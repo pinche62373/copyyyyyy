@@ -75,6 +75,7 @@
     "prettier": "3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.12",
     "prisma": "^4.16.2",
+    "remix-flat-routes": "^0.6.4",
     "start-server-and-test": "^2.0.3",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
