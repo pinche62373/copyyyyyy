@@ -156,7 +156,7 @@ export default function Join() {
               <Link
                 className="text-blue-500 underline"
                 to={{
-                  pathname: "/login",
+                  pathname: "/auth/login",
                   search: searchParams.toString(),
                 }}
               >
