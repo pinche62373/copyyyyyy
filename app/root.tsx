@@ -5,6 +5,7 @@ import {
   Links,
   LiveReload,
   Meta,
+  MetaFunction,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -21,6 +22,13 @@ export const links: LinksFunction = () => [
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ user: await getUser(request) });
 };
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+	return [
+		{ title: data ? 'tzdb.org - the zoo database' : 'Error | tzdb.org' },
+		{ name: 'description', content: `The Zoo Database is an on-line searchable archive referencing over xxx unique zoo movie titles and more than xxx performers.` },
+	]
+}
 
 export default function App() {
   return (
