@@ -9,7 +9,10 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLocation,
 } from "@remix-run/react";
+import { type IStaticMethods } from "preline/preline";
+import { useEffect } from "react";
 
 import { getUser } from "~/session.server";
 import stylesheet from "~/tailwind.css";
@@ -24,13 +27,31 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-	return [
-		{ title: data ? 'tzdb.org - the zoo database' : 'Error | tzdb.org' },
-		{ name: 'description', content: `The Zoo Database is an on-line searchable archive referencing over xxx unique zoo movie titles and more than xxx performers.` },
-	]
+  return [
+    { title: data ? "tzdb.org - the zoo database" : "Error | tzdb.org" },
+    {
+      name: "description",
+      content: `The Zoo Database is an on-line searchable archive referencing over xxx unique zoo movie titles and more than xxx performers.`,
+    },
+  ];
+};
+
+declare global {
+  interface Window {
+    HSStaticMethods: IStaticMethods; // preline
+  }
+}
+if (typeof window !== "undefined") {
+  require("preline/preline");
 }
 
 export default function App() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.HSStaticMethods.autoInit(); // preline
+  }, [location.pathname]);
+
   return (
     <html lang="en" className="h-full">
       <head>
