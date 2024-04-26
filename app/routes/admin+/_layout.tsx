@@ -293,10 +293,7 @@ export default function AdminLayout() {
                 {/* End Director Model */}
 
                 {/* Movie Model */}
-                <li
-                  className="hs-accordion px-5 mb-1.5 "
-                  id="movie-accordion"
-                >
+                <li className="hs-accordion px-5 mb-1.5 " id="movie-accordion">
                   <button
                     type="button"
                     className="hs-accordion-toggle hs-accordion-active:bg-gray-100 w-full text-start flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hs-accordion-active:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700"
@@ -425,7 +422,10 @@ export default function AdminLayout() {
             >
               <ul>
                 {/* Admin Actor Model */}
-                <li className="hs-accordion px-5 mb-1.5 " id="admin-actor-accordion">
+                <li
+                  className="hs-accordion px-5 mb-1.5 "
+                  id="admin-actor-accordion"
+                >
                   <button
                     type="button"
                     className="hs-accordion-toggle hs-accordion-active:bg-gray-100 w-full text-start flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hs-accordion-active:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700"
@@ -485,7 +485,10 @@ export default function AdminLayout() {
                 {/* End Admin Actor Model */}
 
                 {/* Misc Admin Models */}
-                <li className="hs-accordion px-5 mb-1.5 " id="admin-misc-accordion">
+                <li
+                  className="hs-accordion px-5 mb-1.5 "
+                  id="admin-misc-accordion"
+                >
                   <button
                     type="button"
                     className="hs-accordion-toggle hs-accordion-active:bg-gray-100 w-full text-start flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hs-accordion-active:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700"
@@ -542,7 +545,7 @@ export default function AdminLayout() {
                       </li>
                       <li>
                         <NavLink
-                          to="#"
+                          to="/admin/languages"
                           className="flex gap-x-4 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
                         >
                           Languages
@@ -609,11 +612,10 @@ export default function AdminLayout() {
       <main id="content" className="lg:ps-[260px] pt-[59px] lg:pt-0">
         <div className="p-2 sm:p-5 sm:py-0 md:pt-5 space-y-5">
           {/* Card */}
-          <div className="p-4 flex flex-col justify-center h-72 md:h-96 min-h-[calc(100vh-56px)] sm:min-h-[calc(100vh-40px)] bg-white border border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
-            <div className="relative h-full border border-dashed border-gray-200 rounded-xl overflow-hidden dark:border-neutral-700">
+          <div className="p-4 flex flex-col justify-center h-72 md:h-96 min-h-[calc(100vh-56px)] sm:min-h-[calc(100vh-40px)] bg-white shadow-sm rounded-xl dark:bg-neutral-800">
+            <div className="relative h-full overflow-hidden">
               <div className="absolute inset-0 size-full">
                 <Outlet />
-                {/* <div className="bg-[linear-gradient(45deg,rgba(0,0,0,.05)_7.14%,transparent_7.14%,transparent_50%,rgba(0,0,0,.05)_50%,rgba(0,0,0,.05)_57.14%,transparent_57.14%,transparent);] bg-[length:10px_10px] dark:bg-[linear-gradient(45deg,rgba(0,0,0,.4)_7.14%,transparent_7.14%,transparent_50%,rgba(0,0,0,.4)_50%,rgba(0,0,0,.4)_57.14%,transparent_57.14%,transparent);] size-full"></div> */}
               </div>
             </div>
           </div>

@@ -11,7 +11,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({ noteListItems });
 };
 
-export default function NotesPage() {
+export default function NotesLayout() {
   const data = useLoaderData<typeof loader>();
 
   return (
