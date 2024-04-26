@@ -6,7 +6,7 @@ export function Navbar() {
   const navLinkDefaultClassName =
     "font-medium text-gray-600 hover:text-gray-400 dark:text-neutral-400 dark:hover:text-neutral-500 selected:text-blue-500";
 
-  const navLinkActiveClassName = "text-blue-500 hover:text-blue-500"
+  const navLinkActiveClassName = "text-blue-500 hover:text-blue-500";
 
   return (
     <header className="relative flex flex-wrap sm:justify-start sm:flex-nowrap w-full bg-white text-sm py-4 dark:bg-neutral-800">
@@ -98,12 +98,12 @@ export function Navbar() {
             </NavLink>
 
             <NavLink
-              to="/notes"
+              to="/admin"
               className={({ isActive }) =>
                 cn(navLinkDefaultClassName, isActive && navLinkActiveClassName)
               }
             >
-              Notes
+              Admin
             </NavLink>
 
             <div className="hs-dropdown [--strategy:static] sm:[--strategy:fixed] [--adaptive:none] ">
@@ -156,7 +156,7 @@ export function Navbar() {
                     type="submit"
                     className="flex w-full items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:ring-2 focus:ring-blue-500 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300"
                   >
-                    Logout (form)
+                    Logout
                   </button>
                 </Form>
               </div>
