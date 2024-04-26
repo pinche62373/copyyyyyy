@@ -56,7 +56,7 @@ export default function AdminIndexPage() {
             </svg>
             <div className="sm:order-1 grow space-y-1">
               <h2 className="sm:mb-3 text-sm text-stone-500 dark:text-neutral-400">
-                Performers
+                Actors
               </h2>
               <p className="text-lg md:text-xl font-semibold text-stone-800 dark:text-neutral-200">
                 29
