@@ -14,6 +14,7 @@ import {
 import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
 
+import "@fontsource-variable/inter/wght.css";
 import { getUser } from "~/session.server";
 import stylesheet from "~/tailwind.css";
 
