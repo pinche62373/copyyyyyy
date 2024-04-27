@@ -40,7 +40,7 @@ const columns = [
     cell: (info) => (
       <NavLink
         to={info.row.original.id}
-        className="py-3 px-5 block text-sm font-medium text-gray-800 hover:text-indigo-600 focus:outline-none focus:text-indigo-600 dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
+        className="block text-sm font-medium text-gray-800 hover:text-indigo-600 focus:outline-none focus:text-indigo-600 dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
       >
         {info.getValue()}
       </NavLink>

@@ -10,7 +10,7 @@ const TBody = () => {
       {table.getRowModel().rows.map((row) => (
         <tr key={row.id}>
           {row.getVisibleCells().map((cell) => (
-            <td key={cell.id} className="py-3 px-5">
+            <td key={cell.id} className="size-px whitespace-nowrap py-3 px-5">
               <span className="text-sm text-gray-800 dark:text-white">
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </span>
