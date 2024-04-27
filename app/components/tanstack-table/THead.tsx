@@ -10,7 +10,7 @@ const THead = <T,>({ isSortable }: IProps<T>) => {
 
   if (!table) return null;
   return (
-    <thead className="bg-gray-70 dark:bg-neutral-700">
+    <thead className="bg-gray-50 dark:bg-neutral-700">
       <tr>
         {table.getHeaderGroups().map((x) => {
           return x.headers.map((header) => {

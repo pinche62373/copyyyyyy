@@ -18,11 +18,13 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
 
   return (
     <TableContext.Provider value={{ table: table }}>
-      <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        {/* Table */}
-        <table className="min-w-full divide-y divide-gray-200  dark:divide-neutral-700">
-          {children}
-        </table>
+      <div className="relative overflow-x-auto">
+        <div className="border border-gray-200 rounded-lg">
+          {/* Table */}
+          <table className="min-w-full divide-y divide-gray-200  dark:divide-neutral-700">
+            {children}
+          </table>
+        </div>
         {/* End Table */}
 
         {/* Record Navigation */}

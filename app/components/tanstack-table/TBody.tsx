@@ -6,12 +6,14 @@ const TBody = () => {
 
   if (!table) return null;
   return (
-    <tbody>
+    <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
       {table.getRowModel().rows.map((row) => (
-        <tr key={row.id} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+        <tr key={row.id}>
           {row.getVisibleCells().map((cell) => (
-            <td key={cell.id} className="px-6 py-4">
+            <td key={cell.id} className="py-3 px-5">
+              <span className="text-sm text-gray-800 dark:text-white">
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
+              </span>
             </td>
           ))}
         </tr>
