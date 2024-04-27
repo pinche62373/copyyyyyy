@@ -1,4 +1,5 @@
-import { Table, flexRender } from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
+
 import useTable from "./useTable";
 
 interface IProps<T> {
@@ -21,7 +22,7 @@ const THead = <T,>({ isSortable }: IProps<T>) => {
                     <div className="hs-dropdown relative inline-flex w-full">
                       <span
                         onClick={
-                          header.column.getCanSort()
+                          isSortable
                             ? header.column.getToggleSortingHandler()
                             : undefined
                         }
@@ -57,12 +58,6 @@ const THead = <T,>({ isSortable }: IProps<T>) => {
                         </button>
                       </span>
                     </div>
-
-                    {/* {{
-                        asc: <i className="fa-solid fa-sort-up ml-1"></i>,
-                        desc: <i className="fa-solid fa-sort-down ml-1"></i>,
-                      }[header.column.getIsSorted() as string] ?? null} */}
-                    {/* </div> */}
                   </div>
                 )}
               </th>

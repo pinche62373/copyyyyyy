@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { NavLink, useLoaderData } from "@remix-run/react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -28,6 +28,7 @@ const columnHelper = createColumnHelper<Language>();
 
 const columns = [
   columnHelper.display({
+    id: "index",
     header: "#",
     enableSorting: false,
     cell: ({ row, table }) =>
@@ -36,7 +37,14 @@ const columns = [
         ?.flatRows?.findIndex((flatRow) => flatRow.id === row.id) || 0) + 1,
   }),
   columnHelper.accessor("name", {
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <NavLink
+        to={info.row.original.id}
+        className="py-3 px-5 block text-sm font-medium text-gray-800 hover:text-indigo-600 focus:outline-none focus:text-indigo-600 dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
+      >
+        {info.getValue()}
+      </NavLink>
+    ),
     header: () => <span>Language</span>,
   }),
   columnHelper.accessor("createdAt", {
@@ -50,7 +58,7 @@ const columns = [
   columnHelper.display({
     header: "Actions",
     enableSorting: false,
-  })
+  }),
 ];
 
 export default function AdminLanguageIndex() {
