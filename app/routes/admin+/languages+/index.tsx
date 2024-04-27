@@ -8,6 +8,8 @@ import {
 } from "@tanstack/react-table";
 
 import { AdminPageTitle } from "~/components/admin/page-title";
+import IconEdit from "~/components/icons/edit";
+import IconTrash from "~/components/icons/trash";
 import TanstackTable from "~/components/tanstack-table";
 import { getAdminLanguages } from "~/models/language.server";
 
@@ -59,56 +61,30 @@ const columns = [
     header: "Actions",
     enableSorting: false,
     cell: () => (
-    <>
-            {/* Edit Button */}
-            <div className="inline-flex items-center -space-x-px">
-              <a
-                className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-s-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                href="../../pro/ecommerce/product-details.html"
-              >
-                <svg
-                  className="flex-shrink-0 size-3.5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                  <path d="m15 5 4 4" />
-                </svg>
-              </a>
-            </div>
+      <>
+        {/* Edit Button */}
+        <div className="inline-flex items-center -space-x-px">
+          <a
+            className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-s-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+            href="../../pro/ecommerce/product-details.html"
+          >
+            <IconEdit className="flex-shrink-0 size-3.5" />
+          </a>
+        </div>
+        {/* End Edit Button */}
 
-            {/* Delete Button */}
-            <div className="inline-flex items-center -space-x-px">
-              <a
-                className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-r-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-                href="../../pro/ecommerce/product-details.html"
-              >
-                <svg
-                  className="flex-shrink-0 size-3.5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
-                  <path d="m15 5 4 4" />
-                </svg>
-              </a>
-            </div>      
-            </>      
-    )
+        {/* Delete Button */}
+        <div className="inline-flex items-center -space-x-px">
+          <a
+            className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-r-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+            href="../../pro/ecommerce/product-details.html"
+          >
+            <IconTrash className="flex-shrink-0 size-3.5" />
+          </a>
+        </div>
+        {/* End Delete Button */}
+      </>
+    ),
   }),
 ];
 
@@ -125,7 +101,7 @@ export default function AdminLanguageIndex() {
 
   return (
     <>
-      <AdminPageTitle title="Languages" buttonText="New Language"/>
+      <AdminPageTitle title="Languages" buttonText="New Language" />
 
       <TanstackTable.Table table={table}>
         <TanstackTable.THead />

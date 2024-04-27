@@ -1,4 +1,5 @@
-import { NavLink, Outlet } from "@remix-run/react";
+import { Outlet } from "@remix-run/react";
+
 import { AdminSidebar } from "~/components/admin/sidebar";
 
 export default function AdminLayout() {
