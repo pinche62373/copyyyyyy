@@ -13,9 +13,9 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
   const pageSize = table.getState().pagination.pageSize;
 
   const selectedPageClass =
-    "flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white";
+    "flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white";
   const unstatePageClass =
-    "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
+    "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-200 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
 
   return (
     <TableContext.Provider value={{ table: table }}>
@@ -28,9 +28,9 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
         </div>
         {/* End Table */}
 
-        {/* Record Navigation */}
+        {/* Page Index */}
         <nav
-          className="flex items-center justify-between pt-4 p-2"
+          className="flex items-center justify-between pt-4 p-2 pr-0"
           aria-label="Table navigation"
         >
           <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
@@ -47,6 +47,9 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
               {pageSize}
             </span>
           </span>
+          {/* End Page Index */}
+
+          {/* Page Navigation */}
           <ul className="inline-flex -space-x-px text-sm h-8">
             {/* Previous Page */}
             <li>
@@ -55,7 +58,7 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
                 onClick={() =>
                   table.getCanPreviousPage() && table.previousPage()
                 }
-                className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
               >
                 Previous
               </a>
@@ -85,7 +88,7 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
               <a
                 href="#"
                 onClick={() => table.getCanNextPage() && table.nextPage()}
-                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-200 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
               >
                 Next
               </a>
@@ -93,7 +96,7 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
             {/* End Next Page */}
           </ul>
         </nav>
-        {/* End Record Navigation */}
+        {/* End Page Navigation */}
       </div>
     </TableContext.Provider>
   );

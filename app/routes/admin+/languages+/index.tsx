@@ -77,7 +77,7 @@ export default function AdminLanguageIndex() {
       <AdminPageTitle title="Languages" buttonText="New Language"/>
 
       <TanstackTable.Table table={table}>
-        <TanstackTable.THead isSortable />
+        <TanstackTable.THead />
         <TanstackTable.TBody />
       </TanstackTable.Table>
 
