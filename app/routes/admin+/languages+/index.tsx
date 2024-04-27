@@ -7,7 +7,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
-import { AdminPageTitleList } from "~/components/admin/page-title-list";
+import { AdminPageTitle } from "~/components/admin/page-title";
 import TanstackTable from "~/components/tanstack-table";
 import { getAdminLanguages } from "~/models/language.server";
 
@@ -29,7 +29,7 @@ const columnHelper = createColumnHelper<Language>();
 const columns = [
   columnHelper.display({
     header: "#",
-    id: "index",
+    enableSorting: false,
     cell: ({ row, table }) =>
       (table
         .getSortedRowModel()
@@ -47,6 +47,10 @@ const columns = [
     cell: (info) => info.getValue(),
     header: () => <span>Updated</span>,
   }),
+  columnHelper.display({
+    header: "Actions",
+    enableSorting: false,
+  })
 ];
 
 export default function AdminLanguageIndex() {
@@ -62,12 +66,14 @@ export default function AdminLanguageIndex() {
 
   return (
     <>
-      <AdminPageTitleList model="Languages" />
+      <AdminPageTitle model="Languages" />
 
       <TanstackTable.Table table={table}>
         <TanstackTable.THead isSortable />
         <TanstackTable.TBody />
       </TanstackTable.Table>
+
+      <br />
     </>
   );
 }

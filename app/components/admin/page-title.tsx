@@ -6,7 +6,7 @@ interface PropTypes {
   search?: boolean;
 }
 
-export function AdminPageTitleList({ model, search = false }: PropTypes) {
+export function AdminPageTitle({ model, search = false }: PropTypes) {
   return (
     <>
       {/* Header */}

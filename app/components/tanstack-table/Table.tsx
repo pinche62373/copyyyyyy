@@ -1,6 +1,6 @@
-import { PropsWithChildren } from 'react';
-import { t_table } from './types';
-import { TableContext } from './Context';
+import { PropsWithChildren } from "react";
+import { t_table } from "./types";
+import { TableContext } from "./Context";
 
 interface IProps<T> {
   table: t_table<T>;
@@ -12,36 +12,62 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
   const pageSize = table.getState().pagination.pageSize;
 
   const selectedPageClass =
-    'flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white';
+    "flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white";
   const unstatePageClass =
-    'flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white';
+    "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
 
   return (
     <TableContext.Provider value={{ table: table }}>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table className="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">{children}</table>
-        <nav className="flex items-center justify-between pt-4 p-2" aria-label="Table navigation">
+        {/* Table */}
+        <table className="min-w-full divide-y divide-gray-200  dark:divide-neutral-700">
+          {children}
+        </table>
+        {/* End Table */}
+
+        {/* Record Navigation */}
+        <nav
+          className="flex items-center justify-between pt-4 p-2"
+          aria-label="Table navigation"
+        >
           <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-            Page <span className="font-semibold text-gray-900 dark:text-white">{currentPage}</span> of{' '}
-            <span className="font-semibold text-gray-900 dark:text-white">{totalPage} </span>- Showing{' '}
-            <span className="font-semibold text-gray-900 dark:text-white">{pageSize}</span>
+            Page{" "}
+            <span className="font-semibold text-gray-900 dark:text-white">
+              {currentPage}
+            </span>{" "}
+            of{" "}
+            <span className="font-semibold text-gray-900 dark:text-white">
+              {totalPage}{" "}
+            </span>
+            - Showing{" "}
+            <span className="font-semibold text-gray-900 dark:text-white">
+              {pageSize}
+            </span>
           </span>
           <ul className="inline-flex -space-x-px text-sm h-8">
+            {/* Previous Page */}
             <li>
               <a
                 href="#"
-                onClick={() => table.getCanPreviousPage() && table.previousPage()}
+                onClick={() =>
+                  table.getCanPreviousPage() && table.previousPage()
+                }
                 className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
               >
                 Previous
               </a>
             </li>
+            {/* End Previous Page */}
+
+            {/* Page Numbers */}
             {Array.from({ length: totalPage }, (_, i) => i + 1).map((x) => {
               return (
                 <li key={x}>
                   <a
                     href={`#page-${x}`}
-                    className={x === currentPage ? selectedPageClass : unstatePageClass}
+                    className={
+                      x === currentPage ? selectedPageClass : unstatePageClass
+                    }
                     onClick={() => table.setPageIndex(x - 1)}
                   >
                     {x}
@@ -49,6 +75,9 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
                 </li>
               );
             })}
+            {/* End Page Numbers */}
+
+            {/* Next Page */}
             <li>
               <a
                 href="#"
@@ -58,8 +87,10 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
                 Next
               </a>
             </li>
+            {/* End Next Page */}
           </ul>
         </nav>
+        {/* End Record Navigation */}
       </div>
     </TableContext.Provider>
   );
