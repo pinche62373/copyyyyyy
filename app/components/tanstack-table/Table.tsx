@@ -11,6 +11,7 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
   const currentPage = table.getState().pagination.pageIndex + 1;
   const totalPage = table.getPageCount();
   const pageSize = table.getState().pagination.pageSize;
+  const totalRecords = table.getRowCount()
 
   const selectedPageClass =
     "flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white";
@@ -28,75 +29,82 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
         </div>
         {/* End Table */}
 
-        {/* Page Index */}
-        <nav
-          className="flex items-center justify-between pt-4 p-2 pr-0"
-          aria-label="Table navigation"
-        >
-          <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
-            Page{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {currentPage}
-            </span>{" "}
-            of{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {totalPage}{" "}
+        {/* Footer */}
+        <div className="mt-5 flex flex-wrap justify-between items-center gap-2 pl-2">
+          {/* Record Counter */}
+          <p className="text-sm text-stone-800 dark:text-neutral-200">
+            <span className="font-medium">n</span>
+            <span className="text-stone-500 dark:text-neutral-500 pl-1">
+              records of 
             </span>
-            - Showing{" "}
-            <span className="font-semibold text-gray-900 dark:text-white">
-              {pageSize}
-            </span>
-          </span>
-          {/* End Page Index */}
+            <span className="font-medium pl-1">{totalRecords}</span>
+          </p>
 
-          {/* Page Navigation */}
-          <ul className="inline-flex -space-x-px text-sm h-8">
-            {/* Previous Page */}
-            <li>
-              <a
-                href="#"
-                onClick={() =>
-                  table.getCanPreviousPage() && table.previousPage()
-                }
-                className="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+          {/* Pagination */}
+          <nav className="flex justify-end items-center gap-x-1">
+            <button
+              type="button"
+              className="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-stone-800 hover:bg-stone-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-100 dark:text-white dark:hover:bg-white/10 dark:focus:bg-neutral-700"
+              disabled={!table.getCanPreviousPage()}
+            >
+              <svg
+                className="flex-shrink-0 size-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
+                <path d="m15 18-6-6 6-6" />
+              </svg>
+              <span aria-hidden="true" className="sr-only">
                 Previous
-              </a>
-            </li>
-            {/* End Previous Page */}
-
-            {/* Page Numbers */}
-            {Array.from({ length: totalPage }, (_, i) => i + 1).map((x) => {
-              return (
-                <li key={x}>
-                  <a
-                    href={`#page-${x}`}
-                    className={
-                      x === currentPage ? selectedPageClass : unstatePageClass
-                    }
-                    onClick={() => table.setPageIndex(x - 1)}
-                  >
-                    {x}
-                  </a>
-                </li>
-              );
-            })}
-            {/* End Page Numbers */}
-
-            {/* Next Page */}
-            <li>
-              <a
-                href="#"
-                onClick={() => table.getCanNextPage() && table.nextPage()}
-                className="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-200 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >
+              </span>
+            </button>
+            <div className="flex items-center gap-x-1">
+              <span className="min-h-[38px] min-w-[38px] flex justify-center items-center bg-stone-100 text-stone-800 py-2 px-3 text-sm rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:text-white">
+                {currentPage}
+              </span>
+              <span className="min-h-[38px] flex justify-center items-center text-stone-500 py-2 px-1.5 text-sm dark:text-neutral-500">
+                of
+              </span>
+              <span className="min-h-[38px] flex justify-center items-center text-stone-500 py-2 px-1.5 text-sm dark:text-neutral-500">
+              {totalPage}
+              </span>
+            </div>
+            <button
+              type="button"
+              className="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-stone-800 hover:bg-stone-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-100 dark:text-white dark:hover:bg-white/10 dark:focus:bg-neutral-700"
+              disabled={!table.getCanNextPage()}
+            >
+              <span aria-hidden="true" className="sr-only">
                 Next
-              </a>
-            </li>
-            {/* End Next Page */}
-          </ul>
-        </nav>
-        {/* End Page Navigation */}
+              </span>
+              <svg
+                className="flex-shrink-0 size-3.5"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="m9 18 6-6-6-6" />
+              </svg>
+            </button>
+          </nav>
+          {/* End Pagination*/}
+        </div>
+        {/* End Footer */}
+
+
       </div>
     </TableContext.Provider>
   );
