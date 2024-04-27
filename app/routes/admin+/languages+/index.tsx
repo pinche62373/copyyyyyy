@@ -1,4 +1,5 @@
-import { NavLink, useLoaderData } from "@remix-run/react";
+import type { ActionFunctionArgs } from "@remix-run/node";
+import { Form, NavLink, useLoaderData } from "@remix-run/react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -6,17 +7,29 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import invariant from "tiny-invariant";
 
 import { AdminPageTitle } from "~/components/admin/page-title";
 import IconEdit from "~/components/icons/edit";
 import IconTrash from "~/components/icons/trash";
 import TanstackTable from "~/components/tanstack-table";
-import { getAdminLanguages } from "~/models/language.server";
+import { deleteLanguage, getAdminLanguages } from "~/models/language.server";
 
 export const loader = async () => {
   const languages = await getAdminLanguages();
 
   return languages;
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  const formData = await request.formData();
+  const formDataObject = { ...Object.fromEntries(formData) };
+
+  invariant(formDataObject.languageId, "languageId not found");
+
+  await deleteLanguage({ id: formDataObject.languageId.toString() });
+
+  return { status: "success" };
 };
 
 interface Language {
@@ -60,27 +73,31 @@ const columns = [
   columnHelper.display({
     header: "Actions",
     enableSorting: false,
-    cell: () => (
+    cell: (info) => (
       <>
         {/* Edit Button */}
         <div className="inline-flex items-center -space-x-px">
-          <a
+          <button
             className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-s-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-            href="../../pro/ecommerce/product-details.html"
+            onClick={() => alert("Edit")}
           >
             <IconEdit className="flex-shrink-0 size-3.5" />
-          </a>
+          </button>
         </div>
         {/* End Edit Button */}
 
         {/* Delete Button */}
         <div className="inline-flex items-center -space-x-px">
-          <a
-            className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-r-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-            href="../../pro/ecommerce/product-details.html"
-          >
-            <IconTrash className="flex-shrink-0 size-3.5" />
-          </a>
+          <Form method="POST" action="/admin/languages">
+            <input
+              type="hidden"
+              name="languageId"
+              value={info.row.original.id}
+            />
+            <button className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-r-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+              <IconTrash className="flex-shrink-0 size-3.5" />
+            </button>
+          </Form>
         </div>
         {/* End Delete Button */}
       </>

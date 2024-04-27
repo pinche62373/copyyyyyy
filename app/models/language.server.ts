@@ -14,3 +14,11 @@ export function getAdminLanguages() {
     orderBy: { name: "asc" },
   });
 }
+
+export function deleteLanguage({
+  id,
+}: Pick<Language, "id">) {
+  return prisma.language.delete({
+    where: { id },
+  });
+}
