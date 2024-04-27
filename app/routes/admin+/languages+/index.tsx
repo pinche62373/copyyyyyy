@@ -2,10 +2,10 @@ import { json } from "@remix-run/node";
 import { NavLink, useLoaderData } from "@remix-run/react";
 
 import { AdminPageTitleList } from "~/components/admin/page-title-list";
-import { getLanguages } from "~/models/language.server";
+import { getAdminLanguages } from "~/models/language.server";
 
 export const loader = async () => {
-  const languages = await getLanguages();
+  const languages = await getAdminLanguages();
   return json({ languages });
 };
 

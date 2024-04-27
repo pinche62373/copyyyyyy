@@ -9,10 +9,8 @@ export function getLanguage({ id }: Pick<Language, "id">) {
   });
 }
 
-export function getLanguages() {
+export function getAdminLanguages() {
   return prisma.language.findMany({
-    select: { id: true, name: true },
     orderBy: { name: "asc" },
   });
 }
-  
