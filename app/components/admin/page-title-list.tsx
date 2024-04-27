@@ -10,7 +10,7 @@ export function AdminPageTitleList({ model, search = false }: PropTypes) {
   return (
     <>
       {/* Header */}
-      <div className="pb-2 grid sm:flex sm:justify-between sm:items-center gap-2">
+      <div className="pb-10 grid sm:flex sm:justify-between sm:items-center gap-2">
         <h2 className="inline-block font-semibold text-gray-800 dark:text-neutral-200">
           {model}
         </h2>
