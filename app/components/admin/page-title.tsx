@@ -15,7 +15,7 @@ export function AdminPageTitle({
     <>
       {/* Header */}
       <div className="pb-10 grid sm:flex sm:justify-between sm:items-center gap-2">
-        <h1 className="text-lg font-semibold text-gray-800 dark:text-neutral-200">
+        <h1 className="h-[2.1rem] text-lg font-semibold text-gray-800 dark:text-neutral-200">
           {title}
         </h1>
 
