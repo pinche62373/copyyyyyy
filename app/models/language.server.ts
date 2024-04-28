@@ -20,7 +20,8 @@ export function createLanguage({
 }: Pick<Language, "name">) {
   return prisma.language.create({
     data: {
-      name
+      name,
+      updatedAt: null
     },
   });
 }

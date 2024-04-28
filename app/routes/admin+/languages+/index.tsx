@@ -7,6 +7,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
+import dayjs from "dayjs";
 import invariant from "tiny-invariant";
 
 import { AdminPageTitle } from "#app/components/admin/page-title"
@@ -63,11 +64,15 @@ const columns = [
     header: () => <span>Language</span>,
   }),
   columnHelper.accessor("createdAt", {
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      return dayjs(info.getValue()).format("YYYY-MM-DD / HH:mm:ss")
+    },
     header: () => <span>Created</span>,
   }),
   columnHelper.accessor("updatedAt", {
-    cell: (info) => info.getValue(),
+    cell: (info) => {
+      return info.getValue() ? dayjs(info.getValue()).format("YYYY-MM-DD / HH:mm:ss") : null
+    },
     header: () => <span>Updated</span>,
   }),
   columnHelper.display({
