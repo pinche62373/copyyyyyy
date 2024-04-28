@@ -65,13 +65,13 @@ const columns = [
   }),
   columnHelper.accessor("createdAt", {
     cell: (info) => {
-      return dayjs(info.getValue()).format("YYYY-MM-DD / HH:mm:ss")
+      return dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm")
     },
     header: () => <span>Created</span>,
   }),
   columnHelper.accessor("updatedAt", {
     cell: (info) => {
-      return info.getValue() ? dayjs(info.getValue()).format("YYYY-MM-DD / HH:mm:ss") : null
+      return info.getValue() ? dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm") : null
     },
     header: () => <span>Updated</span>,
   }),
