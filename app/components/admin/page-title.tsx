@@ -2,11 +2,15 @@ import { NavLink } from "@remix-run/react";
 
 interface PropTypes {
   title: string;
-  buttonText: string;
+  buttonText?: string;
   search?: boolean;
 }
 
-export function AdminPageTitle({ title, buttonText, search = false }: PropTypes) {
+export function AdminPageTitle({
+  title,
+  buttonText,
+  search = false,
+}: PropTypes) {
   return (
     <>
       {/* Header */}
@@ -46,30 +50,32 @@ export function AdminPageTitle({ title, buttonText, search = false }: PropTypes)
           )}
           {/* End Conditional Search */}
 
-          {/* New Record Button  */}
-          <NavLink
-            type="button"
-            to="/admin/languages/new"
-            className="p-2 pr-4 inline-flex items-center gap-x-1.5 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <svg
-              className="hidden sm:block flex-shrink-0 size-4"
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+          {/* Conditional Add Button  */}
+          {buttonText && (
+            <NavLink
+              type="button"
+              to="/admin/languages/new"
+              className="p-2 pr-4 inline-flex items-center gap-x-1.5 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <path d="M5 12h14" />
-              <path d="M12 5v14" />
-            </svg>
-            {buttonText}
-          </NavLink>
-          {/* End New Record Button  */}
+              <svg
+                className="hidden sm:block flex-shrink-0 size-4"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M5 12h14" />
+                <path d="M12 5v14" />
+              </svg>
+              {buttonText}
+            </NavLink>
+          )}
+          {/* End Conditional Add Button  */}
         </div>
         {/* End Form Group  */}
       </div>
