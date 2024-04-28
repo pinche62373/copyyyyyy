@@ -15,6 +15,16 @@ export function getAdminLanguages() {
   });
 }
 
+export function createLanguage({
+  name,
+}: Pick<Language, "name">) {
+  return prisma.language.create({
+    data: {
+      name
+    },
+  });
+}
+
 export function deleteLanguage({
   id,
 }: Pick<Language, "id">) {

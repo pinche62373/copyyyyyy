@@ -116,7 +116,7 @@ const columns = [
   }),
 ];
 
-export default function AdminLanguageIndex() {
+export default function AdminPageLanguages() {
   const data = useLoaderData<typeof loader>();
 
   const table = useReactTable({

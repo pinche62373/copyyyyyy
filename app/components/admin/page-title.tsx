@@ -1,5 +1,4 @@
-// TODO
-// - Singular model name for add button
+import { NavLink } from "@remix-run/react";
 
 interface PropTypes {
   title: string;
@@ -48,8 +47,9 @@ export function AdminPageTitle({ title, buttonText, search = false }: PropTypes)
           {/* End Conditional Search */}
 
           {/* New Record Button  */}
-          <button
+          <NavLink
             type="button"
+            to="/admin/languages/new"
             className="p-2 pr-4 inline-flex items-center gap-x-1.5 text-xs font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <svg
@@ -68,7 +68,7 @@ export function AdminPageTitle({ title, buttonText, search = false }: PropTypes)
               <path d="M12 5v14" />
             </svg>
             {buttonText}
-          </button>
+          </NavLink>
           {/* End New Record Button  */}
         </div>
         {/* End Form Group  */}
