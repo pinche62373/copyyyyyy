@@ -23,8 +23,7 @@ export const loader = async () => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-
-  const languageId = formData.get("languageId")
+  const { languageId } = Object.fromEntries(formData.entries());
 
   invariant(languageId, "Form data does not contain languageId");
 
@@ -89,13 +88,24 @@ const columns = [
 
         {/* Delete Button */}
         <div className="inline-flex items-center -space-x-px">
-          <Form method="POST" action="/admin/languages">
+          <Form
+            method="POST"
+            action="/admin/languages"
+            onSubmit={(event) => {
+              if (!confirm("Are you sure?")) {
+                event.preventDefault();
+              }
+            }}
+          >
             <input
               type="hidden"
               name="languageId"
               value={info.row.original.id}
             />
-            <button className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-r-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+            <input type="hidden" name="intent" value="delete" />
+            <button
+              className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-r-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+            >
               <IconTrash className="flex-shrink-0 size-3.5" />
             </button>
           </Form>
@@ -125,8 +135,6 @@ export default function AdminLanguageIndex() {
         <TanstackTable.THead />
         <TanstackTable.TBody />
       </TanstackTable.Table>
-
-      <br />
     </>
   );
 }
