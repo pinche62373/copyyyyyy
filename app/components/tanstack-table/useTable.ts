@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+
 import { TableContext } from './Context';
 
 const useTable = () => {

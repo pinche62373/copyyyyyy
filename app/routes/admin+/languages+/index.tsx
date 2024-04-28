@@ -54,7 +54,7 @@ const columns = [
   }),
   columnHelper.accessor("name", {
     cell: (info) => (
-      <NavLink
+      <NavLink  
         to={info.row.original.id}
         className="block text-sm font-medium text-gray-800 hover:text-indigo-600 focus:outline-none focus:text-indigo-600 dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
       >
@@ -127,6 +127,7 @@ export default function AdminPageLanguages() {
   const table = useReactTable({
     data,
     columns,
+    enableSortingRemoval: false,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
