@@ -3,6 +3,7 @@ import { NavLink } from "@remix-run/react";
 import IconDog from "#app/components/icons/dog";
 import IconHome from "#app/components/icons/home";
 import IconUsers from "#app/components/icons/users";
+import  * as Constants from "#app/utils/constants"
 
 export function AdminSidebar() {
   return (
@@ -497,7 +498,7 @@ export function AdminSidebar() {
         {/* Footer */}
         <footer className="hidden lg:block absolute bottom-0 inset-x-0 border-t border-gray-200 dark:border-neutral-700">
           <p className="w-full text-sm inline-flex items-center py-3 px-7 text-start text-gray-800 align-middle disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-white dark:focus:bg-neutral-700">
-            Version 0.0.13
+            Version {Constants.VERSION}
           </p>
         </footer>
 

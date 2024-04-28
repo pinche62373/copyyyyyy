@@ -1,0 +1,1 @@
+export const VERSION="__VERSION__" // do not change, maintained by Semantic Release
