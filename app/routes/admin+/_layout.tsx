@@ -1,6 +1,14 @@
+import { cssBundleHref } from "@remix-run/css-bundle";
+import type { LinksFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import { AdminSidebar } from "#app/components/admin/sidebar";
+import adminStyleSheet from "#app/styles/admin.css";
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: adminStyleSheet },
+  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+]
 
 export default function AdminLayout() {
   return (
