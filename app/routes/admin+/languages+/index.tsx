@@ -23,11 +23,12 @@ export const loader = async () => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const formDataObject = { ...Object.fromEntries(formData) };
 
-  invariant(formDataObject.languageId, "languageId not found");
+  const languageId = formData.get("languageId")
 
-  await deleteLanguage({ id: formDataObject.languageId.toString() });
+  invariant(languageId, "languageId not found");
+
+  await deleteLanguage({ id: languageId.toString() });
 
   return { status: "success" };
 };
