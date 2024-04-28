@@ -82,6 +82,7 @@ module.exports = {
             "newlines-between": "always",
           },
         ],
+        "jsx-a11y/no-autofocus": "off"
       },
     },
 

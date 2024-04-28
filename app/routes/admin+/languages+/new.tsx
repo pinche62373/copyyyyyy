@@ -64,6 +64,7 @@ export default function AdminPageNewLanguage() {
             {/* Col Name Input*/}
             <div className="sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
               <input
+                autoFocus
                 id="inputName"
                 ref={nameRef}
                 name="name"
