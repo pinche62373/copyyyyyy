@@ -10,13 +10,8 @@ interface IProps<T> {
 const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
   const currentPage = table.getState().pagination.pageIndex + 1;
   const totalPage = table.getPageCount();
-  const pageSize = table.getState().pagination.pageSize;
-  const totalRecords = table.getRowCount()
-
-  const selectedPageClass =
-    "flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-200 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white";
-  const unstatePageClass =
-    "flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-200 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white";
+  const paginationSize = table.getState().pagination.pageSize;
+  const totalRecords = table.getRowCount();
 
   return (
     <TableContext.Provider value={{ table: table }}>
@@ -31,16 +26,26 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
 
         {/* Footer */}
         <div className="mt-5 flex flex-wrap justify-between items-center gap-2 pl-2">
-          {/* Record Counter */}
-          <p className="text-sm text-stone-800 dark:text-neutral-200">
-            <span className="font-medium">n</span>
-            <span className="text-stone-500 dark:text-neutral-500 pl-1">
-              records of 
-            </span>
-            <span className="font-medium pl-1">{totalRecords}</span>
-          </p>
+          {/* Pagination Limit */}
+          <span data-hs-input-number="">
+            <div className="inline-flex items-center gap-x-1">
+              <p className="text-sm text-gray-600 dark:text-neutral-400">
+                Results per page:
+              </p>
+              <input
+                    type="text"
+                    defaultValue="12"
+                    className="text-sm font-medium p-2 w-10 focus:outline-none focus:bg-stone-100 bg-white border border-gray-200 rounded-lg text-center focus:ring-0 text-stone-800 dark:text-neutral-200"
+                  />
+                <div className="flex items-center gap-x-1.5">
+                <span className="text-sm">of</span>
+                  <span className="text-sm font-medium">12</span>
+                </div>
+            </div>
+          </span>
+          {/* End Pagination Limit */}
 
-          {/* Pagination */}
+          {/* Page Navigation */}
           <nav className="flex justify-end items-center gap-x-1">
             <button
               type="button"
@@ -67,14 +72,14 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
               </span>
             </button>
             <div className="flex items-center gap-x-1">
-              <span className="min-h-[38px] min-w-[38px] flex justify-center items-center bg-stone-100 text-stone-800 py-2 px-3 text-sm rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:text-white">
+              <span className="min-h-[38px] min-w-[38px] flex justify-center items-center bg-stone-100  py-2 px-3 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 text-stone-800 dark:text-neutral-200">
                 {currentPage}
               </span>
               <span className="min-h-[38px] flex justify-center items-center text-stone-500 py-2 px-1.5 text-sm dark:text-neutral-500">
                 of
               </span>
               <span className="min-h-[38px] flex justify-center items-center text-stone-500 py-2 px-1.5 text-sm dark:text-neutral-500">
-              {totalPage}
+                {totalPage}
               </span>
             </div>
             <button
@@ -102,11 +107,9 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
               </svg>
             </button>
           </nav>
-          {/* End Pagination*/}
+          {/* End Page Navigation */}
         </div>
         {/* End Footer */}
-
-
       </div>
     </TableContext.Provider>
   );

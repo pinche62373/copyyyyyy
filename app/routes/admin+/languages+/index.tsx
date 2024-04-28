@@ -10,7 +10,7 @@ import {
 import dayjs from "dayjs";
 import invariant from "tiny-invariant";
 
-import { AdminPageTitle } from "#app/components/admin/page-title"
+import { AdminPageTitle } from "#app/components/admin/page-title";
 import IconEdit from "#app/components/icons/edit";
 import IconTrash from "#app/components/icons/trash";
 import TanstackTable from "#app/components/tanstack-table";
@@ -54,7 +54,7 @@ const columns = [
   }),
   columnHelper.accessor("name", {
     cell: (info) => (
-      <NavLink  
+      <NavLink
         to={info.row.original.id}
         className="block text-sm font-medium text-gray-800 hover:text-indigo-600 focus:outline-none focus:text-indigo-600 dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
       >
@@ -65,13 +65,15 @@ const columns = [
   }),
   columnHelper.accessor("createdAt", {
     cell: (info) => {
-      return dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm")
+      return dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm");
     },
     header: () => <span>Created</span>,
   }),
   columnHelper.accessor("updatedAt", {
     cell: (info) => {
-      return info.getValue() ? dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm") : null
+      return info.getValue()
+        ? dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm")
+        : null;
     },
     header: () => <span>Updated</span>,
   }),
@@ -108,9 +110,7 @@ const columns = [
               value={info.row.original.id}
             />
             <input type="hidden" name="intent" value="delete" />
-            <button
-              className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-r-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700  hover:fill-red-500"
-            >
+            <button className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-r-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700  hover:fill-red-500">
               <IconTrash className="flex-shrink-0 size-3.5" />
             </button>
           </Form>
@@ -135,7 +135,10 @@ export default function AdminPageLanguages() {
 
   return (
     <>
-      <AdminPageTitle title="Languages" buttonText="New Language" />
+      <AdminPageTitle
+        title="Languages"
+        buttonText="New Language"
+      />
 
       <TanstackTable.Table table={table}>
         <TanstackTable.THead />
