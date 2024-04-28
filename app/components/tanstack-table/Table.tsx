@@ -8,10 +8,9 @@ interface IProps<T> {
 }
 
 const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
-  const currentPage = table.getState().pagination.pageIndex + 1;
-  const totalPage = table.getPageCount();
-  const paginationSize = table.getState().pagination.pageSize;
-  const totalRecords = table.getRowCount();
+  const currentPageIndex = table.getState().pagination.pageIndex + 1;
+  const totalPageCount = table.getPageCount();
+  const totalRecordCount = table.getRowCount();
 
   return (
     <TableContext.Provider value={{ table: table }}>
@@ -26,24 +25,30 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
 
         {/* Footer */}
         <div className="mt-5 flex flex-wrap justify-between items-center gap-2 pl-2">
-          {/* Pagination Limit */}
+          {/* Page Size */}
           <span data-hs-input-number="">
             <div className="inline-flex items-center gap-x-1">
               <p className="text-sm text-gray-600 dark:text-neutral-400">
                 Results per page:
               </p>
+              {/* Counter */}
               <input
-                    type="text"
-                    defaultValue="12"
-                    className="text-sm font-medium p-2 w-10 focus:outline-none focus:bg-stone-100 bg-white border border-gray-200 rounded-lg text-center focus:ring-0 text-stone-800 dark:text-neutral-200"
+                    type="number"
+                    min="1"
+                    className="no-spin p-2 w-11 text-sm font-medium focus:outline-none focus:bg-stone-100 bg-white border border-gray-200 rounded-lg text-center focus:ring-0 text-stone-800 dark:text-neutral-200"
+                    defaultValue={table.getState().pagination.pageSize}                    
+                    onChange={e => {
+                      table.setPageSize(Number(e.target.value))
+                    }}                    
                   />
+                {/* End Counter */}
                 <div className="flex items-center gap-x-1.5">
-                <span className="text-sm">of</span>
-                  <span className="text-sm font-medium">12</span>
+                <span className="text-sm text-gray-600 dark:text-neutral-400">of</span>
+                  <span className="text-sm font-medium">{totalRecordCount}</span>
                 </div>
             </div>
           </span>
-          {/* End Pagination Limit */}
+          {/* End Page Size */}
 
           {/* Page Navigation */}
           <nav className="flex justify-end items-center gap-x-1">
@@ -73,13 +78,13 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
             </button>
             <div className="flex items-center gap-x-1">
               <span className="min-h-[38px] min-w-[38px] flex justify-center items-center bg-stone-100  py-2 px-3 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 text-stone-800 dark:text-neutral-200">
-                {currentPage}
+                {currentPageIndex}
               </span>
               <span className="min-h-[38px] flex justify-center items-center text-stone-500 py-2 px-1.5 text-sm dark:text-neutral-500">
                 of
               </span>
               <span className="min-h-[38px] flex justify-center items-center text-stone-500 py-2 px-1.5 text-sm dark:text-neutral-500">
-                {totalPage}
+                {totalPageCount}
               </span>
             </div>
             <button

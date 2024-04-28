@@ -8,6 +8,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import dayjs from "dayjs";
+import { useState } from "react";
 import invariant from "tiny-invariant";
 
 import { AdminPageTitle } from "#app/components/admin/page-title";
@@ -124,6 +125,16 @@ const columns = [
 export default function AdminPageLanguages() {
   const data = useLoaderData<typeof loader>();
 
+  const [pagination, setPagination] = useState({ 
+    pageIndex: 0, 
+    pageSize: 10
+   });
+
+  // const [pagination, setPagination] = useState({
+  //   pageIndex: 0, //initial page index
+  //   pageSize: 3, //default page size
+  // });
+
   const table = useReactTable({
     data,
     columns,
@@ -131,14 +142,15 @@ export default function AdminPageLanguages() {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    state: {
+      pagination
+    },
+    onPaginationChange: setPagination,
   });
 
   return (
     <>
-      <AdminPageTitle
-        title="Languages"
-        buttonText="New Language"
-      />
+      <AdminPageTitle title="Languages" buttonText="New Language" />
 
       <TanstackTable.Table table={table}>
         <TanstackTable.THead />
