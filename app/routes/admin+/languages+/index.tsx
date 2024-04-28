@@ -26,7 +26,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const languageId = formData.get("languageId")
 
-  invariant(languageId, "languageId not found");
+  invariant(languageId, "Form data does not contain languageId");
 
   await deleteLanguage({ id: languageId.toString() });
 
