@@ -2,6 +2,9 @@
   "name": "tzdb-c26e",
   "private": true,
   "sideEffects": false,
+  "imports": {
+    "#*": "./*"
+  },
   "scripts": {
     "build": "remix build",
     "dev": "remix dev -c \"npm run dev:serve\"",

@@ -1,6 +1,6 @@
 import { Form, NavLink } from "@remix-run/react";
 
-import { cn } from "~/utils/misc";
+import { cn } from "#app/utils/misc";
 
 export function Navbar() {
   const navLinkDefaultClassName =

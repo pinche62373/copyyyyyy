@@ -1,6 +1,6 @@
 import type { Language } from "@prisma/client";
 
-import { prisma } from "~/db.server";
+import { prisma } from "#app/db.server";
 
 export function getLanguage({ id }: Pick<Language, "id">) {
   return prisma.language.findFirst({

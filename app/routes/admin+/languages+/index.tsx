@@ -9,11 +9,11 @@ import {
 } from "@tanstack/react-table";
 import invariant from "tiny-invariant";
 
-import { AdminPageTitle } from "~/components/admin/page-title";
-import IconEdit from "~/components/icons/edit";
-import IconTrash from "~/components/icons/trash";
-import TanstackTable from "~/components/tanstack-table";
-import { deleteLanguage, getAdminLanguages } from "~/models/language.server";
+import { AdminPageTitle } from "#app/components/admin/page-title"
+import IconEdit from "#app/components/icons/edit";
+import IconTrash from "#app/components/icons/trash";
+import TanstackTable from "#app/components/tanstack-table";
+import { deleteLanguage, getAdminLanguages } from "#app/models/language.server";
 
 export const loader = async () => {
   const languages = await getAdminLanguages();

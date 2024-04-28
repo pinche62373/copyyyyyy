@@ -1,6 +1,6 @@
 import { Outlet } from "@remix-run/react";
 
-import { AdminSidebar } from "~/components/admin/sidebar";
+import { AdminSidebar } from "#app/components/admin/sidebar";
 
 export default function AdminLayout() {
   return (

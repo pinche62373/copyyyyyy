@@ -4,9 +4,9 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { Form, NavLink } from "@remix-run/react";
 
-import { AdminPageTitle } from "~/components/admin/page-title";
-import { createLanguage } from "~/models/language.server";
-import { languageSchema } from "~/validations/language-schema";
+import { AdminPageTitle } from "#app/components/admin/page-title";
+import { createLanguage } from "#app/models/language.server";
+import { languageSchema } from "#app/validations/language-schema";
 
 
 export const action = async ({ request }: ActionFunctionArgs) => {
