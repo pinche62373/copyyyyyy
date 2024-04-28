@@ -1,37 +1,42 @@
+import { useForm } from '@conform-to/react';
+import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { Form, NavLink, useActionData } from "@remix-run/react";
-import { useEffect, useRef } from "react";
+import { Form, NavLink } from "@remix-run/react";
 
 import { AdminPageTitle } from "~/components/admin/page-title";
 import { createLanguage } from "~/models/language.server";
+import { languageSchema } from "~/validations/language-schema";
+
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const name = formData.get("name");
+  const formData = await request.formData()
+  const submission = await parseWithZod(formData, { schema: languageSchema })
 
-  if (typeof name !== "string" || name.length === 0) {
+  // Send the submission back to the client if the status is not successful
+  if (submission.status !== 'success') {
     return json(
-      { errors: { name: "This field is required" } },
+      { status: "error", submission },
       { status: 400 },
-    );
+    )
   }
 
-  const language = await createLanguage({ name });
+  // Successful submission, create record
+  const { name } = submission.value
+
+  await createLanguage({ name });
 
   return redirect(`/admin/languages`);
-  return redirect(`/admin/languages/${language.id}`);
+    // return redirect(`/admin/languages/${language.id}`);
 };
 
 export default function AdminPageNewLanguage() {
-  const actionData = useActionData<typeof action>();
-  const nameRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (actionData?.errors?.name) {
-      nameRef.current?.focus();
-    }
-  }, [actionData]);
+  const [form, fields] = useForm({
+    shouldRevalidate: "onBlur",
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: languageSchema })
+    },
+  })
 
   return (
     <>
@@ -39,7 +44,7 @@ export default function AdminPageNewLanguage() {
 
       <div className="p-5 md:p-8 bg-white border border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
         {/* Form */}
-        <Form method="post">
+        <Form method="post" id={form.id} onSubmit={form.onSubmit}>
           {/* Form Field Name */}
           <div className="py-6 sm:py-8 space-y-5 border-t border-gray-200 first:border-t-0 dark:border-neutral-700">
             {/* Grid */}
@@ -47,7 +52,7 @@ export default function AdminPageNewLanguage() {
               {/* Col Name Label*/}
               <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-1">
                 <label
-                  htmlFor="inputName"
+                  htmlFor={fields.name.id}
                   className="sm:mt-2.5 inline-block text-sm text-gray-500 dark:text-neutral-500"
                 >
                   Name
@@ -60,21 +65,15 @@ export default function AdminPageNewLanguage() {
                 <input
                   autoFocus
                   id="inputName"
-                  ref={nameRef}
-                  name="name"
                   type="text"
+                  name={fields.name.name}
                   className="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600"
-                  aria-invalid={actionData?.errors?.name ? true : undefined}
-                  aria-errormessage={
-                    actionData?.errors?.name ? "title-error" : undefined
-                  }
                 />
                 {/* Validation Error */}
-                {actionData?.errors?.name ? (
-                  <div className="pt-1 text-red-700 text-xs" id="title-error">
-                    {actionData.errors.name}
+                  <div className="pt-1 text-red-700 text-xs" id="name-error">
+                    {fields.name.errors}
                   </div>
-                ) : null}
+
                 {/* End Validation Error */}
               </div>
             </div>
