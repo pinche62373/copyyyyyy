@@ -52,10 +52,8 @@ export default function AdminLayout() {
       {/* ========== MAIN CONTENT ========== */}
       <main id="content" className="lg:ps-[260px] pt-[59px] lg:pt-0">
         <div className="relative p-5" >
-          {/* <div className="p-8 pb-5 border rounded border-gray-200 bg-white"> */}
           <Outlet />
           </div>
-          {/* </div> */}
       </main>
       {/* ========== END MAIN CONTENT ========== */}
 
