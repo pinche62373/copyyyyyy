@@ -1,3 +1,5 @@
+.dev.local/
+
 node_modules
 
 /build
