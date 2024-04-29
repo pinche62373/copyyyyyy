@@ -18,9 +18,9 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
         <div className="px-3 pt-2 bg-white border border-stone-200 rounded-xl shadow-sm dark:bg-neutral-800 dark:border-neutral-700">
           {/* Table */}
           <div className="w-full overflow-auto">
-          <table className="min-w-full divide-y divide-gray-200  dark:divide-neutral-700">
-            {children}
-          </table>
+            <table className="min-w-full divide-y divide-gray-200  dark:divide-neutral-700">
+              {children}
+            </table>
           </div>
         </div>
         {/* End Table */}
@@ -35,19 +35,21 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
               </p>
               {/* Counter */}
               <input
-                    type="number"
-                    min="1"
-                    className="no-spin-button p-2 w-11 text-sm font-medium focus:outline-none focus:bg-stone-100 bg-white border border-gray-200 rounded-lg text-center focus:ring-0 text-stone-800 dark:text-neutral-200"
-                    defaultValue={table.getState().pagination.pageSize}                    
-                    onChange={e => {
-                      table.setPageSize(Number(e.target.value))
-                    }}                    
-                  />
-                {/* End Counter */}
-                <div className="flex items-center gap-x-1.5">
-                <span className="text-sm text-gray-600 dark:text-neutral-400">of</span>
-                  <span className="text-sm font-medium">{totalRecordCount}</span>
-                </div>
+                type="number"
+                min="1"
+                className="no-spin-button p-2 w-11 text-sm font-medium focus:outline-none focus:bg-stone-100 bg-white border border-gray-200 rounded-lg text-center focus:ring-0 text-stone-800 dark:text-neutral-200"
+                defaultValue={table.getState().pagination.pageSize}
+                onChange={(e) => {
+                  table.setPageSize(Number(e.target.value));
+                }}
+              />
+              {/* End Counter */}
+              <div className="flex items-center gap-x-1.5">
+                <span className="text-sm text-gray-600 dark:text-neutral-400">
+                  of
+                </span>
+                <span className="text-sm font-medium">{totalRecordCount}</span>
+              </div>
             </div>
           </span>
           {/* End Page Size */}

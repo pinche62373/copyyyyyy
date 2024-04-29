@@ -7,7 +7,7 @@ const THead = () => {
 
   if (!table) return null;
   return (
-    <thead>
+    <thead className="border-t">
       <tr className="divide-x divide-gray-200 dark:divide-neutral-700">
         {table.getHeaderGroups().map((x) => {
           return x.headers.map((header) => {
