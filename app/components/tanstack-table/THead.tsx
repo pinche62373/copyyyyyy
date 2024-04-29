@@ -7,8 +7,8 @@ const THead = () => {
 
   if (!table) return null;
   return (
-    <thead className="bg-gray-50 dark:bg-neutral-700">
-      <tr>
+    <thead>
+      <tr className="divide-x divide-gray-200 dark:divide-neutral-700">
         {table.getHeaderGroups().map((x) => {
           return x.headers.map((header) => {
             return (
@@ -18,7 +18,7 @@ const THead = () => {
                     <div className="relative inline-flex w-full">
                       <button
                         type="button"
-                        className="px-5 py-2.5 text-start w-full flex items-center gap-x-1 text-sm font-normal text-gray-500 focus:outline-none focus:bg-gray-100 dark:text-neutral-500 dark:focus:bg-neutral-700"
+                        className="px-5 py-2.5 text-start w-full flex items-center gap-x-1 text-sm font-normal focus:outline-none focus:bg-gray-100 dark:focus:bg-neutral-700   "
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(

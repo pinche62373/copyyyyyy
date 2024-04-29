@@ -2,14 +2,14 @@
   Remove spin buttons from number inputs with 'no-spin' class
 */
 /* Chrome, Safari, Edge, Opera */
-.no-spin::-webkit-outer-spin-button,
-.no-spin::-webkit-inner-spin-button {
+.no-spin-button::-webkit-outer-spin-button,
+.no-spin-button::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
 /* Firefox */
-.no-spin[type="number"] {
+.no-spin-button[type="number"] {
   -moz-appearance: textfield;
   appearance: textfield;
 }

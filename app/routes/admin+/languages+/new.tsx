@@ -42,11 +42,11 @@ export default function AdminPageNewLanguage() {
     <>
       <AdminPageTitle title="New Language" />
 
-      <div className="p-5 md:p-8 bg-white border border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
+      <div className="p-8 bg-white border border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
         {/* Form */}
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
           {/* Form Field Name */}
-          <div className="py-6 sm:py-8 space-y-5 border-t border-gray-200 first:border-t-0 dark:border-neutral-700">
+          <div className="py-2 space-y-5">
             {/* Grid */}
             <div className="grid sm:grid-cols-12 gap-y-1.5 sm:gap-y-0 sm:gap-x-5">
               {/* Col Name Label*/}
@@ -81,8 +81,10 @@ export default function AdminPageNewLanguage() {
           </div>
           {/* End Form Field Name */}
 
+
+
           {/* Footer */}
-          <div className="flex justify-end gap-x-2">
+          <div className="flex justify-end gap-x-2 pt-2">
             <div className="w-full flex justify-end items-center gap-x-2">
               <NavLink to="/admin/languages">
                 <button

@@ -9,7 +9,7 @@ const TBody = () => {
   return (
     <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
       {table.getRowModel().rows.map((row) => (
-        <tr key={row.id}>
+        <tr key={row.id} className="divide-x divide-gray-200 dark:divide-neutral-700">
           {row.getVisibleCells().map((cell) => (
             <td key={cell.id} className="size-px whitespace-nowrap py-3 px-5">
               <span className="text-sm text-gray-800 dark:text-white">
