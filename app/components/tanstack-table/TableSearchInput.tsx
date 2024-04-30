@@ -1,12 +1,12 @@
 import { DebouncedInput } from "#app/components/debounced-input";
 
-export function TableSearchInput({
+export const TableSearchInput = ({
   onChange,
   ...props
 }: {
   value: string | number;
   onChange: (value: string | number) => void;
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) {
+} & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) => {
   return (
     <div className="px-3 pt-5 pb-5 grid md:grid-cols-2 gap-y-2 md:gap-y-0 md:gap-x-5">
       <div>
@@ -41,6 +41,6 @@ export function TableSearchInput({
       {/*End Col */}
     </div>
   );
-}
+};
 
 export default TableSearchInput;
