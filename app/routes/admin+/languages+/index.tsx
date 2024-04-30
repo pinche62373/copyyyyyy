@@ -1,20 +1,12 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { Form, NavLink, useLoaderData } from "@remix-run/react";
 import {
-  RankingInfo,
-  compareItems,
-  rankItem,
-} from "@tanstack/match-sorter-utils";
-import {
-  FilterFn,
-  SortingFnOption,
-  SortingState,
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  sortingFns,
+  SortingState,
   useReactTable,
 } from "@tanstack/react-table";
 import dayjs from "dayjs";
@@ -26,8 +18,10 @@ import { AdminPageTitle } from "#app/components/admin/page-title";
 import { IconEdit } from "#app/components/icons/edit";
 import { IconTrash } from "#app/components/icons/trash";
 import TanstackTable from "#app/components/tanstack-table";
+import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
+import { fuzzySort } from "#app/components/tanstack-table/fuzzy-sort";
 import { TableBar } from "#app/components/tanstack-table/TableBar";
-import { TableBarFilters } from "#app/components/tanstack-table/TableBarFilters";
+import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { deleteLanguage, getAdminLanguages } from "#app/models/language.server";
@@ -49,51 +43,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return { status: "success" };
 };
 
-declare module "@tanstack/react-table" {
-  //add fuzzy filter to the filterFns
-  interface FilterFns {
-    fuzzy: FilterFn<unknown>;
-  }
-  interface FilterMeta {
-    itemRank: RankingInfo;
-  }
-}
-
-// Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
-const fuzzyFilter: FilterFn<unknown> = (row, columnId, value, addMeta) => {
-  // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value);
-
-  // Store the itemRank info
-  addMeta({
-    itemRank,
-  });
-
-  // Return if the item should be filtered in/out
-  return itemRank.passed;
-};
-
-// Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-const fuzzySort: SortingFnOption<Language> | undefined = (
-  rowA,
-  rowB,
-  columnId,
-) => {
-  let dir = 0;
-
-  // Only sort by rank if the column has ranking information
-  if (rowA.columnFiltersMeta[columnId]) {
-    dir = compareItems(
-      rowA.columnFiltersMeta[columnId]?.itemRank,
-      rowB.columnFiltersMeta[columnId]?.itemRank,
-    );
-  }
-
-  // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
-};
-
-interface Language {
+interface Language {  
   id: string;
   name: string;
   createdAt: string;
@@ -239,7 +189,7 @@ export default function AdminPageLanguages() {
             }
             placeholder="Search languages..."
           />
-          <TableBarFilters />
+          <TableFilterDropdown />
         </TableBar>
 
         <TanstackTable.Table table={table}>

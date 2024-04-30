@@ -6,8 +6,8 @@ import THead from './THead';
 
 export default {
   Caption,
-  THead,
+  Table,
   TBody,
   TFoot,
-  Table,
+  THead,
 };
