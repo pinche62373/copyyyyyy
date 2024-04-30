@@ -1,8 +1,17 @@
 import { compareItems } from "@tanstack/match-sorter-utils";
-import { SortingFn, sortingFns } from "@tanstack/react-table";
+import { Row, SortingFn, sortingFns } from "@tanstack/react-table";
 
 // Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-export const fuzzySort: SortingFn<any> | undefined = (rowA, rowB, columnId) => {
+// -----------------------------------------------------
+// @TODO: fix any check for SortingFn, should be TData
+// -----------------------------------------------------
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+// -----------------------------------------------------
+export const fuzzySort: SortingFn<any> | undefined = (
+  rowA: Row<unknown>,
+  rowB: Row<unknown>,
+  columnId: string,
+) => {
   let dir = 0;
 
   // Only sort by rank if the column has ranking information
