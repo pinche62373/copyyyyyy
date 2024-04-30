@@ -3,7 +3,7 @@ import { Row, SortingFn, sortingFns } from "@tanstack/react-table";
 
 // Define a custom fuzzy sort function that will sort by rank if the row has ranking information
 // -----------------------------------------------------
-// @TODO: fix any check for SortingFn, should be TData
+// TODO: fix <any> and <unknown> type checks
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------

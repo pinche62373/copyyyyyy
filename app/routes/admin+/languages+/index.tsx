@@ -1,5 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form, NavLink, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -9,15 +9,19 @@ import {
   SortingState,
   useReactTable,
 } from "@tanstack/react-table";
-import dayjs from "dayjs";
 import { useState } from "react";
 import invariant from "tiny-invariant";
 
 import { AdminContentCard } from "#app/components/admin/content-card";
 import { AdminPageTitle } from "#app/components/admin/page-title";
-import { IconEdit } from "#app/components/icons/edit";
-import { IconTrash } from "#app/components/icons/trash";
 import TanstackTable from "#app/components/tanstack-table";
+import {
+  getCellActionIcons,
+  getCellCreatedAt,
+  getCellLinkToSelf,
+  getCellTypeRowIndex,
+  getCellUpdatedAt,
+} from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/fuzzy-sort";
 import { TableBar } from "#app/components/tanstack-table/TableBar";
@@ -43,7 +47,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return { status: "success" };
 };
 
-interface Language {  
+interface Language {
   id: string;
   name: string;
   createdAt: string;
@@ -58,82 +62,29 @@ const columns = [
     header: "#",
     enableSorting: false,
     enableGlobalFilter: false,
-    cell: ({ row, table }) =>
-      (table
-        .getSortedRowModel()
-        ?.flatRows?.findIndex((flatRow) => flatRow.id === row.id) || 0) + 1,
+    cell: ({ row, table }) => getCellTypeRowIndex(row, table),
   }),
   columnHelper.accessor("name", {
     header: () => <span>Language</span>,
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: (info) => (
-      <NavLink
-        to={info.row.original.id}
-        className="block text-sm font-medium text-gray-800 hover:text-indigo-600 focus:outline-none focus:text-indigo-600 dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
-      >
-        {info.getValue()}
-      </NavLink>
-    ),
+    cell: (info) => getCellLinkToSelf(info)
   }),
   columnHelper.accessor("createdAt", {
     header: () => <span>Created</span>,
     enableGlobalFilter: false,
-    cell: (info) => {
-      return dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm");
-    },
+    cell: (info) => getCellCreatedAt(info),
   }),
   columnHelper.accessor("updatedAt", {
     header: () => <span>Updated</span>,
     enableGlobalFilter: false,
-    cell: (info) => {
-      return info.getValue()
-        ? dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm")
-        : null;
-    },
+    cell: (info) => getCellUpdatedAt(info),
   }),
   columnHelper.display({
     header: "Actions",
     enableSorting: false,
     enableGlobalFilter: false,
-    cell: (info) => (
-      <>
-        {/* Edit Button */}
-        <div className="inline-flex items-center -space-x-px">
-          <button
-            className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-s-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-            onClick={() => alert("Edit")}
-          >
-            <IconEdit className="flex-shrink-0 size-3.5" />
-          </button>
-        </div>
-        {/* End Edit Button */}
-
-        {/* Delete Button */}
-        <div className="inline-flex items-center -space-x-px">
-          <Form
-            method="POST"
-            action="/admin/languages"
-            onSubmit={(event) => {
-              if (!confirm("Are you sure?")) {
-                event.preventDefault();
-              }
-            }}
-          >
-            <input
-              type="hidden"
-              name="languageId"
-              value={info.row.original.id}
-            />
-            <input type="hidden" name="intent" value="delete" />
-            <button className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-r-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700  hover:fill-red-500">
-              <IconTrash className="flex-shrink-0 size-3.5" />
-            </button>
-          </Form>
-        </div>
-        {/* End Delete Button */}
-      </>
-    ),
+    cell: (info) => getCellActionIcons(info)
   }),
 ];
 
