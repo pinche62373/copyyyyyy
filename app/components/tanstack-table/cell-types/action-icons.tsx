@@ -1,8 +1,8 @@
 import { Form } from "@remix-run/react";
 import { CellContext } from "@tanstack/react-table";
 
-import IconEdit from "#app/components/icons/edit";
-import IconTrash from "#app/components/icons/trash";
+import { IconEdit } from "#app/components/icons/edit";
+import { IconTrash } from "#app/components/icons/trash";
 
 // -----------------------------------------------------
 // TODO: fix <any> type check

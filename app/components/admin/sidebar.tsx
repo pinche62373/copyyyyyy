@@ -1,8 +1,8 @@
 import { NavLink } from "@remix-run/react";
 
-import IconDog from "#app/components/icons/dog";
-import IconHome from "#app/components/icons/home";
-import IconUsers from "#app/components/icons/users";
+import { IconDog } from "#app/components/icons/dog";
+import { IconHome } from "#app/components/icons/home";
+import { IconUsers } from "#app/components/icons/users";
 import  * as Constants from "#app/utils/constants"
 
 export function AdminSidebar() {
