@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function IconHome(props: React.SVGProps<SVGSVGElement>) {
+export const IconHome = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       fill="none"

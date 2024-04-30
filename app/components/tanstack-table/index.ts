@@ -1,13 +1,11 @@
 import Caption from './Caption';
-import Rows from './Rows';
-import THead from './THead';
+import Table from './Table';
 import TBody from './TBody';
 import TFoot from './TFoot';
-import Table from './Table';
+import THead from './THead';
 
 export default {
   Caption,
-  Rows,
   THead,
   TBody,
   TFoot,

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function IconEdit(props: React.SVGProps<SVGSVGElement>) {
+export const IconEdit =(props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       className="flex-shrink-0 size-3.5"

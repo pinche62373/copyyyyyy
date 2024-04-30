@@ -1,7 +1,7 @@
 // icon:users | Feathericons https://feathericons.com/ | Cole Bemis
 import * as React from "react";
 
-function IconUsers(props: React.SVGProps<SVGSVGElement>) {
+export const IconUsers = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       fill="none"

@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-function IconDog(props: React.SVGProps<SVGSVGElement>) {
+export const IconDog = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -15,6 +15,6 @@ function IconDog(props: React.SVGProps<SVGSVGElement>) {
       <path d="M11.38 11.74A5.24 5.24 0 0 1 10.07 9H6a1.88 1.88 0 0 1-2-2 1 1 0 0 0-2 0 4.69 4.69 0 0 0 .48 2A3.58 3.58 0 0 0 4 10.53V22h3v-5h6v5h3v-8.13a7.35 7.35 0 0 1-4.62-2.13z"></path>
     </svg>
   );
-}
+};
 
 export default IconDog;

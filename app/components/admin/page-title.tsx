@@ -6,11 +6,11 @@ interface PropTypes {
   search?: boolean;
 }
 
-export function AdminPageTitle({
+export const AdminPageTitle = ({
   title,
   buttonText,
   search = false,
-}: PropTypes) {
+}: PropTypes) => {
   return (
     <>
       {/* Header */}
@@ -84,3 +84,5 @@ export function AdminPageTitle({
     </>
   );
 }
+
+export default AdminPageTitle

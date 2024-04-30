@@ -3,6 +3,7 @@ import type { LinksFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import { AdminSidebar } from "#app/components/admin/sidebar";
+import AdminContainerMain from "#app/components/admin/content-card";
 import adminStyleSheet from "#app/styles/admin.css";
 
 export const links: LinksFunction = () => [
