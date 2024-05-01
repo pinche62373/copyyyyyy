@@ -1,3 +1,4 @@
+import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
@@ -10,13 +11,12 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import invariant from "tiny-invariant";
 
 import { AdminContentCard } from "#app/components/admin/content-card";
 import { AdminPageTitle } from "#app/components/admin/page-title";
 import TanstackTable from "#app/components/tanstack-table";
 import {
-  getCellActionIcons,
+  getCellActions,
   getCellCreatedAt,
   getCellLinkToSelf,
   getCellTypeRowIndex,
@@ -29,6 +29,7 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { deleteLanguage, getAdminLanguages } from "#app/models/language.server";
+import { languageSchema } from "#app/validations/language-schema";
 
 export const loader = async () => {
   const languages = await getAdminLanguages();
@@ -38,11 +39,18 @@ export const loader = async () => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
-  const { languageId } = Object.fromEntries(formData.entries());
 
-  invariant(languageId, "Form data does not contain languageId");
+  if (formData.get("intent") !== "delete") {
+    throw new Error(`Invalid intent: ${formData.get("intent") ?? "Missing"}`);
+  }
 
-  await deleteLanguage({ id: languageId.toString() });
+  const submission = parseWithZod(formData, { schema: languageSchema.pick({id: true}) })
+
+  if (submission.status !== "success") {
+    throw new Response("Error", { status: 400 });
+  }
+
+  await deleteLanguage(submission.value);
 
   return { status: "success" };
 };
@@ -84,11 +92,11 @@ const columns = [
     header: "Actions",
     enableSorting: false,
     enableGlobalFilter: false,
-    cell: (info) => getCellActionIcons(info)
+    cell: (info) => getCellActions(info)
   }),
 ];
 
-export default function AdminPageLanguages() {
+export default function Component() {
   const data = useLoaderData<typeof loader>();
 
   const [pagination, setPagination] = useState({

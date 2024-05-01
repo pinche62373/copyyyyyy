@@ -26,6 +26,20 @@ export function createLanguage({
   });
 }
 
+export function updateLanguage({
+  id,
+  name,
+}:Pick<Language, "id" | "name">) {
+  return prisma.language.update({
+    where: { id },
+    data: {
+      id,
+      name,
+      // updatedAt: d
+    },
+  });
+}
+
 export function deleteLanguage({
   id,
 }: Pick<Language, "id">) {

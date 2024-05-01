@@ -1,7 +1,7 @@
 import { useForm } from '@conform-to/react';
 import { parseWithZod } from '@conform-to/zod';
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { Form, NavLink } from "@remix-run/react";
 
 import { AdminPageTitle } from "#app/components/admin/page-title";
@@ -16,36 +16,35 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw new Error(`Invalid intent: ${formData.get("intent") ?? "Missing"}`);
   }
 
-  const submission = await parseWithZod(formData, { schema: languageSchema })
+  const submission = parseWithZod(formData, { schema: languageSchema.omit({id: true}) })
 
-  // Send the submission back to the client if the status is not successful
   if (submission.status !== 'success') {
-    return json(
-      { status: "error", submission },
-      { status: 400 },
-    )
+    throw new Response("Error", { status: 404});
   }
 
-  // Successful submission, create record
-  const { name } = submission.value
-
-  await createLanguage({ name });
+  await createLanguage(submission.value);
 
   return redirect(`/admin/languages`);
-    // return redirect(`/admin/languages/${language.id}`);
 };
 
-export default function AdminPageNewLanguage() {
+export default function Component() {
   const [form, fields] = useForm({
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: languageSchema })
+      return parseWithZod(formData, { schema: languageSchema.omit({id:true}) })
     },
   })
 
   return (
     <>
       <AdminPageTitle title="New Language" />
+
+        {/* 
+          - <CrudForm>
+          - intent
+          - args: form, fields, data (optional)
+          - cancelLink: /admin/languages
+        */}
 
       <div className="p-8 bg-white border border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
         {/* Form */}

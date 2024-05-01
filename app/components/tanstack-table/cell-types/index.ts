@@ -1,4 +1,4 @@
-export * from "./action-icons"
+export * from "./actions"
 export * from "./created-at"
 export * from "./link-to-self"
 export * from "./row-index"
