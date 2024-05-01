@@ -35,7 +35,6 @@ export function updateLanguage({
     data: {
       id,
       name,
-      // updatedAt: d
     },
   });
 }
