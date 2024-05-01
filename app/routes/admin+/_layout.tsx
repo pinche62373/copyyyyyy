@@ -3,13 +3,13 @@ import type { LinksFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import { AdminSidebar } from "#app/components/admin/sidebar";
-import AdminContainerMain from "#app/components/admin/content-card";
 import adminStyleSheet from "#app/styles/admin.css";
 
+// import styles for the admin route
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: adminStyleSheet },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
-]
+];
 
 export default function AdminLayout() {
   return (
@@ -52,14 +52,13 @@ export default function AdminLayout() {
 
       {/* ========== MAIN CONTENT ========== */}
       <main id="content" className="lg:ps-[260px] pt-[59px] lg:pt-0">
-        <div className="relative p-5" >
+        <div className="relative p-5">
           <Outlet />
-          </div>
+        </div>
       </main>
       {/* ========== END MAIN CONTENT ========== */}
 
-  {/* <!-- ========== END FOOTER ========== --> */}
-
+      {/* <!-- ========== END FOOTER ========== --> */}
     </>
   );
 }
