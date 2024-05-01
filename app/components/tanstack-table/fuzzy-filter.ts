@@ -3,7 +3,7 @@ import { FilterFn } from "@tanstack/react-table";
 
 declare module "@tanstack/react-table" {
   interface FilterFns {
-    fuzzy: FilterFn<unknown>; //add fuzzy filter to the filterFns
+    fuzzy: FilterFn<unknown>; //add "fuzzy" filter to the filterFns options
   }
   interface FilterMeta {
     itemRank: RankingInfo;
