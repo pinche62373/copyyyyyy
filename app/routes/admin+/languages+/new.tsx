@@ -11,6 +11,11 @@ import { languageSchema } from "#app/validations/language-schema";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
+
+  if (formData.get("intent") !== "create") {
+    throw new Error(`Invalid intent: ${formData.get("intent") ?? "Missing"}`);
+  }
+
   const submission = await parseWithZod(formData, { schema: languageSchema })
 
   // Send the submission back to the client if the status is not successful
@@ -45,6 +50,8 @@ export default function AdminPageNewLanguage() {
       <div className="p-8 bg-white border border-gray-200 shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700">
         {/* Form */}
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
+          {/* Intent Field */}
+          <input type="hidden" name="intent" value="create" />
           {/* Form Field Name */}
           <div className="py-2 space-y-5">
             {/* Grid */}
@@ -80,8 +87,6 @@ export default function AdminPageNewLanguage() {
             {/* End Col Name Input*/}
           </div>
           {/* End Form Field Name */}
-
-
 
           {/* Footer */}
           <div className="flex justify-end gap-x-2 pt-2">
