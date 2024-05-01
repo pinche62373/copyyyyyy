@@ -1,8 +1,6 @@
-import { Row, Table } from "@tanstack/react-table";
+import { type Row, type Table } from "@tanstack/react-table";
 
 // counter for visible rows
-// -----------------------------------------------------
-// TODO: fix <any> type checks
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------

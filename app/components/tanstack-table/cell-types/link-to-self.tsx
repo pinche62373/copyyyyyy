@@ -2,8 +2,6 @@ import { NavLink } from "@remix-run/react";
 import { CellContext } from "@tanstack/react-table";
 
 // -----------------------------------------------------
-// TODO: fix <any> type check
-// -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------
 export const getCellLinkToSelf = (info: CellContext<any, string>) => {

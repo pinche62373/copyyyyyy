@@ -6,8 +6,6 @@ import { IconEdit } from "#app/components/icons/edit";
 import { IconTrash } from "#app/components/icons/trash";
 
 // -----------------------------------------------------
-// TODO: fix <any> type check
-// -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------
 export const getCellActionIcons = (info: CellContext<any, string>) => {
