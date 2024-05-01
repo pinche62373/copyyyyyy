@@ -14,6 +14,7 @@ import { z } from "zod";
 import { AdminPageTitle } from "#app/components/admin/page-title";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { languageSchema } from "#app/validations/language-schema";
+import { validateIntent } from "#app/validations/validate-intent";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const languageId = z.coerce.string().parse(params.languageId);
@@ -29,9 +30,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  if (formData.get("intent") !== "update") {
-    throw new Error(`Invalid intent: ${formData.get("intent") ?? "Missing"}`);
-  }
+  validateIntent(formData, "update")
 
   const submission = parseWithZod(formData, { schema: languageSchema });
 

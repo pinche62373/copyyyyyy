@@ -7,14 +7,12 @@ import { Form, NavLink } from "@remix-run/react";
 import { AdminPageTitle } from "#app/components/admin/page-title";
 import { createLanguage } from "#app/models/language.server";
 import { languageSchema } from "#app/validations/language-schema";
-
+import { validateIntent } from '#app/validations/validate-intent';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData()
 
-  if (formData.get("intent") !== "create") {
-    throw new Error(`Invalid intent: ${formData.get("intent") ?? "Missing"}`);
-  }
+  validateIntent(formData, "create")
 
   const submission = parseWithZod(formData, { schema: languageSchema.omit({id: true}) })
 
