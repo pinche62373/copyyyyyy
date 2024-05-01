@@ -1,7 +1,9 @@
+import { type FormMetadata } from "@conform-to/react";
+
 interface PropTypes {
   fieldName: string;
   label: string;
-  fields: any;
+  fields: ReturnType<FormMetadata['getFieldset']>
   defaultValue?: string;
 }
 
