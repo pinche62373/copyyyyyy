@@ -40,10 +40,12 @@ export const loader = async () => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  validateIntent(formData, "delete")
+  validateIntent(formData, "delete");
 
-  const submission = parseWithZod(formData, { schema: languageSchema.pick({id: true}) })
-  
+  const submission = parseWithZod(formData, {
+    schema: languageSchema.pick({ id: true }),
+  });
+
   if (submission.status !== "success") {
     throw new Response("Error", { status: 400 });
   }
@@ -68,13 +70,13 @@ const columns = [
     header: "#",
     enableSorting: false,
     enableGlobalFilter: false,
-    cell: ({ row, table }) => getCellTypeVisibleRowIndex(row, table),
+    cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("name", {
     header: () => <span>Language</span>,
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: (info) => getCellLinkToSelf(info)
+    cell: (info) => getCellLinkToSelf(info),
   }),
   columnHelper.accessor("createdAt", {
     header: () => <span>Created</span>,
@@ -84,13 +86,13 @@ const columns = [
   columnHelper.accessor("updatedAt", {
     header: () => <span>Updated</span>,
     enableGlobalFilter: false,
-    cell: (info) => getCellUpdatedAt(info),
+    cell: (info) => getCellUpdatedAt( info ),
   }),
   columnHelper.display({
     header: "Actions",
     enableSorting: false,
     enableGlobalFilter: false,
-    cell: (info) => getCellActionIcons(info)
+    cell: (info) => getCellActionIcons(info),
   }),
 ];
 

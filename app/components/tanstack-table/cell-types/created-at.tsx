@@ -5,5 +5,5 @@ import dayjs from "dayjs";
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------
 export const getCellCreatedAt = (info: CellContext<any, string>) => {
- return dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm");
+  return dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm");
 };

@@ -1,10 +1,13 @@
 import { type Row, type Table } from "@tanstack/react-table";
 
-// counter for visible rows
-// -----------------------------------------------------
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-// -----------------------------------------------------
-export const getCellTypeVisibleRowIndex = (row: Row<any>, table: Table<any>) => {
+interface PropTypes {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  row: Row<any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  table: Table<any>;
+}
+
+export const getCellTypeVisibleRowIndex = ({ row, table }: PropTypes) => {
   return (
     (table
       .getSortedRowModel()
