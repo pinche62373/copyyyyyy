@@ -6,7 +6,7 @@ import { Row, Table } from "@tanstack/react-table";
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------
-export const getCellTypeRowIndex = (row: Row<any>, table: Table<any>) => {
+export const getCellTypeVisibleRowIndex = (row: Row<any>, table: Table<any>) => {
   return (
     (table
       .getSortedRowModel()

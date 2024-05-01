@@ -16,10 +16,10 @@ import { AdminContentCard } from "#app/components/admin/content-card";
 import { AdminPageTitle } from "#app/components/admin/page-title";
 import TanstackTable from "#app/components/tanstack-table";
 import {
-  getCellActions,
+  getCellActionIcons,
   getCellCreatedAt,
   getCellLinkToSelf,
-  getCellTypeRowIndex,
+  getCellTypeVisibleRowIndex,
   getCellUpdatedAt,
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
@@ -68,7 +68,7 @@ const columns = [
     header: "#",
     enableSorting: false,
     enableGlobalFilter: false,
-    cell: ({ row, table }) => getCellTypeRowIndex(row, table),
+    cell: ({ row, table }) => getCellTypeVisibleRowIndex(row, table),
   }),
   columnHelper.accessor("name", {
     header: () => <span>Language</span>,
@@ -90,7 +90,7 @@ const columns = [
     header: "Actions",
     enableSorting: false,
     enableGlobalFilter: false,
-    cell: (info) => getCellActions(info)
+    cell: (info) => getCellActionIcons(info)
   }),
 ];
 

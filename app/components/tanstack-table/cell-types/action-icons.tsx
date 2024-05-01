@@ -9,7 +9,7 @@ import { IconTrash } from "#app/components/icons/trash";
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------
-export const getCellActions = (info: CellContext<any, string>) => {
+export const getCellActionIcons = (info: CellContext<any, string>) => {
   return (
     <>
       {/* Edit Button */}
