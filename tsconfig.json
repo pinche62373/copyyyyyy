@@ -2,7 +2,7 @@
   "exclude": ["./cypress", "./cypress.config.ts"],
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2020"],
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["vitest/globals"],
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -10,7 +10,7 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "target": "ES2020",
+    "target": "ES2022",
     "strict": true,
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
@@ -21,6 +21,9 @@
     "skipLibCheck": true,
 
     // Remix takes care of building everything in `remix build`.
-    "noEmit": true
+    "noEmit": true,
+
+    // Epic stack
+    "allowImportingTsExtensions": true,
   }
 }
