@@ -27,15 +27,11 @@ export default function AdminLayout() {
 
       <AdminSidebar />
 
-      {/* ========== MAIN CONTENT ========== */}
       <main id="content" className="lg:ps-[260px] pt-[59px] lg:pt-0">
         <div className="relative px-5 py-4 lg:mt-16">
           <Outlet />
         </div>
       </main>
-      {/* ========== END MAIN CONTENT ========== */}
-
-      {/* <!-- ========== END FOOTER ========== --> */}
     </>
   );
 }
