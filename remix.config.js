@@ -8,4 +8,7 @@ module.exports = {
   routes: async defineRoutes => {
     return flatRoutes('routes', defineRoutes)
   },
+  serverDependenciesToBundle: [
+    /^remix-utils.*/,
+  ]
 };
