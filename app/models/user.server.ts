@@ -6,7 +6,18 @@ import { prisma } from "#app/db.server";
 export type { User } from "@prisma/client";
 
 export async function getUserById(id: User["id"]) {
-  return prisma.user.findUnique({ where: { id } });
+  return prisma.user.findUnique({
+    where: { id },
+    select: {
+      id: true,
+      email: true,
+      roles: {
+        select: {
+          name: true,
+        },
+      },
+    },
+  });
 }
 
 export async function getUserByEmail(email: User["email"]) {
