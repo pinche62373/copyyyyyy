@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { Link, NavLink, Outlet, useLoaderData } from "@remix-run/react";
 
 import { getNoteListItems } from "#app/models/note.server";
-import { requireUserId } from "#app/session.server";
+import { requireUserId } from "#app/utils/auth.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await requireUserId(request);

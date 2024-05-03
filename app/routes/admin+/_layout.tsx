@@ -4,8 +4,8 @@ import { Outlet } from "@remix-run/react";
 
 import { AdminHeader } from "#app/components/admin/admin-header";
 import { AdminSidebar } from "#app/components/admin/admin-sidebar";
-import { requireUserId } from "#app/session.server";
 import adminStyleSheet from "#app/styles/admin.css";
+import { requireUserId } from "#app/utils/auth.server";
 
 // import styles for the admin route
 export const links: LinksFunction = () => [

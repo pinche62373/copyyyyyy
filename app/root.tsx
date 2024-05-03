@@ -15,8 +15,8 @@ import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
 
 import "@fontsource-variable/inter/wght.css";
-import { getUser } from "#app/session.server";
 import stylesheet from "#app/tailwind.css";
+import { getUser } from "#app/utils/auth.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
