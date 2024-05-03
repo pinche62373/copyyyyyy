@@ -1,9 +1,10 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import { AdminHeader } from "#app/components/admin/admin-header";
 import { AdminSidebar } from "#app/components/admin/admin-sidebar";
+import { requireUserId } from "#app/session.server";
 import adminStyleSheet from "#app/styles/admin.css";
 
 // import styles for the admin route
@@ -11,6 +12,13 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: adminStyleSheet },
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
+
+// require authentication
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  await requireUserId(request);
+
+  return null;
+};
 
 export default function AdminLayout() {
   return (
