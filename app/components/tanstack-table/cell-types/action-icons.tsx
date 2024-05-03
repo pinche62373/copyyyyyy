@@ -2,8 +2,8 @@ import { Form, NavLink } from "@remix-run/react";
 import { CellContext } from "@tanstack/react-table";
 
 import { AdminFormFieldHidden } from "#app/components/admin/form";
-import { IconEdit } from "#app/components/icons/edit";
-import { IconTrash } from "#app/components/icons/trash";
+import { IconEdit } from "#app/components/icons/icon-edit";
+import { IconTrash } from "#app/components/icons/icon-trash";
 
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */

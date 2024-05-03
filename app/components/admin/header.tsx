@@ -1,10 +1,10 @@
 import { Form } from "@remix-run/react";
 
-import { IconCog } from "#app/components/icons/cog";
-import { IconHeart } from "#app/components/icons/heart";
-import { IconLogout } from "#app/components/icons/logout";
-import { IconUser } from "#app/components/icons/user";
-import { IconFolder } from "app/components/icons/folder";
+import { IconCog } from "#app/components/icons/icon-cog";
+import { IconFolder } from "#app/components/icons/icon-folder";
+import { IconHeart } from "#app/components/icons/icon-heart";
+import { IconLogout } from "#app/components/icons/icon-logout";
+import { IconUser } from "#app/components/icons/icon-user";
 
 export const AdminHeader = () => {
   return (
