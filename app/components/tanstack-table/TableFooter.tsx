@@ -1,5 +1,6 @@
-import classNames from "classnames";
 import { PropsWithChildren } from "react";
+
+import { cn } from "#app/utils/misc";
 
 import { t_table } from "./types";
 
@@ -19,7 +20,7 @@ export const TableFooter = <T,>({
 
   return (
     <div
-      className={classNames(
+      className={cn(
         "mt-4 flex flex-wrap justify-between items-center gap-2 pl-2",
         className,        
       )}

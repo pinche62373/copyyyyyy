@@ -1,5 +1,6 @@
-import classNames from "classnames";
 import { PropsWithChildren } from "react";
+
+import { cn } from "#app/utils/misc";
 
 interface IProps {
   className?: string;
@@ -12,7 +13,7 @@ export const TableBar = ({
 }: PropsWithChildren<IProps>) => {
   return (
     <div
-      className={classNames(
+      className={cn(
         "px-2 grid md:grid-cols-2 gap-y-2 md:gap-y-0 md:gap-x-5",
         className,
       )}

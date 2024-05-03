@@ -1,5 +1,6 @@
-import classNames from "classnames";
 import { PropsWithChildren } from "react";
+
+import { cn } from "#app/utils/misc";
 
 interface IProps {
   className?: string;
@@ -13,7 +14,7 @@ export const AdminContentCard = ({
   return (
     <div className="relative overflow-x-auto">
       <div
-        className={classNames(
+        className={cn(
           "bg-white border border-stone-200 rounded-xl shadow-sm dark:bg-neutral-800 dark:border-neutral-700",
           className,
         )}
