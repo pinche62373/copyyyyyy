@@ -4,13 +4,13 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { redirect } from "@remix-run/node";
 import { Form } from '@remix-run/react';
 
-import { AdminContentCard } from "#app/components/admin/content-card";
+import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import {
   AdminFormButtons,
   AdminFormFieldHidden,
   AdminFormFieldText,
 } from "#app/components/admin/form";
-import { AdminPageTitle } from "#app/components/admin/page-title";
+import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import { createLanguage } from "#app/models/language.server";
 import { languageSchema } from "#app/validations/language-schema";
 import { validateIntent } from '#app/validations/validate-intent';

@@ -12,8 +12,8 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-import { AdminContentCard } from "#app/components/admin/content-card";
-import { AdminPageTitle } from "#app/components/admin/page-title";
+import { AdminContentCard } from "#app/components/admin/admin-content-card";
+import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import TanstackTable from "#app/components/tanstack-table";
 import {
   getCellActionIcons,

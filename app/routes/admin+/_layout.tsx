@@ -2,8 +2,8 @@ import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
-import { AdminHeader } from "#app/components/admin/header";
-import { AdminSidebar } from "#app/components/admin/sidebar";
+import { AdminHeader } from "#app/components/admin/admin-header";
+import { AdminSidebar } from "#app/components/admin/admin-sidebar";
 import adminStyleSheet from "#app/styles/admin.css";
 
 // import styles for the admin route
