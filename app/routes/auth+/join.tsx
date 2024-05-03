@@ -6,10 +6,11 @@ import type {
 import { json, redirect } from "@remix-run/node";
 import { Form, Link, useActionData, useSearchParams } from "@remix-run/react";
 import { useEffect, useRef } from "react";
+import { safeRedirect } from "remix-utils/safe-redirect";
 
 import { createUser, getUserByEmail } from "#app/models/user.server";
 import { createUserSession, getUserId } from "#app/session.server";
-import { safeRedirect, validateEmail } from "#app/utils";
+import { validateEmail } from "#app/utils";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getUserId(request);
