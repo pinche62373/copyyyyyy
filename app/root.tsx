@@ -61,7 +61,8 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="h-full bg-gray-50">
+      {/* <body className="mb-[40px] sm:mb-[64px] bg-gray-50 dark:bg-neutral-900"> */}
+      <body className="h-full bg-gray-50 dark:bg-neutral-900">
         <Outlet />
         <ScrollRestoration />
         <Scripts />

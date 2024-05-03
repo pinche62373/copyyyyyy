@@ -14,7 +14,7 @@ export const AdminPageTitle = ({
   return (
     <>
       {/* Header */}
-      <div className="pb-5 grid sm:flex sm:justify-between sm:items-center gap-2">
+      <div className="ml-5 pb-5 grid sm:flex sm:justify-between sm:items-center gap-2">
         <h1 className="mt-2 h-[2.1rem] text-lg font-semibold text-gray-800 dark:text-neutral-200">
           {title}
         </h1>
