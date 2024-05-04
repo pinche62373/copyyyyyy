@@ -3,7 +3,6 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { ValidatedForm, validationError } from "remix-validated-form";
@@ -11,30 +10,33 @@ import { ValidatedForm, validationError } from "remix-validated-form";
 import { FormButton } from "#app/components/form-button";
 import { FormInput } from "#app/components/form-input";
 import { FormIntent } from "#app/components/form-intent";
-import { EMAIL_PASSWORD_STRATEGY, authenticator, getUserId } from "#app/utils/auth.server";
+import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
+import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { authLoginSchema } from "#app/validations/auth-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const validator = withZod(authLoginSchema);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await getUserId(request);
-  if (userId) return redirect("/");
-  return json({});
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: "/",
+  });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  validateFormIntent(formData, "login")
+  validateFormIntent(formData, "login");
 
   const fieldValues = await validator.validate(formData);
+
   if (fieldValues.error) return validationError(fieldValues.error);
 
   return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
     successRedirect: "/",
+    failureRedirect: AUTH_LOGIN_ROUTE,
     context: { formData },
-  });  
+  });
 };
 
 export const meta: MetaFunction = () => [{ title: "Login" }];

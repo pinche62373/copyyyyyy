@@ -17,10 +17,10 @@ export const links: LinksFunction = () => [
 // require authentication
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticator.isAuthenticated(request, {
-    failureRedirect: AUTH_LOGIN_ROUTE
+    failureRedirect: AUTH_LOGIN_ROUTE,
   });
 
-  return null
+  return null;
 };
 
 export default function AdminLayout() {

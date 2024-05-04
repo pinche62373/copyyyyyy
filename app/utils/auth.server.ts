@@ -4,19 +4,12 @@ import { FormStrategy } from "remix-auth-form";
 import invariant from "tiny-invariant";
 
 import type { User } from "#app/models/user.server";
-import {
-	getUserById,
-	verifyLogin
-} from "#app/models/user.server";
+import { getUserById, verifyLogin } from "#app/models/user.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 
 import { getSession, sessionStorage } from "./session.server";
-
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
-
-
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
-
 export const authenticator = new Authenticator<User>(sessionStorage);
 
 authenticator.use(
@@ -24,7 +17,12 @@ authenticator.use(
     const email = form.get("email");
     const password = form.get("password");
 
+    invariant(typeof email === "string", "email must be a string");
+    invariant(typeof password === "string", "email must be a string");
+
     const user = await verifyLogin(email, password);
+
+    invariant(user, "Authentication failed");
 
     return user;
   }),
@@ -40,8 +38,6 @@ export async function getUserId(
 
   const userId = session.get(USER_SESSION_KEY);
 
-  console.log(`USERID = ${userId}`)
-
   return userId;
 }
 
@@ -52,7 +48,7 @@ export async function getUser(request: Request) {
   const user = await getUserById(userId);
   if (user) return user;
 
-  throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE })
+  throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
 }
 
 export async function requireUserId(
@@ -73,7 +69,7 @@ export async function requireUser(request: Request) {
   const user = await getUserById(userId);
   if (user) return user;
 
-  throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE })
+  throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
 }
 
 export async function createUserSession({
