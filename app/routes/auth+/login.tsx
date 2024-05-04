@@ -11,10 +11,12 @@ import { ValidatedForm, validationError } from "remix-validated-form";
 
 import { FormButton } from "#app/components/form-button";
 import { FormInput } from "#app/components/form-input";
+import { FormIntent } from "#app/components/form-intent";
 import { verifyLogin } from "#app/models/user.server";
 import { validateEmail } from "#app/utils";
 import { createUserSession, getUserId } from "#app/utils/auth.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
+import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const validator = withZod(authLoginSchema);
 
@@ -26,6 +28,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
+
+  validateFormIntent(formData, "login")
 
   const fieldValues = await validator.validate(formData);
   if (fieldValues.error) return validationError(fieldValues.error);
@@ -88,17 +92,16 @@ export default function LoginPage() {
           className="space-y-6"
           noValidate // disable native HTML validations
         >
-          <div>
-            <FormInput name="email" label="Email" placeholder="Your email..." />
-            <FormInput
-              name="password"
-              label="Password"
-              type="password"
-              placeholder="Your password..."
-            />
-          </div>
-
+          <FormIntent intent="login" />
           <input type="hidden" name="redirectTo" value={redirectTo} />
+
+          <FormInput name="email" label="Email" placeholder="Your email..." />
+          <FormInput
+            name="password"
+            label="Password"
+            type="password"
+            placeholder="Your password..."
+          />
 
           <div className="flex justify-end gap-x-2 pt-2">
             <div className="w-full flex justify-end items-center gap-x-2">

@@ -30,7 +30,7 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { deleteLanguage, getAdminLanguages } from "#app/models/language.server";
 import { languageSchema } from "#app/validations/language-schema";
-import { validateIntent } from "#app/validations/validate-intent";
+import { validateFormIntent } from "#app/validations/validate-form-intent";
 export const loader = async () => {
   const languages = await getAdminLanguages();
 
@@ -40,7 +40,7 @@ export const loader = async () => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  validateIntent(formData, "delete");
+  validateFormIntent(formData, "delete");
 
   const submission = parseWithZod(formData, {
     schema: languageSchema.pick({ id: true }),

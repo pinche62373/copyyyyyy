@@ -11,15 +11,15 @@ import {
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
+import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import {
   AdminFormButtons,
   AdminFormFieldHidden,
   AdminFormFieldText,
 } from "#app/components/admin/form";
-import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { languageSchema } from "#app/validations/language-schema";
-import { validateIntent } from "#app/validations/validate-intent";
+import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const languageId = z.coerce.string().parse(params.languageId);
@@ -35,7 +35,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  validateIntent(formData, "update");
+  validateFormIntent(formData, "update");
 
   const submission = parseWithZod(formData, { schema: languageSchema });
 
