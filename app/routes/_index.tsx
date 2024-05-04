@@ -9,9 +9,6 @@ export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
 export default function IndexPage() {
   const user = useOptionalUser();
 
-  console.log(user)
-
-
   return (
     <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
       <div className="relative sm:pb-16 sm:pt-8">
