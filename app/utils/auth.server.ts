@@ -8,12 +8,13 @@ import { getUserById, verifyLogin } from "#app/models/user.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 
 import { getSession, sessionStorage } from "./session.server";
-invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 export const authenticator = new Authenticator<User>(sessionStorage);
 
+invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
+
 authenticator.use(
-  new FormStrategy(async ({ form }) => {
+  new FormStrategy(async ({ form, request }) => {
     const email = form.get("email");
     const password = form.get("password");
 
@@ -24,21 +25,27 @@ authenticator.use(
 
     invariant(user, "Authentication failed");
 
+    const session = await getSession(request.headers.get("cookie"));
+
+    session.set(authenticator.sessionKey, user);
+
     return user;
   }),
   EMAIL_PASSWORD_STRATEGY,
 );
-
-const USER_SESSION_KEY = "userId";
 
 export async function getUserId(
   request: Request,
 ): Promise<User["id"] | undefined> {
   const session = await getSession(request.headers.get("cookie"));
 
-  const userId = session.get(USER_SESSION_KEY);
+  const user = session.get("user");
 
-  return userId;
+  if (!user) {
+    return undefined;
+  }
+
+  return user.id;
 }
 
 export async function getUser(request: Request) {
@@ -71,6 +78,8 @@ export async function requireUser(request: Request) {
 
   throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
 }
+
+const USER_SESSION_KEY = "userId";
 
 export async function createUserSession({
   request,
