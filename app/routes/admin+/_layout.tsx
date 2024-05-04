@@ -5,7 +5,8 @@ import { Outlet } from "@remix-run/react";
 import { AdminHeader } from "#app/components/admin/admin-header";
 import { AdminSidebar } from "#app/components/admin/admin-sidebar";
 import adminStyleSheet from "#app/styles/admin.css";
-import { requireUserId } from "#app/utils/auth.server";
+import { authenticator } from "#app/utils/auth.server";
+import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 
 // import styles for the admin route
 export const links: LinksFunction = () => [
@@ -15,9 +16,11 @@ export const links: LinksFunction = () => [
 
 // require authentication
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await requireUserId(request);
+  await authenticator.isAuthenticated(request, {
+    failureRedirect: AUTH_LOGIN_ROUTE
+  });
 
-  return null;
+  return null
 };
 
 export default function AdminLayout() {

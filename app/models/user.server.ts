@@ -1,6 +1,4 @@
 import type { Password, User } from "@prisma/client";
-import { type SerializeFrom } from "@remix-run/node";
-import { useRouteLoaderData } from "@remix-run/react";
 import bcrypt from "bcryptjs";
 
 import { prisma } from "#app/utils/db.server";

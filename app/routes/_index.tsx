@@ -1,12 +1,16 @@
 import type { MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 
+import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { useOptionalUser } from "#app/utils/user";
 
 export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
 
 export default function IndexPage() {
   const user = useOptionalUser();
+
+  console.log(user)
+
 
   return (
     <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
@@ -48,7 +52,7 @@ export default function IndexPage() {
                       Sign up
                     </Link>
                     <Link
-                      to="/auth/login"
+                      to={AUTH_LOGIN_ROUTE}
                       className="flex items-center justify-center rounded-md bg-yellow-500 px-4 py-3 font-medium text-white hover:bg-yellow-600"
                     >
                       Log In

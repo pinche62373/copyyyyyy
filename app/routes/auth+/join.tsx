@@ -11,6 +11,7 @@ import { safeRedirect } from "remix-utils/safe-redirect";
 import { createUser, getUserByEmail } from "#app/models/user.server";
 import { validateEmail } from "#app/utils";
 import { createUserSession, getUserId } from "#app/utils/auth.server";
+import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getUserId(request);
@@ -157,7 +158,7 @@ export default function Join() {
               <Link
                 className="text-blue-500 underline"
                 to={{
-                  pathname: "/auth/login",
+                  pathname: AUTH_LOGIN_ROUTE,
                   search: searchParams.toString(),
                 }}
               >

@@ -6,15 +6,12 @@ import type {
 import { json, redirect } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
-import { safeRedirect } from "remix-utils/safe-redirect";
 import { ValidatedForm, validationError } from "remix-validated-form";
 
 import { FormButton } from "#app/components/form-button";
 import { FormInput } from "#app/components/form-input";
 import { FormIntent } from "#app/components/form-intent";
-import { verifyLogin } from "#app/models/user.server";
-import { validateEmail } from "#app/utils";
-import { createUserSession, getUserId } from "#app/utils/auth.server";
+import { EMAIL_PASSWORD_STRATEGY, authenticator, getUserId } from "#app/utils/auth.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
@@ -34,47 +31,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const fieldValues = await validator.validate(formData);
   if (fieldValues.error) return validationError(fieldValues.error);
 
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
-  const remember = formData.get("remember");
-
-  if (!validateEmail(email)) {
-    return json(
-      { errors: { email: "Email is invalid", password: null } },
-      { status: 400 },
-    );
-  }
-
-  if (typeof password !== "string" || password.length === 0) {
-    return json(
-      { errors: { email: null, password: "Password is required" } },
-      { status: 400 },
-    );
-  }
-
-  if (password.length < 8) {
-    return json(
-      { errors: { email: null, password: "Password is too short" } },
-      { status: 400 },
-    );
-  }
-
-  const user = await verifyLogin(email, password);
-
-  if (!user) {
-    return json(
-      { errors: { email: "Invalid email or password", password: null } },
-      { status: 400 },
-    );
-  }
-
-  return createUserSession({
-    redirectTo,
-    remember: remember === "on" ? true : false,
-    request,
-    userId: user.id,
-  });
+  return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
+    successRedirect: "/",
+    context: { formData },
+  });  
 };
 
 export const meta: MetaFunction = () => [{ title: "Login" }];
