@@ -7,11 +7,10 @@ import type { User } from "#app/models/user.server";
 import { getUserById, verifyLogin } from "#app/models/user.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 
+
 import { getSession, sessionStorage } from "./session.server";
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 export const authenticator = new Authenticator<User>(sessionStorage);
-
-invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
 authenticator.use(
   new FormStrategy(async ({ form, request }) => {
