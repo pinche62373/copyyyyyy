@@ -40,9 +40,9 @@ export const AdminFormFieldText = ({
           <div className="pt-1 text-red-700 text-xs" id="name-error">
             {fields[fieldName].errors}
           </div>
-
           {/* End Validation Error */}
         </div>
+        {/* End Col Name Input*/}
       </div>
     </div>
   );
