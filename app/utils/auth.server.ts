@@ -59,35 +59,19 @@ export async function getUserId(
 
 export async function getUser(request: Request) {
   const userId = await getUserId(request);
+
   if (userId === undefined) return null;
 
   const user = await getUserById(userId);
+
   if (user) return user;
 
   throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
 }
 
-export async function requireUserId(
-  request: Request,
-  redirectTo: string = new URL(request.url).pathname,
-) {
-  const userId = await getUserId(request);
-  if (!userId) {
-    const searchParams = new URLSearchParams([["redirectTo", redirectTo]]);
-    throw redirect(`${AUTH_LOGIN_ROUTE}?${searchParams}`);
-  }
-  return userId;
-}
-
-export async function requireUser(request: Request) {
-  const userId = await requireUserId(request);
-
-  const user = await getUserById(userId);
-  if (user) return user;
-
-  throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
-}
-
+// ----------------------------------------------------------------------------
+// MAYBE required for register route
+// ----------------------------------------------------------------------------
 const USER_SESSION_KEY = "userId";
 
 export async function createUserSession({
