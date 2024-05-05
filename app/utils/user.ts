@@ -11,6 +11,7 @@ export function useOptionalUser() {
 	if (!data || !isUser(data.user)) {
 		return undefined
 	}
+
 	return data.user
 }
 

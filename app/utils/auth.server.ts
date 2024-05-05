@@ -7,13 +7,27 @@ import type { User } from "#app/models/user.server";
 import { getUserById, verifyLogin } from "#app/models/user.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 
+import { createDatabaseSessionStorage, getSession } from "./session.server";
 
-import { getSession, sessionStorage } from "./session.server";
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
-export const authenticator = new Authenticator<User>(sessionStorage);
+
+invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
+
+export const authenticator = new Authenticator<User>(
+  createDatabaseSessionStorage({
+    cookie: {
+      name: "__session",
+      sameSite: "lax",
+      secrets: [process.env.SESSION_SECRET],
+    },
+  }),
+  {
+    sessionKey: "user",
+  },
+);
 
 authenticator.use(
-  new FormStrategy(async ({ form, request }) => {
+  new FormStrategy(async ({ form }) => {
     const email = form.get("email");
     const password = form.get("password");
 
@@ -23,10 +37,6 @@ authenticator.use(
     const user = await verifyLogin(email, password);
 
     invariant(user, "Authentication failed");
-
-    const session = await getSession(request.headers.get("cookie"));
-
-    session.set(authenticator.sessionKey, user);
 
     return user;
   }),
@@ -38,13 +48,13 @@ export async function getUserId(
 ): Promise<User["id"] | undefined> {
   const session = await getSession(request.headers.get("cookie"));
 
-  const user = session.get("user");
+  const userId = session.get("userId");
 
-  if (!user) {
+  if (!userId) {
     return undefined;
   }
 
-  return user.id;
+  return userId;
 }
 
 export async function getUser(request: Request) {
@@ -91,9 +101,12 @@ export async function createUserSession({
   remember: boolean;
   redirectTo: string;
 }) {
+  console.log("ENTERED CREATE USER SESSION");
+
   const session = await getSession(request.headers.get("cookie"));
 
   session.set(USER_SESSION_KEY, userId);
+
   return redirect(redirectTo, {
     headers: {
       "Set-Cookie": await sessionStorage.commitSession(session, {
