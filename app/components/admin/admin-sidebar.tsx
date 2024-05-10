@@ -137,6 +137,7 @@ export function AdminSidebar() {
                   className="hs-accordion-toggle hs-accordion-active:bg-gray-100 w-full text-start flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hs-accordion-active:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700"
                 >
                   <IconDog className="flex-shrink-0 mt-0.5 size-4" />
+                  
                   Animals
                   <svg
                     className="hs-accordion-active:-rotate-180 flex-shrink-0 mt-1 size-3.5 ms-auto transition"
@@ -223,7 +224,7 @@ export function AdminSidebar() {
                   type="button"
                   className="hs-accordion-toggle hs-accordion-active:bg-gray-100 w-full text-start flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hs-accordion-active:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700"
                 >
-                  <IconMovie className="flex-shrink-0 size-5" />
+                  <IconMovie className="flex-shrink-0 mt-0.5 size-4" />
                   Movies
                   {/* Chevron Icon */}
                   <svg
