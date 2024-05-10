@@ -5,6 +5,7 @@ import * as React from "react";
 export const IconFolder = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
+      className="flex-shrink-0 size-4"
       viewBox="0 0 24 24"
       fill="currentColor"
       height="1em"

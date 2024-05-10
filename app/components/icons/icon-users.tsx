@@ -4,14 +4,16 @@ import * as React from "react";
 export const IconUsers = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
+      className="flex-shrink-0 size-4"
+      xmlns="http://www.w3.org/2000/svg"      
+      height="24"
+      width="24"
+      viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
       strokeLinecap="round"
       strokeLinejoin="round"
       strokeWidth={2}
-      viewBox="0 0 24 24"
-      height="1em"
-      width="1em"
       {...props}
     >
       <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />

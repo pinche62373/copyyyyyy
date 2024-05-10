@@ -5,13 +5,14 @@ import * as React from "react";
 export const IconLogout = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
+      className="flex-shrink-0 size-4"
       xmlns="http://www.w3.org/2000/svg"
-      fill="none"
+      width="24"
+      height="24"      
       viewBox="0 0 24 24"
+      fill="none"
       strokeWidth="1.5"
       stroke="currentColor"
-      width="24"
-      height="24"
       {...props}
     >
       <path
