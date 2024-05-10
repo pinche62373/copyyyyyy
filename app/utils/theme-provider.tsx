@@ -1,25 +1,31 @@
+// Blog: The Complete Guide to Dark Mode with Remix | https://www.mattstobbs.com/remix-dark-mode/ | Matt Dobbs
+// Repo: https://github.com/remix-run/examples/tree/main/dark-mode
+
 import { useFetcher } from "@remix-run/react";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
-import { createContext, useContext, useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  createElement,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 enum Theme {
   DARK = "dark",
   LIGHT = "light",
 }
-
 const themes: Theme[] = Object.values(Theme);
+
 type ThemeContextType = [Theme | null, Dispatch<SetStateAction<Theme | null>>];
+
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-// preferred theme
-const prefersLightMQ = "(prefers-color-scheme: light)";
-
+const prefersDarkMQ = "(prefers-color-scheme: dark)";
 const getPreferredTheme = () =>
-  window.matchMedia(prefersLightMQ).matches ? Theme.LIGHT : Theme.DARK;
+  window.matchMedia(prefersDarkMQ).matches ? Theme.DARK : Theme.LIGHT;
 
-// ----------------------------------------------------------------------------
-// Theme provider
-// ----------------------------------------------------------------------------
 function ThemeProvider({
   children,
   specifiedTheme,
@@ -42,7 +48,7 @@ function ThemeProvider({
 
     // there's no way for us to know what the theme should be in this context
     // the client will have to figure it out before hydration.
-    if (typeof window !== "object") {
+    if (typeof document === "undefined") {
       return null;
     }
 
@@ -50,6 +56,11 @@ function ThemeProvider({
   });
 
   const persistTheme = useFetcher();
+  // TODO: remove this when persistTheme is memoized properly
+  const persistThemeRef = useRef(persistTheme);
+  useEffect(() => {
+    persistThemeRef.current = persistTheme;
+  }, [persistTheme]);
 
   const mountRun = useRef(false);
 
@@ -62,16 +73,16 @@ function ThemeProvider({
       return;
     }
 
-    persistTheme.submit(
+    persistThemeRef.current.submit(
       { theme },
       { action: "action/set-theme", method: "post" },
     );
   }, [theme]);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia(prefersLightMQ);
+    const mediaQuery = window.matchMedia(prefersDarkMQ);
     const handleChange = () => {
-      setTheme(mediaQuery.matches ? Theme.LIGHT : Theme.DARK);
+      setTheme(mediaQuery.matches ? Theme.DARK : Theme.LIGHT);
     };
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
@@ -90,22 +101,19 @@ const clientThemeCode = `
 // a theme, then I'll know what you want in the future and you'll not see this
 // script anymore.
 ;(() => {
-  const theme = window.matchMedia(${JSON.stringify(prefersLightMQ)}).matches
-    ? 'light'
-    : 'dark';
-
+  const theme = window.matchMedia(${JSON.stringify(prefersDarkMQ)}).matches
+    ? 'dark'
+    : 'light';
   const cl = document.documentElement.classList;
-
   const themeAlreadyApplied = cl.contains('light') || cl.contains('dark');
   if (themeAlreadyApplied) {
     // this script shouldn't exist if the theme is already applied!
     console.warn(
-      "Hi there, could you let Matt know you're seeing this message? Thanks!",
+      "Hi there, could you let me know you're seeing this message? Thanks!",
     );
   } else {
     cl.add(theme);
   }
-
   const meta = document.querySelector('meta[name=color-scheme]');
   if (meta) {
     if (theme === 'dark') {
@@ -115,13 +123,47 @@ const clientThemeCode = `
     }
   } else {
     console.warn(
-      "Hey, could you let Matt know you're seeing this message? Thanks!",
+      "Hey, could you let me know you're seeing this message? Thanks!",
     );
   }
 })();
 `;
 
-function NonFlashOfWrongThemeEls({ ssrTheme }: { ssrTheme: boolean }) {
+const themeStylesCode = `
+  /* default light, but app-preference is "dark" */
+  html.dark {
+    light-mode {
+      display: none;
+    }
+  }
+
+  /* default light, and no app-preference */
+  html:not(.dark) {
+    dark-mode {
+      display: none;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    /* prefers dark, but app-preference is "light" */
+    html.light {
+      dark-mode {
+        display: none;
+      }
+    }
+
+    /* prefers dark, and app-preference is "dark" */
+    html.dark,
+    /* prefers dark and no app-preference */
+    html:not(.light) {
+      light-mode {
+        display: none;
+      }
+    }
+  }
+`;
+
+function ThemeHead({ ssrTheme }: { ssrTheme: boolean }) {
   const [theme] = useTheme();
 
   return (
@@ -139,21 +181,53 @@ function NonFlashOfWrongThemeEls({ ssrTheme }: { ssrTheme: boolean }) {
         to do fancy tricks prior to hydration to make things match.
       */}
       {ssrTheme ? null : (
-        <script
-          // NOTE: we cannot use type="module" because that automatically makes
-          // the script "defer". That doesn't work for us because we need
-          // this script to run synchronously before the rest of the document
-          // is finished loading.
-          dangerouslySetInnerHTML={{ __html: clientThemeCode }}
-        />
+        <>
+          <script
+            // NOTE: we cannot use type="module" because that automatically makes
+            // the script "defer". That doesn't work for us because we need
+            // this script to run synchronously before the rest of the document
+            // is finished loading.
+            dangerouslySetInnerHTML={{ __html: clientThemeCode }}
+          />
+          <style dangerouslySetInnerHTML={{ __html: themeStylesCode }} />
+        </>
       )}
     </>
   );
 }
 
-// ----------------------------------------------------------------------------
-// useTheme hook
-// ----------------------------------------------------------------------------
+const clientDarkAndLightModeElsCode = `;(() => {
+  const theme = window.matchMedia(${JSON.stringify(prefersDarkMQ)}).matches
+    ? 'dark'
+    : 'light';
+  const darkEls = document.querySelectorAll("dark-mode");
+  const lightEls = document.querySelectorAll("light-mode");
+  for (const darkEl of darkEls) {
+    if (theme === "dark") {
+      for (const child of darkEl.childNodes) {
+        darkEl.parentElement?.append(child);
+      }
+    }
+    darkEl.remove();
+  }
+  for (const lightEl of lightEls) {
+    if (theme === "light") {
+      for (const child of lightEl.childNodes) {
+        lightEl.parentElement?.append(child);
+      }
+    }
+    lightEl.remove();
+  }
+})();`;
+
+function ThemeBody({ ssrTheme }: { ssrTheme: boolean }) {
+  return ssrTheme ? null : (
+    <script
+      dangerouslySetInnerHTML={{ __html: clientDarkAndLightModeElsCode }}
+    />
+  );
+}
+
 function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
@@ -162,12 +236,50 @@ function useTheme() {
   return context;
 }
 
-// ----------------------------------------------------------------------------
-// isTheme boolean
-// ----------------------------------------------------------------------------
+/**
+ * This allows you to render something that depends on the theme without
+ * worrying about whether it'll SSR properly when we don't actually know
+ * the user's preferred theme.
+ */
+function Themed({
+  dark,
+  light,
+  initialOnly = false,
+}: {
+  dark: ReactNode | string;
+  light: ReactNode | string;
+  initialOnly?: boolean;
+}) {
+  const [theme] = useTheme();
+  const [initialTheme] = useState(theme);
+  const themeToReference = initialOnly ? initialTheme : theme;
+  const serverRenderWithUnknownTheme =
+    !theme && typeof document === "undefined";
+
+  if (serverRenderWithUnknownTheme) {
+    // stick them both in and our little script will update the DOM to match
+    // what we'll render in the client during hydration.
+    return (
+      <>
+        {createElement("dark-mode", null, dark)}
+        {createElement("light-mode", null, light)}
+      </>
+    );
+  }
+
+  return <>{themeToReference === "light" ? light : dark}</>;
+}
+
 function isTheme(value: unknown): value is Theme {
   return typeof value === "string" && themes.includes(value as Theme);
 }
 
-export { NonFlashOfWrongThemeEls, Theme, ThemeProvider, isTheme, useTheme };
-
+export {
+  Theme,
+  ThemeBody,
+  ThemeHead,
+  ThemeProvider,
+  Themed,
+  isTheme,
+  useTheme,
+};

@@ -1,7 +1,8 @@
 import { createCookieSessionStorage } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
-import { Theme, isTheme } from "./theme-provider";
+import type { Theme } from "./theme-provider";
+import { isTheme } from "./theme-provider";
 
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
@@ -12,7 +13,6 @@ const themeStorage = createCookieSessionStorage({
     secrets: [process.env.SESSION_SECRET],
     sameSite: "lax",
     path: "/",
-    expires: new Date("2099-12-31"),
     httpOnly: true,
   },
 });
@@ -22,7 +22,7 @@ async function getThemeSession(request: Request) {
   return {
     getTheme: () => {
       const themeValue = session.get("theme");
-      return isTheme(themeValue) ? themeValue : Theme.DARK;
+      return isTheme(themeValue) ? themeValue : null;
     },
     setTheme: (theme: Theme) => session.set("theme", theme),
     commit: () => themeStorage.commitSession(session),
@@ -30,4 +30,3 @@ async function getThemeSession(request: Request) {
 }
 
 export { getThemeSession };
-

@@ -18,8 +18,9 @@ import { useEffect } from "react";
 import stylesheet from "#app/tailwind.css";
 import { getUser } from "#app/utils/auth.server";
 import {
-  NonFlashOfWrongThemeEls,
   Theme,
+  ThemeBody,
+  ThemeHead,
   ThemeProvider,
   useTheme,
 } from "#app/utils/theme-provider";
@@ -94,10 +95,11 @@ function App() {
         <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
-        <NonFlashOfWrongThemeEls ssrTheme={Boolean(data.theme)} />
+        <ThemeHead ssrTheme={Boolean(data.theme)} />
       </head>
       <body className="h-full bg-gray-50 dark:bg-neutral-900">
         <Outlet />
+        <ThemeBody ssrTheme={Boolean(data.theme)} />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
