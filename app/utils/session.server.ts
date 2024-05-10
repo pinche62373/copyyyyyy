@@ -60,6 +60,5 @@ export const { getSession, commitSession, destroySession } =
       sameSite: "lax",
       maxAge: 60,
       secrets: [process.env.SESSION_SECRET], // replace this with an actual secret
-      expires: new Date(Date.now() + 99960000)
     },
   });
