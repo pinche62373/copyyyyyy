@@ -7,6 +7,8 @@ import { IconLogout } from "#app/components/icons/icon-logout";
 import { IconUser } from "#app/components/icons/icon-user";
 import { AUTH_LOGOUT_ROUTE } from "#app/utils/constants";
 
+import { ThemeToggler } from "../theme-toggler";
+
 export const AdminHeader = () => {
   return (
     <header className="lg:ms-[260px] fixed top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 bg-white border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
@@ -49,6 +51,10 @@ export const AdminHeader = () => {
         <div className="xl:col-span-2 flex justify-end items-center gap-x-2">
           <div className="flex items-center">
             <div className="h-[38px]">
+              {/* Theme Toggler */}
+                <ThemeToggler />
+              {/* End Theme Toggler */}
+
               {/* Account Dropdown */}
               <div className="hs-dropdown relative inline-flex   [--strategy:absolute] [--auto-close:inside] [--placement:bottom-right]">
                 <button

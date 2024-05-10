@@ -12,7 +12,7 @@ const TBody = () => {
         <tr key={row.id} className="divide-x divide-gray-200 dark:divide-neutral-700">
           {row.getVisibleCells().map((cell) => (
             <td key={cell.id} className="size-px whitespace-nowrap py-3 px-5">
-              <span className="text-sm text-gray-800 dark:text-white">
+              <span className="text-sm text-gray-800 dark:text-neutral-400">
               {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </span>
             </td>

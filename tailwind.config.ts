@@ -5,6 +5,7 @@ export default {
   theme: {
     extend: {},
   },
+  darkMode: 'selector',
   plugins: [
     require('preline/plugin'),
     require('@tailwindcss/forms'),

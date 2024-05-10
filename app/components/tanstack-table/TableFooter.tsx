@@ -36,7 +36,7 @@ export const TableFooter = <T,>({
           <input
             type="number"
             min="1"
-            className="no-spin-button p-2 w-11 text-sm font-medium focus:outline-none focus:bg-stone-100 bg-white border border-gray-200 rounded-lg text-center focus:ring-0 text-stone-800 dark:text-neutral-200"
+            className="no-spin-button p-2 w-11 text-sm font-medium focus:outline-none  focus:bg-stone-100 bg-white border border-gray-200 rounded-lg text-center focus:ring-0 text-stone-800 dark:text-neutral-200 dark:bg-neutral-700 dark:focus:bg-neutral-700 dark:border-neutral-700"
             defaultValue={table.getState().pagination.pageSize}
             onChange={(e) => {
               table.setPageSize(Number(e.target.value));
@@ -47,7 +47,7 @@ export const TableFooter = <T,>({
             <span className="text-sm text-gray-600 dark:text-neutral-400">
               of
             </span>
-            <span className="text-sm font-medium">{totalRecordCount}</span>
+            <span className="text-sm font-medium text-gray-600 dark:text-neutral-400">{totalRecordCount}</span>
           </div>
         </div>
       </span>
