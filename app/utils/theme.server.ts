@@ -8,7 +8,7 @@ invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
 const themeStorage = createCookieSessionStorage({
   cookie: {
-    name: "my_remix_theme",
+    name: "__theme",
     secure: true,
     secrets: [process.env.SESSION_SECRET],
     sameSite: "lax",
