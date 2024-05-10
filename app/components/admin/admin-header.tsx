@@ -7,7 +7,7 @@ import { IconLogout } from "#app/components/icons/icon-logout";
 import { IconUser } from "#app/components/icons/icon-user";
 import { AUTH_LOGOUT_ROUTE } from "#app/utils/constants";
 
-import { ThemeToggler } from "../theme-toggler";
+import { DarkModeToggler } from "../darkmode-toggler";
 
 export const AdminHeader = () => {
   return (
@@ -50,22 +50,18 @@ export const AdminHeader = () => {
         {/* Menu Right */}
         <div className="xl:col-span-2 flex justify-end items-center gap-x-2">
           <div className="flex items-center">
+            {/* Icon List */}
             <div className="h-[38px]">
-              {/* Theme Toggler */}
-                <ThemeToggler />
-              {/* End Theme Toggler */}
+              <DarkModeToggler className="size-[38px] inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" />
 
               {/* Account Dropdown */}
               <div className="hs-dropdown relative inline-flex   [--strategy:absolute] [--auto-close:inside] [--placement:bottom-right]">
                 <button
                   id="@@id"
                   type="button"
-                  className="mt-1 inline-flex flex-shrink-0 items-center gap-x-3 text-start rounded-lg focus:outline-none focus:bg-gray-100 dark:focus:bg-neutral-700 text-gray-800"
+                  className="size-[38px] inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
                 >
-                  <IconUser
-                    className="mr-0 pl-2 pr-2 flex-shrink-0 size-[38px] rounded-lg hover:bg-gray-100"
-                    strokeWidth={2}
-                  />
+                  <IconUser />
                 </button>
 
                 {/* Account Dropdown Items */}
@@ -123,6 +119,7 @@ export const AdminHeader = () => {
               </div>
               {/* End Account Dropdown */}
             </div>
+            {/* End Icon List */}
           </div>
         </div>
         {/* End Menu Right */}
