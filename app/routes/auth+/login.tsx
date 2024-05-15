@@ -3,6 +3,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { ValidatedForm, validationError } from "remix-validated-form";
@@ -12,12 +13,34 @@ import { FormInput } from "#app/components/form-input";
 import { FormIntent } from "#app/components/form-intent";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
+import { prisma } from "#app/utils/db.server";
+import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const validator = withZod(authLoginSchema);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
+
+  // prevent orphaned client-side session cookies breaking remix-auth
+  if (sessionId) {
+    const databaseSessionExists = await prisma.session.findUnique({
+      where: { id: sessionId },
+    });
+
+    if (!databaseSessionExists) {
+      return json(null, {
+        headers: {
+          "Set-Cookie": await sessionCookie.serialize("", {
+            maxAge: 0,
+          }),
+        },
+      });
+    }
+  }
+
+  // database session record found, let authenticator check if user is valid
   return await authenticator.isAuthenticated(request, {
     successRedirect: "/",
   });

@@ -1,15 +1,22 @@
-import { createSessionStorage } from "@remix-run/node";
 import type { Cookie, CookieOptions, SessionData } from "@remix-run/node";
+import { createCookie, createSessionStorage } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 import { prisma } from "./db.server";
-
 invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 invariant(process.env.SESSION_MAX_AGE, "SESSION_MAX_AGE must be set");
 
 interface StoreGeneratorArg {
   cookie: Cookie | CookieOptions;
 }
+
+export const sessionCookie = createCookie("__session", {
+  path: "/",
+  sameSite: "lax",
+  httpOnly: true,
+  secrets: [process.env.SESSION_SECRET],
+  secure: process.env.NODE_ENV === "production",
+});
 
 export const createDatabaseSessionStorage = ({ cookie }: StoreGeneratorArg) => {
   return createSessionStorage<SessionData, SessionData>({
@@ -55,10 +62,5 @@ export const createDatabaseSessionStorage = ({ cookie }: StoreGeneratorArg) => {
 
 export const { getSession, commitSession, destroySession } =
   createDatabaseSessionStorage({
-    cookie: {
-      name: "__session",
-      sameSite: "lax",
-      maxAge: 60,
-      secrets: [process.env.SESSION_SECRET], // replace this with an actual secret
-    },
+    cookie: sessionCookie,
   });

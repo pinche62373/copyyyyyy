@@ -3,11 +3,11 @@ import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import invariant from "tiny-invariant";
 
-import type { User } from "#app/models/user.server";
 import { getUserById, verifyLogin } from "#app/models/user.server";
+import type { User } from "#app/models/user.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 
-import { createDatabaseSessionStorage, getSession } from "./session.server";
+import { createDatabaseSessionStorage, getSession, sessionCookie } from "./session.server";
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 
@@ -15,11 +15,7 @@ invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 
 export const authenticator = new Authenticator<User>(
   createDatabaseSessionStorage({
-    cookie: {
-      name: "__session",
-      sameSite: "lax",
-      secrets: [process.env.SESSION_SECRET],
-    },
+    cookie: sessionCookie
   }),
   {
     sessionKey: "user",
