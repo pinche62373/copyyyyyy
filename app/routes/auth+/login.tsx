@@ -12,7 +12,6 @@ import { FormButton } from "#app/components/form-button";
 import { FormInput } from "#app/components/form-input";
 import { FormIntent } from "#app/components/form-intent";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
-import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { prisma } from "#app/utils/db.server";
 import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
@@ -55,9 +54,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (fieldValues.error) return validationError(fieldValues.error);
 
+  // IMPORTANT: do not use `failureRedirect` or remix-auth will crash trying to save the error to database session using empty `createData()`
   return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
     successRedirect: "/",
-    failureRedirect: AUTH_LOGIN_ROUTE,
     context: { formData },
   });
 };
