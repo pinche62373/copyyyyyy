@@ -14,10 +14,11 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
-// require authentication
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+
   await authenticator.isAuthenticated(request, {
-    failureRedirect: AUTH_LOGIN_ROUTE,
+    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
   });
 
   return null;

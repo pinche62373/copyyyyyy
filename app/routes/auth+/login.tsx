@@ -4,7 +4,6 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { AuthorizationError } from "remix-auth";
 import { jsonWithError } from "remix-toast";
@@ -15,6 +14,7 @@ import { FormInput } from "#app/components/form-input";
 import { FormIntent } from "#app/components/form-intent";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
+import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
@@ -24,7 +24,7 @@ const validator = withZod(authLoginSchema);
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
 
-  // prevent orphaned client-side session cookies breaking remix-auth
+  // prevent orphaned client-side session cookies not existing in database breaking remix-auth
   if (sessionId) {
     const databaseSessionExists = await prisma.session.findUnique({
       where: { id: sessionId },
@@ -41,10 +41,21 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     }
   }
 
-  // database session record found, let authenticator check if user is valid
-  return await authenticator.isAuthenticated(request, {
+  // create returnTo cookie
+  const url = new URL(request.url);
+  const returnTo = url.searchParams.get("returnTo");
+
+  const headers = new Headers();
+  if (returnTo) {
+    headers.append("Set-Cookie", await returnToCookie.serialize(returnTo));
+  }
+
+  // send already authenticated users to homepage
+  const data = await authenticator.isAuthenticated(request, {
     successRedirect: "/",
   });
+
+  return json(data, { headers });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -56,12 +67,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (fieldValues.error) return validationError(fieldValues.error);
 
+  const returnTo = await returnToCookie.parse(request.headers.get("Cookie"));
+
   // IMPORTANT: do not use `failureRedirect` or remix-auth will crash trying to save the error to database session using empty `createData()`
   try {
     return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
       throwOnError: true,
       context: { formData },
-      successRedirect: "/", // TODO redirectTo or home
+      successRedirect: returnTo || "/",
     });
   } catch (error) {
     // Because redirects work by throwing a Response, you need to check if the
@@ -81,9 +94,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const meta: MetaFunction = () => [{ title: "Login" }];
 
 export default function LoginPage() {
-  const [searchParams] = useSearchParams();
-  const redirectTo = searchParams.get("redirectTo") || "/";
-
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
@@ -94,7 +104,6 @@ export default function LoginPage() {
           noValidate // disable native HTML validations
         >
           <FormIntent intent="login" />
-          <input type="hidden" name="redirectTo" value={redirectTo} />
 
           <FormInput name="email" label="Email" placeholder="Your email..." />
           <FormInput
