@@ -85,8 +85,6 @@ export async function createUserSession({
   remember: boolean;
   redirectTo: string;
 }) {
-  console.log("ENTERED CREATE USER SESSION");
-
   const session = await getSession(request.headers.get("cookie"));
 
   session.set(USER_SESSION_KEY, userId);

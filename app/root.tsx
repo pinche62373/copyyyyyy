@@ -103,11 +103,8 @@ function App() {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (toast?.type === "error") {
-      notify.error(toast.message);
-    }
-    if (toast?.type === "success") {
-      notify.success(toast.message);
+    if (toast?.type) {
+      notify[toast?.type](toast.message);
     }
   }, [toast]);
 

@@ -11,6 +11,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -31,6 +32,7 @@ import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInpu
 import { deleteLanguage, getAdminLanguages } from "#app/models/language.server";
 import { languageSchema } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
+
 export const loader = async () => {
   const languages = await getAdminLanguages();
 
@@ -47,12 +49,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   if (submission.status !== "success") {
-    throw new Response("Error", { status: 400 });
+    return jsonWithError(null, "Invalid delete submission")
   }
 
-  await deleteLanguage(submission.value);
+  try {
+    await deleteLanguage(submission.value);
+  } catch(error) {
+    return jsonWithError(null, "Unexpected error")
+  }
 
-  return { status: "success" };
+  return jsonWithSuccess(null, "Language deleted successfully")
 };
 
 interface Language {
