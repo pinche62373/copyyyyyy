@@ -30,7 +30,7 @@ import {
 } from "#app/utils/theme-provider";
 import { getThemeSession } from "#app/utils/theme.server";
 
-import { setToastCookieOptions } from "./utils/toast.server";
+import { setToastCookieOptions } from "./utils/toaster.server";
 
 import "@fontsource-variable/inter/wght.css";
 
