@@ -1,5 +1,6 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -14,6 +15,9 @@ import {
 import clsx from "clsx";
 import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
+import type { ToastMessage } from "remix-toast";
+import { getToast } from "remix-toast";
+import { Toaster, toast as notify } from "sonner";
 
 import stylesheet from "#app/tailwind.css";
 import { getUser } from "#app/utils/auth.server";
@@ -46,22 +50,26 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 // ----------------------------------------------------------------------------
-// fetch user and preferred-theme-cookie
+// fetch user data and cookies for preferred-theme and toast messages
 // ----------------------------------------------------------------------------
 export interface LoaderData {
+  user: ReturnType<typeof getUser> extends Promise<infer T> ? T : never;
   theme: Theme | null;
-  user: ReturnType<typeof getUser> extends Promise<infer T> ? T : never
+  toast: ToastMessage | undefined;
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const themeSession = await getThemeSession(request);
 
+  const { toast, headers } = await getToast(request);
+
   const data: LoaderData = {
     user: await getUser(request),
     theme: themeSession.getTheme(),
+    toast,
   };
 
-  return data;
+  return json({ ...data }, { headers });
 };
 
 // ----------------------------------------------------------------------------
@@ -83,10 +91,20 @@ function App() {
   const location = useLocation();
   const data = useLoaderData<LoaderData>();
   const [theme] = useTheme();
+  const { toast } = useLoaderData<LoaderData>();
 
   useEffect(() => {
     window.HSStaticMethods.autoInit(); // preline
   }, [location.pathname]);
+
+  useEffect(() => {
+    if (toast?.type === "error") {
+      notify.error(toast.message);
+    }
+    if (toast?.type === "success") {
+      notify.success(toast.message);
+    }
+  }, [toast]);
 
   return (
     <html lang="en" className={clsx(theme)}>
@@ -103,6 +121,12 @@ function App() {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        <Toaster
+          position="top-right"
+          richColors
+          expand
+          toastOptions={{ classNames: { title: "font-normal" } }}
+        />
       </body>
     </html>
   );

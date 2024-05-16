@@ -6,6 +6,8 @@ import type {
 import { json } from "@remix-run/node";
 import { useSearchParams } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
+import { AuthorizationError } from "remix-auth";
+import { jsonWithError } from "remix-toast";
 import { ValidatedForm, validationError } from "remix-validated-form";
 
 import { FormButton } from "#app/components/form-button";
@@ -55,10 +57,25 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (fieldValues.error) return validationError(fieldValues.error);
 
   // IMPORTANT: do not use `failureRedirect` or remix-auth will crash trying to save the error to database session using empty `createData()`
-  return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
-    successRedirect: "/",
-    context: { formData },
-  });
+  try {
+    return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
+      throwOnError: true,
+      context: { formData },
+      successRedirect: "/", // TODO redirectTo or home
+    });
+  } catch (error) {
+    // Because redirects work by throwing a Response, you need to check if the
+    // caught error is a response and return it or throw it again
+    if (error instanceof Response) return error;
+
+    // here the error is related to the authentication process
+    if (error instanceof AuthorizationError) {
+      return jsonWithError(null, error.message);
+    }
+
+    // here the error is a generic error that another reason may throw
+    return jsonWithError(null, "Unexpected Failure");
+  }
 };
 
 export const meta: MetaFunction = () => [{ title: "Login" }];

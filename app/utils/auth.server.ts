@@ -1,5 +1,5 @@
 import { redirect } from "@remix-run/node";
-import { Authenticator } from "remix-auth";
+import { Authenticator, AuthorizationError } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import invariant from "tiny-invariant";
 
@@ -36,7 +36,9 @@ authenticator.use(
 
     const user = await verifyLogin(email, password);
 
-    invariant(user, "Authentication failed");
+    if (!user) {
+      throw new AuthorizationError("Authentication Failed");
+    }
 
     return user;
   }),
