@@ -12,7 +12,7 @@ model User {
   email String @unique
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime? @updatedAt
 
   password Password?
   roles    Role[]
