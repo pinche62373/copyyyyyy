@@ -3,8 +3,14 @@ import { createCookie, createSessionStorage } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 import { prisma } from "./db.server";
-invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
-invariant(process.env.SESSION_MAX_AGE, "SESSION_MAX_AGE must be set");
+invariant(
+  process.env.COOKIE_SECRET,
+  "Environment variable not found: COOKIE_SECRET",
+);
+invariant(
+  process.env.SESSION_MAX_AGE,
+  "Environment variable not found: SESSION_MAX_AGE",
+);
 
 interface StoreGeneratorArg {
   cookie: Cookie | CookieOptions;
@@ -12,9 +18,9 @@ interface StoreGeneratorArg {
 
 export const sessionCookie = createCookie("__session", {
   path: "/",
-  sameSite: "lax",
   httpOnly: true,
-  secrets: [process.env.SESSION_SECRET],
+  sameSite: "lax",
+  secrets: [process.env.COOKIE_SECRET],
   secure: process.env.NODE_ENV === "production",
 });
 

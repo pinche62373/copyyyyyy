@@ -15,8 +15,6 @@ import {
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 
-invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
-
 export const authenticator = new Authenticator<User>(
   createDatabaseSessionStorage({
     cookie: sessionCookie,

@@ -4,13 +4,16 @@ import invariant from "tiny-invariant";
 import type { Theme } from "./theme-provider";
 import { isTheme } from "./theme-provider";
 
-invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
+invariant(
+  process.env.COOKIE_SECRET,
+  "Environment variable not found: COOKIE_SECRET",
+);
 
 const themeStorage = createCookieSessionStorage({
   cookie: {
     name: "__theme",
     secure: process.env.NODE_ENV === "production",
-    secrets: [process.env.SESSION_SECRET],
+    secrets: [process.env.COOKIE_SECRET],
     sameSite: "lax",
     path: "/",
     httpOnly: true,
