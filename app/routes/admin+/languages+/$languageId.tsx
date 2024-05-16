@@ -4,9 +4,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Form,
-  isRouteErrorResponse,
-  useLoaderData,
-  useRouteError,
+  useLoaderData
 } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import { z } from "zod";
@@ -87,22 +85,4 @@ export default function Component() {
       </AdminContentCard>
     </>
   );
-}
-
-export function ErrorBoundary() {
-  const error = useRouteError();
-
-  if (error instanceof Error) {
-    return <div>An unexpected error occurred: {error.message}</div>;
-  }
-
-  if (!isRouteErrorResponse(error)) {
-    return <h1>Unknown Error</h1>;
-  }
-
-  if (error.status === 404) {
-    return <div>Note not found</div>;
-  }
-
-  return <div>An unexpected error occurred: {error.statusText}</div>;
 }
