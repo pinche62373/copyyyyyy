@@ -9,7 +9,7 @@ invariant(process.env.SESSION_SECRET, "SESSION_SECRET must be set");
 const themeStorage = createCookieSessionStorage({
   cookie: {
     name: "__theme",
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     secrets: [process.env.SESSION_SECRET],
     sameSite: "lax",
     path: "/",
