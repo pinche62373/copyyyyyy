@@ -16,7 +16,7 @@ import clsx from "clsx";
 import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
 import type { ToastMessage } from "remix-toast";
-import { getToast, setToastCookieOptions } from "remix-toast";
+import { getToast } from "remix-toast";
 import { Toaster, toast as notify } from "sonner";
 
 import stylesheet from "#app/tailwind.css";
@@ -29,6 +29,8 @@ import {
   useTheme,
 } from "#app/utils/theme-provider";
 import { getThemeSession } from "#app/utils/theme.server";
+
+import { setToastCookieOptions } from "./utils/toast.server";
 
 import "@fontsource-variable/inter/wght.css";
 
@@ -62,9 +64,7 @@ export interface LoaderData {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const themeSession = await getThemeSession(request);
 
-  setToastCookieOptions({
-    name: "__toast",
-  })
+  setToastCookieOptions();
 
   const { toast, headers } = await getToast(request);
 
