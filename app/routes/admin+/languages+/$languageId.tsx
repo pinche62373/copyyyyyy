@@ -1,13 +1,14 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Form,
   isRouteErrorResponse,
   useLoaderData,
   useRouteError,
 } from "@remix-run/react";
+import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
@@ -40,12 +41,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const submission = parseWithZod(formData, { schema: languageSchema });
 
   if (submission.status !== "success") {
-    throw new Response("Error", { status: 400 });
+    return jsonWithError(null, "Invalid form data");
   }
 
-  await updateLanguage(submission.value);
+  try {
+    await updateLanguage(submission.value);
+  } catch (error) {
+    return jsonWithError(null, "Unexpected error");
+  }
 
-  return redirect(`/admin/languages`);
+  return redirectWithSuccess(
+    "/admin/languages",
+    "Language updated successfully",
+  );
 };
 
 export default function Component() {
