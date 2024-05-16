@@ -51,12 +51,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     headers.append("Set-Cookie", await returnToCookie.serialize(returnTo));
   }
 
-  // send already authenticated users to homepage
-  const data = await authenticator.isAuthenticated(request, {
+  // send already authenticated users back to the homepage
+  await authenticator.isAuthenticated(request, {
     successRedirect: "/",
   });
 
-  return json(data, { headers });
+  // otherwise, create redirectCookie and continue
+  return json(null, { headers });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
