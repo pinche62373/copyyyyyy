@@ -4,6 +4,7 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import { Link } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { AuthorizationError } from "remix-auth";
 import { jsonWithError } from "remix-toast";
@@ -115,11 +116,13 @@ export default function LoginPage() {
 
           <div className="flex justify-end gap-x-2 pt-2">
             <div className="w-full flex justify-end items-center gap-x-2">
-              <FormButton
-                type="button"
-                label="Cancel"
-                className="py-2 px-3 inline-flex justify-center items-center text-start bg-white border border-gray-200 text-gray-800 text-sm font-medium rounded-lg shadow-sm align-middle hover:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
-              />
+              <Link to="/">
+                <FormButton
+                  type="button"
+                  label="Cancel"
+                  className="py-2 px-3 inline-flex justify-center items-center text-start bg-white border border-gray-200 text-gray-800 text-sm font-medium rounded-lg shadow-sm align-middle hover:bg-gray-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                />
+              </Link>
               <FormButton type="submit" label="Log In" />
             </div>
           </div>
