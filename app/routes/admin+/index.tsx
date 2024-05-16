@@ -1,4 +1,22 @@
+import { useLoaderData } from "@remix-run/react";
+
+import { prisma } from "#app/utils/db.server";
+
+export interface LoaderData {
+  userCount: number
+}
+
+export const loader = async () => {
+  const data: LoaderData = {
+    userCount: await prisma.user.count()
+  }
+
+  return data
+};
+
 export default function AdminIndexPage() {
+  const data = useLoaderData<LoaderData>();
+
   return (
     <>
       {/* Stats Grid */}
@@ -123,7 +141,7 @@ export default function AdminIndexPage() {
                 Users
               </h2>
               <p className="text-lg md:text-xl font-semibold text-stone-800 dark:text-neutral-200">
-                13.983
+                {data.userCount}
               </p>
             </div>
           </div>
