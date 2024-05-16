@@ -11,8 +11,8 @@ import {
   AdminFormFieldHidden,
   AdminFormFieldText,
 } from "#app/components/admin/form";
-import { createLanguage } from "#app/models/language.server";
-import { languageSchema } from "#app/validations/language-schema";
+import { createRegion } from "#app/models/region.server";
+import { regionSchema } from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -21,7 +21,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   validateFormIntent(formData, "create");
 
   const submission = parseWithZod(formData, {
-    schema: languageSchema.omit({ id: true }),
+    schema: regionSchema.omit({ id: true }),
   });
 
   if (submission.status !== "success") {
@@ -29,15 +29,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   try {
-    await createLanguage(submission.value);
+    await createRegion(submission.value);
   } catch (error) {
     return jsonWithError(null, "Unexpected error");
   }
 
-  return redirectWithSuccess(
-    "/admin/languages",
-    "Language created successfully",
-  );
+  return redirectWithSuccess("/admin/regions", "Region created successfully");
 };
 
 export default function Component() {
@@ -45,14 +42,14 @@ export default function Component() {
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
       return parseWithZod(formData, {
-        schema: languageSchema.omit({ id: true }),
+        schema: regionSchema.omit({ id: true }),
       });
     },
   });
 
   return (
     <>
-      <AdminPageTitle title="New Language" />
+      <AdminPageTitle title="New Region" />
 
       <AdminContentCard className="p-5">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
@@ -60,7 +57,7 @@ export default function Component() {
 
           <AdminFormFieldText label="Name" fieldName="name" fields={fields} />
 
-          <AdminFormButtons cancelLink="/admin/languages" />
+          <AdminFormButtons cancelLink="/admin/regions" />
         </Form>
       </AdminContentCard>
     </>

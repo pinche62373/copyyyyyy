@@ -2,10 +2,7 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import {
-  Form,
-  useLoaderData
-} from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import { z } from "zod";
 
@@ -16,19 +13,19 @@ import {
   AdminFormFieldHidden,
   AdminFormFieldText,
 } from "#app/components/admin/form";
-import { getLanguage, updateLanguage } from "#app/models/language.server";
-import { languageSchema } from "#app/validations/language-schema";
+import { getRegion, updateRegion } from "#app/models/region.server";
+import { regionSchema } from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  const languageId = z.coerce.string().parse(params.languageId);
-  const language = await getLanguage({ id: languageId });
+  const regionId = z.coerce.string().parse(params.regionId);
+  const region = await getRegion({ id: regionId });
 
-  if (!language) {
+  if (!region) {
     throw new Response("Not Found", { status: 404 });
   }
 
-  return json({ language });
+  return json({ region });
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -36,22 +33,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   validateFormIntent(formData, "update");
 
-  const submission = parseWithZod(formData, { schema: languageSchema });
+  const submission = parseWithZod(formData, { schema: regionSchema });
 
   if (submission.status !== "success") {
     return jsonWithError(null, "Invalid form data");
   }
 
   try {
-    await updateLanguage(submission.value);
+    await updateRegion(submission.value);
   } catch (error) {
     return jsonWithError(null, "Unexpected error");
   }
 
-  return redirectWithSuccess(
-    "/admin/languages",
-    "Language updated successfully",
-  );
+  return redirectWithSuccess("/admin/regions", "Region updated successfully");
 };
 
 export default function Component() {
@@ -60,27 +54,27 @@ export default function Component() {
   const [form, fields] = useForm({
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: languageSchema });
+      return parseWithZod(formData, { schema: regionSchema });
     },
   });
 
   return (
     <>
-      <AdminPageTitle title="Edit Language" />
+      <AdminPageTitle title="Edit Region" />
 
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
           <AdminFormFieldHidden name="intent" value="update" />
-          <AdminFormFieldHidden name="id" value={data.language.id} />
+          <AdminFormFieldHidden name="id" value={data.region.id} />
 
           <AdminFormFieldText
             label="Name"
             fieldName="name"
             fields={fields}
-            defaultValue={data.language.name}
+            defaultValue={data.region.name}
           />
 
-          <AdminFormButtons cancelLink="/admin/languages" />
+          <AdminFormButtons cancelLink="/admin/regions" />
         </Form>
       </AdminContentCard>
     </>

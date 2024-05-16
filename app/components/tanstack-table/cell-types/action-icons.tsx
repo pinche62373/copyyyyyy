@@ -8,7 +8,12 @@ import { IconTrash } from "#app/components/icons/icon-trash";
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------
-export const getCellActionIcons = (info: CellContext<any, string>) => {
+interface PropTypes {
+  info: CellContext<any, string>;
+  target: string;
+}
+
+export const getCellActionIcons = ({ info, target }: PropTypes) => {
   return (
     <>
       {/* Edit Button */}
@@ -25,7 +30,7 @@ export const getCellActionIcons = (info: CellContext<any, string>) => {
       <div className="inline-flex items-center -space-x-px">
         <Form
           method="POST"
-          action="/admin/languages"
+          action={target}
           onSubmit={(event) => {
             if (!confirm("Are you sure?")) {
               event.preventDefault();

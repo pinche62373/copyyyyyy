@@ -49,26 +49,26 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   if (submission.status !== "success") {
-    return jsonWithError(null, "Invalid delete submission")
+    return jsonWithError(null, "Invalid delete submission");
   }
 
   try {
     await deleteRegion(submission.value);
-  } catch(error) {
-    return jsonWithError(null, "Unexpected error")
+  } catch (error) {
+    return jsonWithError(null, "Unexpected error");
   }
 
-  return jsonWithSuccess(null, "Region deleted successfully")
+  return jsonWithSuccess(null, "Region deleted successfully");
 };
 
-interface Language {
+interface Region {
   id: string;
   name: string;
   createdAt: string;
   updatedAt: string | null;
 }
 
-const columnHelper = createColumnHelper<Language>();
+const columnHelper = createColumnHelper<Region>();
 
 const columns = [
   columnHelper.display({
@@ -79,7 +79,7 @@ const columns = [
     cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("name", {
-    header: () => <span>Language</span>,
+    header: () => <span>Region</span>,
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: (info) => getCellLinkToSelf(info),
@@ -92,13 +92,17 @@ const columns = [
   columnHelper.accessor("updatedAt", {
     header: () => <span>Updated</span>,
     enableGlobalFilter: false,
-    cell: (info) => getCellUpdatedAt( info ),
+    cell: (info) => getCellUpdatedAt(info),
   }),
   columnHelper.display({
     header: "Actions",
     enableSorting: false,
     enableGlobalFilter: false,
-    cell: (info) => getCellActionIcons(info),
+    cell: (info) =>
+      getCellActionIcons({
+        info,
+        target: "/admin/regions",
+      }),
   }),
 ];
 
@@ -143,7 +147,11 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title="Regions" buttonText="New Region" />
+      <AdminPageTitle
+        title="Regions"
+        buttonText="New Region"
+        buttonTarget="/admin/regions/new"
+      />
 
       <AdminContentCard>
         <TableBar>

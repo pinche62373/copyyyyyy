@@ -49,16 +49,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   if (submission.status !== "success") {
-    return jsonWithError(null, "Invalid delete submission")
+    return jsonWithError(null, "Invalid delete submission");
   }
 
   try {
     await deleteLanguage(submission.value);
-  } catch(error) {
-    return jsonWithError(null, "Unexpected error")
+  } catch (error) {
+    return jsonWithError(null, "Unexpected error");
   }
 
-  return jsonWithSuccess(null, "Language deleted successfully")
+  return jsonWithSuccess(null, "Language deleted successfully");
 };
 
 interface Language {
@@ -92,13 +92,17 @@ const columns = [
   columnHelper.accessor("updatedAt", {
     header: () => <span>Updated</span>,
     enableGlobalFilter: false,
-    cell: (info) => getCellUpdatedAt( info ),
+    cell: (info) => getCellUpdatedAt(info),
   }),
   columnHelper.display({
     header: "Actions",
     enableSorting: false,
     enableGlobalFilter: false,
-    cell: (info) => getCellActionIcons(info),
+    cell: (info) =>
+      getCellActionIcons({
+        info,
+        target: "/admin/languages",
+      }),
   }),
 ];
 
@@ -143,7 +147,11 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title="Languages" buttonText="New Language" />
+      <AdminPageTitle
+        title="Languages"
+        buttonText="New Language"
+        buttonTarget="/admin/languages/new"
+      />
 
       <AdminContentCard>
         <TableBar>

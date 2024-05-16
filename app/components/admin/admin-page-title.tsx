@@ -1,14 +1,23 @@
 import { NavLink } from "@remix-run/react";
 
-interface PropTypes {
-  title: string;
-  buttonText?: string;
-  search?: boolean;
-}
+type PropTypes =
+  | {
+      title: string;
+      search?: boolean;
+      buttonText?: undefined;
+      buttonTarget?: undefined;
+    }
+  | {
+      title: string;
+      search?: boolean;
+      buttonText: string;
+      buttonTarget: string;
+    };
 
 export const AdminPageTitle = ({
   title,
   buttonText,
+  buttonTarget,
   search = false,
 }: PropTypes) => {
   return (
@@ -54,7 +63,7 @@ export const AdminPageTitle = ({
           {buttonText && (
             <NavLink
               type="button"
-              to="/admin/languages/new"
+              to={buttonTarget}
               className="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-start bg-blue-600 border border-blue-600 text-white text-sm font-medium rounded-lg shadow-sm align-middle hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-300 dark:focus:ring-blue-500"
               // className="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-start bg-blue-600 border border-blue-600 text-white text-sm font-medium rounded-lg shadow-sm align-middle hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-300 dark:focus:ring-blue-500"
             >
@@ -83,6 +92,6 @@ export const AdminPageTitle = ({
       {/* End Header  */}
     </>
   );
-}
+};
 
-export default AdminPageTitle
+export default AdminPageTitle;
