@@ -10,10 +10,12 @@ import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import {
   AdminFormButtons,
+  AdminFormFieldDropdown,
   AdminFormFieldHidden,
   AdminFormFieldText,
 } from "#app/components/admin/form";
 import { getCountry, updateCountry } from "#app/models/country.server";
+import { getAdminRegions } from "#app/models/region.server";
 import { getModelCrud } from "#app/utils/crud";
 import { countrySchema } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
@@ -28,7 +30,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404 });
   }
 
-  return json({ country });
+  const regions = await getAdminRegions();
+
+  return json({ country, regions });
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -78,6 +82,14 @@ export default function Component() {
             fieldName="name"
             fields={fields}
             defaultValue={data.country.name}
+          />
+
+          <AdminFormFieldDropdown
+            label="Region"
+            items={data.regions}
+            fieldName="regionId"
+            fields={fields}
+            defaultValue={data.country.region.id}
           />
 
           <AdminFormButtons cancelLink={crud.target} />

@@ -75,7 +75,7 @@ export default function Component() {
 
           <AdminFormFieldDropdown
             label="Region"
-            options={regions}
+            items={regions}
             fieldName="regionId"
             fields={fields}
           />

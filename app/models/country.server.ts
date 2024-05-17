@@ -4,7 +4,16 @@ import { prisma } from "#app/utils/db.server";
 
 export function getCountry({ id }: Pick<Country, "id">) {
   return prisma.country.findFirst({
-    select: { id: true, name: true },
+    select: {
+      id: true,
+      name: true,
+      region: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
     where: { id },
   });
 }
@@ -36,12 +45,17 @@ export function createCountry({
   });
 }
 
-export function updateCountry({ id, name }: Pick<Country, "id" | "name">) {
+export function updateCountry({
+  id,
+  name,
+  regionId,
+}: Pick<Country, "id" | "name" | "regionId">) {
   return prisma.country.update({
     where: { id },
     data: {
       id,
       name,
+      regionId,
     },
   });
 }
