@@ -7,6 +7,9 @@ import { z } from "zod";
 export const regionSchema = z.object({
   id: z.string(),
   name: z
-    .string({ required_error: 'Language name is required' })
-    .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, { message: 'This field only allows capitalized Latin words, separated by spaces.' })
+    .string({ required_error: "Region name is required" })
+    .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, {
+      message:
+        "This field only allows capitalized Latin words, separated by spaces.",
+    }),
 });
