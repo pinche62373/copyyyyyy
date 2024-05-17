@@ -12,7 +12,7 @@ export const AdminContentCard = ({
   ...rest
 }: PropsWithChildren<IProps>) => {
   return (
-    <div className="relative overflow-x-auto">
+    <div className="relative overflow-visible">
       <div
         className={cn(
           "bg-white border border-stone-200 rounded-xl shadow-sm dark:bg-neutral-800 dark:border-neutral-700",
