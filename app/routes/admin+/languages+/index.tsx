@@ -30,8 +30,11 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { deleteLanguage, getAdminLanguages } from "#app/models/language.server";
+import { getModelCrud } from "#app/utils/crud";
 import { languageSchema } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
+
+const { crudLanguage: crud } = getModelCrud();
 
 export const loader = async () => {
   const languages = await getAdminLanguages();
@@ -58,7 +61,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Unexpected error");
   }
 
-  return jsonWithSuccess(null, "Language deleted successfully");
+  return jsonWithSuccess(null, `${crud.singular} deleted successfully`);
 };
 
 interface Language {
@@ -101,7 +104,7 @@ const columns = [
     cell: (info) =>
       getCellActionIcons({
         info,
-        target: "/admin/languages",
+        crud,
       }),
   }),
 ];
@@ -148,9 +151,9 @@ export default function Component() {
   return (
     <>
       <AdminPageTitle
-        title="Languages"
-        buttonText="New Language"
-        buttonTarget="/admin/languages/new"
+        title={crud.plural}
+        buttonText={`New ${crud.singular}`}
+        buttonTarget={`${crud.target}/new`}
       />
 
       <AdminContentCard>
@@ -160,7 +163,7 @@ export default function Component() {
             onChange={(value: string | number) =>
               setGlobalFilter(String(value))
             }
-            placeholder="Search languages..."
+            placeholder={`Search ${crud.plural.toLowerCase()}...`}
           />
           <TableFilterDropdown />
         </TableBar>

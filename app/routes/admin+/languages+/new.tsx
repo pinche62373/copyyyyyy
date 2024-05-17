@@ -12,8 +12,11 @@ import {
   AdminFormFieldText,
 } from "#app/components/admin/form";
 import { createLanguage } from "#app/models/language.server";
+import { getModelCrud } from "#app/utils/crud";
 import { languageSchema } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
+
+const { crudLanguage: crud } = getModelCrud();
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -35,8 +38,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   return redirectWithSuccess(
-    "/admin/languages",
-    "Language created successfully",
+    crud.target,
+    `${crud.singular} created successfully`,
   );
 };
 
@@ -52,7 +55,7 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title="New Language" />
+      <AdminPageTitle title={`New ${crud.singular}`} />
 
       <AdminContentCard className="p-5">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
@@ -60,7 +63,7 @@ export default function Component() {
 
           <AdminFormFieldText label="Name" fieldName="name" fields={fields} />
 
-          <AdminFormButtons cancelLink="/admin/languages" />
+          <AdminFormButtons cancelLink={crud.target} />
         </Form>
       </AdminContentCard>
     </>

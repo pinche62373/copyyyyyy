@@ -15,21 +15,16 @@ export function getAdminRegions() {
   });
 }
 
-export function createRegion({
-  name,
-}: Pick<Region, "name">) {
+export function createRegion({ name }: Pick<Region, "name">) {
   return prisma.region.create({
     data: {
       name,
-      updatedAt: null
+      updatedAt: null,
     },
   });
 }
 
-export function updateRegion({
-  id,
-  name,
-}:Pick<Region, "id" | "name">) {
+export function updateRegion({ id, name }: Pick<Region, "id" | "name">) {
   return prisma.region.update({
     where: { id },
     data: {
@@ -39,9 +34,7 @@ export function updateRegion({
   });
 }
 
-export function deleteRegion({
-  id,
-}: Pick<Region, "id">) {
+export function deleteRegion({ id }: Pick<Region, "id">) {
   return prisma.region.delete({
     where: { id },
   });

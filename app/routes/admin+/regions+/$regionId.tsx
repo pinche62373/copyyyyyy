@@ -14,8 +14,11 @@ import {
   AdminFormFieldText,
 } from "#app/components/admin/form";
 import { getRegion, updateRegion } from "#app/models/region.server";
+import { getModelCrud } from "#app/utils/crud";
 import { regionSchema } from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
+
+const { crudRegion: crud } = getModelCrud();
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const regionId = z.coerce.string().parse(params.regionId);
@@ -45,7 +48,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Unexpected error");
   }
 
-  return redirectWithSuccess("/admin/regions", "Region updated successfully");
+  return redirectWithSuccess(
+    crud.target,
+    `${crud.singular} updated successfully`,
+  );
 };
 
 export default function Component() {
@@ -60,7 +66,7 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title="Edit Region" />
+      <AdminPageTitle title={`Edit ${crud.singular}`} />
 
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
@@ -74,7 +80,7 @@ export default function Component() {
             defaultValue={data.region.name}
           />
 
-          <AdminFormButtons cancelLink="/admin/regions" />
+          <AdminFormButtons cancelLink={crud.target} />
         </Form>
       </AdminContentCard>
     </>

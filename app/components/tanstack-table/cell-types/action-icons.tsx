@@ -10,10 +10,14 @@ import { IconTrash } from "#app/components/icons/icon-trash";
 // -----------------------------------------------------
 interface PropTypes {
   info: CellContext<any, string>;
-  target: string;
+  crud: {
+    target: string;
+    singular: string;
+    plural: string;
+  };
 }
 
-export const getCellActionIcons = ({ info, target }: PropTypes) => {
+export const getCellActionIcons = ({ info, crud }: PropTypes) => {
   return (
     <>
       {/* Edit Button */}
@@ -30,7 +34,7 @@ export const getCellActionIcons = ({ info, target }: PropTypes) => {
       <div className="inline-flex items-center -space-x-px">
         <Form
           method="POST"
-          action={target}
+          action={crud.target}
           onSubmit={(event) => {
             if (!confirm("Are you sure?")) {
               event.preventDefault();

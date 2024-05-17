@@ -30,8 +30,11 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { deleteRegion, getAdminRegions } from "#app/models/region.server";
+import { getModelCrud } from "#app/utils/crud";
 import { regionSchema } from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
+
+const { crudRegion: crud } = getModelCrud();
 
 export const loader = async () => {
   const regions = await getAdminRegions();
@@ -58,10 +61,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Unexpected error");
   }
 
-  return jsonWithSuccess(null, "Region deleted successfully");
+  return jsonWithSuccess(null, `${crud.singular} deleted successfully`);
 };
 
 interface Region {
+  // TODO: zod schema, loose
   id: string;
   name: string;
   createdAt: string;
@@ -101,7 +105,7 @@ const columns = [
     cell: (info) =>
       getCellActionIcons({
         info,
-        target: "/admin/regions",
+        crud,
       }),
   }),
 ];
@@ -148,9 +152,9 @@ export default function Component() {
   return (
     <>
       <AdminPageTitle
-        title="Regions"
-        buttonText="New Region"
-        buttonTarget="/admin/regions/new"
+        title={crud.plural}
+        buttonText={`New ${crud.singular}`}
+        buttonTarget={`${crud.target}/new`}
       />
 
       <AdminContentCard>
@@ -160,7 +164,7 @@ export default function Component() {
             onChange={(value: string | number) =>
               setGlobalFilter(String(value))
             }
-            placeholder="Search regions..."
+            placeholder={`Search ${crud.plural.toLowerCase()}...`}
           />
           <TableFilterDropdown />
         </TableBar>

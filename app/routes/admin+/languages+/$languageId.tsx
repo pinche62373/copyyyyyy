@@ -2,10 +2,7 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import {
-  Form,
-  useLoaderData
-} from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import { z } from "zod";
 
@@ -17,8 +14,11 @@ import {
   AdminFormFieldText,
 } from "#app/components/admin/form";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
+import { getModelCrud } from "#app/utils/crud";
 import { languageSchema } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
+
+const { crudLanguage: crud } = getModelCrud();
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const languageId = z.coerce.string().parse(params.languageId);
@@ -49,8 +49,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   return redirectWithSuccess(
-    "/admin/languages",
-    "Language updated successfully",
+    crud.target,
+    `${crud.singular} updated successfully`,
   );
 };
 
@@ -66,7 +66,7 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title="Edit Language" />
+      <AdminPageTitle title={`Edit ${crud.singular}`} />
 
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
@@ -80,7 +80,7 @@ export default function Component() {
             defaultValue={data.language.name}
           />
 
-          <AdminFormButtons cancelLink="/admin/languages" />
+          <AdminFormButtons cancelLink={crud.target} />
         </Form>
       </AdminContentCard>
     </>
