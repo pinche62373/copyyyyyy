@@ -44,6 +44,7 @@ export const AdminFormFieldText = ({
         </div>
         {/* End Col Name Input*/}
       </div>
+      {/* End Grid */}
     </div>
   );
 };
