@@ -8,6 +8,7 @@ import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import {
   AdminFormButtons,
+  AdminFormFieldDropdown,
   AdminFormFieldHidden,
   AdminFormFieldText,
 } from "#app/components/admin/form";
@@ -22,9 +23,8 @@ const { crudCountry: crud } = getModelCrud();
 export const loader = async () => {
   const regions = await getAdminRegions();
 
-  return regions
-}
-
+  return regions;
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -52,8 +52,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Component() {
-  const regions  = useLoaderData<typeof loader>();
-  console.log(regions)
+  const regions = useLoaderData<typeof loader>();
 
   const [form, fields] = useForm({
     shouldRevalidate: "onBlur",
@@ -73,6 +72,13 @@ export default function Component() {
           <AdminFormFieldHidden name="intent" value="create" />
 
           <AdminFormFieldText label="Name" fieldName="name" fields={fields} />
+
+          <AdminFormFieldDropdown
+            label="Region"
+            options={regions}
+            fieldName="regionId"
+            fields={fields}
+          />
 
           <AdminFormButtons cancelLink={crud.target} />
         </Form>
