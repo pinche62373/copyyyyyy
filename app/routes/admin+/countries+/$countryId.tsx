@@ -15,7 +15,7 @@ import {
   AdminFormFieldText,
 } from "#app/components/admin/form";
 import { getCountry, updateCountry } from "#app/models/country.server";
-import { getAdminRegions } from "#app/models/region.server";
+import { getRegionById, getRegions } from "#app/models/region.server";
 import { getModelCrud } from "#app/utils/crud";
 import { countrySchema } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
@@ -30,7 +30,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404 });
   }
 
-  const regions = await getAdminRegions();
+  const regions = await getRegions();
 
   return json({ country, regions });
 }
@@ -44,6 +44,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (submission.status !== "success") {
     return jsonWithError(null, "Invalid form data");
+  }
+
+  if (await getRegionById(submission.value.regionId) === null) {
+    return jsonWithError(null, "Invalid relationship");
   }
 
   try {

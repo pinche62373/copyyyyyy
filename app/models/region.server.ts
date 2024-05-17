@@ -9,7 +9,11 @@ export function getRegion({ id }: Pick<Region, "id">) {
   });
 }
 
-export function getAdminRegions() {
+export async function getRegionById(id: Region["id"]) {
+  return prisma.region.findUnique({ where: { id } });
+}
+
+export function getRegions() {
   return prisma.region.findMany({
     orderBy: { name: "asc" },
   });
