@@ -4,7 +4,7 @@ import Select from "react-select";
 
 // https://www.jussivirtanen.fi/writing/styling-react-select-with-tailwind
 const controlStyles = {
-  base: "border rounded-lg bg-white hover:cursor-pointer text-sm",
+  base: "border rounded-lg bg-white hover:cursor-pointer text-sm pl-1",
   nonFocus:
     "border-gray-200 placeholder:text-gray-400 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60",
   focus: "border-blue-500 ring-1 ring-blue-500 dark:ring-neutral-600",
@@ -78,7 +78,7 @@ export const AdminFormFieldDropdown = ({
         {/* End Col Name Label*/}
 
         {/* Test Col */}
-        <div className="sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
+        <div className="mt-0.5 sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
           <Select
             name={fieldName}
             placeholder={`Select a ${label.toLowerCase()}...`}

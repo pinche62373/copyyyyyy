@@ -28,7 +28,7 @@ export const AdminFormFieldText = ({
         {/* End Col Name Label*/}
 
         {/* Col Name Input*/}
-        <div className="sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
+        <div className="mt-0.5 sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
           <input
             autoFocus
             type="text"
