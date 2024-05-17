@@ -46,7 +46,7 @@ export const AdminFormFieldDropdown = ({
         {/* Test Col */}
         <div className="sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
           <Select
-            name="regionId"
+            name={fieldName}
             options={options}
             placeholder={`Select a ${label.toLowerCase()}...`}
             className="py-2"
