@@ -74,9 +74,8 @@ export default function Component() {
           <AdminFormFieldText label="Name" fieldName="name" fields={fields} />
 
           <AdminFormFieldDropdown
-            label="Region"
+            label={crud.singular}
             items={data.regions}
-            fieldName="regionId"
             fields={fields}
           />
 

@@ -2,7 +2,7 @@ import { type FormMetadata } from "@conform-to/react";
 import { useState } from "react";
 
 interface PropTypes {
-  fieldName: string;
+  // fieldName: string;
   label: string;
   fields: ReturnType<FormMetadata["getFieldset"]>;
   items: {
@@ -13,7 +13,7 @@ interface PropTypes {
 }
 
 export const AdminFormFieldDropdown = ({
-  fieldName,
+  // fieldName,
   label,
   fields,
   items,
@@ -24,6 +24,8 @@ export const AdminFormFieldDropdown = ({
   const changeSelected = (optionId: string) => {
     setSelected(optionId);
   };
+
+  const fieldName = label.toLowerCase() + "Id"; // e.g. `regionId`
 
   return (
     <div className="py-2 space-y-5">
@@ -48,7 +50,7 @@ export const AdminFormFieldDropdown = ({
           >
             {/* Options */}
             <option disabled selected defaultValue={selected}>
-              Select a region...
+              Select a {label.toLowerCase()}...
             </option>
 
             {items.map((item, i: number) => {
