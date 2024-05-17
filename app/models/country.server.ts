@@ -12,14 +12,24 @@ export function getCountry({ id }: Pick<Country, "id">) {
 export function getAdminCountries() {
   return prisma.country.findMany({
     orderBy: { name: "asc" },
+    include: {
+      region: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 }
 
-export function createCountry({ name }: Pick<Country, "name">) {
+export function createCountry({
+  name,
+  regionId,
+}: Pick<Country, "name" | "regionId">) {
   return prisma.country.create({
     data: {
       name,
-      regionId: "clw9imvha0007jqmslvuugk1d",
+      regionId,
       updatedAt: null,
     },
   });
