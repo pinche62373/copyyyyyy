@@ -19,7 +19,7 @@ import TanstackTable from "#app/components/tanstack-table";
 import {
   getCellActionIcons,
   getCellCreatedAt,
-  getCellLinkToSelf,
+  getCellLink,
   getCellTypeVisibleRowIndex,
   getCellUpdatedAt,
 } from "#app/components/tanstack-table/cell-types";
@@ -85,7 +85,12 @@ const columns = [
     header: () => <span>Language</span>,
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: (info) => getCellLinkToSelf(info),
+    cell: ({ row }) =>
+      getCellLink({
+        id: row.original.id,
+        name: row.original.name,
+        target: crud.target
+      }),
   }),
   columnHelper.accessor("createdAt", {
     header: () => <span>Created</span>,

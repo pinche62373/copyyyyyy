@@ -19,7 +19,7 @@ import TanstackTable from "#app/components/tanstack-table";
 import {
   getCellActionIcons,
   getCellCreatedAt,
-  getCellLinkToSelf,
+  getCellLink,
   getCellTypeVisibleRowIndex,
   getCellUpdatedAt,
 } from "#app/components/tanstack-table/cell-types";
@@ -65,11 +65,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 interface Country {
-  // TODO: zod schema, loose
+  // TODO: zod schema, create
   id: string;
   name: string;
   createdAt: string;
   updatedAt: string | null;
+  region: {
+    name: string;
+  };
 }
 
 const columnHelper = createColumnHelper<Country>();
@@ -86,7 +89,17 @@ const columns = [
     header: () => <span>Country</span>,
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: (info) => getCellLinkToSelf(info),
+    cell: ({ row }) =>
+      getCellLink({
+        id: row.original.id,
+        name: row.original.name,
+        target: crud.target
+      }),
+  }),
+  columnHelper.accessor("region", {
+    header: () => <span>Region</span>,
+    enableGlobalFilter: false,
+    cell: ({ row }) => row.original.region.name
   }),
   columnHelper.accessor("createdAt", {
     header: () => <span>Created</span>,

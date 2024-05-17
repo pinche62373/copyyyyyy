@@ -15,6 +15,7 @@ export function getAdminCountries() {
     include: {
       region: {
         select: {
+          id: true,
           name: true,
         },
       },
