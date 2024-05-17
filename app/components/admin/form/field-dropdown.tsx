@@ -1,5 +1,5 @@
 import { type FormMetadata } from "@conform-to/react";
-import { useState } from "react";
+import Select from "react-select";
 
 interface PropTypes {
   // fieldName: string;
@@ -13,19 +13,23 @@ interface PropTypes {
 }
 
 export const AdminFormFieldDropdown = ({
-  // fieldName,
   label,
   fields,
   items,
   defaultValue,
 }: PropTypes) => {
-  const [selected, setSelected] = useState<string | undefined>(defaultValue);
-
-  const changeSelected = (optionId: string) => {
-    setSelected(optionId);
-  };
-
   const fieldName = label.toLowerCase() + "Id"; // e.g. `regionId`
+
+  const options = items.map((item) => {
+    return {
+      value: item.id,
+      label: item.name,
+    };
+  });
+
+  const defaultOption = options.find(function (option) {
+    return option.value === defaultValue;
+  });
 
   return (
     <div className="py-2 space-y-5">
@@ -39,40 +43,22 @@ export const AdminFormFieldDropdown = ({
         </div>
         {/* End Col Name Label*/}
 
-        {/* Col Name Select*/}
+        {/* Test Col */}
         <div className="sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
-          <select
-            id="regionId"
+          <Select
             name="regionId"
-            onChange={(event) => changeSelected(event.target.value)}
-            value={selected}
-            className="py-2 px-4 pe-9 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-          >
-            {/* Options */}
-            <option disabled selected defaultValue={selected}>
-              Select a {label.toLowerCase()}...
-            </option>
-
-            {items.map((item, i: number) => {
-              return (
-                <option
-                  key={i}
-                  value={item.id}
-                  selected={defaultValue === item.id} // set selected item if id matches
-                >
-                  {item.name}
-                </option>
-              );
-            })}
-            {/* End Options */}
-          </select>
+            options={options}
+            placeholder={`Select a ${label.toLowerCase()}...`}
+            className="py-2"
+            defaultValue={defaultOption}
+          />
           {/* Validation Error */}
           <div className="pt-1 text-red-700 text-xs" id="name-error">
             {fields[fieldName].errors}
           </div>
-          {/* End Validation Error */}
+          {/* End Validation Error */}          
         </div>
-        {/* End Col Name Select*/}
+        {/* End Test Col */}
       </div>
       {/* End Grid */}
     </div>
