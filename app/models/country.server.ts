@@ -18,7 +18,7 @@ export function getCountry({ id }: Pick<Country, "id">) {
   });
 }
 
-export function getAdminCountries() {
+export function getCountries() {
   return prisma.country.findMany({
     orderBy: { name: "asc" },
     include: {

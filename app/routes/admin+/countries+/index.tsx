@@ -29,7 +29,7 @@ import { TableBar } from "#app/components/tanstack-table/TableBar";
 import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
-import { deleteCountry, getAdminCountries } from "#app/models/country.server";
+import { deleteCountry, getCountries } from "#app/models/country.server";
 import { getModelCrud } from "#app/utils/crud";
 import { countrySchema } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
@@ -37,7 +37,7 @@ import { validateFormIntent } from "#app/validations/validate-form-intent";
 const { crudCountry: crud } = getModelCrud();
 
 export const loader = async () => {
-  const countries = await getAdminCountries();
+  const countries = await getCountries();
 
   return countries;
 };
