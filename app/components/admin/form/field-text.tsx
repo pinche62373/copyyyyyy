@@ -14,7 +14,7 @@ export const AdminFormFieldText = ({
   defaultValue,
 }: PropTypes) => {
   return (
-    <div className="py-2 space-y-5">
+    <div className="py-2.5 space-y-5">
       {/* Grid */}
       <div className="grid sm:grid-cols-12 gap-y-1.5 sm:gap-y-0 sm:gap-x-5">
         {/* Col Name Label*/}
