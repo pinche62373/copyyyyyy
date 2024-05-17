@@ -23,7 +23,7 @@ const { crudCountry: crud } = getModelCrud();
 export const loader = async () => {
   const regions = await getAdminRegions();
 
-  return regions;
+  return { regions };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -52,7 +52,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Component() {
-  const regions = useLoaderData<typeof loader>();
+  const data = useLoaderData<typeof loader>();
 
   const [form, fields] = useForm({
     shouldRevalidate: "onBlur",
@@ -75,7 +75,7 @@ export default function Component() {
 
           <AdminFormFieldDropdown
             label="Region"
-            items={regions}
+            items={data.regions}
             fieldName="regionId"
             fields={fields}
           />
