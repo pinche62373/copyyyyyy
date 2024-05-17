@@ -1,4 +1,10 @@
 export function getModelCrud() {
+  const crudCountry = {
+    target: "/admin/countries",
+    singular: "Country",
+    plural: "Countries",
+  };
+
   const crudLanguage = {
     target: "/admin/languages",
     singular: "Language",
@@ -12,6 +18,7 @@ export function getModelCrud() {
   };
 
   return {
+    crudCountry,
     crudLanguage,
     crudRegion,
   };
