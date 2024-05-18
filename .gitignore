@@ -10,3 +10,4 @@ node_modules
 /cypress/videos
 /prisma/data.db
 /prisma/data.db-journal
+/prisma/seed/.snaplet/dataModel.json
