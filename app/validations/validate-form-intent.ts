@@ -1,4 +1,4 @@
-export type IntentType = "create" | "update" | "delete" | "login"
+export type IntentType = "create" | "update" | "delete" | "login" | "purge"
 
 export function validateFormIntent(
   formData: FormData,
