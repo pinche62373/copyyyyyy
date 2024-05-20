@@ -17,10 +17,12 @@ import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
 import type { ToastMessage } from "remix-toast";
 import { getToast } from "remix-toast";
+import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { Toaster, toast as notify } from "sonner";
 
 import stylesheet from "#app/tailwind.css";
 import { getUser } from "#app/utils/auth.server";
+import { honeypot } from "#app/utils/honeypot.server";
 import {
   Theme,
   ThemeBody,
@@ -30,9 +32,7 @@ import {
 } from "#app/utils/theme-provider";
 import { getThemeSession } from "#app/utils/theme.server";
 
-import { honeypot } from "#app/utils/honeypot.server";
 import "@fontsource-variable/inter/wght.css";
-import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { setToastCookieOptions } from "./utils/toaster.server";
 
 export const links: LinksFunction = () => [
