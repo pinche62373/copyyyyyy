@@ -7,10 +7,6 @@ invariant(
   process.env.COOKIE_SECRET,
   "Environment variable not found: COOKIE_SECRET",
 );
-invariant(
-  process.env.SESSION_MAX_AGE,
-  "Environment variable not found: SESSION_MAX_AGE",
-);
 
 interface StoreGeneratorArg {
   cookie: Cookie | CookieOptions;

@@ -30,9 +30,10 @@ import {
 } from "#app/utils/theme-provider";
 import { getThemeSession } from "#app/utils/theme.server";
 
-import { setToastCookieOptions } from "./utils/toaster.server";
-
+import { honeypot } from "#app/utils/honeypot.server";
 import "@fontsource-variable/inter/wght.css";
+import { HoneypotProvider } from "remix-utils/honeypot/react";
+import { setToastCookieOptions } from "./utils/toaster.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -59,6 +60,7 @@ export interface LoaderData {
   user: ReturnType<typeof getUser> extends Promise<infer T> ? T : never;
   theme: Theme | null;
   toast: ToastMessage | undefined;
+  honeypotInputProps: any;
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -72,6 +74,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     user: await getUser(request),
     theme: themeSession.getTheme(),
     toast,
+    honeypotInputProps: honeypot.getInputProps(),
   };
 
   return json({ ...data }, { headers });
@@ -118,7 +121,9 @@ function App() {
         <ThemeHead ssrTheme={Boolean(data.theme)} />
       </head>
       <body className="h-full bg-gray-50 dark:bg-neutral-900">
-        <Outlet />
+        <HoneypotProvider {...data.honeypotInputProps}>
+          <Outlet />
+        </HoneypotProvider>
         <ThemeBody ssrTheme={Boolean(data.theme)} />
         <ScrollRestoration />
         <Scripts />

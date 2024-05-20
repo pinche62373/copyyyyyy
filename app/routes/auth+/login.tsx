@@ -19,6 +19,9 @@ import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
+import { HoneypotInputs } from "remix-utils/honeypot/react";
+import { SpamError } from "remix-utils/honeypot/server";
+import { honeypot } from "#app/utils/honeypot.server";
 
 const validator = withZod(authLoginSchema);
 
@@ -65,6 +68,17 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   validateFormIntent(formData, "login");
 
+  // honeypot
+  try {
+    honeypot.check(formData);
+  } catch (error) {
+    if (error instanceof SpamError) {
+      throw new Response("Invalid form data", { status: 400 });
+    }
+    throw error; // rethrow
+  }
+
+  // validate
   const fieldValues = await validator.validate(formData);
 
   if (fieldValues.error) return validationError(fieldValues.error);
@@ -114,6 +128,8 @@ export default function LoginPage() {
             type="password"
             placeholder="Your password..."
           />
+
+          <HoneypotInputs />
 
           <div className="flex justify-end gap-x-2 pt-2">
             <div className="w-full flex justify-end items-center gap-x-2">

@@ -46,6 +46,7 @@
     "@tanstack/react-table": "^8.17.3",
     "bcryptjs": "^2.4.3",
     "clsx": "^2.1.1",
+    "crypto-js": "^4.2.0",
     "dayjs": "^1.11.11",
     "isbot": "^5.1.6",
     "preline": "^2.1.0",
