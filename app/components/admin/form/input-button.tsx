@@ -23,11 +23,12 @@ export const AdminFormInputButton = ({
         </div>
         {/* End Col Name Label*/}
 
-        {/* Col Name Input*/}
-        <div className="mt-0.5 sm:col-span-4 md:col-span-4 lg:col-span-4 xl:col-span-3 text-right">
-          <FormButton label={buttonLabel} disabled={disabled} />
-        </div>
-        {/* End Col Name Input*/}
+        {/* Only render button column if not disabled */}
+        {!disabled && (
+          <div className="mt-0.5 sm:col-span-4 md:col-span-4 lg:col-span-4 xl:col-span-3 text-right">
+            <FormButton label={buttonLabel} />
+          </div>
+        )}
       </div>
       {/* End Grid */}
     </div>

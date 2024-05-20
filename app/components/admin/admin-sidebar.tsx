@@ -310,7 +310,7 @@ export function AdminSidebar() {
               {/* Divider */}
               <li className="pt-5 px-8 mt-5 mb-1.5 border-t border-gray-200 first:border-transparent first:pt-0 dark:border-neutral-700 dark:first:border-transparent">
                 <span className="block text-xs uppercase text-gray-500 dark:text-neutral-500">
-                  Admin Models
+                  Base Models
                 </span>
               </li>
               {/* End Divider */}

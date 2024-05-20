@@ -37,7 +37,7 @@ export default function Component() {
 
   const invalidSessionsLabel =
     data.expiredSessionCount === 0
-      ? "No expired database sessions"
+      ? "No expired database sessions to purge"
       : `Purge expired database sessions (${data.expiredSessionCount})`;
 
   return (
