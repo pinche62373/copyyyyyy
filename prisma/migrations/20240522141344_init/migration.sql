@@ -70,6 +70,15 @@ CREATE TABLE "Country" (
 );
 
 -- CreateTable
+CREATE TABLE "Movie" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "slug" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME
+);
+
+-- CreateTable
 CREATE TABLE "_RoleToUser" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
@@ -97,6 +106,12 @@ CREATE UNIQUE INDEX "Region_name_key" ON "Region"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Country_name_key" ON "Country"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Movie_name_key" ON "Movie"("name");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Movie_slug_key" ON "Movie"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_RoleToUser_AB_unique" ON "_RoleToUser"("A", "B");

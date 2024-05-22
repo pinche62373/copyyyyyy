@@ -12,6 +12,7 @@ export default defineConfig({
     "!*", // Exclude all tables except the ones whitelisted below
     "Country",
     "Language",
+    "Movie",
     "Password",
     "Region",
     "User",

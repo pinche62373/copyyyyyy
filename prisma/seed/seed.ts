@@ -136,6 +136,30 @@ const main = async () => {
   ]);
 
   // --------------------------------------------------------------------------
+  // Movies
+  // --------------------------------------------------------------------------
+  await seed.movie([
+    {
+      id: cuid("Movie 1"),
+      name: "Movie 1",
+      slug: "wdm0q",
+      updatedAt,
+    },
+    {
+      id: cuid("Movie 3"),
+      name: "Movie 3",
+      slug: "dum3c",
+      updatedAt,
+    },
+    {
+      id: cuid("Movie 2"),
+      name: "Movie 2",
+      slug: "8k3a7",
+      updatedAt,
+    },
+  ]);
+
+  // --------------------------------------------------------------------------
   // Exit seeding
   // --------------------------------------------------------------------------
   console.log("Database seeded successfully!");

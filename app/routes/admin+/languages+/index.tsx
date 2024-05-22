@@ -89,7 +89,7 @@ const columns = [
       getCellLink({
         id: row.original.id,
         name: row.original.name,
-        target: crud.target
+        target: crud.target,
       }),
   }),
   columnHelper.accessor("createdAt", {
