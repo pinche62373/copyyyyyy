@@ -11,6 +11,13 @@ export function getMovie({ id }: Pick<Movie, "id">) {
   });
 }
 
+export function getMovieIdBySlug({ slug }: Pick<Movie, "slug">) {
+  return prisma[model].findFirst({
+    select: { id: true },
+    where: { slug },
+  });
+}
+
 export function getMovies() {
   return prisma[model].findMany({
     orderBy: { name: "asc" },

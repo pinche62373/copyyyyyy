@@ -142,19 +142,19 @@ const main = async () => {
     {
       id: cuid("Movie 1"),
       name: "Movie 1",
-      slug: "wdm0q",
+      slug: "ZWDM0Q",
       updatedAt,
     },
     {
       id: cuid("Movie 3"),
       name: "Movie 3",
-      slug: "dum3c",
+      slug: "ZBDUM3C",
       updatedAt,
     },
     {
       id: cuid("Movie 2"),
       name: "Movie 2",
-      slug: "8k3a7",
+      slug: "ZB8K3A7",
       updatedAt,
     },
   ]);
