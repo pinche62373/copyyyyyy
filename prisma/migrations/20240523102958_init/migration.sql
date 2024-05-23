@@ -79,6 +79,13 @@ CREATE TABLE "Movie" (
 );
 
 -- CreateTable
+CREATE TABLE "PermaLink" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "slug" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- CreateTable
 CREATE TABLE "_RoleToUser" (
     "A" TEXT NOT NULL,
     "B" TEXT NOT NULL,
@@ -112,6 +119,9 @@ CREATE UNIQUE INDEX "Movie_name_key" ON "Movie"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Movie_slug_key" ON "Movie"("slug");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "PermaLink_slug_key" ON "PermaLink"("slug");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_RoleToUser_AB_unique" ON "_RoleToUser"("A", "B");

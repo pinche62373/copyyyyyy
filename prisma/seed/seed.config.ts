@@ -14,6 +14,7 @@ export default defineConfig({
     "Language",
     "Movie",
     "Password",
+    "PermaLink",
     "Region",
     "User",
   ],

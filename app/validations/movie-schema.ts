@@ -8,7 +8,15 @@ export const slug = z
       "Movie slug must start Z followed by 5 uppercase characters and/or numbers.",
   });
 
-export const movieSchema = z.object({
+export const movieSchemaFull = z.object({
   id: z.string(),
+  name: z.string(),
   slug: slug,
+  createdAt: z.date(),
+  updatedAt: z.date().optional().nullable(),
+});
+
+export const movieSchemaPermaLink = movieSchemaFull.pick({
+  id: true,
+  slug: true,
 });

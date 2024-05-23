@@ -5,16 +5,16 @@ import { getMovieIdBySlug } from "#app/models/movie.server";
 import { slug as slugSchema } from "#app/validations/movie-schema";
 
 export async function loader({ params }: LoaderFunctionArgs) {
-  const movieSlug = params.movieSlug;
+  const slug = params.movieSlug;
 
   try {
-    invariant(movieSlug, "Must be set");
-    slugSchema.parse(movieSlug);
+    invariant(slug, "Must be set");
+    slugSchema.parse(slug);
   } catch (error) {
     throw new Response(`Not Found: ${error}`, { status: 404 });
   }
 
-  const movie = await getMovieIdBySlug({ slug: movieSlug });
+  const movie = await getMovieIdBySlug({ slug });
 
   if (!movie) {
     throw new Response("Not Found", { status: 404 });

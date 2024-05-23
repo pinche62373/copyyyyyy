@@ -2,12 +2,15 @@ import { parseArgs } from "node:util";
 
 import { createSeedClient } from "@snaplet/seed";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
+
+import { movieSchemaFull } from "#app/validations/movie-schema";
 
 import { cuid } from "./utils";
 
 const adminEmail = "rachel@remix.run";
 const adminPassword = "racheliscool";
-const updatedAt = null;
+const updatedAt = null; // TODO waits for snaplet fix
 
 // command line arguments
 const options = {
@@ -138,26 +141,58 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Movies
   // --------------------------------------------------------------------------
-  await seed.movie([
+  const movieSeedSchema = movieSchemaFull.pick({
+    id: true,
+    name: true,
+    slug: true,
+    updatedAt: true,
+  });
+
+  type MovieType = z.infer<typeof movieSeedSchema>;
+
+  type MoviesType = Record<string, MovieType>[];
+
+  const movies: MoviesType = [
     {
-      id: cuid("Movie 1"),
-      name: "Movie 1",
-      slug: "ZWDM0Q",
-      updatedAt,
+      movie1: {
+        id: cuid("Movie 1"),
+        name: "Movie 1",
+        slug: "ZWDM0Q",
+        updatedAt,
+      },
     },
     {
-      id: cuid("Movie 3"),
-      name: "Movie 3",
-      slug: "ZBDUM3C",
-      updatedAt,
+      movie2: {
+        id: cuid("Movie 2"),
+        name: "Movie 2",
+        slug: "Z8K3A7",
+        updatedAt,
+      },
     },
     {
-      id: cuid("Movie 2"),
-      name: "Movie 2",
-      slug: "ZB8K3A7",
-      updatedAt,
+      movie3: {
+        id: cuid("Movie 3"),
+        name: "Movie 3",
+        slug: "ZDUM3C",
+        updatedAt,
+      },
     },
-  ]);
+  ];
+
+  await seed.movie(
+    movies.map((movie) => {
+      return movie[Object.keys(movie)[0]]; // TODO updatedAt waits for snaplet fix
+    }),
+  );
+
+  // --------------------------------------------------------------------------
+  // PermaLinks
+  // --------------------------------------------------------------------------
+  await seed.permaLink(
+    movies.map((movie) => {
+      return { slug: movie[Object.keys(movie)[0]].slug };
+    }),
+  );
 
   // --------------------------------------------------------------------------
   // Exit seeding

@@ -21,9 +21,9 @@ export default function MovieIndexPage() {
         <ul className="ml-10 list-disc">
           {movies.map((movie, i) => (
             <li key={i}>
-              <NavLink to={movie.id}>
-                {movie.name} - {movie.slug}
-              </NavLink>
+              <NavLink to={movie.id}>{movie.name}</NavLink>
+              <span className="px-5">-</span>
+              <NavLink to={`/${movie.slug}`}>{movie.slug}</NavLink>
             </li>
           ))}
         </ul>

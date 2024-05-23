@@ -101,3 +101,11 @@ model Movie {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 }
+
+// memory table to ensure historically unique permalinks
+model PermaLink {
+  id   Int    @id @default(autoincrement())
+  slug String @unique
+
+  createdAt DateTime @default(now())
+}
