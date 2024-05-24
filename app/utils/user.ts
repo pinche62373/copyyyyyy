@@ -3,7 +3,13 @@ import { useRouteLoaderData } from '@remix-run/react'
 
 import { type loader as rootLoader } from '#app/root.tsx'
 
-function isUser(user: any): user is SerializeFrom<typeof rootLoader>['user'] {
+type UserType = SerializeFrom<typeof rootLoader>['user']
+
+function isUser(user: UserType): user is UserType  {
+	if (user === null) {
+		return false
+	}
+	
 	return user && typeof user === 'object' && typeof user.id === 'string'
 }
 export function useOptionalUser() {

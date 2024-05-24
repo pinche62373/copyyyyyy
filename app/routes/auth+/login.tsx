@@ -8,6 +8,8 @@ import { Link } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { AuthorizationError } from "remix-auth";
 import { jsonWithError } from "remix-toast";
+import { HoneypotInputs } from "remix-utils/honeypot/react";
+import { SpamError } from "remix-utils/honeypot/server";
 import { ValidatedForm, validationError } from "remix-validated-form";
 
 import { FormButton } from "#app/components/form-button";
@@ -15,13 +17,12 @@ import { FormInput } from "#app/components/form-input";
 import { FormIntent } from "#app/components/form-intent";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
+import { honeypot } from "#app/utils/honeypot.server";
 import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
-import { HoneypotInputs } from "remix-utils/honeypot/react";
-import { SpamError } from "remix-utils/honeypot/server";
-import { honeypot } from "#app/utils/honeypot.server";
+
 
 const validator = withZod(authLoginSchema);
 

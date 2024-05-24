@@ -18,6 +18,7 @@ import { useEffect } from "react";
 import type { ToastMessage } from "remix-toast";
 import { getToast } from "remix-toast";
 import { HoneypotProvider } from "remix-utils/honeypot/react";
+import { HoneypotInputProps } from "remix-utils/honeypot/server";
 import { Toaster, toast as notify } from "sonner";
 
 import stylesheet from "#app/tailwind.css";
@@ -60,7 +61,7 @@ export interface LoaderData {
   user: ReturnType<typeof getUser> extends Promise<infer T> ? T : never;
   theme: Theme | null;
   toast: ToastMessage | undefined;
-  honeypotInputProps: any;
+  honeypotInputProps: HoneypotInputProps;
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
