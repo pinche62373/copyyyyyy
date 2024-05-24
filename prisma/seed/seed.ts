@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { parseArgs } from "node:util";
 
 import { createSeedClient } from "@snaplet/seed";
@@ -10,7 +13,7 @@ import { cuid } from "./utils";
 
 const adminEmail = "rachel@remix.run";
 const adminPassword = "racheliscool";
-const updatedAt = null; // TODO waits for snaplet fix
+const updatedAt = null; // TODO waits for snaplet fix (then remove @ts-nocheck)
 
 // command line arguments
 const options = {
