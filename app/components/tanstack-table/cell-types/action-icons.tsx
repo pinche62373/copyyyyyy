@@ -57,7 +57,7 @@ export const getCellActionIcons = ({ info, crud }: PropTypes) => {
         formId={deleteFormId}
         confirmButtonText="Delete"
         caption={`Delete ${crud.singular}`}
-        body={`Are you sure you want to permanently delete this ${crud.singular.toLowerCase()}?`}
+        body={`Are you sure you want to permanently delete "${info.row.original.name}"?`}
       />
     </>
   );

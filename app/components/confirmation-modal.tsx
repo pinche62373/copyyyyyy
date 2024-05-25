@@ -69,9 +69,10 @@ export function ConfirmationModal({
                 <h3 className="mb-2 text-xl font-bold text-gray-800 dark:text-neutral-200">
                   {caption}
                 </h3>
-                <p className="text-gray-500 dark:text-neutral-500">{body}</p>
+                <p className="text-wrap text-gray-500 dark:text-neutral-500">{body}</p>
               </div>
             </div>
+
           </div>
 
           <div className="flex justify-end items-center gap-x-2 py-3 px-4 bg-gray-50 border-t dark:bg-neutral-950 dark:border-neutral-800">
