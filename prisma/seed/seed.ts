@@ -9,13 +9,19 @@ import { z } from "zod";
 
 import { movieSchemaFull } from "#app/validations/movie-schema";
 
+import { findRbacPermissions, getRbacPermissions } from "./rbac";
 import { cuid } from "./utils";
 
+// --------------------------------------------------------------------------
+// Variables
+// --------------------------------------------------------------------------
 const adminEmail = "rachel@remix.run";
 const adminPassword = "racheliscool";
 const updatedAt = null; // TODO waits for snaplet fix (then remove @ts-nocheck)
 
-// command line arguments
+// --------------------------------------------------------------------------
+// Command line arguments
+// --------------------------------------------------------------------------
 const options = {
   force: {
     type: "boolean",
@@ -27,9 +33,7 @@ const main = async () => {
     values: { force },
   } = parseArgs({ options });
 
-  // --------------------------------------------------------------------------
   // Execute dry run unless --force argument was passed
-  // --------------------------------------------------------------------------
   const dryRun = force === true ? false : true;
 
   dryRun ? console.log("Dry running") : console.log(`Not dry running`);
@@ -57,6 +61,49 @@ const main = async () => {
         x(1, {
           hash: hashedPassword,
         }),
+    },
+  ]);
+
+  // --------------------------------------------------------------------------
+  // Permissions
+  // --------------------------------------------------------------------------
+  await seed.permission(getRbacPermissions());
+
+  // --------------------------------------------------------------------------
+  // Roles with Permissions
+  // --------------------------------------------------------------------------
+  const adminPermissions = findRbacPermissions({
+    store: seed.$store,
+    field: "access",
+    value: "any",
+  });
+
+  const adminResult = adminPermissions.map((permission) => ({
+    A: permission.id,
+  }));
+  console.log(adminResult);
+
+  await seed.role([
+    {
+      id: cuid("admin"),
+      name: "admin",
+      description: "Administrators",
+      // _PermissionToRole: adminPermissions.map((permission) => ({ A: permission.id })), // RBAC
+      _RoleToUser: [
+        {
+          B: cuid(adminEmail),
+        },
+      ],
+    },
+    {
+      id: cuid("user"),
+      name: "user",
+      description: "Users",
+    },
+    {
+      id: cuid("moderator"),
+      name: "moderator",
+      description: "Moderators",
     },
   ]);
 

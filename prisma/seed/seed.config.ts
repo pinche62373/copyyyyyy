@@ -10,12 +10,16 @@ export default defineConfig({
   },
   select: [
     "!*", // Exclude all tables except the ones whitelisted below
+    "_PermissionToRole",
+    "_RoleToUser",
     "Country",
     "Language",
     "Movie",
     "Password",
     "PermaLink",
+    "Permission",
     "Region",
+    "Role",
     "User",
   ],
 });
