@@ -15,9 +15,17 @@ import { cuid } from "./utils";
 // --------------------------------------------------------------------------
 // Variables
 // --------------------------------------------------------------------------
-const adminEmail = "rachel@remix.run";
-const adminPassword = "racheliscool";
 const updatedAt = null; // TODO waits for snaplet fix (then remove @ts-nocheck)
+const accounts = {
+  admin: {
+    email: "rachel@remix.run",
+    password: "racheliscool",
+  },
+  user: {
+    email: "candy@remix.run",
+    password: "candyiscool",
+  },
+};
 
 // --------------------------------------------------------------------------
 // Command line arguments
@@ -50,12 +58,21 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // User with Password
   // --------------------------------------------------------------------------
-  const hashedPassword = await bcrypt.hash(adminPassword, 10);
+  const hashedPassword = await bcrypt.hash(accounts.admin.password, 10);
 
   await seed.user([
     {
-      id: cuid(adminEmail),
-      email: adminEmail,
+      id: cuid(accounts.admin.email),
+      email: accounts.admin.email,
+      updatedAt,
+      password: (x) =>
+        x(1, {
+          hash: hashedPassword,
+        }),
+    },
+    {
+      id: cuid(accounts.user.email),
+      email: accounts.user.email,
       updatedAt,
       password: (x) =>
         x(1, {
@@ -91,7 +108,7 @@ const main = async () => {
       // _PermissionToRole: adminPermissions.map((permission) => ({ A: permission.id })), // RBAC
       _RoleToUser: [
         {
-          B: cuid(adminEmail),
+          B: cuid(accounts.admin.email),
         },
       ],
     },
@@ -99,6 +116,11 @@ const main = async () => {
       id: cuid("user"),
       name: "user",
       description: "Users",
+      _RoleToUser: [
+        {
+          B: cuid(accounts.user.email),
+        },
+      ],
     },
     {
       id: cuid("moderator"),
