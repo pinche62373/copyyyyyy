@@ -15,7 +15,7 @@ import { cuid } from "./utils";
 // --------------------------------------------------------------------------
 // Variables
 // --------------------------------------------------------------------------
-const updatedAt = null; // TODO waits for snaplet fix (then remove @ts-nocheck)
+const updatedAt = null;
 const accounts = {
   admin: {
     email: "rachel@remix.run",
@@ -95,17 +95,12 @@ const main = async () => {
     value: "any",
   });
 
-  const adminResult = adminPermissions.map((permission) => ({
-    A: permission.id,
-  }));
-  console.log(adminResult);
-
   await seed.role([
     {
       id: cuid("admin"),
       name: "admin",
       description: "Administrators",
-      // _PermissionToRole: adminPermissions.map((permission) => ({ A: permission.id })), // RBAC
+      _PermissionToRole: adminPermissions.map((permission) => ({ A: permission.id })), // RBAC
       _RoleToUser: [
         {
           B: cuid(accounts.admin.email),
@@ -253,7 +248,7 @@ const main = async () => {
 
   await seed.movie(
     movies.map((movie) => {
-      return movie[Object.keys(movie)[0]]; // TODO updatedAt waits for snaplet fix
+      return movie[Object.keys(movie)[0]];
     }),
   );
 
