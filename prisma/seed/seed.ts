@@ -3,7 +3,7 @@
 
 import { parseArgs } from "node:util";
 
-import { createSeedClient } from "@snaplet/seed";
+import { createSeedClient  } from "@snaplet/seed";
 import bcrypt from "bcryptjs";
 
 import { findRbacPermissions, getRbacPermissions } from "./rbac";
@@ -30,28 +30,31 @@ const accounts = {
 const options = {
   force: {
     type: "boolean",
-  },
-  prod: {
-    type: "boolean",
-  },
+  }
 } as const;
 
 const main = async () => {
   const {
-    values: { force, prod },
+    values: { force },
   } = parseArgs({ options });
 
   // Execute dry run unless --force argument was passed
   const dryRun = force === true ? false : true;
 
   dryRun ? console.log("Dry running") : console.log(`Not dry running`);
-  prod
-    ? console.log("Running production mode")
-    : console.log(`Not running production mode`);
 
   const seed = await createSeedClient({
     dryRun,
   });
+
+  // --------------------------------------------------------------------------
+  // Determine production mode
+  // --------------------------------------------------------------------------
+  const prod = process.env.NODE_ENV === "production" ? true : false
+
+  prod
+    ? console.log("Running production mode")
+    : console.log(`Not running production mode`);
 
   // --------------------------------------------------------------------------
   // Truncate tables specified in the config
