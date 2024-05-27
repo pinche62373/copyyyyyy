@@ -45,7 +45,9 @@ const main = async () => {
   const dryRun = force === true ? false : true;
 
   dryRun ? console.log("Dry running") : console.log(`Not dry running`);
-  prod ? console.log("Running production mode") : console.log(`Not running production mode`);
+  prod
+    ? console.log("Running production mode")
+    : console.log(`Not running production mode`);
 
   const seed = await createSeedClient({
     dryRun,
@@ -146,54 +148,40 @@ const main = async () => {
   }
 
   // --------------------------------------------------------------------------
-  // Regions with Countries
+  // Regions (ALWAYS) with Countries (DEV-ONLY)
   // --------------------------------------------------------------------------
-  await seed.region([
+  const regions = [
     {
-      id: cuid("Asia"),
       name: "Asia",
-      updatedAt,
     },
     {
-      id: cuid("Europe"),
       name: "Europe",
-      updatedAt,
-      countries: [
-        {
-          id: cuid("Russia"),
-          name: "Russia",
-          updatedAt,
-        },
-        {
-          id: cuid("France"),
-          name: "France",
-          updatedAt,
-        },
-        {
-          id: cuid("Portugal"),
-          name: "Portugal",
-          updatedAt,
-        },
-      ],
+      countries: ["Russia", "France", "Portugal"],
     },
     {
-      id: cuid("Africa"),
       name: "Africa",
-      updatedAt,
     },
     {
-      id: cuid("Latin America"),
       name: "Latin America",
-      updatedAt,
-      countries: [
-        {
-          id: cuid("Colombia"),
-          name: "Colombia",
-          updatedAt,
-        },
-      ],
+      countries: ["Colombia"],
     },
-  ]);
+  ];
+
+  await seed.region(
+    regions.map((region) => ({
+      id: cuid(region.name),
+      name: region.name,
+      updatedAt,
+      countries:
+        prod === true
+          ? undefined
+          : region.countries?.map((country) => ({
+              id: cuid(country),
+              name: country,
+              updatedAt,
+            })),
+    })),
+  );
 
   // --------------------------------------------------------------------------
   // Movies - DEV ONLY
