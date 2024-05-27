@@ -5,9 +5,6 @@ import { parseArgs } from "node:util";
 
 import { createSeedClient } from "@snaplet/seed";
 import bcrypt from "bcryptjs";
-import { z } from "zod";
-
-import { movieSchemaFull } from "#app/validations/movie-schema";
 
 import { findRbacPermissions, getRbacPermissions } from "./rbac";
 import { cuid } from "./utils";
@@ -100,7 +97,9 @@ const main = async () => {
       id: cuid("admin"),
       name: "admin",
       description: "Administrators",
-      _PermissionToRole: adminPermissions.map((permission) => ({ A: permission.id })), // RBAC
+      _PermissionToRole: adminPermissions.map((permission) => ({
+        A: permission.id,
+      })), // RBAC
       _RoleToUser: [
         {
           B: cuid(accounts.admin.email),
@@ -127,33 +126,15 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Languages
   // --------------------------------------------------------------------------
-  await seed.language([
-    {
-      id: cuid("English"),
-      name: "English",
+  const languages = ["English", "Russian", "Portugese", "Chinese", "Hungarian"];
+
+  await seed.language(
+    languages.map((language) => ({
+      id: cuid(language),
+      name: language,
       updatedAt,
-    },
-    {
-      id: cuid("Russian"),
-      name: "Russian",
-      updatedAt,
-    },
-    {
-      id: cuid("Portugese"),
-      name: "Portugese",
-      updatedAt,
-    },
-    {
-      id: cuid("Chinese"),
-      name: "Chinese",
-      updatedAt,
-    },
-    {
-      id: cuid("Hungarian"),
-      name: "Hungarian",
-      updatedAt,
-    },
-  ]);
+    })),
+  );
 
   // --------------------------------------------------------------------------
   // Regions with Countries
@@ -208,48 +189,28 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Movies
   // --------------------------------------------------------------------------
-  const movieSeedSchema = movieSchemaFull.pick({
-    id: true,
-    name: true,
-    slug: true,
-    updatedAt: true,
-  });
-
-  type MovieType = z.infer<typeof movieSeedSchema>;
-
-  type MoviesType = Record<string, MovieType>[];
-
-  const movies: MoviesType = [
+  const movies = [
     {
-      movie1: {
-        id: cuid("Movie 1"),
-        name: "Movie 1",
-        slug: "ZWDM0Q",
-        updatedAt,
-      },
+      name: "Movie1",
+      slug: "ZWDM0Q",
     },
     {
-      movie2: {
-        id: cuid("Movie 2"),
-        name: "Movie 2",
-        slug: "Z8K3A7",
-        updatedAt,
-      },
+      name: "Movie2",
+      slug: "Z8K3A7",
     },
     {
-      movie3: {
-        id: cuid("Movie 3"),
-        name: "Movie 3",
-        slug: "ZDUM3C",
-        updatedAt,
-      },
+      name: "Movie3",
+      slug: "ZDUM3C",
     },
   ];
 
   await seed.movie(
-    movies.map((movie) => {
-      return movie[Object.keys(movie)[0]];
-    }),
+    movies.map((movie) => ({
+      id: cuid(movie.name),
+      name: movie.name,
+      slug: movie.slug,
+      updatedAt,
+    })),
   );
 
   // --------------------------------------------------------------------------
