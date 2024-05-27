@@ -25,7 +25,7 @@ const accounts = {
 };
 
 // --------------------------------------------------------------------------
-// Command line arguments
+// Command line arguments --force and --prod
 // --------------------------------------------------------------------------
 const options = {
   force: {
@@ -59,7 +59,7 @@ const main = async () => {
   await seed.$resetDatabase();
 
   // --------------------------------------------------------------------------
-  // User with Password - DEV ONLY
+  // User with Password (DEV ONLY)
   // --------------------------------------------------------------------------
   const hashedAdminPassword = await bcrypt.hash(accounts.admin.password, 10);
   const hashedUserPassword = await bcrypt.hash(accounts.user.password, 10);
@@ -88,12 +88,12 @@ const main = async () => {
   }
 
   // --------------------------------------------------------------------------
-  // Permissions
+  // Permissions (ALWAYS)
   // --------------------------------------------------------------------------
   await seed.permission(getRbacPermissions());
 
   // --------------------------------------------------------------------------
-  // Roles with Permissions
+  // Roles with Permissions (ALWAYS)
   // --------------------------------------------------------------------------
   const adminPermissions = findRbacPermissions({
     store: seed.$store,
@@ -133,7 +133,7 @@ const main = async () => {
   ]);
 
   // --------------------------------------------------------------------------
-  // Languages - DEV ONLY
+  // Languages (DEV ONLY)
   // --------------------------------------------------------------------------
   const languages = ["English", "Russian", "Portugese", "Chinese", "Hungarian"];
 
@@ -148,7 +148,7 @@ const main = async () => {
   }
 
   // --------------------------------------------------------------------------
-  // Regions (ALWAYS) with Countries (DEV-ONLY)
+  // Regions (ALWAYS) with Countries (DEV ONLY)
   // --------------------------------------------------------------------------
   const regions = [
     {
@@ -184,7 +184,7 @@ const main = async () => {
   );
 
   // --------------------------------------------------------------------------
-  // Movies - DEV ONLY
+  // Movies (DEV ONLY)
   // --------------------------------------------------------------------------
   const movies = ["Movie1", "Movie2", "Movie3"];
 
@@ -200,7 +200,7 @@ const main = async () => {
   }
 
   // --------------------------------------------------------------------------
-  // PermaLinks - DEV ONLY
+  // PermaLinks (DEV ONLY)
   // --------------------------------------------------------------------------
   if (!prod) {
     await seed.permaLink(movies.map((movie) => ({ slug: permaLink(movie) })));
