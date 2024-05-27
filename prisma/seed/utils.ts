@@ -15,3 +15,10 @@ export const cuid = (
 const alphaNumAlphabet = Array.from({ length: 36 }, (x, i) =>
   i < 10 ? String(i) : String.fromCharCode(i + 87),
 );
+
+/*
+ * Deterministic tzbd permalink slug
+ */
+export const permaLink = (name: string) => {
+  return "Z" + cuid(name, { length: 5 }).toUpperCase();
+};

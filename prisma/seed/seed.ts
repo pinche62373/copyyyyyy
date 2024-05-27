@@ -7,7 +7,7 @@ import { createSeedClient } from "@snaplet/seed";
 import bcrypt from "bcryptjs";
 
 import { findRbacPermissions, getRbacPermissions } from "./rbac";
-import { cuid } from "./utils";
+import { cuid, permaLink } from "./utils";
 
 // --------------------------------------------------------------------------
 // Variables
@@ -189,26 +189,13 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Movies
   // --------------------------------------------------------------------------
-  const movies = [
-    {
-      name: "Movie1",
-      slug: "ZWDM0Q",
-    },
-    {
-      name: "Movie2",
-      slug: "Z8K3A7",
-    },
-    {
-      name: "Movie3",
-      slug: "ZDUM3C",
-    },
-  ];
+  const movies = ["Movie1", "Movie2", "Movie3"];
 
   await seed.movie(
     movies.map((movie) => ({
-      id: cuid(movie.name),
-      name: movie.name,
-      slug: movie.slug,
+      id: cuid(movie),
+      name: movie,
+      slug: permaLink(movie),
       updatedAt,
     })),
   );
@@ -216,11 +203,7 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // PermaLinks
   // --------------------------------------------------------------------------
-  await seed.permaLink(
-    movies.map((movie) => {
-      return { slug: movie[Object.keys(movie)[0]].slug };
-    }),
-  );
+  await seed.permaLink(movies.map((movie) => ({ slug: permaLink(movie) })));
 
   // --------------------------------------------------------------------------
   // Exit seeding
