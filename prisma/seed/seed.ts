@@ -31,17 +31,21 @@ const options = {
   force: {
     type: "boolean",
   },
+  prod: {
+    type: "boolean",
+  },
 } as const;
 
 const main = async () => {
   const {
-    values: { force },
+    values: { force, prod },
   } = parseArgs({ options });
 
   // Execute dry run unless --force argument was passed
   const dryRun = force === true ? false : true;
 
   dryRun ? console.log("Dry running") : console.log(`Not dry running`);
+  prod ? console.log("Running production mode") : console.log(`Not running production mode`);
 
   const seed = await createSeedClient({
     dryRun,
@@ -53,30 +57,33 @@ const main = async () => {
   await seed.$resetDatabase();
 
   // --------------------------------------------------------------------------
-  // User with Password
+  // User with Password - DEV ONLY
   // --------------------------------------------------------------------------
-  const hashedPassword = await bcrypt.hash(accounts.admin.password, 10);
+  const hashedAdminPassword = await bcrypt.hash(accounts.admin.password, 10);
+  const hashedUserPassword = await bcrypt.hash(accounts.user.password, 10);
 
-  await seed.user([
-    {
-      id: cuid(accounts.admin.email),
-      email: accounts.admin.email,
-      updatedAt,
-      password: (x) =>
-        x(1, {
-          hash: hashedPassword,
-        }),
-    },
-    {
-      id: cuid(accounts.user.email),
-      email: accounts.user.email,
-      updatedAt,
-      password: (x) =>
-        x(1, {
-          hash: hashedPassword,
-        }),
-    },
-  ]);
+  if (!prod) {
+    await seed.user([
+      {
+        id: cuid(accounts.admin.email),
+        email: accounts.admin.email,
+        updatedAt,
+        password: (x) =>
+          x(1, {
+            hash: hashedAdminPassword,
+          }),
+      },
+      {
+        id: cuid(accounts.user.email),
+        email: accounts.user.email,
+        updatedAt,
+        password: (x) =>
+          x(1, {
+            hash: hashedUserPassword,
+          }),
+      },
+    ]);
+  }
 
   // --------------------------------------------------------------------------
   // Permissions
@@ -124,17 +131,19 @@ const main = async () => {
   ]);
 
   // --------------------------------------------------------------------------
-  // Languages
+  // Languages - DEV ONLY
   // --------------------------------------------------------------------------
   const languages = ["English", "Russian", "Portugese", "Chinese", "Hungarian"];
 
-  await seed.language(
-    languages.map((language) => ({
-      id: cuid(language),
-      name: language,
-      updatedAt,
-    })),
-  );
+  if (!prod) {
+    await seed.language(
+      languages.map((language) => ({
+        id: cuid(language),
+        name: language,
+        updatedAt,
+      })),
+    );
+  }
 
   // --------------------------------------------------------------------------
   // Regions with Countries
@@ -187,23 +196,27 @@ const main = async () => {
   ]);
 
   // --------------------------------------------------------------------------
-  // Movies
+  // Movies - DEV ONLY
   // --------------------------------------------------------------------------
   const movies = ["Movie1", "Movie2", "Movie3"];
 
-  await seed.movie(
-    movies.map((movie) => ({
-      id: cuid(movie),
-      name: movie,
-      slug: permaLink(movie),
-      updatedAt,
-    })),
-  );
+  if (!prod) {
+    await seed.movie(
+      movies.map((movie) => ({
+        id: cuid(movie),
+        name: movie,
+        slug: permaLink(movie),
+        updatedAt,
+      })),
+    );
+  }
 
   // --------------------------------------------------------------------------
-  // PermaLinks
+  // PermaLinks - DEV ONLY
   // --------------------------------------------------------------------------
-  await seed.permaLink(movies.map((movie) => ({ slug: permaLink(movie) })));
+  if (!prod) {
+    await seed.permaLink(movies.map((movie) => ({ slug: permaLink(movie) })));
+  }
 
   // --------------------------------------------------------------------------
   // Exit seeding
