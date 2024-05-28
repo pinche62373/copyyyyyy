@@ -3,10 +3,11 @@
 
 import { parseArgs } from "node:util";
 
-import { createSeedClient  } from "@snaplet/seed";
+import { createSeedClient } from "@snaplet/seed";
 import bcrypt from "bcryptjs";
 
 import { findRbacPermissions, getRbacPermissions } from "./rbac";
+import seedConfig from "./seed.config";
 import { cuid, permaLink } from "./utils";
 
 // --------------------------------------------------------------------------
@@ -30,7 +31,7 @@ const accounts = {
 const options = {
   force: {
     type: "boolean",
-  }
+  },
 } as const;
 
 const main = async () => {
@@ -43,23 +44,29 @@ const main = async () => {
 
   dryRun ? console.log("Dry running") : console.log(`Not dry running`);
 
-  const seed = await createSeedClient({
-    dryRun,
-  });
-
   // --------------------------------------------------------------------------
-  // Determine production mode
+  // Handle production mode
   // --------------------------------------------------------------------------
-  const prod = process.env.NODE_ENV === "production" ? true : false
+  const prod = process.env.NODE_ENV === "production" ? true : false;
 
   prod
     ? console.log("Running production mode")
     : console.log(`Not running production mode`);
 
   // --------------------------------------------------------------------------
-  // Truncate tables specified in the config
+  // Create seed client
   // --------------------------------------------------------------------------
-  await seed.$resetDatabase();
+  const seed = await createSeedClient({
+    dryRun,
+  });
+
+  // --------------------------------------------------------------------------
+  // Truncate tables as specified in the config
+  // --------------------------------------------------------------------------
+  console.log("Using tables:");
+  console.log(seedConfig.select);
+
+  await seed.$resetDatabase(seedConfig.select);
 
   // --------------------------------------------------------------------------
   // User with Password (DEV ONLY)
@@ -67,7 +74,7 @@ const main = async () => {
   const hashedAdminPassword = await bcrypt.hash(accounts.admin.password, 10);
   const hashedUserPassword = await bcrypt.hash(accounts.user.password, 10);
 
-  if (!prod) {
+  if (prod === false) {
     await seed.user([
       {
         id: cuid(accounts.admin.email),
@@ -96,7 +103,7 @@ const main = async () => {
   await seed.permission(getRbacPermissions());
 
   // --------------------------------------------------------------------------
-  // Roles with Permissions (ALWAYS)
+  // Roles (ALWAYS) with Permissions (ALWAYS) and _RoleToUSer (DEV ONLY)
   // --------------------------------------------------------------------------
   const adminPermissions = findRbacPermissions({
     store: seed.$store,
@@ -110,9 +117,9 @@ const main = async () => {
       name: "admin",
       description: "Administrators",
       _PermissionToRole: adminPermissions.map((permission) => ({
-        A: permission.id,
-      })), // RBAC
-      _RoleToUser: [
+        A: permission.id, // RBAC
+      })),
+      _RoleToUser: prod === false && [
         {
           B: cuid(accounts.admin.email),
         },
@@ -122,7 +129,7 @@ const main = async () => {
       id: cuid("user"),
       name: "user",
       description: "Users",
-      _RoleToUser: [
+      _RoleToUser: prod === false && [
         {
           B: cuid(accounts.user.email),
         },
@@ -140,7 +147,7 @@ const main = async () => {
   // --------------------------------------------------------------------------
   const languages = ["English", "Russian", "Portugese", "Chinese", "Hungarian"];
 
-  if (!prod) {
+  if (prod === false) {
     await seed.language(
       languages.map((language) => ({
         id: cuid(language),
@@ -176,13 +183,12 @@ const main = async () => {
       name: region.name,
       updatedAt,
       countries:
-        prod === true
-          ? undefined
-          : region.countries?.map((country) => ({
-              id: cuid(country),
-              name: country,
-              updatedAt,
-            })),
+        prod === false &&
+        region.countries?.map((country) => ({
+          id: cuid(country),
+          name: country,
+          updatedAt,
+        })),
     })),
   );
 

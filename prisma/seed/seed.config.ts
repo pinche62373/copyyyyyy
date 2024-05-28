@@ -3,23 +3,34 @@ import { defineConfig } from "@snaplet/seed/config";
 
 import { prisma } from "#app/utils/db.server";
 
-export default defineConfig({
-  adapter: () => new SeedPrisma(prisma),
-  alias: {
-    inflection: false,
-  },
-  select: [
+const tables = {
+  prod: [
     "!*", // Exclude all tables except the ones whitelisted below
     "_PermissionToRole",
+    "Permission",
+    "Region",
+    "Role",
+  ],
+  devOnly: [
     "_RoleToUser",
     "Country",
     "Language",
     "Movie",
     "Password",
     "PermaLink",
-    "Permission",
-    "Region",
-    "Role",
     "User",
   ],
+};
+
+const mergedTables =
+  process.env.NODE_ENV === "production"
+    ? tables.prod
+    : tables.prod.concat(tables.devOnly);
+
+export default defineConfig({
+  adapter: () => new SeedPrisma(prisma),
+  alias: {
+    inflection: false,
+  },
+  select: mergedTables,
 });
