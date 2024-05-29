@@ -69,6 +69,26 @@ export async function getUser(request: Request) {
   throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
 }
 
+export async function requireUserId(
+  request: Request,
+  { redirectTo }: { redirectTo?: string | null } = {},
+) {
+  const userId = await getUserId(request);
+  if (!userId) {
+    const requestUrl = new URL(request.url);
+    redirectTo =
+      redirectTo === null
+        ? null
+        : redirectTo ?? `${requestUrl.pathname}${requestUrl.search}`;
+    const loginParams = redirectTo ? new URLSearchParams({ redirectTo }) : null;
+    const loginRedirect = ["/login", loginParams?.toString()]
+      .filter(Boolean)
+      .join("?");
+    throw redirect(loginRedirect);
+  }
+  return userId;
+}
+
 // ----------------------------------------------------------------------------
 // MAYBE required for register route
 // ----------------------------------------------------------------------------

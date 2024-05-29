@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
@@ -10,13 +10,19 @@ import {
   deleteExpiredSessions,
   getExpiredSessionCount,
 } from "#app/models/session";
+import { requireUserWithRole } from "#app/utils/rbac.server";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
-export const loader = async () => {
+export async function loader({ request }: LoaderFunctionArgs) {
+  await requireUserWithRole(
+    request,
+    "admin"
+  );
+
   const expiredSessionCount = await getExpiredSessionCount();
 
   return { expiredSessionCount };
-};
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -46,11 +52,7 @@ export default function Component() {
       <AdminPageTitle title="System" />
 
       <AdminContentCard className="px-5 py-3">
-        <Form
-          id={formId}
-          method="POST"
-          action="/admin/system"
-        >
+        <Form id={formId} method="POST" action="/admin/system">
           <FormInputHidden name="intent" value="purge" />
 
           <FormInputActionButton

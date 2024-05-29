@@ -30,11 +30,3 @@ export function useUser() {
 	}
 	return maybeUser
 }
-
-export function userHasRole(
-	user: Pick<ReturnType<typeof useUser>, 'roles'> | null,
-	role: string,
-) {
-	if (!user) return false
-	return user.roles.some(r => r.name === role)
-}
