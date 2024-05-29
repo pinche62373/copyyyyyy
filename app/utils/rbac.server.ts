@@ -2,7 +2,12 @@ import { json } from "@remix-run/node";
 
 import { requireUserId } from "./auth.server.ts";
 import { prisma } from "./db.server.ts";
+import { actions, entities, accesses } from "./rbac-permissions";
 import { useUser } from "./user";
+
+type Action = (typeof actions)[number];
+type Entity = (typeof entities)[number];
+type Access = (typeof accesses)[number];
 
 export function userHasRole(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
