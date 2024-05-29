@@ -7,7 +7,7 @@ interface PropTypes {
   defaultValue?: string;
 }
 
-export const AdminFormFieldText = ({
+export const FormInputText = ({
   fieldName,
   label,
   fields,

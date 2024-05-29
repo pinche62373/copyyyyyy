@@ -3,7 +3,7 @@ interface PropTypes {
     value: string
 }
 
-export const AdminFormFieldHidden = ({name, value}:PropTypes) => {
+export const FormInputHidden = ({name, value}:PropTypes) => {
     return(
         <input type="hidden" name={name} value={value} />
     )

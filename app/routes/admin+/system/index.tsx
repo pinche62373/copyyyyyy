@@ -4,8 +4,8 @@ import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import { AdminFormFieldHidden } from "#app/components/admin/form/field-hidden";
-import { AdminFormInputButton } from "#app/components/admin/form/input-button";
+import { FormInputActionButton } from "#app/components/admin/form/form-input-action-button";
+import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import {
   deleteExpiredSessions,
   getExpiredSessionCount,
@@ -34,11 +34,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function Component() {
   const data = useLoaderData<typeof loader>();
+  const formId = "form-purge-sessions";
 
   const invalidSessionsLabel =
     data.expiredSessionCount === 0
       ? "No expired database sessions to purge"
-      : `Purge expired database sessions (${data.expiredSessionCount})`;
+      : `Purge ${data.expiredSessionCount} expired database sessions`;
 
   return (
     <>
@@ -46,19 +47,16 @@ export default function Component() {
 
       <AdminContentCard className="px-5 py-3">
         <Form
+          id={formId}
           method="POST"
           action="/admin/system"
-          onSubmit={(event) => {
-            if (!confirm("Are you sure?")) {
-              event.preventDefault();
-            }
-          }}
         >
-          <AdminFormFieldHidden name="intent" value="purge" />
+          <FormInputHidden name="intent" value="purge" />
 
-          <AdminFormInputButton
+          <FormInputActionButton
+            formId={formId}
             label={invalidSessionsLabel}
-            buttonLabel="Purge now!"
+            buttonLabel="Purge"
             disabled={data.expiredSessionCount === 0}
           />
         </Form>

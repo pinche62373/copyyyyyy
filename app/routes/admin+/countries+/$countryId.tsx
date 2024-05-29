@@ -8,12 +8,10 @@ import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import {
-  AdminFormButtons,
-  AdminFormFieldDropdown,
-  AdminFormFieldHidden,
-  AdminFormFieldText,
-} from "#app/components/admin/form";
+import { AdminFormButtons } from "#app/components/admin/form/form-buttons";
+import { FormInputDropdown } from "#app/components/admin/form/form-input-dropdown";
+import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
+import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { getModelCrud } from "#app/utils/crud";
@@ -78,17 +76,17 @@ export default function Component() {
 
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <AdminFormFieldHidden name="intent" value="update" />
-          <AdminFormFieldHidden name="id" value={data.country.id} />
+          <FormInputHidden name="intent" value="update" />
+          <FormInputHidden name="id" value={data.country.id} />
 
-          <AdminFormFieldText
+          <FormInputText
             label="Name"
             fieldName="name"
             fields={fields}
             defaultValue={data.country.name}
           />
 
-          <AdminFormFieldDropdown
+          <FormInputDropdown
             label="Region"
             items={data.regions}
             fields={fields}

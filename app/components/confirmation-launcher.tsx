@@ -2,7 +2,6 @@ import { PropsWithChildren } from "react";
 
 interface PropTypes {
   modalId: string;
-  formId?: string | number;
   className?: string;
 }
 

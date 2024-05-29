@@ -1,14 +1,14 @@
 interface PropTypes {
-  modalId: string;
+  id: string;
   formId?: string;
-  caption: string;
-  body: string;
-  confirmButtonText: string;
+  caption?: string;
+  body?: string;
+  confirmButtonText?: string;
   className?: string;
 }
 
 export function ConfirmationModal({
-  modalId,
+  id,
   formId,
   caption,
   body,
@@ -17,7 +17,7 @@ export function ConfirmationModal({
 }: PropTypes) {
   return (
     <div
-      id={modalId}
+      id={id}
       className="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto"
       {...rest}
     >
@@ -28,7 +28,7 @@ export function ConfirmationModal({
             <button
               type="button"
               className="flex justify-center items-center size-7 text-sm font-semibold rounded-lg border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:border-transparent dark:hover:bg-neutral-700"
-              data-hs-overlay={"#" + modalId}
+              data-hs-overlay={"#" + id}
             >
               <span className="sr-only">Close</span>
               <svg
@@ -66,20 +66,26 @@ export function ConfirmationModal({
               {/* <!-- End Icon --> */}
 
               <div className="grow">
-                <h3 className="mb-2 text-xl font-bold text-gray-800 dark:text-neutral-200">
-                  {caption}
+                <h3
+                  className={
+                    "mb-2 text-xl font-bold text-gray-800 dark:text-neutral-200" +
+                    (!body && " pt-4")
+                  }
+                >
+                  {caption || "Are you sure?"}
                 </h3>
-                <p className="text-wrap text-gray-500 dark:text-neutral-500">{body}</p>
+                <p className="text-wrap text-gray-500 dark:text-neutral-500">
+                  {body}
+                </p>
               </div>
             </div>
-
           </div>
 
           <div className="flex justify-end items-center gap-x-2 py-3 px-4 bg-gray-50 border-t dark:bg-neutral-950 dark:border-neutral-800">
             <button
               type="button"
               className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800"
-              data-hs-overlay={"#" + modalId}
+              data-hs-overlay={"#" + id}
             >
               Cancel
             </button>
@@ -87,9 +93,9 @@ export function ConfirmationModal({
               type="submit"
               form={formId}
               className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none"
-              data-hs-overlay={"#" + modalId}
+              data-hs-overlay={"#" + id}
             >
-              {confirmButtonText}
+              {confirmButtonText || "Confirm"}
             </button>
           </div>
         </div>

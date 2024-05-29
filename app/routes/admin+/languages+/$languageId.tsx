@@ -8,11 +8,9 @@ import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import {
-  AdminFormButtons,
-  AdminFormFieldHidden,
-  AdminFormFieldText,
-} from "#app/components/admin/form";
+import { AdminFormButtons } from "#app/components/admin/form/form-buttons";
+import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
+import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { getModelCrud } from "#app/utils/crud";
 import { languageSchema } from "#app/validations/language-schema";
@@ -70,10 +68,10 @@ export default function Component() {
 
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <AdminFormFieldHidden name="intent" value="update" />
-          <AdminFormFieldHidden name="id" value={data.language.id} />
+          <FormInputHidden name="intent" value="update" />
+          <FormInputHidden name="id" value={data.language.id} />
 
-          <AdminFormFieldText
+          <FormInputText
             label="Name"
             fieldName="name"
             fields={fields}

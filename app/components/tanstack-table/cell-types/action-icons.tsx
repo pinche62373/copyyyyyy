@@ -1,7 +1,7 @@
 import { Form, NavLink } from "@remix-run/react";
 import { CellContext } from "@tanstack/react-table";
 
-import { AdminFormFieldHidden } from "#app/components/admin/form";
+import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { ConfirmationLauncher } from "#app/components/confirmation-launcher";
 import { ConfirmationModal } from "#app/components/confirmation-modal";
 import { IconEdit } from "#app/components/icons/icon-edit";
@@ -38,8 +38,8 @@ export const getCellActionIcons = ({ info, crud }: PropTypes) => {
       {/* Delete Button */}
       <div className="inline-flex items-center -space-x-px">
         <Form method="POST" id={deleteFormId} action={crud.target}>
-          <AdminFormFieldHidden name="intent" value="delete" />
-          <AdminFormFieldHidden name="id" value={info.row.original.id} />
+          <FormInputHidden name="intent" value="delete" />
+          <FormInputHidden name="id" value={info.row.original.id} />
 
           <ConfirmationLauncher
             modalId={confirmDeleteId}
@@ -53,7 +53,7 @@ export const getCellActionIcons = ({ info, crud }: PropTypes) => {
 
       {/* Delete Confirmation */}
       <ConfirmationModal
-        modalId={confirmDeleteId}
+        id={confirmDeleteId}
         formId={deleteFormId}
         confirmButtonText="Delete"
         caption={`Delete ${crud.singular}`}

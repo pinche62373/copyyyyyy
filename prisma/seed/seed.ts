@@ -26,7 +26,7 @@ const accounts = {
 };
 
 // --------------------------------------------------------------------------
-// Command line arguments --force and --prod
+// Command line arguments --force
 // --------------------------------------------------------------------------
 const options = {
   force: {

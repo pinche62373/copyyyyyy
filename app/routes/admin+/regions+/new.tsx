@@ -6,11 +6,9 @@ import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import {
-  AdminFormButtons,
-  AdminFormFieldHidden,
-  AdminFormFieldText,
-} from "#app/components/admin/form";
+import { AdminFormButtons } from "#app/components/admin/form/form-buttons";
+import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
+import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createRegion } from "#app/models/region.server";
 import { getModelCrud } from "#app/utils/crud";
 import { regionSchema } from "#app/validations/region-schema";
@@ -59,9 +57,9 @@ export default function Component() {
 
       <AdminContentCard className="p-5">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <AdminFormFieldHidden name="intent" value="create" />
+          <FormInputHidden name="intent" value="create" />
 
-          <AdminFormFieldText label="Name" fieldName="name" fields={fields} />
+          <FormInputText label="Name" fieldName="name" fields={fields} />
 
           <AdminFormButtons cancelLink={crud.target} />
         </Form>
