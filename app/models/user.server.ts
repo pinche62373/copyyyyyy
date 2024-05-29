@@ -14,6 +14,16 @@ export async function getUserById(id: User["id"]) {
       roles: {
         select: {
           name: true,
+          permissions: {
+            select: {
+              entity: true,
+              action: true,
+              access: true,
+            },
+            orderBy: {
+              entity: "asc",
+            },
+          },
         },
       },
     },
