@@ -14,10 +14,7 @@ import { requireUserWithRole } from "#app/utils/rbac.server";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireUserWithRole(
-    request,
-    "admin"
-  );
+  await requireUserWithRole(request, "admin");
 
   const expiredSessionCount = await getExpiredSessionCount();
 
@@ -59,7 +56,7 @@ export default function Component() {
             formId={formId}
             label={invalidSessionsLabel}
             buttonLabel="Purge"
-            disabled={data.expiredSessionCount === 0}
+            enabled={data.expiredSessionCount > 0}
           />
         </Form>
       </AdminContentCard>

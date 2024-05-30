@@ -3,29 +3,29 @@ import { PropsWithChildren } from "react";
 interface PropTypes {
   modalId: string;
   className?: string;
-  disabled?: boolean;
+  enabled?: boolean;
 }
 
 export function ConfirmationLauncher({
   modalId,
   className,
-  disabled,
+  enabled = true,
   children,
   ...rest
 }: PropsWithChildren<PropTypes>) {
   return (
     <>
-      {disabled ? (
-        <button type="button" className={className} {...rest}>
-          {children}
-        </button>
-      ) : (
+      {enabled === true ? (
         <button
           type="button"
           data-hs-overlay={"#" + modalId}
           className={className}
           {...rest}
         >
+          {children}
+        </button>
+      ) : (
+        <button type="button" className={className} {...rest} disabled>
           {children}
         </button>
       )}
