@@ -13,8 +13,8 @@ import { ValidatedForm, validationError } from "remix-validated-form";
 
 import { Button } from "#app/components/admin/button";
 import { FormFooter } from "#app/components/admin/form/form-footer";
+import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInput } from "#app/components/form-input";
-import { FormIntent } from "#app/components/form-intent";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
@@ -119,7 +119,7 @@ export default function LoginPage() {
           className="space-y-6"
           noValidate // disable native HTML validations
         >
-          <FormIntent intent="login" />
+          <FormInputHidden name="intent" value="login" />
 
           <FormInput name="email" label="Email" placeholder="Your email..." />
           <FormInput
