@@ -1,12 +1,13 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import { AdminFormButtons } from "#app/components/admin/form/form-buttons";
+import { Button } from "#app/components/admin/button";
+import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputDropdown } from "#app/components/admin/form/form-input-dropdown";
 import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
@@ -37,7 +38,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Invalid form data");
   }
 
-  if (await getRegionById(submission.value.regionId) === null) {
+  if ((await getRegionById(submission.value.regionId)) === null) {
     return jsonWithError(null, "Invalid relationship");
   }
 
@@ -55,6 +56,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function Component() {
   const data = useLoaderData<typeof loader>();
+
+  const navigation = useNavigation();
 
   const [form, fields] = useForm({
     shouldRevalidate: "onBlur",
@@ -81,7 +84,16 @@ export default function Component() {
             fields={fields}
           />
 
-          <AdminFormButtons cancelLink={crud.target} />
+          <FormFooter>
+            <Button
+              type="button"
+              text="Cancel"
+              secondary
+              link={crud.target}
+              disabled={navigation.state === "submitting"}
+            />
+            <Button type="submit" text="Save" />
+          </FormFooter>
         </Form>
       </AdminContentCard>
     </>

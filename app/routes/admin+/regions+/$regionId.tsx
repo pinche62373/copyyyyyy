@@ -2,13 +2,14 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import { AdminFormButtons } from "#app/components/admin/form/form-buttons";
+import { Button } from "#app/components/admin/button";
+import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getRegion, updateRegion } from "#app/models/region.server";
@@ -55,6 +56,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Component() {
   const data = useLoaderData<typeof loader>();
 
+  const navigation = useNavigation();
+
   const [form, fields] = useForm({
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
@@ -78,7 +81,16 @@ export default function Component() {
             defaultValue={data.region.name}
           />
 
-          <AdminFormButtons cancelLink={crud.target} />
+          <FormFooter>
+            <Button
+              type="button"
+              text="Cancel"
+              secondary
+              link={crud.target}
+              disabled={navigation.state === "submitting"}
+            />
+            <Button type="submit" text="Save" />
+          </FormFooter>
         </Form>
       </AdminContentCard>
     </>
