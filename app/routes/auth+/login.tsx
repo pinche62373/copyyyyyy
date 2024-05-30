@@ -4,6 +4,7 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import { useNavigation } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { AuthorizationError } from "remix-auth";
 import { jsonWithError } from "remix-toast";
@@ -110,6 +111,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const meta: MetaFunction = () => [{ title: "Login" }];
 
 export default function LoginPage() {
+  const navigation = useNavigation();
+
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
@@ -133,7 +136,11 @@ export default function LoginPage() {
 
           <FormFooter>
             <Button type="button" text="Cancel" to="/" secondary />
-            <Button type="submit" text="Log In" />
+            <Button
+              type="submit"
+              text="Log In"
+              disabled={navigation.state === "submitting"}
+            />
           </FormFooter>
         </ValidatedForm>
         {/* </Form> */}

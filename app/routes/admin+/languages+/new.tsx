@@ -65,8 +65,12 @@ export default function Component() {
           <FormInputText label="Name" fieldName="name" fields={fields} />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to={crud.target} disabled={navigation.state === "submitting"} secondary />
-            <Button type="submit" text="Save" />
+            <Button type="button" text="Cancel" to={crud.target} secondary />
+            <Button
+              type="submit"
+              text="Save"
+              disabled={navigation.state === "submitting"}
+            />
           </FormFooter>
         </Form>
       </AdminContentCard>

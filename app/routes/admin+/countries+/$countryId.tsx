@@ -45,7 +45,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Invalid form data");
   }
 
-  if (await getRegionById(submission.value.regionId) === null) {
+  if ((await getRegionById(submission.value.regionId)) === null) {
     return jsonWithError(null, "Invalid relationship");
   }
 
@@ -97,8 +97,12 @@ export default function Component() {
           />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to={crud.target} disabled={navigation.state === "submitting"} secondary />
-            <Button type="submit" text="Save" />
+            <Button type="button" text="Cancel" to={crud.target} secondary />
+            <Button
+              type="submit"
+              text="Save"
+              disabled={navigation.state === "submitting"}
+            />
           </FormFooter>
         </Form>
       </AdminContentCard>
