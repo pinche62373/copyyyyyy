@@ -61,7 +61,7 @@ export const AdminPageTitle = ({
 
           {/* Conditional Add Button  */}
           {buttonText && (
-            <Button type="button" text={buttonText} link={buttonTarget} />
+            <Button type="button" text={buttonText} to={buttonTarget} />
           )}
           {/* End Conditional Add Button  */}
         </div>

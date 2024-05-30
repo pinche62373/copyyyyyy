@@ -132,7 +132,7 @@ export default function LoginPage() {
           <HoneypotInputs />
 
           <FormFooter>
-            <Button type="button" secondary text="Cancel" link="/" />
+            <Button type="button" text="Cancel" to="/" secondary />
             <Button type="submit" text="Log In" />
           </FormFooter>
         </ValidatedForm>

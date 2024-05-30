@@ -6,7 +6,7 @@ import { cn } from "#app/utils/misc";
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   type: "submit" | "reset" | "button"
   text: string;
-  link?: string;
+  to?: string;
   secondary?: boolean;
   className?: string;
 
@@ -15,7 +15,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 export function Button({
   text,
   type,
-  link,
+  to,
   secondary,
   className,
   ...rest
@@ -26,8 +26,8 @@ export function Button({
 
   return (
     <>
-      {link ? (
-        <NavLink to={link}>
+      {to ? (
+        <NavLink to={to}>
           <button type={type} className={cn(buttonClass, className)} {...rest}>
             {text}
           </button>

@@ -65,7 +65,7 @@ export default function Component() {
           <FormInputText label="Name" fieldName="name" fields={fields} />
 
           <FormFooter>
-            <Button type="button" text="Cancel" secondary link={crud.target} disabled={navigation.state === "submitting"} />
+            <Button type="button" text="Cancel" to={crud.target} disabled={navigation.state === "submitting"} secondary />
             <Button type="submit" text="Save" />
           </FormFooter>
         </Form>

@@ -68,9 +68,9 @@ export default function Component() {
             <Button
               type="button"
               text="Cancel"
-              secondary
-              link={crud.target}
+              to={crud.target}
               disabled={navigation.state === "submitting"}
+              secondary
             />
             <Button type="submit" text="Save" />
           </FormFooter>
