@@ -2,6 +2,7 @@ import { NavLink } from "@remix-run/react";
 
 import { ConfirmationLauncher } from "#app/components/confirmation-launcher";
 import { ConfirmationModal } from "#app/components/confirmation-modal";
+import { cn } from "#app/utils/misc";
 
 interface PropTypes {
   formId: string;
@@ -18,6 +19,8 @@ export const FormInputActionButton = ({
 }: PropTypes) => {
   const modalId = `confirm-${formId}`;
 
+  const disabledButtonClass = disabled && "opacity-50 cursor-not-allowed"; // mimic tailwind utility class
+
   return (
     <>
       <div className="py-2.5 space-y-5">
@@ -32,19 +35,22 @@ export const FormInputActionButton = ({
           {/* End Col Name Label*/}
 
           {/* Only render button column if not disabled */}
-          {!disabled && (
-            <div className="mt-0.5 sm:col-span-4 md:col-span-4 lg:col-span-4 xl:col-span-3 text-right">
-              <ConfirmationLauncher modalId={modalId}>
-                <NavLink
-                  type="button"
-                  to="#"
-                  className="py-2 px-3 inline-flex justify-center items-center gap-x-2 text-start bg-blue-600 border border-blue-600 text-white text-sm font-medium rounded-lg shadow-sm align-middle hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-300 dark:focus:ring-blue-500  disabled:opacity-50 disabled:pointer-events-none"
-                >
-                  {buttonLabel}
-                </NavLink>
-              </ConfirmationLauncher>
-            </div>
-          )}
+          {/* {!disabled && ( */}
+          <div className="mt-0.5 sm:col-span-4 md:col-span-4 lg:col-span-4 xl:col-span-3 text-right">
+            <ConfirmationLauncher modalId={modalId} disabled>
+              <NavLink
+                type="button"
+                to="#"
+                className={cn(
+                  "py-2 px-3 inline-flex justify-center items-center gap-x-2 text-start bg-blue-600 border border-blue-600 text-white text-sm font-medium rounded-lg shadow-sm align-middle hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-300 dark:focus:ring-blue-500  disabled:opacity-50 disabled:pointer-events-none",
+                  disabledButtonClass,
+                )}
+              >
+                {buttonLabel}
+              </NavLink>
+            </ConfirmationLauncher>
+          </div>
+          {/* )} */}
         </div>
         {/* End Grid */}
       </div>

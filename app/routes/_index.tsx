@@ -9,6 +9,7 @@ export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
 export default function IndexPage() {
   const user = useOptionalUser();
 
+  // TODO : remove when done
   console.log(JSON.stringify(user, null, 2))
 
   return (
