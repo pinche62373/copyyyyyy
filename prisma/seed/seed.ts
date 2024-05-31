@@ -8,9 +8,8 @@ import bcrypt from "bcryptjs";
 
 import { getRbacSeedPermissions } from "#app/utils/rbac-permissions";
 
-import { findRbacPermissions } from "./rbac";
 import seedConfig from "./seed.config";
-import { cuid, permaLink } from "./utils";
+import { cuid, findRbacPermissions, permaLink } from "./utils";
 
 // --------------------------------------------------------------------------
 // Variables
