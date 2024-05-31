@@ -28,5 +28,3 @@ export const fuzzyFilter: FilterFn<unknown> = (
   // Return if the item should be filtered in/out
   return itemRank.passed;
 };
-
-export default fuzzyFilter;

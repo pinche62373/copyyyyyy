@@ -16,5 +16,3 @@ export const IconFolder = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
-
-export default IconFolder;

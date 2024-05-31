@@ -7,7 +7,7 @@ interface IProps<T> {
   table: t_table<T>;
 }
 
-const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
+export const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
   return (
     <TableContext.Provider value={{ table: table }}>
       <div className="relative overflow-x-auto">
@@ -24,5 +24,3 @@ const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) => {
     </TableContext.Provider>
   );
 };
-
-export default TableFC;

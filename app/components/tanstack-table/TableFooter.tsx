@@ -119,5 +119,3 @@ export const TableFooter = <T,>({
     </div>
   );
 };
-
-export default TableFooter;

@@ -42,5 +42,3 @@ export const TableSearchInput = ({
     </div>
   );
 };
-
-export default TableSearchInput;

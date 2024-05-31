@@ -22,5 +22,3 @@ export const IconEdit =(props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 }
-
-export default IconEdit;

@@ -25,5 +25,3 @@ export const AdminContentCard = ({
     </div>
   );
 };
-
-export default AdminContentCard;

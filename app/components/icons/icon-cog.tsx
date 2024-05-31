@@ -23,4 +23,3 @@ export const IconCog = (props: React.SVGProps<SVGSVGElement>) => {
   );
 };
 
-export default IconCog;

@@ -27,5 +27,3 @@ export const IconDarkModeDisable = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
-
-export default IconDarkModeDisable;

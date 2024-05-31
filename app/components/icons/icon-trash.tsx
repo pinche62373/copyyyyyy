@@ -17,5 +17,3 @@ export const IconTrash = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 }
-
-export default IconTrash;

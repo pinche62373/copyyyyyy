@@ -23,5 +23,3 @@ export const fuzzySort: SortingFn<any> | undefined = (
   // Provide an alphanumeric fallback for when the item ranks are equal
   return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir;
 };
-
-export default fuzzySort;

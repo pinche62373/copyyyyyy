@@ -17,5 +17,3 @@ export const IconHeart = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
-
-export default IconHeart;

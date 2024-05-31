@@ -18,5 +18,3 @@ export const IconDog = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
-
-export default IconDog;

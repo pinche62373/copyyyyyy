@@ -230,5 +230,3 @@ export const TableFilterDropdown = () => {
     </div>
   );
 };
-
-export default TableFilterDropdown;

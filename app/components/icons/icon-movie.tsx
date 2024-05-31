@@ -17,5 +17,3 @@ export const IconMovie = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
-
-export default IconMovie;

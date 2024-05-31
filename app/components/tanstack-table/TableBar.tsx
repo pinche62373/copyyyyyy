@@ -23,5 +23,3 @@ export const TableBar = ({
     </div>
   );
 };
-
-export default TableBar;

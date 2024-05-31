@@ -23,4 +23,3 @@ export const IconHome = (props: React.SVGProps<SVGSVGElement>) => {
   );
 }
 
-export default IconHome;

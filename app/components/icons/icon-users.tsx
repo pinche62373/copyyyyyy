@@ -22,5 +22,3 @@ export const IconUsers = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 }
-
-export default IconUsers;

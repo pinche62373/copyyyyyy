@@ -23,5 +23,3 @@ export const IconLogout = (props: React.SVGProps<SVGSVGElement>) => {
     </svg>
   );
 };
-
-export default IconLogout;

@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import { PropsWithChildren } from "react";
 
-const Caption: React.FC<PropsWithChildren> = ({ children }) => {
+export const Caption: React.FC<PropsWithChildren> = ({ children }) => {
   Caption.propTypes = {
     children: PropTypes.any,
   };
@@ -11,5 +11,3 @@ const Caption: React.FC<PropsWithChildren> = ({ children }) => {
     </caption>
   );
 };
-
-export default Caption;
