@@ -7,6 +7,7 @@ import { AdminSidebar } from "#app/components/admin/admin-sidebar";
 import adminStyleSheet from "#app/styles/admin.css";
 import { authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
+import { requireUserWithRole } from "#app/utils/rbac.server";
 
 // import styles for the admin route
 export const links: LinksFunction = () => [
@@ -20,6 +21,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   await authenticator.isAuthenticated(request, {
     failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
   });
+
+  await requireUserWithRole(request, ["admin", "moderator"]);
 
   return null;
 };
