@@ -6,10 +6,9 @@ import { parseArgs } from "node:util";
 import { createSeedClient } from "@snaplet/seed";
 import bcrypt from "bcryptjs";
 
-import { getSeedPermissions } from "#app/utils/rbac.server";
+import { getSeedPermissions } from "#app/utils/permissions.server";
 import seedConfig from "#prisma/seed/seed.config";
 import { cuid, findRbacPermissions, permaLink } from "#prisma/seed/utils";
-
 
 // --------------------------------------------------------------------------
 // Variables

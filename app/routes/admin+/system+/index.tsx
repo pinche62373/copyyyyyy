@@ -10,7 +10,7 @@ import {
   deleteExpiredSessions,
   getExpiredSessionCount,
 } from "#app/models/session";
-import { requireUserWithRole } from "#app/utils/rbac.server";
+import { requireUserWithRole } from "#app/utils/permissions.server";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 export async function loader({ request }: LoaderFunctionArgs) {

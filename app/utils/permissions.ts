@@ -1,7 +1,7 @@
 import type {
   RoutePermissionFunctionArgs,
   ModelPermissionFunctionArgs,
-} from "#app/utils/rbac.types";
+} from "#app/utils/permissions.types";
 
 const C = "create";
 const R = "read";

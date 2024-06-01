@@ -1,19 +1,19 @@
 import { json } from "@remix-run/node";
 
+import { requireUserId } from "#app/utils/auth.server";
+import { prisma } from "#app/utils/db.server";
 import {
   modelPermissions,
   routePermissions,
-} from "#app/utils/rbac.permissions";
+} from "#app/utils/permissions";
 import type {
   ModelPermission,
   ModelPermissionFunctionArgs,
   RoutePermission,
   RoutePermissionFunctionArgs,
-} from "#app/utils/rbac.types";
+} from "#app/utils/permissions.types";
 import { cuid } from "#prisma/seed/utils";
 
-import { requireUserId } from "./auth.server.ts";
-import { prisma } from "./db.server.ts";
 
 // ----------------------------------------------------------------------------
 // Throw 403 unless user has specific permission.
