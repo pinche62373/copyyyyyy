@@ -6,10 +6,10 @@ import { parseArgs } from "node:util";
 import { createSeedClient } from "@snaplet/seed";
 import bcrypt from "bcryptjs";
 
-import { getAllSeedPermissions } from "#app/utils/rbac-permissions";
+import { getSeedPermissions } from "#app/utils/rbac.server";
+import seedConfig from "#prisma/seed/seed.config";
+import { cuid, findRbacPermissions, permaLink } from "#prisma/seed/utils";
 
-import seedConfig from "./seed.config";
-import { cuid, findRbacPermissions, permaLink } from "./utils";
 
 // --------------------------------------------------------------------------
 // Variables
@@ -101,16 +101,25 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Permissions (ALWAYS)
   // --------------------------------------------------------------------------
-  await seed.permission(getAllSeedPermissions());
+  const seedPermissions = getSeedPermissions();
+
+  console.log(seedPermissions);
+
+  await seed.permission(seedPermissions);
 
   // --------------------------------------------------------------------------
   // Roles (ALWAYS) with Permissions (ALWAYS) and _RoleToUSer (DEV ONLY)
   // --------------------------------------------------------------------------
+  // TODO : replace with looking in getSeedPermissions
   const adminPermissions = findRbacPermissions({
     store: seed.$store,
     field: "access",
     value: "any",
   });
+
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  console.log(adminPermissions);
+  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
 
   await seed.role([
     {
