@@ -15,20 +15,23 @@ import { cuid, findRbacPermissions, permaLink } from "./utils";
 // Variables
 // --------------------------------------------------------------------------
 const updatedAt = null;
-const accounts = {
-  admin: {
+const accounts = [
+  {
+    name: "admin",
     email: "admin@remix.run",
     password: "adminpassword",
   },
-  moderator: {
+  {
+    name: "moderator",
     email: "moderator@remix.run",
     password: "moderatorpassword",
   },
-  user: {
+  {
+    name: "user",
     email: "user@remix.run",
     password: "userpassword",
   },
-};
+];
 
 // --------------------------------------------------------------------------
 // Command line arguments --force
@@ -76,43 +79,20 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // User with Password (DEV ONLY)
   // --------------------------------------------------------------------------
-  const hashedAdminPassword = await bcrypt.hash(accounts.admin.password, 10);
-  const hashedModeratorPassword = await bcrypt.hash(
-    accounts.moderator.password,
-    10,
-  );
-  const hashedUserPassword = await bcrypt.hash(accounts.user.password, 10);
-
   if (prod === false) {
-    await seed.user([
-      {
-        id: cuid(accounts.admin.email),
-        email: accounts.admin.email,
-        updatedAt,
-        password: (x) =>
-          x(1, {
-            hash: hashedAdminPassword,
-          }),
-      },
-      {
-        id: cuid(accounts.moderator.email),
-        email: accounts.moderator.email,
-        updatedAt,
-        password: (x) =>
-          x(1, {
-            hash: hashedModeratorPassword,
-          }),
-      },
-      {
-        id: cuid(accounts.user.email),
-        email: accounts.user.email,
-        updatedAt,
-        password: (x) =>
-          x(1, {
-            hash: hashedUserPassword,
-          }),
-      },
-    ]);
+    await seed.user(
+      accounts.map((account) => {
+        return {
+          id: cuid(account.email),
+          email: account.email,
+          updatedAt,
+          password: (x) =>
+            x(1, {
+              hash: bcrypt.hashSync(account.password, 10), // bcrypt sync mode
+            }),
+        };
+      }),
+    );
   }
 
   // --------------------------------------------------------------------------
@@ -139,7 +119,12 @@ const main = async () => {
       })),
       _RoleToUser: prod === false && [
         {
-          B: cuid(accounts.admin.email),
+          B: cuid(
+            accounts
+              .filter((account) => account.name === "admin")
+              .map(({ email }) => email)
+              .toString(),
+          ),
         },
       ],
     },
@@ -149,7 +134,12 @@ const main = async () => {
       description: "Moderators",
       _RoleToUser: prod === false && [
         {
-          B: cuid(accounts.moderator.email),
+          B: cuid(
+            accounts
+              .filter((account) => account.name === "moderator")
+              .map(({ email }) => email)
+              .toString(),
+          ),
         },
       ],
     },
@@ -159,7 +149,12 @@ const main = async () => {
       description: "Users",
       _RoleToUser: prod === false && [
         {
-          B: cuid(accounts.user.email),
+          B: cuid(
+            accounts
+              .filter((account) => account.name === "user")
+              .map(({ email }) => email)
+              .toString(),
+          ),
         },
       ],
     },

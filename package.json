@@ -71,7 +71,7 @@
     "@faker-js/faker": "^8.4.1",
     "@remix-run/dev": "^2.9.2",
     "@snaplet/copycat": "^5.0.0",
-    "@snaplet/seed": "^0.97.17",
+    "@snaplet/seed": "^0.97.20",
     "@tailwindcss/forms": "^0.5.7",
     "@testing-library/jest-dom": "^6.4.5",
     "@types/bcryptjs": "^2.4.6",
