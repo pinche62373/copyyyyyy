@@ -17,12 +17,16 @@ import { cuid, findRbacPermissions, permaLink } from "./utils";
 const updatedAt = null;
 const accounts = {
   admin: {
-    email: "rachel@remix.run",
-    password: "racheliscool",
+    email: "admin@remix.run",
+    password: "adminpassword",
+  },
+  moderator: {
+    email: "moderator@remix.run",
+    password: "moderatorpassword",
   },
   user: {
-    email: "candy@remix.run",
-    password: "candyiscool",
+    email: "user@remix.run",
+    password: "userpassword",
   },
 };
 
@@ -73,6 +77,10 @@ const main = async () => {
   // User with Password (DEV ONLY)
   // --------------------------------------------------------------------------
   const hashedAdminPassword = await bcrypt.hash(accounts.admin.password, 10);
+  const hashedModeratorPassword = await bcrypt.hash(
+    accounts.moderator.password,
+    10,
+  );
   const hashedUserPassword = await bcrypt.hash(accounts.user.password, 10);
 
   if (prod === false) {
@@ -84,6 +92,15 @@ const main = async () => {
         password: (x) =>
           x(1, {
             hash: hashedAdminPassword,
+          }),
+      },
+      {
+        id: cuid(accounts.moderator.email),
+        email: accounts.moderator.email,
+        updatedAt,
+        password: (x) =>
+          x(1, {
+            hash: hashedModeratorPassword,
           }),
       },
       {
@@ -127,6 +144,16 @@ const main = async () => {
       ],
     },
     {
+      id: cuid("moderator"),
+      name: "moderator",
+      description: "Moderators",
+      _RoleToUser: prod === false && [
+        {
+          B: cuid(accounts.moderator.email),
+        },
+      ],
+    },
+    {
       id: cuid("user"),
       name: "user",
       description: "Users",
@@ -135,11 +162,6 @@ const main = async () => {
           B: cuid(accounts.user.email),
         },
       ],
-    },
-    {
-      id: cuid("moderator"),
-      name: "moderator",
-      description: "Moderators",
     },
   ]);
 

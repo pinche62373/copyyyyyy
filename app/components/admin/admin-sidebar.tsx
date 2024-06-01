@@ -5,8 +5,11 @@ import { IconHome } from "#app/components/icons/icon-home";
 import { IconMovie } from "#app/components/icons/icon-movie";
 import { IconUsers } from "#app/components/icons/icon-users";
 import * as Constants from "#app/utils/constants";
+import { userHasRole, useUser } from "#app/utils/user";
 
 export function AdminSidebar() {
+  const user = useUser();
+
   return (
     <aside
       id="hs-pro-sidebar"
@@ -308,214 +311,220 @@ export function AdminSidebar() {
               {/* End Publisher Model */}
 
               {/* Divider */}
-              <li className="pt-5 px-8 mt-5 mb-1.5 border-t border-gray-200 first:border-transparent first:pt-0 dark:border-neutral-700 dark:first:border-transparent">
-                <span className="block text-xs uppercase text-gray-500 dark:text-neutral-500">
-                  Base Models
-                </span>
-              </li>
+              {userHasRole(user, "admin") && (
+                <li className="pt-5 px-8 mt-5 mb-1.5 border-t border-gray-200 first:border-transparent first:pt-0 dark:border-neutral-700 dark:first:border-transparent">
+                  <span className="block text-xs uppercase text-gray-500 dark:text-neutral-500">
+                    Base Models
+                  </span>
+                </li>
+              )}
               {/* End Divider */}
 
               {/* End Link */}
             </ul>
           </nav>
 
-          {/* Admin Menu */}
-          <nav
-            className="hs-accordion-group pb-3  w-full flex flex-col flex-wrap"
-            data-hs-accordion-always-open
-          >
-            <ul>
-              {/* Admin Actor Model */}
-              <li
-                className="hs-accordion px-5 mb-1.5 "
-                id="admin-actor-accordion"
+          {/* Base Models Menu */}
+          {userHasRole(user, "admin") && (
+            <>
+              <nav
+                className="hs-accordion-group pb-3  w-full flex flex-col flex-wrap"
+                data-hs-accordion-always-open
               >
-                <button
-                  type="button"
-                  className="hs-accordion-toggle hs-accordion-active:bg-gray-100 w-full text-start flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hs-accordion-active:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700"
-                >
-                  <svg
-                    className="flex-shrink-0 mt-0.5 size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+                <ul>
+                  {/* Admin Actor Model */}
+                  <li
+                    className="hs-accordion px-5 mb-1.5 "
+                    id="admin-actor-accordion"
                   >
-                    <circle cx="12" cy="12" r="10" />
-                    <circle cx="12" cy="10" r="3" />
-                    <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
-                  </svg>
-                  Actors
-                  <svg
-                    className="hs-accordion-active:-rotate-180 flex-shrink-0 mt-1 size-3.5 ms-auto transition"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-
-                <div
-                  id="admin-actor-accordion-sub"
-                  className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden "
-                >
-                  <ul
-                    className="hs-accordion-group ps-7 mt-1.5 space-y-1.5 relative before:absolute before:top-0 before:start-[18px] before:w-0.5 before:h-full before:bg-gray-100 dark:before:bg-neutral-700"
-                    data-hs-accordion-always-open
-                  >
-                    <li>
-                      <NavLink
-                        to="#"
-                        className="flex gap-x-4 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
+                    <button
+                      type="button"
+                      className="hs-accordion-toggle hs-accordion-active:bg-gray-100 w-full text-start flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hs-accordion-active:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700"
+                    >
+                      <svg
+                        className="flex-shrink-0 mt-0.5 size-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       >
-                        Skin Colors
-                      </NavLink>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              {/* End Admin Actor Model */}
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="10" r="3" />
+                        <path d="M7 20.662V19a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v1.662" />
+                      </svg>
+                      Actors
+                      <svg
+                        className="hs-accordion-active:-rotate-180 flex-shrink-0 mt-1 size-3.5 ms-auto transition"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
 
-              {/* Misc Admin Models */}
-              <li
-                className="hs-accordion px-5 mb-1.5 "
-                id="admin-misc-accordion"
+                    <div
+                      id="admin-actor-accordion-sub"
+                      className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden "
+                    >
+                      <ul
+                        className="hs-accordion-group ps-7 mt-1.5 space-y-1.5 relative before:absolute before:top-0 before:start-[18px] before:w-0.5 before:h-full before:bg-gray-100 dark:before:bg-neutral-700"
+                        data-hs-accordion-always-open
+                      >
+                        <li>
+                          <NavLink
+                            to="#"
+                            className="flex gap-x-4 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
+                          >
+                            Skin Colors
+                          </NavLink>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  {/* End Admin Actor Model */}
+
+                  {/* Misc Admin Models */}
+                  <li
+                    className="hs-accordion px-5 mb-1.5 "
+                    id="admin-misc-accordion"
+                  >
+                    <button
+                      type="button"
+                      className="hs-accordion-toggle hs-accordion-active:bg-gray-100 w-full text-start flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hs-accordion-active:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700"
+                    >
+                      <svg
+                        className="flex-shrink-0 mt-0.5 size-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                      </svg>
+                      Misc
+                      <svg
+                        className="hs-accordion-active:-rotate-180 flex-shrink-0 mt-1 size-3.5 ms-auto transition"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="m6 9 6 6 6-6" />
+                      </svg>
+                    </button>
+
+                    <div
+                      id="admin-misc-accordion-sub"
+                      className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden "
+                    >
+                      <ul
+                        className="hs-accordion-group ps-7 mt-1.5 space-y-1.5 relative before:absolute before:top-0 before:start-[18px] before:w-0.5 before:h-full before:bg-gray-100 dark:before:bg-neutral-700"
+                        data-hs-accordion-always-open
+                      >
+                        <li>
+                          <NavLink
+                            to="/admin/countries"
+                            className="flex gap-x-4 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
+                          >
+                            Countries
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to="/admin/languages"
+                            className="flex gap-x-4 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
+                          >
+                            Languages
+                          </NavLink>
+                        </li>
+                        <li>
+                          <NavLink
+                            to="/admin/regions"
+                            className="flex gap-x-4 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
+                          >
+                            Regions
+                          </NavLink>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                  {/* End Misc Admin Models */}
+
+                  {/* Divider */}
+                  <li className="pt-5 px-8 mt-5 mb-1.5 border-t border-gray-200 first:border-transparent first:pt-0 dark:border-neutral-700 dark:first:border-transparent">
+                    <span className="block text-xs uppercase text-gray-500 dark:text-neutral-500">
+                      Misc
+                    </span>
+                  </li>
+                  {/* End Divider */}
+                </ul>
+              </nav>
+
+              {/* End Admin Menu */}
+
+              {/* Misc Menu */}
+              <nav
+                className="hs-accordion-group pb-3  w-full flex flex-col flex-wrap"
+                data-hs-accordion-always-open
               >
-                <button
-                  type="button"
-                  className="hs-accordion-toggle hs-accordion-active:bg-gray-100 w-full text-start flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:hs-accordion-active:bg-neutral-700 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700"
-                >
-                  <svg
-                    className="flex-shrink-0 mt-0.5 size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                  </svg>
-                  Misc
-                  <svg
-                    className="hs-accordion-active:-rotate-180 flex-shrink-0 mt-1 size-3.5 ms-auto transition"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-
-                <div
-                  id="admin-misc-accordion-sub"
-                  className="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden "
-                >
-                  <ul
-                    className="hs-accordion-group ps-7 mt-1.5 space-y-1.5 relative before:absolute before:top-0 before:start-[18px] before:w-0.5 before:h-full before:bg-gray-100 dark:before:bg-neutral-700"
-                    data-hs-accordion-always-open
-                  >
-                    <li>
-                      <NavLink
-                        to="/admin/countries"
-                        className="flex gap-x-4 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
+                {/* Misc Menu List */}
+                <ul>
+                  {/* System */}
+                  <li className="px-5 mb-1.5">
+                    <NavLink
+                      to="/admin/system"
+                      className="flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
+                    >
+                      <svg
+                        className="flex-shrink-0 mt-0.5 size-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       >
-                        Countries
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        to="/admin/languages"
-                        className="flex gap-x-4 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
-                      >
-                        Languages
-                      </NavLink>
-                    </li>
-                    <li>
-                      <NavLink
-                        to="/admin/regions"
-                        className="flex gap-x-4 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
-                      >
-                        Regions
-                      </NavLink>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              {/* End Misc Admin Models */}
-
-              {/* Divider */}
-              <li className="pt-5 px-8 mt-5 mb-1.5 border-t border-gray-200 first:border-transparent first:pt-0 dark:border-neutral-700 dark:first:border-transparent">
-                <span className="block text-xs uppercase text-gray-500 dark:text-neutral-500">
-                  Misc
-                </span>
-              </li>
-              {/* End Divider */}
-            </ul>
-          </nav>
-          {/* End Admin Menu */}
-
-          {/* Misc Menu */}
-          <nav
-            className="hs-accordion-group pb-3  w-full flex flex-col flex-wrap"
-            data-hs-accordion-always-open
-          >
-            {/* Misc Menu List */}
-            <ul>
-              {/* System */}
-              <li className="px-5 mb-1.5">
-                <NavLink
-                  to="/admin/system"
-                  className="flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
-                >
-                  <svg
-                    className="flex-shrink-0 mt-0.5 size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
-                    <circle cx="12" cy="12" r="3" />
-                  </svg>
-                  System
-                </NavLink>
-              </li>
-              {/* End System */}
-            </ul>
-            {/* End Misc Menu List */}
-          </nav>
-          {/* End Misc Menu */}
-
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      System
+                    </NavLink>
+                  </li>
+                  {/* End System */}
+                </ul>
+                {/* End Misc Menu List */}
+              </nav>
+              {/* End Misc Menu */}
+            </>
+          )}
           {/* End Nav */}
         </div>
         {/* End Content */}
