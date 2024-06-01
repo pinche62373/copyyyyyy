@@ -6,7 +6,7 @@ import { parseArgs } from "node:util";
 import { createSeedClient } from "@snaplet/seed";
 import bcrypt from "bcryptjs";
 
-import { getRbacSeedPermissions } from "#app/utils/rbac-permissions";
+import { getAllSeedPermissions } from "#app/utils/rbac-permissions";
 
 import seedConfig from "./seed.config";
 import { cuid, findRbacPermissions, permaLink } from "./utils";
@@ -20,16 +20,19 @@ const accounts = [
     name: "admin",
     email: "admin@remix.run",
     password: "adminpassword",
+    description: "Administrators",
   },
   {
     name: "moderator",
     email: "moderator@remix.run",
     password: "moderatorpassword",
+    description: "Moderators",
   },
   {
     name: "user",
     email: "user@remix.run",
     password: "userpassword",
+    description: "Users",
   },
 ];
 
@@ -98,7 +101,7 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Permissions (ALWAYS)
   // --------------------------------------------------------------------------
-  await seed.permission(getRbacSeedPermissions());
+  await seed.permission(getAllSeedPermissions());
 
   // --------------------------------------------------------------------------
   // Roles (ALWAYS) with Permissions (ALWAYS) and _RoleToUSer (DEV ONLY)

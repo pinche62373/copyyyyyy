@@ -7,7 +7,7 @@ export const accesses = ["own", "any"] as const;
 /**
  * Returns an array with all RBAC permissions
  */
-export const getRbacPermissions = () => {
+export const getAllPermissions = () => {
   const result = [];
 
   for (const entity of entities) {
@@ -28,8 +28,8 @@ export const getRbacPermissions = () => {
 /**
  * Adds a deterministic id to each RBAC permission for seeding purposes
  */
-export const getRbacSeedPermissions = () => {
-  const permissions = getRbacPermissions();
+export const getAllSeedPermissions = () => {
+  const permissions = getAllPermissions();
 
   const result = permissions.map((permission) => ({
     ...permission,
