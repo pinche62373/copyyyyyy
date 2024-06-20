@@ -46,7 +46,7 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [
 // ----------------------------------------------------------------------------
 export const routePermissions: RoutePermissionFunctionArgs[] = [
   {
-    entity: "admin",
+    entity: "/admin",
     roles: [ADMIN, MOD],
   },
   // {
@@ -54,7 +54,7 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   //   roles: ADMIN,
   // },
   {
-    entity: "admin/system",
+    entity: "/admin/system",
     roles: USER,
   },
 ];
