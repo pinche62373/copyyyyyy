@@ -10,11 +10,11 @@ import {
   deleteExpiredSessions,
   getExpiredSessionCount,
 } from "#app/models/session";
-import { requireUserWithRole } from "#app/utils/permissions.server";
+import { requireRole } from "#app/utils/permissions.server";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireUserWithRole(request, "admin");
+  await requireRole(request, "admin");
 
   const expiredSessionCount = await getExpiredSessionCount();
 

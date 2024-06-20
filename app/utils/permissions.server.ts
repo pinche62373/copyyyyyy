@@ -18,7 +18,7 @@ import { cuid } from "#prisma/seed/utils";
 // ----------------------------------------------------------------------------
 // Throw 403 unless user has specific permission.
 // ----------------------------------------------------------------------------
-export async function requireUserWithRole(
+export async function requireRole(
   request: Request,
   name: string | string[],
 ) {
