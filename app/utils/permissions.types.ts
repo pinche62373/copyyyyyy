@@ -7,11 +7,12 @@ const modelAccesses = ["own", "any"] as const;
 
 const routeEntities = ["admin", "admin/system"];
 const routeActions = ["access"] as const;
+const routeAccesses = ["route"] as const;
 
 export interface RoutePermission {
   entity: (typeof routeEntities)[number];
   action: (typeof routeActions)[number];
-  access: null;
+  access: (typeof routeAccesses)[number];
   description?: string;
   roles: (typeof roles)[number] | (typeof roles)[number][];
 }

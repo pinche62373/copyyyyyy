@@ -6,9 +6,9 @@ import { parseArgs } from "node:util";
 import { createSeedClient } from "@snaplet/seed";
 import bcrypt from "bcryptjs";
 
-import { getSeedPermissions } from "#app/utils/permissions.server";
+import { getPermissionsForRole, getSeedPermissions } from "#app/utils/permissions.server";
 import seedConfig from "#prisma/seed/seed.config";
-import { cuid, findRbacPermissions, permaLink } from "#prisma/seed/utils";
+import { cuid, permaLink } from "#prisma/seed/utils";
 
 // --------------------------------------------------------------------------
 // Variables
@@ -102,23 +102,14 @@ const main = async () => {
   // --------------------------------------------------------------------------
   const seedPermissions = getSeedPermissions();
 
-  console.log(seedPermissions);
-
   await seed.permission(seedPermissions);
 
   // --------------------------------------------------------------------------
   // Roles (ALWAYS) with Permissions (ALWAYS) and _RoleToUSer (DEV ONLY)
   // --------------------------------------------------------------------------
-  // TODO : replace with looking in getSeedPermissions
-  const adminPermissions = findRbacPermissions({
-    store: seed.$store,
-    field: "access",
-    value: "any",
-  });
-
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-  console.log(adminPermissions);
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+  const adminPermissions = getPermissionsForRole(seedPermissions, "admin")
+  const moderatorPermissions = getPermissionsForRole(seedPermissions, "moderator")
+  const userPermissions = getPermissionsForRole(seedPermissions, "user")
 
   await seed.role([
     {
@@ -143,6 +134,9 @@ const main = async () => {
       id: cuid("moderator"),
       name: "moderator",
       description: "Moderators",
+      _PermissionToRole: moderatorPermissions.map((permission) => ({
+        A: permission.id, // RBAC
+      })),      
       _RoleToUser: prod === false && [
         {
           B: cuid(
@@ -158,6 +152,9 @@ const main = async () => {
       id: cuid("user"),
       name: "user",
       description: "Users",
+      _PermissionToRole: userPermissions.map((permission) => ({
+        A: permission.id, // RBAC
+      })),      
       _RoleToUser: prod === false && [
         {
           B: cuid(

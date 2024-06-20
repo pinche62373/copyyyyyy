@@ -2,10 +2,7 @@ import { json } from "@remix-run/node";
 
 import { requireUserId } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
-import {
-  modelPermissions,
-  routePermissions,
-} from "#app/utils/permissions";
+import { modelPermissions, routePermissions } from "#app/utils/permissions";
 import type {
   ModelPermission,
   ModelPermissionFunctionArgs,
@@ -14,14 +11,10 @@ import type {
 } from "#app/utils/permissions.types";
 import { cuid } from "#prisma/seed/utils";
 
-
 // ----------------------------------------------------------------------------
 // Throw 403 unless user has specific permission.
 // ----------------------------------------------------------------------------
-export async function requireRole(
-  request: Request,
-  name: string | string[],
-) {
+export async function requireRole(request: Request, name: string | string[]) {
   const userId = await requireUserId(request);
 
   name = Array.isArray(name) ? name : [name];
@@ -131,7 +124,7 @@ const generateRoutePermissions = ({
     {
       entity,
       action: "access",
-      access: null,
+      access: "route",
       description,
       roles,
     },
@@ -152,5 +145,19 @@ const isDuplicatePermission = (
         p.action === permission.action &&
         p.access === permission.access,
     ) !== undefined;
+  return result;
+};
+
+// ----------------------------------------------------------------------------
+// Helper function to extract permissions for the given role.
+// ----------------------------------------------------------------------------
+export const getPermissionsForRole = (
+  permissions: ModelPermission[] & RoutePermission[],
+  role: "admin" | "moderator" | "user",
+) => {
+  const result = permissions.filter((permission) =>
+    permission.roles.includes(role),
+  );
+
   return result;
 };

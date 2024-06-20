@@ -57,7 +57,7 @@ model Permission {
   id          String @id @default(cuid())
   entity      String // e.g. note, user, admin/system, user/profile etc.
   action      String // create, read, update, delete OR access (for routes)
-  access      String // own, any or null
+  access      String // own, any or route
   description String @default("")
 
   createdAt DateTime @default(now())
