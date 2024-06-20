@@ -11,6 +11,12 @@ export function getModelCrud() {
     plural: "Languages",
   };
 
+  const crudPermission = {
+    target: "/admin/rbac/permissions",
+    singular: "Permission",
+    plural: "Permissions",
+  };
+
   const crudRegion = {
     target: "/admin/regions",
     singular: "Region",
@@ -20,6 +26,7 @@ export function getModelCrud() {
   return {
     crudCountry,
     crudLanguage,
+    crudPermission,
     crudRegion,
   };
 }
