@@ -50,7 +50,7 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
     roles: [ADMIN, MOD],
   },
   // {
-  //   entity: "admin", // TEST case: should throw an error because ADMIN route already added
+  //   entity: "/admin", // TEST case: should throw an error because ADMIN route already added
   //   roles: ADMIN,
   // },
   {
