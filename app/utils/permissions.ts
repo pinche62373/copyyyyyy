@@ -55,6 +55,6 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   // },
   {
     entity: "/admin/system",
-    roles: USER,
+    roles: ADMIN,
   },
 ];
