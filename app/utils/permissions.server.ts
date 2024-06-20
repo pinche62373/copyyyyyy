@@ -132,7 +132,7 @@ const generateRoutePermissions = ({
 };
 
 // ----------------------------------------------------------------------------
-// Helper function to throw error if permission already exists in the store.
+// Helper function to throw error if permission already exists in the seed store.
 // ----------------------------------------------------------------------------
 const isDuplicatePermission = (
   store: ModelPermission[] & RoutePermission[],
@@ -158,6 +158,35 @@ export const getPermissionsForRole = (
   const result = permissions.filter((permission) =>
     permission.roles.includes(role),
   );
+
+  return result;
+};
+
+// ----------------------------------------------------------------------------
+// Helper function to create a flat list with permissions and roles (as used
+// by the UI)
+// ----------------------------------------------------------------------------
+export const flattenPermissions = (permissions) => {
+  const result = [];
+
+  permissions.forEach((permission) => {
+    if (permission.roles.length === 0) {
+      permission.role = null;
+      delete permission.roles;
+
+      result.push(permission);
+
+      return;
+    }
+
+    permission.roles.forEach((role) => {
+      const temp = { ...permission };
+      temp.role = role.name;
+      delete temp.roles;
+
+      result.push(temp);
+    });
+  });
 
   return result;
 };
