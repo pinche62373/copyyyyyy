@@ -42,8 +42,8 @@ export async function requireRole(request: Request, name: string | string[]) {
 // ----------------------------------------------------------------------------
 // Returns a list of all (Model and Route) Permissions.
 // ----------------------------------------------------------------------------
-export const getAllPermissions = (): ModelPermission[] & RoutePermission[] => {
-  const result: ModelPermission[] & RoutePermission[] = [];
+export const getAllPermissions = (): Permission[] => {
+  const result: Permission[] = [];
 
   modelPermissions.forEach((permission) => {
     generateModelPermissions(permission).forEach((generatedPermission) => {
@@ -53,7 +53,7 @@ export const getAllPermissions = (): ModelPermission[] & RoutePermission[] => {
         );
       }
 
-      result.push(generatedPermission);
+      result.push(generatedPermission as unknown as Permission);
     });
   });
 
@@ -65,7 +65,7 @@ export const getAllPermissions = (): ModelPermission[] & RoutePermission[] => {
         );
       }
 
-      result.push(generatedPermission);
+      result.push(generatedPermission as unknown as Permission);
     });
   });
 
@@ -139,7 +139,7 @@ const generateRoutePermissions = ({
 // Helper function to throw error if permission already exists in the seed store.
 // ----------------------------------------------------------------------------
 const isDuplicatePermission = (
-  store: ModelPermission[] & RoutePermission[],
+  store: Permission[],
   permission: ModelPermission | RoutePermission,
 ) => {
   const result =
