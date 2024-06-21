@@ -1,14 +1,15 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { parseArgs } from "node:util";
-
-import { createSeedClient } from "@snaplet/seed";
-import bcrypt from "bcryptjs";
-
-import { getPermissionsForRole, getSeedPermissions } from "#app/utils/permissions.server";
+import {
+  getPermissionsForRole,
+  getSeedPermissions,
+} from "#app/utils/permissions.server";
 import seedConfig from "#prisma/seed/seed.config";
 import { cuid, permaLink } from "#prisma/seed/utils";
+import { createSeedClient } from "@snaplet/seed";
+import bcrypt from "bcryptjs";
+import { parseArgs } from "node:util";
 
 // --------------------------------------------------------------------------
 // Variables
@@ -107,9 +108,12 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Roles (ALWAYS) with Permissions (ALWAYS) and _RoleToUSer (DEV ONLY)
   // --------------------------------------------------------------------------
-  const adminPermissions = getPermissionsForRole(seedPermissions, "admin")
-  const moderatorPermissions = getPermissionsForRole(seedPermissions, "moderator")
-  const userPermissions = getPermissionsForRole(seedPermissions, "user")
+  const adminPermissions = getPermissionsForRole(seedPermissions, "admin";
+  const moderatorPermissions = getPermissionsForRole(
+    seedPermissions,
+    "moderator",
+  );
+  const userPermissions = getPermissionsForRole(seedPermissions, "user");
 
   await seed.role([
     {
@@ -136,7 +140,7 @@ const main = async () => {
       description: "Moderators",
       _PermissionToRole: moderatorPermissions.map((permission) => ({
         A: permission.id, // RBAC
-      })),      
+      })),
       _RoleToUser: prod === false && [
         {
           B: cuid(
@@ -154,7 +158,7 @@ const main = async () => {
       description: "Users",
       _PermissionToRole: userPermissions.map((permission) => ({
         A: permission.id, // RBAC
-      })),      
+      })),
       _RoleToUser: prod === false && [
         {
           B: cuid(
