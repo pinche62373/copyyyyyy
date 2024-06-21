@@ -157,8 +157,8 @@ const isDuplicatePermission = (
 // ----------------------------------------------------------------------------
 export const getPermissionsForRole = (
   permissions: Permission[],
-  role: Role,
-) => {
+  role: Role
+): Permission[] => {
   const result = permissions.filter((permission) =>
     permission.roles.includes(role),
   );
