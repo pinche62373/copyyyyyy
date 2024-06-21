@@ -18,7 +18,7 @@ export async function getUserById(id: User["id"]) {
             select: {
               entity: true,
               action: true,
-              access: true,
+              scope: true,
             },
             orderBy: {
               entity: "asc",

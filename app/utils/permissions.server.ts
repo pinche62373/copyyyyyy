@@ -77,7 +77,7 @@ export const getSeedPermissions = () => {
 
   const result = permissions.map((permission) => ({
     ...permission,
-    id: cuid(permission.entity + permission.action + permission.access),
+    id: cuid(permission.entity + permission.action + permission.scope),
   }));
 
   return result;
@@ -90,7 +90,7 @@ const generateModelPermissions = ({
   entity,
   actions,
   roles,
-  access = "own",
+  scope,
   description,
 }: ModelPermissionFunctionArgs): ModelPermission[] => {
   actions = Array.isArray(actions) ? actions : [actions];
@@ -102,7 +102,7 @@ const generateModelPermissions = ({
     result.push({
       entity,
       action,
-      access,
+      scope,
       description,
       roles,
     });
@@ -115,6 +115,7 @@ const generateModelPermissions = ({
 // ----------------------------------------------------------------------------
 const generateRoutePermissions = ({
   entity,
+  scope,
   roles,
   description,
 }: RoutePermissionFunctionArgs): RoutePermission[] => {
@@ -124,7 +125,7 @@ const generateRoutePermissions = ({
     {
       entity,
       action: "access",
-      access: "route",
+      scope,
       description,
       roles,
     },
@@ -143,7 +144,7 @@ const isDuplicatePermission = (
       (p) =>
         p.entity === permission.entity &&
         p.action === permission.action &&
-        p.access === permission.access,
+        p.scope === permission.scope,
     ) !== undefined;
   return result;
 };

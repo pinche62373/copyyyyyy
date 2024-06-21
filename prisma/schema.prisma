@@ -57,7 +57,7 @@ model Permission {
   id          String @id @default(cuid())
   entity      String // e.g. note, user, admin/system, user/profile etc.
   action      String // create, read, update, delete OR access (for routes)
-  access      String // own, any or route
+  scope       String // own or any
   description String @default("")
 
   createdAt DateTime @default(now())
@@ -65,7 +65,7 @@ model Permission {
 
   roles Role[]
 
-  @@unique([action, entity, access])
+  @@unique([action, entity, scope])
 }
 
 model Note {

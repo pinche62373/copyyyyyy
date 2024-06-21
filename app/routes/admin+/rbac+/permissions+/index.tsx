@@ -45,7 +45,7 @@ interface Permission {
   id: string;
   entity: string;
   action: string;
-  access: string;
+  scope: string;
   role: string;
 }
 
@@ -75,8 +75,8 @@ const columns = [
     enableGlobalFilter: false,
     cell: (info) => info.getValue(), //=> getCellCreatedAt(info),
   }),
-  columnHelper.accessor("access", {
-    header: () => <span>Access</span>,
+  columnHelper.accessor("scope", {
+    header: () => <span>Scope</span>,
     enableGlobalFilter: false,
     cell: (info) => info.getValue(),
   }),

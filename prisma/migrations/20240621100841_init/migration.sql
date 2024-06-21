@@ -37,7 +37,7 @@ CREATE TABLE "Permission" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "entity" TEXT NOT NULL,
     "action" TEXT NOT NULL,
-    "access" TEXT NOT NULL,
+    "scope" TEXT NOT NULL,
     "description" TEXT NOT NULL DEFAULT '',
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" DATETIME NOT NULL
@@ -125,7 +125,7 @@ CREATE INDEX "Session_userId_idx" ON "Session"("userId");
 CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Permission_action_entity_access_key" ON "Permission"("action", "entity", "access");
+CREATE UNIQUE INDEX "Permission_action_entity_scope_key" ON "Permission"("action", "entity", "scope");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Language_name_key" ON "Language"("name");

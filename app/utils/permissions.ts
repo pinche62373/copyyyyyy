@@ -20,16 +20,16 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [
     entity: "language",
     actions: [C, R, U, D],
     roles: [ADMIN, MOD],
-    access: "any",
+    scope: "any",
   },
   {
     entity: "language",
     actions: R,
     roles: USER,
-    access: "own",
+    scope: "own",
   },
   //   {
-  //     entity: "language", // Test case: error should be thrown because entity, action, access combi already exists
+  //     entity: "language", // Test case: error should be thrown because entity, action, scope combi already exists
   //     actions: R,
   //     roles: MOD,
   //   },
@@ -37,7 +37,7 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [
     entity: "language", // Test case: should throw an error because ADMIN has role membership for two "delete" actions
     actions: D,
     roles: ADMIN,
-    access: "own",
+    scope: "own",
   },
 ];
 
@@ -48,6 +48,7 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   {
     entity: "/admin",
     roles: [ADMIN, MOD],
+    scope: "any",
   },
   // {
   //   entity: "/admin", // TEST case: should throw an error because ADMIN route already added
@@ -56,5 +57,6 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   {
     entity: "/admin/system",
     roles: ADMIN,
+    scope: "any",
   },
 ];
