@@ -9,6 +9,27 @@ const routeEntities = ["admin", "admin/system"];
 const routeActions = ["access"] as const;
 const routeScopes = ["own", "any"] as const;
 
+export interface Role {
+  name: (typeof roles)[number];
+}
+
+export interface Permission {
+  id: string;
+  entity: string;
+  action: string;
+  scope: string;
+  description: string;
+  createdAt: Date;
+  updatedAt: Date;
+  roles: {
+    name: (typeof roles)[number];
+  }[];
+}
+
+export interface FlatPermission extends Omit<Permission, "roles"> {
+  role: (typeof roles)[number];
+}
+
 export interface RoutePermission {
   entity: (typeof routeEntities)[number];
   action: (typeof routeActions)[number];

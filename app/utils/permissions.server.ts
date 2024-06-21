@@ -4,8 +4,11 @@ import { requireUserId } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { modelPermissions, routePermissions } from "#app/utils/permissions";
 import type {
+  FlatPermission,
   ModelPermission,
   ModelPermissionFunctionArgs,
+  Permission,
+  Role,
   RoutePermission,
   RoutePermissionFunctionArgs,
 } from "#app/utils/permissions.types";
@@ -153,8 +156,8 @@ const isDuplicatePermission = (
 // Helper function to extract permissions for the given role.
 // ----------------------------------------------------------------------------
 export const getPermissionsForRole = (
-  permissions: ModelPermission[] & RoutePermission[],
-  role: "admin" | "moderator" | "user",
+  permissions: Permission[],
+  role: Role,
 ) => {
   const result = permissions.filter((permission) =>
     permission.roles.includes(role),
@@ -167,23 +170,15 @@ export const getPermissionsForRole = (
 // Helper function to create a flat list with permissions and roles (as used
 // by the UI)
 // ----------------------------------------------------------------------------
-export const flattenPermissions = (permissions) => {
-  const result = [];
+export const flattenPermissions = (permissions: Permission[]) => {
+  const result: FlatPermission[] = [];
 
   permissions.forEach((permission) => {
-    if (permission.roles.length === 0) {
-      permission.role = null;
-      delete permission.roles;
-
-      result.push(permission);
-
-      return;
-    }
-
     permission.roles.forEach((role) => {
-      const temp = { ...permission };
-      temp.role = role.name;
-      delete temp.roles;
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { roles, ...otherProps } = permission; // roles prop deleted here
+
+      const temp = { ...otherProps, role: role.name }; // add role prop
 
       result.push(temp);
     });
