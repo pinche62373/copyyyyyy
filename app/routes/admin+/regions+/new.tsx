@@ -1,6 +1,6 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
-import type { ActionFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
@@ -12,10 +12,17 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createRegion } from "#app/models/region.server";
 import { getCrud } from "#app/utils/crud";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 import { regionSchema } from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudRegion: crud } = getCrud();
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  await requireRoutePermission(request, `${crud.index}/new`);
+
+  return null;
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();

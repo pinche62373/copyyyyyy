@@ -1,6 +1,7 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
@@ -14,16 +15,19 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { getCrud } from "#app/utils/crud";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchema } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudCountry: crud } = getCrud();
 
-export const loader = async () => {
+export async function loader({ request }: LoaderFunctionArgs) {
+  await requireRoutePermission(request, `${crud.index}/new`);
+
   const regions = await getRegions();
 
   return { regions };
-};
+}
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
