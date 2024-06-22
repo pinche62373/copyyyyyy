@@ -41,7 +41,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   };
 }
 
-interface Permission {
+interface FlatPermission {
   id: string;
   entity: string;
   action: string;
@@ -49,7 +49,7 @@ interface Permission {
   role: string;
 }
 
-const columnHelper = createColumnHelper<Permission>();
+const columnHelper = createColumnHelper<FlatPermission>();
 
 const columns = [
   columnHelper.display({
