@@ -20,9 +20,12 @@ model User {
   sessions Session[]
   notes    Note[]
 
-  // admin relationships
-  createdRegions Region[]   @relation("CreatedRegions")
-  updatedRegions Region[]   @relation("UpdatedRegions")
+  // admin creators and updators
+  languageCreatedBy Language[] @relation("CreatedLanguages")
+  languageUpdatedBy Language[] @relation("UpdatedLanguages")
+
+  regionCreatedBy Region[] @relation("CreatedRegions")
+  regionUpdatedBy Region[] @relation("UpdatedRegions")
 }
 
 model Password {
@@ -91,6 +94,11 @@ model Language {
 
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
+  createdBy String
+  updatedBy String?
+
+  languageCreatedBy User  @relation("CreatedLanguages", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  languageUpdatedBy User? @relation("UpdatedLanguages", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Region {
@@ -102,8 +110,8 @@ model Region {
   createdBy String
   updatedBy String?
 
-  createdByUser User  @relation("CreatedRegions", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  updatedByUser User? @relation("UpdatedRegions", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  regionCreatedBy User  @relation("CreatedRegions", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  regionupdatedBy User? @relation("UpdatedRegions", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   countries Country[]
 }
@@ -115,7 +123,7 @@ model Country {
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 
-  region   Region  @relation(fields: [regionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  region   Region @relation(fields: [regionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   regionId String
 }
 

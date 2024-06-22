@@ -9,13 +9,13 @@ export function getRegion({ id }: Pick<Region, "id">) {
       name: true,
       createdAt: true,
       updatedAt: true,
-      createdByUser: {
+      regionCreatedBy: {
         select: {
           id: true,
           username: true,
         },
       },
-      updatedByUser: {
+      regionupdatedBy: {
         select: {
           id: true,
           username: true,

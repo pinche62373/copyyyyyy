@@ -201,6 +201,13 @@ const main = async () => {
         id: cuid(language),
         name: language,
         updatedAt,
+        updatedBy,
+        createdBy: cuid(
+          accounts
+            .filter((account) => account.name === "admin")
+            .map(({ email }) => email)
+            .toString(),
+        ),
       })),
     );
   }
@@ -231,13 +238,13 @@ const main = async () => {
         id: cuid(region.name),
         name: region.name,
         updatedAt,
+        updatedBy,
         createdBy: cuid(
           accounts
             .filter((account) => account.name === "admin")
             .map(({ email }) => email)
             .toString(),
         ),
-        updatedBy,
         countries: region.countries?.map((country) => ({
           id: cuid(country),
           name: country,
