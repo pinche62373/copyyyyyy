@@ -4,6 +4,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
+import invariant from "tiny-invariant";
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
@@ -15,9 +16,10 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
+import { getUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { countrySchema } from "#app/validations/country-schema";
+import { countrySchemaUpdateForm } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudCountry: crud } = getCrud();
@@ -42,7 +44,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   validateFormIntent(formData, "update");
 
-  const submission = parseWithZod(formData, { schema: countrySchema });
+  const submission = parseWithZod(formData, { schema: countrySchemaUpdateForm });
 
   if (submission.status !== "success") {
     return jsonWithError(null, "Invalid form data");
@@ -52,8 +54,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Invalid relationship");
   }
 
+  const userId = await getUserId(request);
+
+  invariant(userId, "userId must be set"); // TODO : make this check obsolete by refactoring getUserId function(s)
+
   try {
-    await updateCountry(submission.value);
+    await updateCountry(submission.value, userId);
   } catch (error) {
     return jsonWithError(null, "Unexpected error");
   }
@@ -72,7 +78,7 @@ export default function Component() {
   const [form, fields] = useForm({
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: countrySchema });
+      return parseWithZod(formData, { schema: countrySchemaUpdateForm });
     },
   });
 

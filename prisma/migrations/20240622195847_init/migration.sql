@@ -45,6 +45,20 @@ CREATE TABLE "Permission" (
 );
 
 -- CreateTable
+CREATE TABLE "Country" (
+    "id" TEXT NOT NULL PRIMARY KEY,
+    "name" TEXT NOT NULL,
+    "regionId" TEXT NOT NULL,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" DATETIME,
+    "createdBy" TEXT NOT NULL,
+    "updatedBy" TEXT,
+    CONSTRAINT "Country_regionId_fkey" FOREIGN KEY ("regionId") REFERENCES "Region" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Country_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Country_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+-- CreateTable
 CREATE TABLE "Language" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
@@ -66,16 +80,6 @@ CREATE TABLE "Region" (
     "updatedBy" TEXT,
     CONSTRAINT "Region_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT "Region_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- CreateTable
-CREATE TABLE "Country" (
-    "id" TEXT NOT NULL PRIMARY KEY,
-    "name" TEXT NOT NULL,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME,
-    "regionId" TEXT NOT NULL,
-    CONSTRAINT "Country_regionId_fkey" FOREIGN KEY ("regionId") REFERENCES "Region" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -129,13 +133,13 @@ CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
 CREATE UNIQUE INDEX "Permission_action_entity_scope_key" ON "Permission"("action", "entity", "scope");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "Country_name_key" ON "Country"("name");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "Language_name_key" ON "Language"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Region_name_key" ON "Region"("name");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Country_name_key" ON "Country"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Movie_name_key" ON "Movie"("name");

@@ -20,6 +20,9 @@ model User {
   sessions Session[]
 
   // admin creators and updators
+  countryCreatedBy Country[] @relation("CreatedCountries")
+  countryUpdatedBy Country[] @relation("UpdatedCountries")
+
   languageCreatedBy Language[] @relation("CreatedLanguages")
   languageUpdatedBy Language[] @relation("UpdatedLanguages")
 
@@ -75,6 +78,22 @@ model Permission {
   @@unique([action, entity, scope])
 }
 
+model Country {
+  id   String @id @default(cuid())
+  name String @unique
+
+  region   Region @relation(fields: [regionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  regionId String
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+  createdBy String
+  updatedBy String?
+
+  countryCreatedBy User  @relation("CreatedCountries", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  countryUpdatedBy User? @relation("UpdatedCountries", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
 model Language {
   id   String @id @default(cuid())
   name String @unique
@@ -101,17 +120,6 @@ model Region {
   regionupdatedBy User? @relation("UpdatedRegions", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   countries Country[]
-}
-
-model Country {
-  id   String @id @default(cuid())
-  name String @unique
-
-  createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
-
-  region   Region @relation(fields: [regionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  regionId String
 }
 
 model Movie {

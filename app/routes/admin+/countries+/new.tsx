@@ -4,6 +4,7 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
+import invariant from "tiny-invariant";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -14,9 +15,10 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
+import { getUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { countrySchema } from "#app/validations/country-schema";
+import { countrySchemaCreateForm } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudCountry: crud } = getCrud();
@@ -35,7 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   validateFormIntent(formData, "create");
 
   const submission = parseWithZod(formData, {
-    schema: countrySchema.omit({ id: true }),
+    schema: countrySchemaCreateForm,
   });
 
   if (submission.status !== "success") {
@@ -46,8 +48,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Invalid relationship");
   }
 
+  const userId = await getUserId(request);
+
+  invariant(userId, "userId must be set"); // TODO : make this check obsolete by refactoring getUserId function(s)
+
   try {
-    await createCountry(submission.value);
+    await createCountry(submission.value, userId);
   } catch (error) {
     return jsonWithError(null, "Unexpected error");
   }
@@ -67,7 +73,7 @@ export default function Component() {
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
       return parseWithZod(formData, {
-        schema: countrySchema.omit({ id: true }),
+        schema: countrySchemaCreateForm,
       });
     },
   });

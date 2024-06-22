@@ -39,8 +39,8 @@ export function createLanguage(
   return prisma.language.create({
     data: {
       name,
-      updatedAt: null,
       createdBy: userId,
+      updatedAt: null,
     },
   });
 }

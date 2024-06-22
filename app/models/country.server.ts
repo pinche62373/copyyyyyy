@@ -32,30 +32,31 @@ export function getCountries() {
   });
 }
 
-export function createCountry({
-  name,
-  regionId,
-}: Pick<Country, "name" | "regionId">) {
+export function createCountry(
+  { name, regionId }: Pick<Country, "name" | "regionId">,
+  userId: string,
+) {
   return prisma.country.create({
     data: {
       name,
       regionId,
+      createdBy: userId,
       updatedAt: null,
     },
   });
 }
 
-export function updateCountry({
-  id,
-  name,
-  regionId,
-}: Pick<Country, "id" | "name" | "regionId">) {
+export function updateCountry(
+  { id, name, regionId }: Pick<Country, "id" | "name" | "regionId">,
+  userId: string,
+) {
   return prisma.country.update({
     where: { id },
     data: {
       id,
       name,
       regionId,
+      updatedBy: userId,
     },
   });
 }

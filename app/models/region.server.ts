@@ -40,8 +40,8 @@ export function createRegion({ name }: Pick<Region, "name">, userId: string) {
   return prisma.region.create({
     data: {
       name,
-      updatedAt: null,
       createdBy: userId,
+      updatedAt: null,
     },
   });
 }

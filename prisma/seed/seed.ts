@@ -249,6 +249,13 @@ const main = async () => {
           id: cuid(country),
           name: country,
           updatedAt,
+          updatedBy,
+          createdBy: cuid(
+            accounts
+              .filter((account) => account.name === "admin")
+              .map(({ email }) => email)
+              .toString(),
+          ),
         })),
       })),
     );
