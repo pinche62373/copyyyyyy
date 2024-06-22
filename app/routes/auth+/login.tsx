@@ -74,7 +74,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     honeypot.check(formData);
   } catch (error) {
     if (error instanceof SpamError) {
-      throw new Response("Invalid form data", { status: 400 });
+      throw new Response("Invalid form data", { status: 400, statusText: "Invalid Form Data" });
     }
     throw error; // rethrow
   }

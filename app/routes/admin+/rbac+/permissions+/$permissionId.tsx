@@ -21,7 +21,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const permission = await getPermission({ id: permissionId });
 
   if (!permission) {
-    throw new Response("Not Found", { status: 404 });
+    throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
   return json({ permission });

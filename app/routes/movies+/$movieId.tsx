@@ -12,7 +12,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const movie = await getMovie({ id: movieId });
 
   if (!movie) {
-    throw new Response("Not Found", { status: 404 });
+    throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
   return json({ movie });

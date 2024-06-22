@@ -11,13 +11,13 @@ export async function loader({ params }: LoaderFunctionArgs) {
     invariant(slug, "Must be set");
     slugSchema.parse(slug);
   } catch (error) {
-    throw new Response(`Not Found: ${error}`, { status: 404 });
+    throw new Response(`Not Found: ${error}`, { status: 404, statusText: "Not Found" });
   }
 
   const movie = await getMovieIdBySlug({ slug });
 
   if (!movie) {
-    throw new Response("Not Found", { status: 404 });
+    throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
   throw redirect(`/movies/${movie.id}`, 307);
