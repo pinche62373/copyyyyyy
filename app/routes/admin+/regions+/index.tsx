@@ -33,7 +33,7 @@ import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInpu
 import { deleteRegion, getRegions } from "#app/models/region.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { regionSchema } from "#app/validations/region-schema";
+import { regionSchemaFull } from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudRegion: crud } = getCrud();
@@ -52,7 +52,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   validateFormIntent(formData, "delete");
 
   const submission = parseWithZod(formData, {
-    schema: regionSchema.pick({ id: true }),
+    schema: regionSchemaFull.pick({ id: true }),
   });
 
   if (submission.status !== "success") {

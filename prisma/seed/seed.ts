@@ -18,6 +18,8 @@ import { cuid, permaLink } from "#prisma/seed/utils";
 // Variables
 // --------------------------------------------------------------------------
 const updatedAt = null;
+const updatedBy = null;
+
 const accounts = [
   {
     name: "admin",
@@ -228,6 +230,13 @@ const main = async () => {
         id: cuid(region.name),
         name: region.name,
         updatedAt,
+        createdBy: cuid(
+          accounts
+            .filter((account) => account.name === "admin")
+            .map(({ email }) => email)
+            .toString(),
+        ),
+        updatedBy,
         countries: region.countries?.map((country) => ({
           id: cuid(country),
           name: country,

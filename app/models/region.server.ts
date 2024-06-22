@@ -19,11 +19,13 @@ export function getRegions() {
   });
 }
 
-export function createRegion({ name }: Pick<Region, "name">) {
+export function createRegion({ name }: Pick<Region, "name">, userId: string) {
   return prisma.region.create({
     data: {
       name,
       updatedAt: null,
+      createdBy: userId,
+      updatedBy: null,
     },
   });
 }

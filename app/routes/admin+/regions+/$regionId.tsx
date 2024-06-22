@@ -15,7 +15,7 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { regionSchema } from "#app/validations/region-schema";
+import { regionSchemaUpdateForm } from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudRegion: crud } = getCrud();
@@ -38,7 +38,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   validateFormIntent(formData, "update");
 
-  const submission = parseWithZod(formData, { schema: regionSchema });
+  const submission = parseWithZod(formData, { schema: regionSchemaUpdateForm });
 
   if (submission.status !== "success") {
     return jsonWithError(null, "Invalid form data");
@@ -64,7 +64,7 @@ export default function Component() {
   const [form, fields] = useForm({
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: regionSchema });
+      return parseWithZod(formData, { schema: regionSchemaUpdateForm });
     },
   });
 

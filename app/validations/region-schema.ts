@@ -4,7 +4,7 @@
 //
 import { z } from "zod";
 
-export const regionSchema = z.object({
+export const regionSchemaFull = z.object({
   id: z.string(),
   name: z
     .string({ required_error: "Region name is required" })
@@ -12,4 +12,14 @@ export const regionSchema = z.object({
       message:
         "This field only allows capitalized Latin words, separated by spaces.",
     }),
+  createdBy: z.string(),
+});
+
+export const regionSchemaCreateForm = regionSchemaFull.pick({
+  name: true,
+});
+
+export const regionSchemaUpdateForm = regionSchemaFull.pick({
+  id: true,
+  name: true,
 });
