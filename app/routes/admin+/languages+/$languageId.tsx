@@ -14,17 +14,20 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { getCrud } from "#app/utils/crud";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchema } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudLanguage: crud } = getCrud();
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  await requireRoutePermission(request, `${crud.index}/edit`);
+
   const languageId = z.coerce.string().parse(params.languageId);
   const language = await getLanguage({ id: languageId });
 
   if (!language) {
-    throw new Response("Not Found", { status: 404 });
+    throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
   return json({ language });

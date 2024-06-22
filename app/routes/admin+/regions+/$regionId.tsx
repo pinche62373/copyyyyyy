@@ -14,17 +14,20 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { getCrud } from "#app/utils/crud";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 import { regionSchema } from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudRegion: crud } = getCrud();
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  await requireRoutePermission(request, `${crud.index}/edit`);
+
   const regionId = z.coerce.string().parse(params.regionId);
   const region = await getRegion({ id: regionId });
 
   if (!region) {
-    throw new Response("Not Found", { status: 404 });
+    throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
   return json({ region });

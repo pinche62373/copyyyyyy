@@ -16,17 +16,20 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { getCrud } from "#app/utils/crud";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchema } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudCountry: crud } = getCrud();
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  await requireRoutePermission(request, `${crud.index}/edit`);
+
   const countryId = z.coerce.string().parse(params.countryId);
   const country = await getCountry({ id: countryId });
 
   if (!country) {
-    throw new Response("Not Found", { status: 404 });
+    throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
   const regions = await getRegions();

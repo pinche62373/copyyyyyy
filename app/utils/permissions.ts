@@ -68,6 +68,16 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
     roles: [ADMIN, MOD],
     scope: "any",
   },
+  {
+    entity: "/admin/countries/new",
+    roles: [ADMIN, MOD],
+    scope: "any",
+  },
+  {
+    entity: "/admin/countries/edit",
+    roles: [ADMIN, MOD],
+    scope: "any",
+  },
   // LANGUAGES
   {
     entity: "/admin/languages",
@@ -90,11 +100,23 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
     roles: ADMIN,
     scope: "any",
   },
+  // REGIONS
   {
     entity: "/admin/regions",
     roles: ADMIN,
     scope: "any",
   },
+  {
+    entity: "/admin/regions/new",
+    roles: ADMIN,
+    scope: "any",
+  },
+  {
+    entity: "/admin/regions/edit",
+    roles: ADMIN,
+    scope: "any",
+  },
+  // SYSTEM
   {
     entity: "/admin/system",
     roles: ADMIN,
