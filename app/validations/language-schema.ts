@@ -4,12 +4,25 @@
 //
 import { z } from "zod";
 
-export const languageSchema = z.object({
-  id: z.string(),
+export const languageSchemaFull = z.object({
+  id: z.string().cuid2(),
   name: z
     .string({ required_error: "Language name is required" })
     .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, {
       message:
         "This field only allows capitalized Latin words, separated by spaces.",
     }),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+  createdBy: z.string(),
+  updatedBy: z.string(),
+});
+
+export const languageSchemaCreateForm = languageSchemaFull.pick({
+  name: true,
+});
+
+export const languageSchemaUpdateForm = languageSchemaFull.pick({
+  id: true,
+  name: true,
 });

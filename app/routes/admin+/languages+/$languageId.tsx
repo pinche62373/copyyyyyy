@@ -4,6 +4,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
+import invariant from "tiny-invariant";
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
@@ -13,9 +14,10 @@ import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
+import { getUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { languageSchema } from "#app/validations/language-schema";
+import { languageSchemaUpdateForm } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudLanguage: crud } = getCrud();
@@ -38,14 +40,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   validateFormIntent(formData, "update");
 
-  const submission = parseWithZod(formData, { schema: languageSchema });
+  const submission = parseWithZod(formData, {
+    schema: languageSchemaUpdateForm,
+  });
 
   if (submission.status !== "success") {
     return jsonWithError(null, "Invalid form data");
   }
 
+  const userId = await getUserId(request);
+
+  invariant(userId, "userId must be set"); // TODO : make this check obsolete by refactoring getUserId function(s)
+
   try {
-    await updateLanguage(submission.value);
+    await updateLanguage(submission.value, userId);
   } catch (error) {
     return jsonWithError(null, "Unexpected error");
   }
@@ -64,7 +72,7 @@ export default function Component() {
   const [form, fields] = useForm({
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
-      return parseWithZod(formData, { schema: languageSchema });
+      return parseWithZod(formData, { schema: languageSchemaUpdateForm });
     },
   });
 

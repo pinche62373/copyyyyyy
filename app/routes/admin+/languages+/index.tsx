@@ -33,7 +33,7 @@ import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInpu
 import { deleteLanguage, getLanguages } from "#app/models/language.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { languageSchema } from "#app/validations/language-schema";
+import { languageSchemaFull } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudLanguage: crud } = getCrud();
@@ -52,7 +52,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   validateFormIntent(formData, "delete");
 
   const submission = parseWithZod(formData, {
-    schema: languageSchema.pick({ id: true }),
+    schema: languageSchemaFull.pick({ id: true }),
   });
 
   if (submission.status !== "success") {
