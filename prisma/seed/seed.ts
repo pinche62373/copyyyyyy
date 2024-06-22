@@ -11,8 +11,8 @@ import {
   getSeedPermissions,
 } from "#app/utils/permissions.server";
 import { Role } from "#app/utils/permissions.types";
+import { cuid, permaLink } from "#prisma/seed/seed-utils";
 import seedConfig from "#prisma/seed/seed.config";
-import { cuid, permaLink } from "#prisma/seed/utils";
 
 // --------------------------------------------------------------------------
 // Variables

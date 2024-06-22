@@ -14,7 +14,7 @@ import type {
   RoutePermissionFunctionArgs,
 } from "#app/utils/permissions.types";
 import { userHasPermission } from "#app/utils/user";
-import { cuid } from "#prisma/seed/utils";
+import { cuid } from "#prisma/seed/seed-utils";
 
 // ----------------------------------------------------------------------------
 // Throw 403 unless user has specified role.
