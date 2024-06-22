@@ -4,6 +4,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
+import invariant from "tiny-invariant";
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
@@ -13,6 +14,7 @@ import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getRegion, updateRegion } from "#app/models/region.server";
+import { getUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { regionSchemaUpdateForm } from "#app/validations/region-schema";
@@ -44,8 +46,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Invalid form data");
   }
 
+  const userId = await getUserId(request);
+
+  invariant(userId, "userId must be set"); // TODO : make this check obsolete by refactoring getUserId function(s)
+
   try {
-    await updateRegion(submission.value);
+    await updateRegion(submission.value, userId);
   } catch (error) {
     return jsonWithError(null, "Unexpected error");
   }

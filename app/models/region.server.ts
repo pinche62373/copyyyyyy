@@ -32,17 +32,17 @@ export function createRegion({ name }: Pick<Region, "name">, userId: string) {
       name,
       updatedAt: null,
       createdBy: userId,
-      updatedBy: null,
     },
   });
 }
 
-export function updateRegion({ id, name }: Pick<Region, "id" | "name">) {
+export function updateRegion({ id, name }: Pick<Region, "id" | "name">, userId: string) {
   return prisma.region.update({
     where: { id },
     data: {
       id,
       name,
+      updatedBy: userId
     },
   });
 }
