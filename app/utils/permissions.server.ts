@@ -49,9 +49,6 @@ export async function requireRole(request: Request, name: string | string[]) {
 export async function requireRoutePermission(request: Request, route: string) {
   const user = await getUser(request);
 
-  console.log(`REQUESTED URL = ${request.url}`);
-  console.log(`CHECK IF USER '${user!.id}' HAS ACCESS TO ROUTE '${route}'`);
-
   const permission = {
     entity: route,
     action: "access",
