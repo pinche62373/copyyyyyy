@@ -13,7 +13,7 @@ import { IconTrash } from "#app/components/icons/icon-trash";
 interface PropTypes {
   info: CellContext<any, string>;
   crud: {
-    target: string;
+    index: string;
     singular: string;
     plural: string;
   };
