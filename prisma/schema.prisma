@@ -86,8 +86,8 @@ model Country {
   regionId String
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
   createdBy String
+  updatedAt DateTime? @updatedAt
   updatedBy String?
 
   countryCreatedBy User  @relation("CreatedCountries", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -99,8 +99,8 @@ model Language {
   name String @unique
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
   createdBy String
+  updatedAt DateTime? @updatedAt
   updatedBy String?
 
   languageCreatedBy User  @relation("CreatedLanguages", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -112,8 +112,8 @@ model Region {
   name String @unique
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime? @updatedAt
   createdBy String
+  updatedAt DateTime? @updatedAt
   updatedBy String?
 
   regionCreatedBy User  @relation("CreatedRegions", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
