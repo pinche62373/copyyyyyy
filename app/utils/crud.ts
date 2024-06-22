@@ -1,24 +1,24 @@
-export function getModelCrud() {
+export function getCrud() {
   const crudCountry = {
-    target: "/admin/countries",
+    index: "/admin/countries",
     singular: "Country",
     plural: "Countries",
   };
 
   const crudLanguage = {
-    target: "/admin/languages",
+    index: "/admin/languages",
     singular: "Language",
     plural: "Languages",
   };
 
   const crudPermission = {
-    target: "/admin/rbac/permissions",
+    index: "/admin/rbac/permissions",
     singular: "Permission",
     plural: "Permissions",
   };
 
   const crudRegion = {
-    target: "/admin/regions",
+    index: "/admin/regions",
     singular: "Region",
     plural: "Regions",
   };

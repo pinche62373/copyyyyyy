@@ -11,11 +11,11 @@ import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createLanguage } from "#app/models/language.server";
-import { getModelCrud } from "#app/utils/crud";
+import { getCrud } from "#app/utils/crud";
 import { languageSchema } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
-const { crudLanguage: crud } = getModelCrud();
+const { crudLanguage: crud } = getCrud();
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
@@ -37,7 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   return redirectWithSuccess(
-    crud.target,
+    crud.index,
     `${crud.singular} created successfully`,
   );
 };
@@ -65,7 +65,7 @@ export default function Component() {
           <FormInputText label="Name" fieldName="name" fields={fields} />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to={crud.target} secondary />
+            <Button type="button" text="Cancel" to={crud.index} secondary />
             <Button
               type="submit"
               text="Save"

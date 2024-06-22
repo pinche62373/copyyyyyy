@@ -15,11 +15,11 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
-import { getModelCrud } from "#app/utils/crud";
+import { getCrud } from "#app/utils/crud";
 import { countrySchema } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
-const { crudCountry: crud } = getModelCrud();
+const { crudCountry: crud } = getCrud();
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const countryId = z.coerce.string().parse(params.countryId);
@@ -56,7 +56,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   return redirectWithSuccess(
-    crud.target,
+    crud.index,
     `${crud.singular} updated successfully`,
   );
 };
@@ -97,7 +97,7 @@ export default function Component() {
           />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to={crud.target} secondary />
+            <Button type="button" text="Cancel" to={crud.index} secondary />
             <Button
               type="submit"
               text="Save"

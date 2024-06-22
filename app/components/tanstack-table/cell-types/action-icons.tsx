@@ -37,7 +37,7 @@ export const getCellActionIcons = ({ info, crud }: PropTypes) => {
 
       {/* Delete Button */}
       <div className="inline-flex items-center -space-x-px">
-        <Form method="POST" id={deleteFormId} action={crud.target}>
+        <Form method="POST" id={deleteFormId} action={crud.index}>
           <FormInputHidden name="intent" value="delete" />
           <FormInputHidden name="id" value={info.row.original.id} />
 

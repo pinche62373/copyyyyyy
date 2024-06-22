@@ -9,9 +9,9 @@ import { Button } from "#app/components/admin/button";
 import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
 import { getPermission } from "#app/models/permission.server";
-import { getModelCrud } from "#app/utils/crud";
+import { getCrud } from "#app/utils/crud";
 
-const { crudPermission: crud } = getModelCrud();
+const { crudPermission: crud } = getCrud();
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const permissionId = z.coerce.string().parse(params.permissionId);
@@ -59,7 +59,7 @@ export default function Component() {
         </FormInputTextReadOnly>
 
         <FormFooter>
-          <Button type="button" text="Close" to={crud.target} />
+          <Button type="button" text="Close" to={crud.index} />
         </FormFooter>
       </AdminContentCard>
     </>
