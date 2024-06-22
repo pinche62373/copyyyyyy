@@ -8,7 +8,6 @@ const tables = {
     "!*", // Exclude all tables except the ones whitelisted below
     "_PermissionToRole",
     "Permission",
-    "Region",
     "Role",
   ],
   devOnly: [
@@ -18,6 +17,7 @@ const tables = {
     "Movie",
     "Password",
     "PermaLink",
+    "Region",
     "User",
   ],
 };

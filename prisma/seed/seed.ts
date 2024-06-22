@@ -14,7 +14,6 @@ import { Role } from "#app/utils/permissions.types";
 import seedConfig from "#prisma/seed/seed.config";
 import { cuid, permaLink } from "#prisma/seed/utils";
 
-
 // --------------------------------------------------------------------------
 // Variables
 // --------------------------------------------------------------------------
@@ -112,12 +111,18 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Roles (ALWAYS) with Permissions (ALWAYS) and _RoleToUSer (DEV ONLY)
   // --------------------------------------------------------------------------
-  const adminPermissions = getPermissionsForRole(seedPermissions, "admin" as unknown as Role)
+  const adminPermissions = getPermissionsForRole(
+    seedPermissions,
+    "admin" as unknown as Role,
+  );
   const moderatorPermissions = getPermissionsForRole(
     seedPermissions,
     "moderator" as unknown as Role,
   );
-  const userPermissions = getPermissionsForRole(seedPermissions, "user" as unknown as Role);
+  const userPermissions = getPermissionsForRole(
+    seedPermissions,
+    "user" as unknown as Role,
+  );
 
   await seed.role([
     {
@@ -179,9 +184,15 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Languages (DEV ONLY)
   // --------------------------------------------------------------------------
-  const languages = ["English", "Russian", "Portugese", "Chinese", "Hungarian"];
-
   if (prod === false) {
+    const languages = [
+      "English",
+      "Russian",
+      "Portugese",
+      "Chinese",
+      "Hungarian",
+    ];
+
     await seed.language(
       languages.map((language) => ({
         id: cuid(language),
@@ -192,46 +203,46 @@ const main = async () => {
   }
 
   // --------------------------------------------------------------------------
-  // Regions (ALWAYS) with Countries (DEV ONLY)
+  // Regions (DEV ONLY) and Countries (DEV ONLY)
   // --------------------------------------------------------------------------
-  const regions = [
-    {
-      name: "Asia",
-    },
-    {
-      name: "Europe",
-      countries: ["Russia", "France", "Portugal"],
-    },
-    {
-      name: "Africa",
-    },
-    {
-      name: "Latin America",
-      countries: ["Colombia"],
-    },
-  ];
+  if (prod === false) {
+    const regions = [
+      {
+        name: "Asia",
+      },
+      {
+        name: "Europe",
+        countries: ["Russia", "France", "Portugal"],
+      },
+      {
+        name: "Africa",
+      },
+      {
+        name: "Latin America",
+        countries: ["Colombia"],
+      },
+    ];
 
-  await seed.region(
-    regions.map((region) => ({
-      id: cuid(region.name),
-      name: region.name,
-      updatedAt,
-      countries:
-        prod === false &&
-        region.countries?.map((country) => ({
+    await seed.region(
+      regions.map((region) => ({
+        id: cuid(region.name),
+        name: region.name,
+        updatedAt,
+        countries: region.countries?.map((country) => ({
           id: cuid(country),
           name: country,
           updatedAt,
         })),
-    })),
-  );
+      })),
+    );
+  }
 
   // --------------------------------------------------------------------------
   // Movies (DEV ONLY)
   // --------------------------------------------------------------------------
   const movies = ["Movie1", "Movie2", "Movie3"];
 
-  if (!prod) {
+  if (prod === false) {
     await seed.movie(
       movies.map((movie) => ({
         id: cuid(movie),
@@ -245,7 +256,7 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // PermaLinks (DEV ONLY)
   // --------------------------------------------------------------------------
-  if (!prod) {
+  if (prod === false) {
     await seed.permaLink(movies.map((movie) => ({ slug: permaLink(movie) })));
   }
 
