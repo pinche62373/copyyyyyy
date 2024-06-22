@@ -29,14 +29,7 @@ export async function requireRole(request: Request, role: string | string[]) {
     where: { id: userId, roles: { some: { name: { in: role } } } },
   });
   if (!user) {
-    throw json(
-      {
-        error: "Unauthorized",
-        requiredRole: role,
-        message: `Unauthorized: required role: ${role}`,
-      },
-      { status: 403 },
-    );
+    throw json(null, { status: 403, statusText: "Forbidden" });
   }
   return user.id;
 }
@@ -56,14 +49,7 @@ export async function requireRoutePermission(request: Request, route: string) {
   };
 
   if (!userHasPermission(user, permission)) {
-    throw json(
-      {
-        error: "Unauthorized",
-        requiredPermission: permission,
-        message: `Unauthorized: missing permission`,
-      },
-      { status: 403 },
-    );
+    throw json(null, { status: 403, statusText: "Forbidden" });
   }
 
   return true;
