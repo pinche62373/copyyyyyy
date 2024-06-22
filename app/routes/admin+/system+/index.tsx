@@ -10,11 +10,11 @@ import {
   deleteExpiredSessions,
   getExpiredSessionCount,
 } from "#app/models/session";
-import { requireRole } from "#app/utils/permissions.server";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRole(request, "admin");
+  await requireRoutePermission(request, "/admin/system");
 
   const expiredSessionCount = await getExpiredSessionCount();
 

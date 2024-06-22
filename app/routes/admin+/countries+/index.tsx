@@ -1,5 +1,6 @@
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
   createColumnHelper,
@@ -31,12 +32,15 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { deleteCountry, getCountries } from "#app/models/country.server";
 import { getModelCrud } from "#app/utils/crud";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchema } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudCountry: crud } = getModelCrud();
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  await requireRoutePermission(request, crud.target);
+
   const countries = await getCountries();
 
   return countries;
@@ -93,13 +97,13 @@ const columns = [
       getCellLink({
         id: row.original.id,
         name: row.original.name,
-        target: crud.target
+        target: crud.target,
       }),
   }),
   columnHelper.accessor("region", {
     header: () => <span>Region</span>,
     enableGlobalFilter: false,
-    cell: ({ row }) => row.original.region.name
+    cell: ({ row }) => row.original.region.name,
   }),
   columnHelper.accessor("createdAt", {
     header: () => <span>Created</span>,

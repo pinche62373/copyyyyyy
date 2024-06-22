@@ -2,6 +2,7 @@ import { type SerializeFrom } from "@remix-run/node";
 import { useRouteLoaderData } from "@remix-run/react";
 
 import { type loader as rootLoader } from "#app/root.tsx";
+import { Permission } from "#app/utils/permissions.types";
 
 type UserType = SerializeFrom<typeof rootLoader>["user"];
 
@@ -42,4 +43,22 @@ export function userHasRole(
   role = Array.isArray(role) ? role : [role];
 
   return user.roles.some((r) => role.includes(r.name));
+}
+
+export function userHasPermission(
+  user: Pick<ReturnType<typeof useUser>, "roles"> | null,
+  permission: Pick<Permission, "entity" | "action" | "scope">,
+) {
+  if (!user) return false;
+  console.log("Check if user has below permission:");
+  console.log(permission);
+
+  return user.roles.some((role) =>
+    role.permissions.some(
+      (p) =>
+        p.entity === permission.entity &&
+        p.action === permission.action &&
+        p.scope === permission.scope,
+    ),
+  );
 }

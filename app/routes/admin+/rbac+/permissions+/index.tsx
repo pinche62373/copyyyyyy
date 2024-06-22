@@ -26,12 +26,15 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getPermissions } from "#app/models/permission.server";
 import { getModelCrud } from "#app/utils/crud";
-import { flattenPermissions, requireRole } from "#app/utils/permissions.server";
+import {
+  flattenPermissions,
+  requireRoutePermission,
+} from "#app/utils/permissions.server";
 
 const { crudPermission: crud } = getModelCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRole(request, "admin");
+  await requireRoutePermission(request, crud.target);
 
   const permissions = await getPermissions();
   const flattenedPermissions = flattenPermissions(permissions);

@@ -1,5 +1,6 @@
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs } from "@remix-run/node";
+import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
   createColumnHelper,
@@ -31,12 +32,15 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { deleteLanguage, getLanguages } from "#app/models/language.server";
 import { getModelCrud } from "#app/utils/crud";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchema } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudLanguage: crud } = getModelCrud();
 
-export const loader = async () => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  await requireRoutePermission(request, crud.target);
+
   const languages = await getLanguages();
 
   return languages;

@@ -59,27 +59,32 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   {
     entity: "/admin",
     roles: [ADMIN, MOD],
-    scope: "this",
+    scope: "any",
   },
   {
     entity: "/admin/countries",
     roles: [ADMIN, MOD],
-    scope: "this",
+    scope: "any",
   },
   {
     entity: "/admin/languages",
     roles: [ADMIN, MOD],
-    scope: "this",
+    scope: "any",
+  },
+  {
+    entity: "/admin/rbac/permissions",
+    roles: ADMIN,
+    scope: "any",
   },
   {
     entity: "/admin/regions",
     roles: ADMIN,
-    scope: "this",
+    scope: "any",
   },
   {
     entity: "/admin/system",
     roles: ADMIN,
-    scope: "this",
+    scope: "any",
   },
 
   // TODO: create testcases

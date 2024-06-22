@@ -1,7 +1,7 @@
 import { json } from "@remix-run/node";
 
 import { getPermissions } from "#app/models/permission.server";
-import { requireUserId } from "#app/utils/auth.server";
+import { getUser, requireUserId } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { modelPermissions, routePermissions } from "#app/utils/permissions";
 import type {
@@ -13,10 +13,11 @@ import type {
   RoutePermission,
   RoutePermissionFunctionArgs,
 } from "#app/utils/permissions.types";
+import { userHasPermission } from "#app/utils/user";
 import { cuid } from "#prisma/seed/utils";
 
 // ----------------------------------------------------------------------------
-// Throw 403 unless user has specific permission.
+// Throw 403 unless user has specified role.
 // ----------------------------------------------------------------------------
 export async function requireRole(request: Request, name: string | string[]) {
   const userId = await requireUserId(request);
@@ -38,6 +39,37 @@ export async function requireRole(request: Request, name: string | string[]) {
     );
   }
   return user.id;
+}
+
+// ----------------------------------------------------------------------------
+// Throw 403 unless user has role with permission to access the route.
+//
+// TODO : differentiate between `any`and `own`
+// ----------------------------------------------------------------------------
+export async function requireRoutePermission(request: Request, route: string) {
+  const user = await getUser(request);
+
+  console.log(`REQUESTED URL = ${request.url}`);
+  console.log(`CHECK IF USER '${user!.id}' HAS ACCESS TO ROUTE '${route}'`);
+
+  const permission = {
+    entity: route,
+    action: "access",
+    scope: "any",
+  };
+
+  if (!userHasPermission(user, permission)) {
+    throw json(
+      {
+        error: "Unauthorized",
+        requiredPermission: permission,
+        message: `Unauthorized: missing permission`,
+      },
+      { status: 403 },
+    );
+  }
+
+  return true;
 }
 
 // ----------------------------------------------------------------------------
@@ -158,7 +190,7 @@ const isDuplicatePermission = (
 // ----------------------------------------------------------------------------
 export const getPermissionsForRole = (
   permissions: Permission[],
-  role: Role
+  role: Role,
 ): Permission[] => {
   const result = permissions.filter((permission) =>
     permission.roles.includes(role),
@@ -171,7 +203,8 @@ export const getPermissionsForRole = (
 // Helper function to create a flat list with permissions and roles (as used
 // by the UI)
 // ----------------------------------------------------------------------------
-type FlattenPermissionsArg  = ReturnType<typeof getPermissions> extends Promise<infer T> ? T : never;
+type FlattenPermissionsArg =
+  ReturnType<typeof getPermissions> extends Promise<infer T> ? T : never;
 
 export const flattenPermissions = (permissions: FlattenPermissionsArg) => {
   const result: FlatPermission[] = [];
