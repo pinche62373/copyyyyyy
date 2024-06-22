@@ -17,28 +17,39 @@ const USER = "user";
 // ----------------------------------------------------------------------------
 export const modelPermissions: ModelPermissionFunctionArgs[] = [
   {
+    entity: "country",
+    actions: [C, U],
+    roles: [ADMIN, MOD],
+    scope: "any",
+  },
+  {
+    entity: "country",
+    actions: [D],
+    roles: [ADMIN],
+    scope: "any",
+  },
+  {
     entity: "language",
-    actions: [C, R, U, D],
+    actions: [C, U],
     roles: [ADMIN, MOD],
     scope: "any",
   },
   {
     entity: "language",
-    actions: R,
-    roles: USER,
-    scope: "own",
+    actions: [D],
+    roles: [ADMIN],
+    scope: "any",
   },
-  //   {
-  //     entity: "language", // Test case: error should be thrown because entity, action, scope combi already exists
-  //     actions: R,
-  //     roles: MOD,
-  //   },
   {
-    entity: "language", // Test case: should throw an error because ADMIN has role membership for two "delete" actions
-    actions: D,
+    entity: "region",
+    actions: [C, U, D],
     roles: ADMIN,
-    scope: "own",
+    scope: "any",
   },
+
+  // TODO: create testcases
+  // - throw error when entity, action, scope combi already exists
+  // - throw error when role is assigned two idenitical actions
 ];
 
 // ----------------------------------------------------------------------------
@@ -48,15 +59,29 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   {
     entity: "/admin",
     roles: [ADMIN, MOD],
-    scope: "any",
+    scope: "this",
   },
-  // {
-  //   entity: "/admin", // TEST case: should throw an error because ADMIN route already added
-  //   roles: ADMIN,
-  // },
+  {
+    entity: "/admin/countries",
+    roles: [ADMIN, MOD],
+    scope: "this",
+  },
+  {
+    entity: "/admin/languages",
+    roles: [ADMIN, MOD],
+    scope: "this",
+  },
+  {
+    entity: "/admin/regions",
+    roles: ADMIN,
+    scope: "this",
+  },
   {
     entity: "/admin/system",
     roles: ADMIN,
-    scope: "any",
+    scope: "this",
   },
+
+  // TODO: create testcases
+  // - throw error when a ROUTE is already added
 ];

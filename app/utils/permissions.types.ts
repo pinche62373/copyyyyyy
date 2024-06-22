@@ -7,7 +7,7 @@ const modelScopes = ["own", "any"] as const;
 
 const routeEntities = ["admin", "admin/system"];
 const routeActions = ["access"] as const;
-const routeScopes = ["own", "any"] as const;
+const routeScopes = ["own", "any", "this"] as const;
 
 export interface Role {
   name: (typeof roles)[number];
