@@ -10,10 +10,13 @@ import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
 import { getPermission } from "#app/models/permission.server";
 import { getCrud } from "#app/utils/crud";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 
 const { crudPermission: crud } = getCrud();
 
-export async function loader({ params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  await requireRoutePermission(request, `${crud.index}/edit`);
+
   const permissionId = z.coerce.string().parse(params.permissionId);
   const permission = await getPermission({ id: permissionId });
 
