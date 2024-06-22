@@ -56,21 +56,35 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [
 // ROUTE PERMISSIONS
 // ----------------------------------------------------------------------------
 export const routePermissions: RoutePermissionFunctionArgs[] = [
+  // ADMIN DASHBOARD
   {
     entity: "/admin",
     roles: [ADMIN, MOD],
     scope: "any",
   },
+  // COUNTRIES
   {
     entity: "/admin/countries",
     roles: [ADMIN, MOD],
     scope: "any",
   },
+  // LANGUAGES
   {
     entity: "/admin/languages",
     roles: [ADMIN, MOD],
     scope: "any",
   },
+  {
+    entity: "/admin/languages/new",
+    roles: [ADMIN, MOD],
+    scope: "any",
+  },
+  {
+    entity: "/admin/languages/edit",
+    roles: [ADMIN, MOD],
+    scope: "any",
+  },
+  // PERMISSIONS
   {
     entity: "/admin/rbac/permissions",
     roles: ADMIN,
