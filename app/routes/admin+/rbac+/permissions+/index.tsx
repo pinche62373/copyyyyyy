@@ -130,7 +130,7 @@ export default function Component() {
     <>
       <AdminPageTitle title="Permissions" />
 
-      <AdminContentCard className="px-5 py-3">
+      <AdminContentCard>
         <TableBar>
           <TableSearchInput
             value={globalFilter ?? ""}
