@@ -1,5 +1,6 @@
 import { json } from "@remix-run/node";
 
+import { getPermissions } from "#app/models/permission.server";
 import { requireUserId } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { modelPermissions, routePermissions } from "#app/utils/permissions";
@@ -170,7 +171,9 @@ export const getPermissionsForRole = (
 // Helper function to create a flat list with permissions and roles (as used
 // by the UI)
 // ----------------------------------------------------------------------------
-export const flattenPermissions = (permissions: Permission[]) => {
+type FlattenPermissionsArg  = ReturnType<typeof getPermissions> extends Promise<infer T> ? T : never;
+
+export const flattenPermissions = (permissions: FlattenPermissionsArg) => {
   const result: FlatPermission[] = [];
 
   permissions.forEach((permission) => {
@@ -180,7 +183,7 @@ export const flattenPermissions = (permissions: Permission[]) => {
 
       const temp = { ...otherProps, role: role.name }; // add role prop
 
-      result.push(temp);
+      result.push(temp as unknown as FlatPermission);
     });
   });
 
