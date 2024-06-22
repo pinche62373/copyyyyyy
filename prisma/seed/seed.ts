@@ -93,6 +93,7 @@ const main = async () => {
         return {
           id: cuid(account.email),
           email: account.email,
+          username: account.name,
           updatedAt,
           password: (x) =>
             x(1, {

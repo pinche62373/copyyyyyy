@@ -9,8 +9,18 @@ export function getRegion({ id }: Pick<Region, "id">) {
       name: true,
       createdAt: true,
       updatedAt: true,
-      createdByUser: true,
-      updatedByUser: true,
+      createdByUser: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+      updatedByUser: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
     },
     where: { id },
   });
@@ -36,13 +46,16 @@ export function createRegion({ name }: Pick<Region, "name">, userId: string) {
   });
 }
 
-export function updateRegion({ id, name }: Pick<Region, "id" | "name">, userId: string) {
+export function updateRegion(
+  { id, name }: Pick<Region, "id" | "name">,
+  userId: string,
+) {
   return prisma.region.update({
     where: { id },
     data: {
       id,
       name,
-      updatedBy: userId
+      updatedBy: userId,
     },
   });
 }
