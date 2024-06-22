@@ -4,7 +4,14 @@ import { prisma } from "#app/utils/db.server";
 
 export function getRegion({ id }: Pick<Region, "id">) {
   return prisma.region.findFirst({
-    select: { id: true, name: true },
+    select: {
+      id: true,
+      name: true,
+      createdAt: true,
+      updatedAt: true,
+      createdByUser: true,
+      updatedByUser: true,
+    },
     where: { id },
   });
 }

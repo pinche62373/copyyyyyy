@@ -57,7 +57,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const { region } = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
@@ -75,13 +75,13 @@ export default function Component() {
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
           <FormInputHidden name="intent" value="update" />
-          <FormInputHidden name="id" value={data.region.id} />
+          <FormInputHidden name="id" value={region.id} />
 
           <FormInputText
             label="Name"
             fieldName="name"
             fields={fields}
-            defaultValue={data.region.name}
+            defaultValue={region.name}
           />
 
           <FormFooter>
