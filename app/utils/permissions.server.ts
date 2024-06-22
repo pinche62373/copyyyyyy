@@ -19,21 +19,21 @@ import { cuid } from "#prisma/seed/utils";
 // ----------------------------------------------------------------------------
 // Throw 403 unless user has specified role.
 // ----------------------------------------------------------------------------
-export async function requireRole(request: Request, name: string | string[]) {
+export async function requireRole(request: Request, role: string | string[]) {
   const userId = await requireUserId(request);
 
-  name = Array.isArray(name) ? name : [name];
+  role = Array.isArray(role) ? role : [role];
 
   const user = await prisma.user.findFirst({
     select: { id: true },
-    where: { id: userId, roles: { some: { name: { in: name } } } },
+    where: { id: userId, roles: { some: { name: { in: role } } } },
   });
   if (!user) {
     throw json(
       {
         error: "Unauthorized",
-        requiredRole: name,
-        message: `Unauthorized: required role: ${name}`,
+        requiredRole: role,
+        message: `Unauthorized: required role: ${role}`,
       },
       { status: 403 },
     );
