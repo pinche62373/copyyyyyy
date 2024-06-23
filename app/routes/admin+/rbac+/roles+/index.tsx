@@ -72,7 +72,7 @@ const columns = [
   }),
   columnHelper.accessor("description", {
     header: () => <span>Description</span>,
-    enableGlobalFilter: false,
+    enableGlobalFilter: true,
     enableSorting: false,
     cell: (info) => info.getValue(),
   }),
