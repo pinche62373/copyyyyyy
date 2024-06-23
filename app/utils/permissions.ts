@@ -85,12 +85,17 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
     scope: "any",
   },
   {
-    entity: "/admin/languages/new",
+    entity: "/admin/languages/view",
     roles: [ADMIN, MOD],
     scope: "any",
   },
   {
     entity: "/admin/languages/edit",
+    roles: [ADMIN, MOD],
+    scope: "any",
+  },
+  {
+    entity: "/admin/languages/new",
     roles: [ADMIN, MOD],
     scope: "any",
   },

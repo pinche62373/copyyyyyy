@@ -1,29 +1,22 @@
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
-import { jsonWithError, redirectWithSuccess } from "remix-toast";
-import invariant from "tiny-invariant";
+import { useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import { Button } from "#app/components/admin/button";
 import { FormFooter } from "#app/components/admin/form/form-footer";
-import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
-import { FormInputText } from "#app/components/admin/form/form-input-text";
-import { getLanguage, updateLanguage } from "#app/models/language.server";
-import { getUserId } from "#app/utils/auth.server";
+import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
+import { getLanguage } from "#app/models/language.server";
 import { getCrud } from "#app/utils/crud";
+import { timeStampToHuman } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { languageSchemaUpdateForm } from "#app/validations/language-schema";
-import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudLanguage: crud } = getCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, `${crud.index}/edit`);
+  await requireRoutePermission(request, `${crud.index}/view`);
 
   const languageId = z.coerce.string().parse(params.languageId);
   const language = await getLanguage({ id: languageId });
@@ -35,72 +28,32 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   return json({ language });
 }
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-
-  validateFormIntent(formData, "update");
-
-  const submission = parseWithZod(formData, {
-    schema: languageSchemaUpdateForm,
-  });
-
-  if (submission.status !== "success") {
-    return jsonWithError(null, "Invalid form data");
-  }
-
-  const userId = await getUserId(request);
-
-  invariant(userId, "userId must be set"); // TODO : make this check obsolete by refactoring getUserId function(s)
-
-  try {
-    await updateLanguage(submission.value, userId);
-  } catch (error) {
-    return jsonWithError(null, "Unexpected error");
-  }
-
-  return redirectWithSuccess(
-    crud.index,
-    `${crud.singular} updated successfully`,
-  );
-};
-
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const { language } = useLoaderData<typeof loader>();
 
-  const navigation = useNavigation();
-
-  const [form, fields] = useForm({
-    shouldRevalidate: "onBlur",
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: languageSchemaUpdateForm });
-    },
-  });
+  console.log(language);
 
   return (
     <>
-      <AdminPageTitle title={`Edit ${crud.singular}`} />
+      <AdminPageTitle title={`View ${crud.singular}`} />
 
       <AdminContentCard className="p-6">
-        <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <FormInputHidden name="intent" value="update" />
-          <FormInputHidden name="id" value={data.language.id} />
+        <FormInputTextReadOnly label="Name">
+          {language.name}
+        </FormInputTextReadOnly>
 
-          <FormInputText
-            label="Name"
-            fieldName="name"
-            fields={fields}
-            defaultValue={data.language.name}
-          />
+        <FormInputTextReadOnly label="Created By">
+          {language.languageCreatedBy.username} at{" "}
+          {timeStampToHuman(language.createdAt)}
+        </FormInputTextReadOnly>
 
-          <FormFooter>
-            <Button type="button" text="Cancel" to={crud.index} secondary />
-            <Button
-              type="submit"
-              text="Save"
-              disabled={navigation.state === "submitting"}
-            />
-          </FormFooter>
-        </Form>
+        <FormInputTextReadOnly label="Updated By">
+          {language.updatedAt}
+        </FormInputTextReadOnly>
+
+        <FormFooter>
+          <Button type="button" text="Close" to={crud.index} />
+        </FormFooter>
       </AdminContentCard>
     </>
   );

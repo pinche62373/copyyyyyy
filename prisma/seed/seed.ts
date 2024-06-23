@@ -222,14 +222,18 @@ const main = async () => {
       },
       {
         name: "Europe",
-        countries: ["Russia", "France", "Portugal"],
+        countries: ["France", "Portugal"],
       },
       {
         name: "Africa",
       },
       {
-        name: "Latin America",
+        name: "South America",
         countries: ["Colombia"],
+      },
+      {
+        name: "Russia",
+        countries: ["Russia"],
       },
     ];
 
