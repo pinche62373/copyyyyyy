@@ -81,8 +81,13 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   // LANGUAGES
   {
     entity: "/admin/languages",
-    roles: [ADMIN, MOD],
+    roles: [ADMIN],
     scope: "any",
+  },
+  {
+    entity: "/admin/languages",
+    roles: [MOD],
+    scope: "own",
   },
   {
     entity: "/admin/languages/new",
@@ -94,6 +99,27 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
     roles: [ADMIN, MOD],
     scope: "any",
   },
+  
+  // --------------------------------------------------------------------------
+  // RBAC STARTING BELOW
+  // --------------------------------------------------------------------------
+  // ENTITIES
+  {
+    entity: "/admin/rbac/entities/view",
+    roles: ADMIN,
+    scope: "any",
+  },
+  // ROLES
+  {
+    entity: "/admin/rbac/roles",
+    roles: ADMIN,
+    scope: "any",
+  },
+  {
+    entity: "/admin/rbac/roles/view",
+    roles: ADMIN,
+    scope: "any",
+  },    
   // PERMISSIONS
   {
     entity: "/admin/rbac/permissions",
@@ -105,6 +131,10 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
     roles: ADMIN,
     scope: "any",
   },  
+  // --------------------------------------------------------------------------
+  // RBAC ENDING ABOVE
+  // --------------------------------------------------------------------------  
+
   // REGIONS
   {
     entity: "/admin/regions",
@@ -121,17 +151,6 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
     roles: ADMIN,
     scope: "any",
   },
-  // ROLES
-  {
-    entity: "/admin/rbac/roles",
-    roles: ADMIN,
-    scope: "any",
-  },
-  {
-    entity: "/admin/rbac/roles/view",
-    roles: ADMIN,
-    scope: "any",
-  },  
   // SYSTEM
   {
     entity: "/admin/system",

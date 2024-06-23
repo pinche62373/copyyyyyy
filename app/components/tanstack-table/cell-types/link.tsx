@@ -7,6 +7,8 @@ interface PropTypes {
 }
 
 export const getCellLink = ({ id, name, target }: PropTypes) => {
+  id = encodeURIComponent(id) // so we can use both cuids and strings
+
   return (
     <NavLink
       to={`${target}/${id}`}

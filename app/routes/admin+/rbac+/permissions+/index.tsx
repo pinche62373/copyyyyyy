@@ -69,9 +69,9 @@ const columns = [
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: ({ row }) =>
       getCellLink({
-        id: row.original.id,
+        id: row.original.entity,
         name: row.original.entity,
-        target: crud.index,
+        target: "/admin/rbac/entities",
       }),
   }),
   columnHelper.accessor("action", {

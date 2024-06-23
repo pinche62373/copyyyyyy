@@ -89,7 +89,7 @@ export default function Component() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([
     {
-      id: "entity", // MUST be here or global filter will not sort by rankingValue
+      id: "name", // MUST be here or global filter will not sort by rankingValue
       desc: false,
     },
   ]);

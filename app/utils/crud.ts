@@ -1,8 +1,24 @@
-export function getCrud() {
+type CrudList = Record<
+  string,
+  {
+    index: string;
+    singular: string;
+    plural: string;
+  }
+>;
+[];
+
+export function getCrud(): CrudList {
   const crudCountry = {
     index: "/admin/countries",
     singular: "Country",
     plural: "Countries",
+  };
+
+  const crudEntity = {
+    index: "/admin/rbac/entities",
+    singular: "Entity",
+    plural: "Entities",
   };
 
   const crudLanguage = {
@@ -31,6 +47,7 @@ export function getCrud() {
 
   return {
     crudCountry,
+    crudEntity,
     crudLanguage,
     crudPermission,
     crudRegion,
