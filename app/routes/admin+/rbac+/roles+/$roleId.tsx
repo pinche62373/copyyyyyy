@@ -144,7 +144,7 @@ export default function Component() {
       </AdminContentCard>
 
       {/* Start Permissions Table*/}
-      <AdminPageTitle title="Permissions" />
+      <AdminPageTitle title="Permissions" className="pt-4" />
 
       <AdminContentCard>
         <TableBar>

@@ -1,4 +1,5 @@
 import { Button } from "#app/components/admin/button";
+import { cn } from "#app/utils/misc";
 
 type PropTypes =
   | {
@@ -6,12 +7,14 @@ type PropTypes =
       search?: boolean;
       buttonText?: undefined;
       buttonTarget?: undefined;
+      className?: string;
     }
   | {
       title: string;
       search?: boolean;
       buttonText: string;
       buttonTarget: string;
+      className?: string;
     };
 
 export const AdminPageTitle = ({
@@ -19,11 +22,19 @@ export const AdminPageTitle = ({
   buttonText,
   buttonTarget,
   search = false,
+  className,
+  ...rest
 }: PropTypes) => {
   return (
     <>
       {/* Header */}
-      <div className="ml-5 pb-5 grid sm:flex sm:justify-between sm:items-center gap-2">
+      <div
+        className={cn(
+          className,
+          "ml-5 pb-5 grid sm:flex sm:justify-between sm:items-center gap-2",
+        )}
+        {...rest}
+      >
         <h1 className="mt-2 h-[2.1rem] text-lg font-semibold text-gray-800 dark:text-neutral-200">
           {title}
         </h1>
