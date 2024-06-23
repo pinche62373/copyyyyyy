@@ -15,7 +15,7 @@ import { requireRoutePermission } from "#app/utils/permissions.server";
 const { crudPermission: crud } = getCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, `${crud.index}/edit`);
+  await requireRoutePermission(request, `${crud.index}/view`);
 
   const permissionId = z.coerce.string().parse(params.permissionId);
   const permission = await getPermission({ id: permissionId });

@@ -19,9 +19,6 @@ export function getRoleWithPermissions({ id }: Pick<Role, "id">) {
     where: { id },
     include: {
       permissions: {
-        select: {
-          entity: true,
-        },
         orderBy: { entity: "asc" },
       },
     },
