@@ -23,10 +23,17 @@ export function getCrud() {
     plural: "Regions",
   };
 
+  const crudRole = {
+    index: "/admin/rbac/roles",
+    singular: "Role",
+    plural: "Roles",
+  };
+
   return {
     crudCountry,
     crudLanguage,
     crudPermission,
     crudRegion,
+    crudRole,
   };
 }

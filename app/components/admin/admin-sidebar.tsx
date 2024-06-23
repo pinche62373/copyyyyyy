@@ -520,6 +520,32 @@ export function AdminSidebar() {
                   </li>
                   {/* End Permissions */}
 
+                  {/* Roles */}
+                  <li className="px-5 mb-1.5">
+                    <NavLink
+                      to="/admin/rbac/roles"
+                      className="flex gap-x-3 py-2 px-3 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-300 dark:focus:bg-neutral-700 "
+                    >
+                      <svg
+                        className="flex-shrink-0 mt-0.5 size-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      Roles
+                    </NavLink>
+                  </li>
+                  {/* End Roles */}
+
                   {/* System */}
                   <li className="px-5 mb-1.5">
                     <NavLink
