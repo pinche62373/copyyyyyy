@@ -131,8 +131,6 @@ const columns = [
 export default function Component() {
   const data = useLoaderData<typeof loader>();
 
-  console.log(data);
-
   const [pagination, setPagination] = useState({
     pageIndex: 0,
     pageSize: 20,

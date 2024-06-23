@@ -20,6 +20,7 @@ interface PropTypes {
 }
 
 export const getCellActionIcons = ({ info, crud }: PropTypes) => {
+  const editUrl = `${info.row.original.id}/edit`
   const deleteFormId = "delete-form-" + info.row.original.id;
   const confirmDeleteId = "confirm-" + deleteFormId;
 
@@ -27,7 +28,7 @@ export const getCellActionIcons = ({ info, crud }: PropTypes) => {
     <>
       {/* Edit Button */}
       <div className="inline-flex items-center -space-x-px">
-        <NavLink to={info.row.original.id}>
+        <NavLink to={editUrl}>
           <button className="size-8 inline-flex justify-center items-center gap-x-2 font-medium rounded-s-lg border border-stone-200 bg-white text-stone-800 shadow-sm hover:bg-stone-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-50 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
             <IconEdit className="flex-shrink-0 size-3.5" />
           </button>
