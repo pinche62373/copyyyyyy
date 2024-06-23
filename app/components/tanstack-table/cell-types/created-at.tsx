@@ -1,9 +1,10 @@
 import { CellContext } from "@tanstack/react-table";
-import dayjs from "dayjs";
+
+import { timeStampToHuman } from "#app/utils/misc";
 
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------
 export const getCellCreatedAt = (info: CellContext<any, string>) => {
-  return dayjs(info.getValue()).format("YYYY-MM-DD, HH:mm");
+  return timeStampToHuman(info.getValue())
 };

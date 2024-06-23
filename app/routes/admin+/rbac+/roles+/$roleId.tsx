@@ -78,7 +78,7 @@ const columns = [
   columnHelper.accessor("action", {
     header: () => <span>Action</span>,
     enableGlobalFilter: true,
-    cell: (info) => info.getValue(), //=> getCellCreatedAt(info),
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("scope", {
     header: () => <span>Scope</span>,
