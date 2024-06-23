@@ -15,11 +15,8 @@ import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import TanstackTable from "#app/components/tanstack-table";
 import {
-  getCellActionIcons,
-  getCellCreatedAt,
   getCellLink,
   getCellTypeVisibleRowIndex,
-  getCellUpdatedAt,
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/fuzzy-sort";
@@ -47,6 +44,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 interface Role {
   id: string;
   name: string;
+  description: string;
   createdAt: string;
   updatedAt: string | null;
 }
@@ -62,7 +60,7 @@ const columns = [
     cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("name", {
-    header: () => <span>Language</span>,
+    header: () => <span>Name</span>,
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: ({ row }) =>
@@ -72,25 +70,11 @@ const columns = [
         target: crud.index,
       }),
   }),
-  columnHelper.accessor("createdAt", {
-    header: () => <span>Created</span>,
+  columnHelper.accessor("description", {
+    header: () => <span>Description</span>,
     enableGlobalFilter: false,
-    cell: (info) => getCellCreatedAt(info),
-  }),
-  columnHelper.accessor("updatedAt", {
-    header: () => <span>Updated</span>,
-    enableGlobalFilter: false,
-    cell: (info) => getCellUpdatedAt(info),
-  }),
-  columnHelper.display({
-    header: "Actions",
     enableSorting: false,
-    enableGlobalFilter: false,
-    cell: (info) =>
-      getCellActionIcons({
-        info,
-        crud,
-      }),
+    cell: (info) => info.getValue(),
   }),
 ];
 

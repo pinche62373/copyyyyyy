@@ -153,7 +153,7 @@ export default function Component() {
             onChange={(value: string | number) =>
               setGlobalFilter(String(value))
             }
-            placeholder={`Search ${crud.plural.toLowerCase()}...`}
+            placeholder="Search permissions..."
           />
           <TableFilterDropdown />
         </TableBar>
