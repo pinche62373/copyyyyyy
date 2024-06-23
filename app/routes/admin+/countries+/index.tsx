@@ -124,6 +124,10 @@ const columns = [
       getCellActionIcons({
         info,
         crud,
+        actions: {
+          edit: true,
+          delete: false,
+        },        
       }),
   }),
 ];
