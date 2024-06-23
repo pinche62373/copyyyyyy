@@ -31,8 +31,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function Component() {
   const { language } = useLoaderData<typeof loader>();
 
-  console.log(language);
-
   return (
     <>
       <AdminPageTitle title={`View ${crud.singular}`} />

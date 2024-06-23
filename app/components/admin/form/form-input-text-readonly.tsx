@@ -10,7 +10,7 @@ export const FormInputTextReadOnly = ({ label, children }: PropTypes) => {
       {/* Grid */}
       <div className="grid sm:grid-cols-12 gap-y-1.5 sm:gap-y-0 sm:gap-x-5">
         {/* Col Label*/}
-        <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-1">
+        <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-1 whitespace-nowrap">
           <label className="sm:mt-3 inline-block text-sm text-gray-500 dark:text-neutral-500">
             {label}
           </label>
