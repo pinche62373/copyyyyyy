@@ -50,6 +50,7 @@ interface FlatPermission {
   action: string;
   scope: string;
   role: string;
+  roleId: string;
 }
 
 const columnHelper = createColumnHelper<FlatPermission>();
@@ -86,7 +87,12 @@ const columns = [
   columnHelper.accessor("role", {
     header: () => <span>Role</span>,
     enableGlobalFilter: false,
-    cell: (info) => info.getValue(),
+    cell: ({ row }) =>
+      getCellLink({
+        id: row.original.roleId,
+        name: row.original.role,
+        target: "/admin/rbac/roles",
+      }),
   }),
 ];
 

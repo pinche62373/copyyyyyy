@@ -28,6 +28,7 @@ export interface Permission {
 
 export interface FlatPermission extends Omit<Permission, "roles"> {
   role: (typeof roles)[number];
+  roleId: string;
 }
 
 export interface RoutePermission {

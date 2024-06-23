@@ -8,6 +8,7 @@ export function getPermission({ id }: Pick<Permission, "id">) {
     include: {
       roles: {
         select: {
+          id: true,
           name: true,
         },
         orderBy: { name: "asc" },
@@ -22,6 +23,7 @@ export function getPermissions() {
     include: {
       roles: {
         select: {
+          id: true,
           name: true,
         },
         orderBy: { name: "asc" },

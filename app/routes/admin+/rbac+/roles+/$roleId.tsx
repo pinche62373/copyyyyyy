@@ -72,7 +72,7 @@ const columns = [
       getCellLink({
         id: row.original.id,
         name: row.original.entity,
-        target: crud.index,
+        target: "/admin/rbac/entities",
       }),
   }),
   columnHelper.accessor("action", {

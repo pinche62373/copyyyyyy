@@ -197,7 +197,7 @@ export const flattenPermissions = (permissions: FlattenPermissionsArg) => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { roles, ...otherProps } = permission; // roles prop deleted here
 
-      const temp = { ...otherProps, role: role.name }; // add role prop
+      const temp = { ...otherProps, role: role.name, roleId: role.id }; // add role prop
 
       result.push(temp as unknown as FlatPermission);
     });
