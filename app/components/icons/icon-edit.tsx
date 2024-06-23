@@ -2,10 +2,10 @@
 
 import * as React from "react";
 
-export const IconEdit =(props: React.SVGProps<SVGSVGElement>) => {
+export const IconEdit = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
-      className="flex-shrink-0 size-3.5"
+      className="flex-shrink-0 size-4"
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
@@ -21,4 +21,4 @@ export const IconEdit =(props: React.SVGProps<SVGSVGElement>) => {
       <path d="m15 5 4 4" />
     </svg>
   );
-}
+};

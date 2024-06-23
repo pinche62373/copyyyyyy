@@ -46,7 +46,12 @@ export default function Component() {
         </FormInputTextReadOnly>
 
         <FormInputTextReadOnly label="Updated By">
-          {language.updatedAt}
+          {language.updatedAt !== null && (
+            <>
+              {language.languageUpdatedBy?.username} at{" "}
+              {timeStampToHuman(language.updatedAt)}
+            </>
+          )}
         </FormInputTextReadOnly>
 
         <FormFooter>

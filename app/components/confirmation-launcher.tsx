@@ -4,12 +4,14 @@ interface PropTypes {
   modalId: string;
   className?: string;
   enabled?: boolean;
+  title?: string;
 }
 
 export function ConfirmationLauncher({
   modalId,
   className,
   enabled = true,
+  title,
   children,
   ...rest
 }: PropsWithChildren<PropTypes>) {
@@ -17,6 +19,7 @@ export function ConfirmationLauncher({
     <>
       {enabled === true ? (
         <button
+          title={title}
           type="button"
           data-hs-overlay={"#" + modalId}
           className={className}
