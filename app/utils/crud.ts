@@ -15,12 +15,6 @@ export function getCrud(): CrudList {
     plural: "Countries",
   };
 
-  const crudEntity = {
-    index: "/admin/rbac/entities",
-    singular: "Entity",
-    plural: "Entities",
-  };
-
   const crudLanguage = {
     index: "/admin/languages",
     singular: "Language",
@@ -47,7 +41,6 @@ export function getCrud(): CrudList {
 
   return {
     crudCountry,
-    crudEntity,
     crudLanguage,
     crudPermission,
     crudRegion,

@@ -10,21 +10,19 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import TanstackTable from "#app/components/tanstack-table";
-import {
-  getCellLink,
-  getCellTypeVisibleRowIndex,
-} from "#app/components/tanstack-table/cell-types";
+import { getCellTypeVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/fuzzy-sort";
 import { TableBar } from "#app/components/tanstack-table/TableBar";
 import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
-import { getPermissions } from "#app/models/permission.server";
+import { getPermissionsByEntityName } from "#app/models/permission.server";
 import { getCrud } from "#app/utils/crud";
 import {
   flattenPermissions,
@@ -33,27 +31,33 @@ import {
 
 const { crudPermission: crud } = getCrud();
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.index);
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  await requireRoutePermission(request, `${crud.index}/entity/view`);
 
-  const permissions = await getPermissions();
+  const entityName = z.coerce.string().parse(params.entityName);
+
+  const permissions = await getPermissionsByEntityName(entityName);
+
+  if (!permissions) {
+    throw new Response("Not Found", { status: 404, statusText: "Not Found" });
+  }
+
   const flattenedPermissions = flattenPermissions(permissions);
 
   return {
-    flattenedPermissions,
+    entityName,
+    permissions: flattenedPermissions,
   };
 }
 
-interface FlatPermission {
+interface Permission {
   id: string;
-  entity: string;
   action: string;
   scope: string;
   role: string;
-  roleId: string;
 }
 
-const columnHelper = createColumnHelper<FlatPermission>();
+const columnHelper = createColumnHelper<Permission>();
 
 const columns = [
   columnHelper.display({
@@ -63,41 +67,28 @@ const columns = [
     enableGlobalFilter: false,
     cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
   }),
-  columnHelper.accessor("entity", {
-    header: () => <span>Entity</span>,
-    filterFn: "fuzzy", //using our custom fuzzy filter function
-    sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: ({ row }) =>
-      getCellLink({
-        id: row.original.entity,
-        name: row.original.entity,
-        target: "/admin/rbac/permissions/entity",
-      }),
-  }),
   columnHelper.accessor("action", {
     header: () => <span>Action</span>,
-    enableGlobalFilter: false,
+    filterFn: "fuzzy", //using our custom fuzzy filter function
+    sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("scope", {
     header: () => <span>Scope</span>,
-    enableGlobalFilter: false,
+    enableGlobalFilter: true,
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("role", {
     header: () => <span>Role</span>,
-    enableGlobalFilter: false,
-    cell: ({ row }) =>
-      getCellLink({
-        id: row.original.roleId,
-        name: row.original.role,
-        target: "/admin/rbac/roles",
-      }),
+    enableGlobalFilter: true,
+    cell: (info) => info.getValue(),
   }),
 ];
 
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const { entityName, permissions } = useLoaderData<typeof loader>();
+
+  const entityType = permissions[0].action === "access" ? "Route" : "Model";
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -113,7 +104,7 @@ export default function Component() {
   ]);
 
   const table = useReactTable({
-    data: data.flattenedPermissions,
+    data: permissions,
     columns,
     filterFns: {
       fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
@@ -137,8 +128,13 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title="Permissions" />
+      <AdminPageTitle
+        title={`${entityType} permissions for ${entityName}`}
+        buttonText="Close"
+        buttonTarget={crud.index}
+      />
 
+      {/* Start Permissions Table*/}
       <AdminContentCard>
         <TableBar>
           <TableSearchInput
@@ -146,7 +142,7 @@ export default function Component() {
             onChange={(value: string | number) =>
               setGlobalFilter(String(value))
             }
-            placeholder={`Search ${crud.plural.toLowerCase()}...`}
+            placeholder="Search permissions..."
           />
           <TableFilterDropdown />
         </TableBar>

@@ -31,3 +31,21 @@ export function getPermissions() {
     },
   });
 }
+
+export function getPermissionsByEntityName(entityName: string) {
+  return prisma.permission.findMany({
+    where: {
+      entity: entityName,
+    },
+    orderBy: { entity: "asc" },
+    include: {
+      roles: {
+        select: {
+          id: true,
+          name: true,
+        },
+        orderBy: { name: "asc" },
+      },
+    },
+  });
+}
