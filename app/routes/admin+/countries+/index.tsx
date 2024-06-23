@@ -75,6 +75,7 @@ interface Country {
   createdAt: string;
   updatedAt: string | null;
   region: {
+    id: string;
     name: string;
   };
 }
@@ -100,10 +101,10 @@ const columns = [
         target: crud.index,
       }),
   }),
-  columnHelper.accessor("region", {
+  columnHelper.accessor("region.name", {
     header: () => <span>Region</span>,
-    enableGlobalFilter: false,
-    cell: ({ row }) => row.original.region.name,
+    enableGlobalFilter: true,
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("createdAt", {
     header: () => <span>Created</span>,
@@ -129,6 +130,8 @@ const columns = [
 
 export default function Component() {
   const data = useLoaderData<typeof loader>();
+
+  console.log(data);
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
