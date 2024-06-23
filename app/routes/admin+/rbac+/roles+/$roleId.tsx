@@ -77,12 +77,12 @@ const columns = [
   }),
   columnHelper.accessor("action", {
     header: () => <span>Action</span>,
-    enableGlobalFilter: false,
+    enableGlobalFilter: true,
     cell: (info) => info.getValue(), //=> getCellCreatedAt(info),
   }),
   columnHelper.accessor("scope", {
     header: () => <span>Scope</span>,
-    enableGlobalFilter: false,
+    enableGlobalFilter: true,
     cell: (info) => info.getValue(),
   }),
 ];
