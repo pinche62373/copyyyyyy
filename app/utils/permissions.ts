@@ -69,12 +69,17 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
     scope: "any",
   },
   {
-    entity: "/admin/countries/new",
+    entity: "/admin/countries/view",
     roles: [ADMIN, MOD],
     scope: "any",
   },
   {
     entity: "/admin/countries/edit",
+    roles: [ADMIN, MOD],
+    scope: "any",
+  },    
+  {
+    entity: "/admin/countries/new",
     roles: [ADMIN, MOD],
     scope: "any",
   },

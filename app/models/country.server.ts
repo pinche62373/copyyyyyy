@@ -4,17 +4,27 @@ import { prisma } from "#app/utils/db.server";
 
 export function getCountry({ id }: Pick<Country, "id">) {
   return prisma.country.findFirst({
-    select: {
-      id: true,
-      name: true,
+    where: { id },
+    include: {
       region: {
         select: {
           id: true,
           name: true,
         },
       },
+      countryCreatedBy: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },
+      countryUpdatedBy: {
+        select: {
+          id: true,
+          username: true,
+        },
+      },          
     },
-    where: { id },
   });
 }
 
