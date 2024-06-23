@@ -19,7 +19,7 @@ export const FormInputTextReadOnly = ({ label, children }: PropTypes) => {
 
         {/* Col Children*/}
         <div className="mt-0 sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
-          <div className="py-3 px-4 block w-full rounded-lg text-sm bg-gray-100 border-gray-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600 disabled:opacity-80">
+          <div className="min-h-12 py-3 px-4 block w-full rounded-lg text-sm bg-gray-100 border-gray-200 placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600 disabled:opacity-80">
             {children}
           </div>
         </div>
