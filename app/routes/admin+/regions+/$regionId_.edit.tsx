@@ -1,7 +1,6 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import invariant from "tiny-invariant";
@@ -32,7 +31,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return json({ region });
+  return { region };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {

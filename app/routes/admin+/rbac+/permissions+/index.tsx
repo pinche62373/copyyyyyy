@@ -39,9 +39,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const permissions = await getPermissions();
   const flattenedPermissions = flattenPermissions(permissions);
 
-  return {
-    flattenedPermissions,
-  };
+  return { flattenedPermissions };
 }
 
 interface FlatPermission {
@@ -97,7 +95,7 @@ const columns = [
 ];
 
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const { flattenedPermissions } = useLoaderData<typeof loader>();
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -113,7 +111,7 @@ export default function Component() {
   ]);
 
   const table = useReactTable({
-    data: data.flattenedPermissions,
+    data: flattenedPermissions,
     columns,
     filterFns: {
       fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions

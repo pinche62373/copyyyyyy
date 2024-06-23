@@ -1,7 +1,6 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import invariant from "tiny-invariant";
@@ -36,7 +35,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const regions = await getRegions();
 
-  return json({ country, regions });
+  return { country, regions };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -44,7 +43,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   validateFormIntent(formData, "update");
 
-  const submission = parseWithZod(formData, { schema: countrySchemaUpdateForm });
+  const submission = parseWithZod(formData, {
+    schema: countrySchemaUpdateForm,
+  });
 
   if (submission.status !== "success") {
     return jsonWithError(null, "Invalid form data");

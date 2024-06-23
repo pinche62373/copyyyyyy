@@ -44,7 +44,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return role;
+  return { role };
 }
 
 interface Permission {
@@ -88,7 +88,7 @@ const columns = [
 ];
 
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const { role } = useLoaderData<typeof loader>();
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -104,7 +104,7 @@ export default function Component() {
   ]);
 
   const table = useReactTable({
-    data: data.permissions,
+    data: role.permissions,
     columns,
     filterFns: {
       fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
@@ -132,10 +132,10 @@ export default function Component() {
       <AdminPageTitle title={`View ${crud.singular}`} />
 
       <AdminContentCard className="p-6">
-        <FormInputTextReadOnly label="Name">{data.name}</FormInputTextReadOnly>
+        <FormInputTextReadOnly label="Name">{role.name}</FormInputTextReadOnly>
 
         <FormInputTextReadOnly label="Description">
-          {data.description}
+          {role.description}
         </FormInputTextReadOnly>
 
         <FormFooter>

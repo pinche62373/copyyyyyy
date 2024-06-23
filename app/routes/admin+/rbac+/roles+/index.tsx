@@ -34,11 +34,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, crud.index);
 
   const roles = await getRoles();
-  // const flattenedPermissions = flattenPermissions(permissions);
-
-  return {
-    roles,
-  };
+  
+  return { roles };
 }
 
 interface Role {
@@ -79,7 +76,7 @@ const columns = [
 ];
 
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const { roles } = useLoaderData<typeof loader>();
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -95,7 +92,7 @@ export default function Component() {
   ]);
 
   const table = useReactTable({
-    data: data.roles,
+    data: roles,
     columns,
     filterFns: {
       fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions

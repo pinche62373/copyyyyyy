@@ -2,20 +2,14 @@ import { useLoaderData } from "@remix-run/react";
 
 import { prisma } from "#app/utils/db.server";
 
-export interface LoaderData {
-  userCount: number
-}
-
 export const loader = async () => {
-  const data: LoaderData = {
-    userCount: await prisma.user.count()
-  }
+  const userCount = await prisma.user.count()
 
-  return data
+  return { userCount }
 };
 
 export default function AdminIndexPage() {
-  const data = useLoaderData<LoaderData>();
+  const { userCount } = useLoaderData<typeof loader>()
 
   return (
     <>
@@ -141,7 +135,7 @@ export default function AdminIndexPage() {
                 Users
               </h2>
               <p className="text-lg md:text-xl font-semibold text-stone-800 dark:text-neutral-200">
-                {data.userCount}
+                {userCount}
               </p>
             </div>
           </div>

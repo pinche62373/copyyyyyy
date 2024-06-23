@@ -1,5 +1,4 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 
@@ -25,7 +24,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return json({ country });
+  return { country };
 }
 
 export default function Component() {

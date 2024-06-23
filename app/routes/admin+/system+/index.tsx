@@ -36,13 +36,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const { expiredSessionCount } = useLoaderData<typeof loader>();
   const formId = "form-purge-sessions";
 
   const invalidSessionsLabel =
-    data.expiredSessionCount === 0
+    expiredSessionCount === 0
       ? "No expired database sessions to purge"
-      : `Purge ${data.expiredSessionCount} expired database sessions`;
+      : `Purge ${expiredSessionCount} expired database sessions`;
 
   return (
     <>
@@ -56,7 +56,7 @@ export default function Component() {
             formId={formId}
             label={invalidSessionsLabel}
             buttonLabel="Purge"
-            enabled={data.expiredSessionCount > 0}
+            enabled={expiredSessionCount > 0}
           />
         </Form>
       </AdminContentCard>

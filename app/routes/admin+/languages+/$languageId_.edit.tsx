@@ -1,7 +1,6 @@
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import invariant from "tiny-invariant";
@@ -32,7 +31,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return json({ language });
+  return { language };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -65,7 +64,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const { language } = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
@@ -83,13 +82,13 @@ export default function Component() {
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
           <FormInputHidden name="intent" value="update" />
-          <FormInputHidden name="id" value={data.language.id} />
+          <FormInputHidden name="id" value={language.id} />
 
           <FormInputText
             label="Name"
             fieldName="name"
             fields={fields}
-            defaultValue={data.language.name}
+            defaultValue={language.name}
           />
 
           <FormFooter>
