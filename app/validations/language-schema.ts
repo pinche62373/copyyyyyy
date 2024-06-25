@@ -20,6 +20,13 @@ export const languageSchemaFull = z.object({
   updatedBy: userSchema.pick({ id: true }).nullable(),
 });
 
+export const languageSchemaAdminTable = languageSchemaFull.pick({
+  id: true,
+  name: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const languageSchemaCreateForm = languageSchemaFull.pick({
   name: true,
 });

@@ -34,7 +34,10 @@ import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInpu
 import { deleteCountry, getCountries } from "#app/models/country.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { countrySchemaAdminTable, countrySchemaFull } from "#app/validations/country-schema";
+import {
+  countrySchemaAdminTable,
+  countrySchemaFull,
+} from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudCountry: crud } = getCrud();
@@ -69,7 +72,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return jsonWithSuccess(null, `${crud.singular} deleted successfully`);
 };
 
-type Country = z.infer<typeof countrySchemaAdminTable>
+type Country = z.infer<typeof countrySchemaAdminTable>;
 
 const columnHelper = createColumnHelper<Country>();
 
@@ -118,7 +121,7 @@ const columns = [
         actions: {
           edit: true,
           delete: false,
-        },        
+        },
       }),
   }),
 ];

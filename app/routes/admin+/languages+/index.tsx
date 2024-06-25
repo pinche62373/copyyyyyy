@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
+import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -33,7 +34,10 @@ import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInpu
 import { deleteLanguage, getLanguages } from "#app/models/language.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { languageSchemaFull } from "#app/validations/language-schema";
+import {
+  languageSchemaAdminTable,
+  languageSchemaFull,
+} from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudLanguage: crud } = getCrud();
@@ -68,12 +72,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return jsonWithSuccess(null, `${crud.singular} deleted successfully`);
 };
 
-interface Language {
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string | null;
-}
+type Language = z.infer<typeof languageSchemaAdminTable>;
 
 const columnHelper = createColumnHelper<Language>();
 
