@@ -1,6 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -11,13 +10,17 @@ import { getRegion } from "#app/models/region.server";
 import { getCrud } from "#app/utils/crud";
 import { timeStampToHuman } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+import { regionSchemaFull } from "#app/validations/region-schema";
 
 const { crudRegion: crud } = getCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/view`);
 
-  const regionId = z.coerce.string().parse(params.regionId);
+  const regionId = regionSchemaFull
+    .pick({ id: true })
+    .parse({ id: params.regionId }).id;
+
   const region = await getRegion({ id: regionId });
 
   if (!region) {

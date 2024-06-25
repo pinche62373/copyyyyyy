@@ -1,6 +1,5 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -11,13 +10,17 @@ import { getLanguage } from "#app/models/language.server";
 import { getCrud } from "#app/utils/crud";
 import { timeStampToHuman } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+import { languageSchemaFull } from "#app/validations/language-schema";
 
 const { crudLanguage: crud } = getCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/view`);
 
-  const languageId = z.coerce.string().parse(params.languageId);
+  const languageId = languageSchemaFull
+    .pick({ id: true })
+    .parse({ id: params.languageId }).id;
+
   const language = await getLanguage({ id: languageId });
 
   if (!language) {

@@ -4,7 +4,6 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import invariant from "tiny-invariant";
-import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -26,7 +25,10 @@ const { crudCountry: crud } = getCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/edit`);
 
-  const countryId = z.coerce.string().parse(params.countryId);
+  const countryId = countrySchemaUpdateForm
+    .pick({ id: true })
+    .parse({ id: params.countryId }).id;
+
   const country = await getCountry({ id: countryId });
 
   if (!country) {
