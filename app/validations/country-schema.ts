@@ -5,6 +5,7 @@
 import { z } from "zod";
 
 import { regionSchemaFull } from "#app/validations/region-schema";
+import { userSchema } from "#app/validations/user-schema";
 
 export const countrySchemaFull = z.object({
   id: z.string().cuid2(),
@@ -16,12 +17,12 @@ export const countrySchemaFull = z.object({
     }),
   regionId: z.string({ required_error: "You must select a region" }).cuid2(),
   createdAt: z.string().datetime(),
+  createdBy: userSchema.pick({ id: true }),
   updatedAt: z.string().datetime().nullable(),
-  createdBy: z.string(),
-  updatedBy: z.string().nullable(),
+  updatedBy: userSchema.pick({ id: true }).nullable(),
   region: regionSchemaFull.pick({
     id: true,
-    name: true
+    name: true,
   }),
 });
 
@@ -30,7 +31,7 @@ export const countrySchemaAdminTable = countrySchemaFull.pick({
   name: true,
   createdAt: true,
   updatedAt: true,
-  region: true
+  region: true,
 });
 
 export const countrySchemaCreateForm = countrySchemaFull.pick({

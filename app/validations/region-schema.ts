@@ -4,6 +4,8 @@
 //
 import { z } from "zod";
 
+import { userSchema } from "#app/validations/user-schema";
+
 export const regionSchemaFull = z.object({
   id: z.string().cuid2(),
   name: z
@@ -13,9 +15,9 @@ export const regionSchemaFull = z.object({
         "This field only allows capitalized Latin words, separated by spaces.",
     }),
   createdAt: z.string().datetime(),
-  updatedAt: z.string().datetime(),
-  createdBy: z.string(),
-  updatedBy: z.string(),
+  createdBy: userSchema.pick({ id: true }),
+  updatedAt: z.string().datetime().nullable(),
+  updatedBy: userSchema.pick({ id: true }).nullable(),
 });
 
 export const regionSchemaCreateForm = regionSchemaFull.pick({
