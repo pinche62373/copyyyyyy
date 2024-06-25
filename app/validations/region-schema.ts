@@ -20,6 +20,13 @@ export const regionSchemaFull = z.object({
   updatedBy: userSchema.pick({ id: true }).nullable(),
 });
 
+export const regionSchemaAdminTable = regionSchemaFull.pick({
+  id: true,
+  name: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 export const regionSchemaCreateForm = regionSchemaFull.pick({
   name: true,
 });

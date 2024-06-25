@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
+import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -33,7 +34,10 @@ import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInpu
 import { deleteRegion, getRegions } from "#app/models/region.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { regionSchemaFull } from "#app/validations/region-schema";
+import {
+  regionSchemaAdminTable,
+  regionSchemaFull,
+} from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudRegion: crud } = getCrud();
@@ -68,13 +72,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return jsonWithSuccess(null, `${crud.singular} deleted successfully`);
 };
 
-interface Region {
-  // TODO: zod schema, loose
-  id: string;
-  name: string;
-  createdAt: string;
-  updatedAt: string | null;
-}
+type Region = z.infer<typeof regionSchemaAdminTable>;
 
 const columnHelper = createColumnHelper<Region>();
 
