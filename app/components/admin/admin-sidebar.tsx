@@ -332,7 +332,7 @@ export function AdminSidebar() {
                 data-hs-accordion-always-open
               >
                 <ul>
-                  {/* Admin Actor Model */}
+                  {/* Actor Model */}
                   <li
                     className="hs-accordion px-5 mb-1.5 "
                     id="admin-actor-accordion"
@@ -393,9 +393,9 @@ export function AdminSidebar() {
                       </ul>
                     </div>
                   </li>
-                  {/* End Admin Actor Model */}
+                  {/* End Actor Model */}
 
-                  {/* Misc Admin Models */}
+                  {/* General Models */}
                   <li
                     className="hs-accordion px-5 mb-1.5 "
                     id="admin-misc-accordion"
@@ -421,7 +421,7 @@ export function AdminSidebar() {
                         <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
                         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
                       </svg>
-                      Misc
+                      General
                       <svg
                         className="hs-accordion-active:-rotate-180 flex-shrink-0 mt-1 size-3.5 ms-auto transition"
                         xmlns="http://www.w3.org/2000/svg"
@@ -473,26 +473,26 @@ export function AdminSidebar() {
                       </ul>
                     </div>
                   </li>
-                  {/* End Misc Admin Models */}
+                  {/* End General Models */}
 
                   {/* Divider */}
                   <li className="pt-5 px-8 mt-5 mb-1.5 border-t border-gray-200 first:border-transparent first:pt-0 dark:border-neutral-700 dark:first:border-transparent">
                     <span className="block text-xs uppercase text-gray-500 dark:text-neutral-500">
-                      Misc
+                      Admin
                     </span>
                   </li>
                   {/* End Divider */}
                 </ul>
               </nav>
 
-              {/* End Admin Menu */}
+              {/* End Base Models Menu */}
 
-              {/* Misc Menu */}
+              {/* Admin Menu */}
               <nav
                 className="hs-accordion-group pb-3  w-full flex flex-col flex-wrap"
                 data-hs-accordion-always-open
               >
-                {/* Misc Menu List */}
+                {/* Admin Menu List */}
                 <ul>
                   {/* Permissions */}
                   <li className="px-5 mb-1.5">
@@ -572,9 +572,9 @@ export function AdminSidebar() {
                   </li>
                   {/* End System */}
                 </ul>
-                {/* End Misc Menu List */}
+                {/* End Admin Menu List */}
               </nav>
-              {/* End Misc Menu */}
+              {/* End Admin Menu */}
             </>
           )}
           {/* End Nav */}
