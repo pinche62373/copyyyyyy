@@ -14,6 +14,7 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { getUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
+import { getPageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchemaUpdateForm } from "#app/validations/language-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
@@ -23,9 +24,10 @@ const { crudLanguage: crud } = getCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/edit`);
 
-  const languageId = languageSchemaUpdateForm
-    .pick({ id: true })
-    .parse({ id: params.languageId }).id;
+  const languageId = getPageId(
+    params.languageId,
+    languageSchemaUpdateForm,
+  );
 
   const language = await getLanguage({ id: languageId });
 

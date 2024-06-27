@@ -14,6 +14,7 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { getUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
+import { getPageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { regionSchemaUpdateForm } from "#app/validations/region-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
@@ -23,9 +24,7 @@ const { crudRegion: crud } = getCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/edit`);
 
-  const regionId = regionSchemaUpdateForm
-    .pick({ id: true })
-    .parse({ id: params.regionId }).id;
+  const regionId = getPageId(params.regionId, regionSchemaUpdateForm);
 
   const region = await getRegion({ id: regionId });
 

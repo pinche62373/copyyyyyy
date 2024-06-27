@@ -8,7 +8,7 @@ import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
 import { getLanguage } from "#app/models/language.server";
 import { getCrud } from "#app/utils/crud";
-import { timeStampToHuman } from "#app/utils/misc";
+import { getPageId, timeStampToHuman } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchemaFull } from "#app/validations/language-schema";
 
@@ -17,9 +17,7 @@ const { crudLanguage: crud } = getCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/view`);
 
-  const languageId = languageSchemaFull
-    .pick({ id: true })
-    .parse({ id: params.languageId }).id;
+  const languageId = getPageId(params.languageId, languageSchemaFull);
 
   const language = await getLanguage({ id: languageId });
 

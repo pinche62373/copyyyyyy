@@ -16,6 +16,7 @@ import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { getUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
+import { getPageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaUpdateForm } from "#app/validations/country-schema";
 import { validateFormIntent } from "#app/validations/validate-form-intent";
@@ -25,9 +26,7 @@ const { crudCountry: crud } = getCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/edit`);
 
-  const countryId = countrySchemaUpdateForm
-    .pick({ id: true })
-    .parse({ id: params.countryId }).id;
+  const countryId = getPageId(params.countryId, countrySchemaUpdateForm);
 
   const country = await getCountry({ id: countryId });
 
