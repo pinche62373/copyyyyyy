@@ -2,17 +2,12 @@ import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
-  Links,
   LiveReload,
-  Meta,
   MetaFunction,
   Outlet,
-  Scripts,
-  ScrollRestoration,
   useLoaderData,
   useLocation,
 } from "@remix-run/react";
-import clsx from "clsx";
 import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
 import type { ToastMessage } from "remix-toast";
@@ -21,16 +16,12 @@ import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { HoneypotInputProps } from "remix-utils/honeypot/server";
 import { Toaster, toast as notify } from "sonner";
 
+import { Document } from "#app/components/document";
+import { GeneralErrorBoundary } from "#app/components/general-error-boundary";
 import stylesheet from "#app/tailwind.css";
 import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
-import {
-  Theme,
-  ThemeBody,
-  ThemeHead,
-  ThemeProvider,
-  useTheme,
-} from "#app/utils/theme-provider";
+import { Theme, ThemeProvider, useTheme } from "#app/utils/theme-provider";
 import { getThemeSession } from "#app/utils/theme.server";
 
 import "@fontsource-variable/inter/wght.css";
@@ -98,7 +89,7 @@ if (typeof window !== "undefined") {
 // ----------------------------------------------------------------------------
 function App() {
   const location = useLocation();
-  const data = useLoaderData<LoaderData>();
+  // const data = useLoaderData<LoaderData>();
   const [theme] = useTheme();
   const { toast } = useLoaderData<LoaderData>();
 
@@ -113,30 +104,16 @@ function App() {
   }, [toast]);
 
   return (
-    <html lang="en" className={clsx(theme)}>
-      <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <Meta />
-        <Links />
-        <ThemeHead ssrTheme={Boolean(data.theme)} />
-      </head>
-      <body className="h-full bg-gray-50 dark:bg-neutral-900">
-        <HoneypotProvider {...data.honeypotInputProps}>
-          <Outlet />
-        </HoneypotProvider>
-        <ThemeBody ssrTheme={Boolean(data.theme)} />
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
-        <Toaster
-          position="top-right"
-          richColors
-          expand
-          toastOptions={{ classNames: { title: "font-normal" } }}
-        />
-      </body>
-    </html>
+    <Document theme={theme}>
+      <Outlet />
+      <LiveReload />
+      <Toaster
+        position="top-right"
+        richColors
+        expand
+        toastOptions={{ classNames: { title: "font-normal" } }}
+      />
+    </Document>
   );
 }
 
@@ -148,7 +125,22 @@ export default function AppWithProviders() {
 
   return (
     <ThemeProvider specifiedTheme={data.theme}>
-      <App />
+      <HoneypotProvider {...data.honeypotInputProps}>
+        <App />
+      </HoneypotProvider>
+    </ThemeProvider>
+  );
+}
+
+// ----------------------------------------------------------------------------
+// Top-Most Error Boundary
+// ----------------------------------------------------------------------------
+export function ErrorBoundary(data: LoaderData) {
+  return (
+    <ThemeProvider specifiedTheme={data.theme}>
+      <Document>
+        <GeneralErrorBoundary />
+      </Document>
     </ThemeProvider>
   );
 }
