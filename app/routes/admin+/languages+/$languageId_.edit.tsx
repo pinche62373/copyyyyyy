@@ -3,7 +3,6 @@ import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
-import invariant from "tiny-invariant";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -12,22 +11,18 @@ import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
-import { getUserId } from "#app/utils/auth.server";
+import { validateUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
-import { getPageId } from "#app/utils/misc";
+import { getPageId, validateFormData } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchemaUpdateForm } from "#app/validations/language-schema";
-import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudLanguage: crud } = getCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/edit`);
 
-  const languageId = getPageId(
-    params.languageId,
-    languageSchemaUpdateForm,
-  );
+  const languageId = getPageId(params.languageId, languageSchemaUpdateForm);
 
   const language = await getLanguage({ id: languageId });
 
@@ -39,21 +34,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
+  await requireRoutePermission(request, `${crud.index}/edit`);
 
-  validateFormIntent(formData, "update");
+  const userId = await validateUserId(request);
 
-  const submission = parseWithZod(formData, {
+  const submission = validateFormData({
+    intent: "update",
+    formData: await request.formData(),
     schema: languageSchemaUpdateForm,
   });
-
-  if (submission.status !== "success") {
-    return jsonWithError(null, "Invalid form data");
-  }
-
-  const userId = await getUserId(request);
-
-  invariant(userId, "userId must be set"); // TODO : make this check obsolete by refactoring getUserId function(s)
 
   try {
     await updateLanguage(submission.value, userId);

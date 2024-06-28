@@ -1,7 +1,13 @@
+import { parseWithZod } from "@conform-to/zod";
 import { clsx, type ClassValue } from "clsx";
 import dayjs from "dayjs";
 import { extendTailwindMerge } from "tailwind-merge";
-import { ZodRawShape, z } from "zod";
+import { z } from "zod";
+
+import {
+  IntentType,
+  validateFormIntent,
+} from "#app/validations/validate-form-intent";
 
 import { extendedTheme } from "./extended-theme";
 
@@ -60,10 +66,10 @@ export function timeStampToHuman(timestamp: string) {
   return dayjs(timestamp).format("YYYY-MM-DD, HH:mm");
 }
 
-// throw a 400 unless page `id` parameter passed zod validation
+// throw 400 Bad Request unless page `id` parameter passed zod validation
 export function getPageId(
   id: string | undefined,
-  schema: z.ZodObject<ZodRawShape>,
+  schema: z.ZodObject<z.ZodRawShape>,
 ): string {
   if (!id) {
     throw new Response("Bad Request", {
@@ -80,4 +86,32 @@ export function getPageId(
   }
 
   return id;
+}
+
+// throw 422 Unprocessable Entity unless formData passed zod validation and intent
+interface ValidateFormDataFunctionArgs {
+  intent: IntentType;
+  formData: FormData;
+  schema: z.ZodSchema;
+}
+
+export function validateFormData({
+  intent,
+  formData,
+  schema,
+}: ValidateFormDataFunctionArgs) {
+  validateFormIntent(formData, intent); // TODO: refactor into named args
+
+  const submission = parseWithZod(formData, {
+    schema,
+  });
+
+  if (submission.status !== "success") {
+    throw new Response("Unprocessable Entity", {
+      status: 422,
+      statusText: "Unprocessable Entity",
+    });
+  }
+
+  return submission;
 }

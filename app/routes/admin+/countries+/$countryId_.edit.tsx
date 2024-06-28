@@ -3,7 +3,6 @@ import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
-import invariant from "tiny-invariant";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -14,19 +13,20 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
-import { getUserId } from "#app/utils/auth.server";
+import { validateUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
-import { getPageId } from "#app/utils/misc";
+import { validateFormData } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaUpdateForm } from "#app/validations/country-schema";
-import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudCountry: crud } = getCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/edit`);
 
-  const countryId = getPageId(params.countryId, countrySchemaUpdateForm);
+  const countryId = countrySchemaUpdateForm
+    .pick({ id: true })
+    .parse({ id: params.countryId }).id;
 
   const country = await getCountry({ id: countryId });
 
@@ -40,25 +40,19 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
+  await requireRoutePermission(request, `${crud.index}/edit`);
 
-  validateFormIntent(formData, "update");
+  const userId = await validateUserId(request);
 
-  const submission = parseWithZod(formData, {
+  const submission = validateFormData({
+    intent: "update",
+    formData: await request.formData(),
     schema: countrySchemaUpdateForm,
   });
-
-  if (submission.status !== "success") {
-    return jsonWithError(null, "Invalid form data");
-  }
 
   if ((await getRegionById(submission.value.regionId)) === null) {
     return jsonWithError(null, "Invalid relationship");
   }
-
-  const userId = await getUserId(request);
-
-  invariant(userId, "userId must be set"); // TODO : make this check obsolete by refactoring getUserId function(s)
 
   try {
     await updateCountry(submission.value, userId);

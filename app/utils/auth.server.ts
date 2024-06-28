@@ -57,6 +57,21 @@ export async function getUserId(
   return userId;
 }
 
+export async function validateUserId( request: Request,
+):  Promise<User["id"]> {
+  const userId = await getUserId(request)
+
+  if (userId === undefined) {
+    throw new Response("Unauthorized", {
+      status: 401,
+      statusText: "Unauthorized",
+    });
+  }
+
+  return userId
+}
+
+
 export async function getUser(request: Request) {
   const userId = await getUserId(request);
 
