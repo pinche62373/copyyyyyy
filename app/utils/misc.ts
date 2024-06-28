@@ -64,7 +64,7 @@ export function timeStampToHuman(timestamp: string) {
 }
 
 // throw 400 Bad Request unless page `id` parameter passed zod validation
-export function getPageId(
+export function validatePageId(
   id: string | undefined,
   schema: z.ZodObject<z.ZodRawShape>,
 ): string {

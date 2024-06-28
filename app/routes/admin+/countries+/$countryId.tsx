@@ -8,7 +8,7 @@ import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
 import { getCountry } from "#app/models/country.server";
 import { getCrud } from "#app/utils/crud";
-import { timeStampToHuman, getPageId } from "#app/utils/misc";
+import { timeStampToHuman, validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaFull } from "#app/validations/country-schema";
 
@@ -17,7 +17,7 @@ const { crudCountry: crud } = getCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, `${crud.index}/view`);
 
-  const countryId = getPageId(params.countryId, countrySchemaFull);
+  const countryId = validatePageId(params.countryId, countrySchemaFull);
 
   const country = await getCountry({ id: countryId });
 
