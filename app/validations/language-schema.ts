@@ -12,7 +12,7 @@ export const languageSchemaFull = z.object({
     .string({ required_error: "Language name is required" })
     .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, {
       message:
-        "This field only allows capitalized Latin words, separated by spaces.",
+        "This field only allows capitalized Latin words, separated by single spaces.",
     }),
   createdAt: z.string().datetime(),
   createdBy: userSchema.pick({ id: true }),

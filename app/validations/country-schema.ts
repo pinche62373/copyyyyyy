@@ -13,7 +13,7 @@ export const countrySchemaFull = z.object({
     .string({ required_error: "Country is required" })
     .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, {
       message:
-        "This field only allows capitalized Latin words, separated by spaces.",
+        "This field only allows capitalized Latin words, separated by single spaces.",
     }),
   regionId: z.string({ required_error: "You must select a region" }).cuid2(),
   createdAt: z.string().datetime(),

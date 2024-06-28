@@ -4,7 +4,6 @@ import type { ActionFunctionArgs } from "@remix-run/node";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
-import invariant from "tiny-invariant";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
@@ -15,11 +14,11 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
-import { getUserId } from "#app/utils/auth.server";
+import { requireUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
+import { validateFormData } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaCreateForm } from "#app/validations/country-schema";
-import { validateFormIntent } from "#app/validations/form-intent";
 
 const { crudCountry: crud } = getCrud();
 
@@ -32,25 +31,19 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
+  await requireRoutePermission(request, `${crud.index}/new`);
 
-  validateFormIntent({ formData, intent: "create" });
+  const userId = await requireUserId(request);
 
-  const submission = parseWithZod(formData, {
+  const submission = validateFormData({
+    intent: "create",
+    formData: await request.formData(),
     schema: countrySchemaCreateForm,
   });
-
-  if (submission.status !== "success") {
-    return jsonWithError(null, "Invalid form data");
-  }
 
   if ((await getRegionById(submission.value.regionId)) === null) {
     return jsonWithError(null, "Invalid relationship");
   }
-
-  const userId = await getUserId(request);
-
-  invariant(userId, "userId must be set"); // TODO : make this check obsolete by refactoring getUserId function(s)
 
   try {
     await createCountry(submission.value, userId);

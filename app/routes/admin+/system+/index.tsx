@@ -22,6 +22,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  await requireRoutePermission(request, "/admin/system");
+
   const formData = await request.formData();
 
   validateFormIntent({ formData, intent: "purge" });
