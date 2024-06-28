@@ -13,7 +13,7 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
-import { validateUserId } from "#app/utils/auth.server";
+import { requireUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
 import { validateFormData } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
@@ -42,7 +42,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export const action = async ({ request }: ActionFunctionArgs) => {
   await requireRoutePermission(request, `${crud.index}/edit`);
 
-  const userId = await validateUserId(request);
+  const userId = await requireUserId(request);
 
   const submission = validateFormData({
     intent: "update",
