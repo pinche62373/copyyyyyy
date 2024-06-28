@@ -1,14 +1,17 @@
-import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
-import { Link } from "@remix-run/react";
+import {
+  Link,
+  isRouteErrorResponse,
+  useNavigate,
+  useRouteError,
+} from "@remix-run/react";
 
+import { Button } from "#app/components/admin/button";
 import { getErrorMessage } from "#app/utils/misc";
 
 export function GeneralErrorBoundary() {
   const error = useRouteError();
-
-  if (typeof document !== "undefined") {
-    console.error(error);
-  }
+  const navigate = useNavigate();
+  const goBack = () => navigate(-1);
 
   return (
     <div className="max-w-[50rem] flex flex-col mx-auto size-full">
@@ -38,9 +41,17 @@ export function GeneralErrorBoundary() {
             )}
 
           <div className="mt-5 flex flex-col justify-center items-center gap-2 sm:flex-row sm:gap-3">
+            <Button
+              text="Back"
+              type="button"
+              secondary
+              onClick={goBack}
+              className="mr-2"
+            />
+
             <Link
               type="button"
-              className="w-full sm:w-auto py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+              className="w-full sm:w-auto py-2 px-2 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
               to="/"
             >
               {" "}
