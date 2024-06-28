@@ -11,7 +11,7 @@ import {
   getExpiredSessionCount,
 } from "#app/models/session";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { validateFormIntent } from "#app/validations/validate-form-intent";
+import { validateFormIntent } from "#app/validations/form-intent";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, "/admin/system");
@@ -24,7 +24,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  validateFormIntent(formData, "purge");
+  validateFormIntent({ formData, intent: "purge" });
 
   try {
     await deleteExpiredSessions();

@@ -1,5 +1,3 @@
-import { parseWithZod } from "@conform-to/zod";
-import type { ActionFunctionArgs } from "@remix-run/node";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
@@ -12,7 +10,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { jsonWithError, jsonWithSuccess } from "remix-toast";
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
@@ -31,14 +28,10 @@ import { TableBar } from "#app/components/tanstack-table/TableBar";
 import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
-import { deleteCountry, getCountries } from "#app/models/country.server";
+import { getCountries } from "#app/models/country.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import {
-  countrySchemaAdminTable,
-  countrySchemaFull,
-} from "#app/validations/country-schema";
-import { validateFormIntent } from "#app/validations/validate-form-intent";
+import { countrySchemaAdminTable } from "#app/validations/country-schema";
 
 const { crudCountry: crud } = getCrud();
 
@@ -48,28 +41,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const countries = await getCountries();
 
   return { countries };
-};
-
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-
-  validateFormIntent(formData, "delete");
-
-  const submission = parseWithZod(formData, {
-    schema: countrySchemaFull.pick({ id: true }),
-  });
-
-  if (submission.status !== "success") {
-    return jsonWithError(null, "Invalid delete submission");
-  }
-
-  try {
-    await deleteCountry(submission.value);
-  } catch (error) {
-    return jsonWithError(null, "Unexpected error");
-  }
-
-  return jsonWithSuccess(null, `${crud.singular} deleted successfully`);
 };
 
 type Country = z.infer<typeof countrySchemaAdminTable>;

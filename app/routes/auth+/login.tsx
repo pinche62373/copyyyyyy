@@ -22,7 +22,7 @@ import { honeypot } from "#app/utils/honeypot.server";
 import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
-import { validateFormIntent } from "#app/validations/validate-form-intent";
+import { validateFormIntent } from "#app/validations/form-intent";
 
 const validator = withZod(authLoginSchema);
 
@@ -67,14 +67,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  validateFormIntent(formData, "login");
+  validateFormIntent({ formData, intent: "login" });
 
   // honeypot
   try {
     honeypot.check(formData);
   } catch (error) {
     if (error instanceof SpamError) {
-      throw new Response("Invalid form data", { status: 400, statusText: "Invalid Form Data" });
+      throw new Response("Invalid form data", {
+        status: 400,
+        statusText: "Invalid Form Data",
+      });
     }
     throw error; // rethrow
   }

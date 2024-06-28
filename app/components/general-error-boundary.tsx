@@ -31,7 +31,9 @@ export function GeneralErrorBoundary() {
           {!isRouteErrorResponse(error) &&
             process.env.NODE_ENV !== "production" && (
               <p className="mt-5 text-gray-600 dark:text-neutral-400">
-                {getErrorMessage(error)}
+                {isRouteErrorResponse(error)
+                  ? error.data
+                  : getErrorMessage(error)}
               </p>
             )}
 

@@ -15,8 +15,8 @@ import { createLanguage } from "#app/models/language.server";
 import { getUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+import { validateFormIntent } from "#app/validations/form-intent";
 import { languageSchemaCreateForm } from "#app/validations/language-schema";
-import { validateFormIntent } from "#app/validations/validate-form-intent";
 
 const { crudLanguage: crud } = getCrud();
 
@@ -29,7 +29,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  validateFormIntent(formData, "create");
+  validateFormIntent({ formData, intent: "create" });
 
   const submission = parseWithZod(formData, {
     schema: languageSchemaCreateForm,

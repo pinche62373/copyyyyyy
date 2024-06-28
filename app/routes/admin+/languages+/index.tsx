@@ -1,5 +1,3 @@
-import { parseWithZod } from "@conform-to/zod";
-import type { ActionFunctionArgs } from "@remix-run/node";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
@@ -12,7 +10,6 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { jsonWithError, jsonWithSuccess } from "remix-toast";
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
@@ -31,14 +28,10 @@ import { TableBar } from "#app/components/tanstack-table/TableBar";
 import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
-import { deleteLanguage, getLanguages } from "#app/models/language.server";
+import { getLanguages } from "#app/models/language.server";
 import { getCrud } from "#app/utils/crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import {
-  languageSchemaAdminTable,
-  languageSchemaFull,
-} from "#app/validations/language-schema";
-import { validateFormIntent } from "#app/validations/validate-form-intent";
+import { languageSchemaAdminTable } from "#app/validations/language-schema";
 
 const { crudLanguage: crud } = getCrud();
 
@@ -48,28 +41,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const languages = await getLanguages();
 
   return { languages };
-};
-
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-
-  validateFormIntent(formData, "delete");
-
-  const submission = parseWithZod(formData, {
-    schema: languageSchemaFull.pick({ id: true }),
-  });
-
-  if (submission.status !== "success") {
-    return jsonWithError(null, "Invalid delete submission");
-  }
-
-  try {
-    await deleteLanguage(submission.value);
-  } catch (error) {
-    return jsonWithError(null, "Unexpected error");
-  }
-
-  return jsonWithSuccess(null, `${crud.singular} deleted successfully`);
 };
 
 type Language = z.infer<typeof languageSchemaAdminTable>;

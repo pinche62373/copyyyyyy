@@ -4,10 +4,7 @@ import dayjs from "dayjs";
 import { extendTailwindMerge } from "tailwind-merge";
 import { z } from "zod";
 
-import {
-  IntentType,
-  validateFormIntent,
-} from "#app/validations/validate-form-intent";
+import { Intent, validateFormIntent } from "#app/validations/form-intent";
 
 import { extendedTheme } from "./extended-theme";
 
@@ -90,7 +87,7 @@ export function getPageId(
 
 // throw 422 Unprocessable Entity unless formData passed zod validation and intent
 interface ValidateFormDataFunctionArgs {
-  intent: IntentType;
+  intent: Intent;
   formData: FormData;
   schema: z.ZodSchema;
 }
@@ -100,7 +97,7 @@ export function validateFormData({
   formData,
   schema,
 }: ValidateFormDataFunctionArgs) {
-  validateFormIntent(formData, intent); // TODO: refactor into named args
+  validateFormIntent({ formData, intent }); // TODO: refactor into named args
 
   const submission = parseWithZod(formData, {
     schema,
