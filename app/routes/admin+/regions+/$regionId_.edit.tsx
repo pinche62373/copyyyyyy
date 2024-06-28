@@ -13,7 +13,7 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { requireUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
-import { validatePageId, validateFormData } from "#app/utils/misc";
+import { validatePageId, validateSubmission } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { regionSchemaUpdateForm } from "#app/validations/region-schema";
 
@@ -38,7 +38,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const userId = await requireUserId(request);
 
-  const submission = validateFormData({
+  const submission = validateSubmission({
     intent: "update",
     formData: await request.formData(),
     schema: regionSchemaUpdateForm,

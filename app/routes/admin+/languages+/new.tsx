@@ -13,7 +13,7 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createLanguage } from "#app/models/language.server";
 import { requireUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
-import { validateFormData } from "#app/utils/misc";
+import { validateSubmission } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchemaCreateForm } from "#app/validations/language-schema";
 
@@ -30,7 +30,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const userId = await requireUserId(request);
 
-  const submission = validateFormData({
+  const submission = validateSubmission({
     intent: "create",
     formData: await request.formData(),
     schema: languageSchemaCreateForm,

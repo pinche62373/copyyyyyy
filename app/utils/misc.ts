@@ -86,17 +86,17 @@ export function validatePageId(
 }
 
 // throw 422 Unprocessable Entity unless formData passed zod validation and intent
-interface ValidateFormDataFunctionArgs {
+interface validateSubmissionFunctionArgs {
   intent: Intent;
   formData: FormData;
   schema: z.ZodSchema;
 }
 
-export function validateFormData({
+export function validateSubmission({
   intent,
   formData,
   schema,
-}: ValidateFormDataFunctionArgs) {
+}: validateSubmissionFunctionArgs) {
   validateFormIntent({ formData, intent }); // TODO: refactor into named args
 
   const submission = parseWithZod(formData, {

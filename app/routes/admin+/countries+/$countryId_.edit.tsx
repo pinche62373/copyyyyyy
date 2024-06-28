@@ -15,7 +15,7 @@ import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { requireUserId } from "#app/utils/auth.server";
 import { getCrud } from "#app/utils/crud";
-import { validateFormData } from "#app/utils/misc";
+import { validateSubmission } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaUpdateForm } from "#app/validations/country-schema";
 
@@ -44,7 +44,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const userId = await requireUserId(request);
 
-  const submission = validateFormData({
+  const submission = validateSubmission({
     intent: "update",
     formData: await request.formData(),
     schema: countrySchemaUpdateForm,
