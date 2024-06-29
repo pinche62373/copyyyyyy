@@ -11,8 +11,7 @@ import { requireRole } from "#app/utils/permissions.server";
 
 // import styles for the admin route
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: adminStyleSheet },
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+  ...(cssBundleHref ? [{ rel: "stylesheet", href: adminStyleSheet, as: "style" }] : []),
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
