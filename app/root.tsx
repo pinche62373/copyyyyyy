@@ -7,6 +7,7 @@ import {
   Outlet,
   useLoaderData,
   useLocation,
+  useRouteLoaderData,
 } from "@remix-run/react";
 import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
@@ -135,10 +136,12 @@ export default function AppWithProviders() {
 // ----------------------------------------------------------------------------
 // Top-Most Error Boundary
 // ----------------------------------------------------------------------------
-export function ErrorBoundary(data: LoaderData) {
+export function ErrorBoundary() {
+  const data = useRouteLoaderData<typeof loader>("root");
+
   return (
-    <ThemeProvider specifiedTheme={data.theme}>
-      <Document>
+    <ThemeProvider specifiedTheme={data!.theme}>
+      <Document theme={data?.theme}>
         <GeneralErrorBoundary />
       </Document>
     </ThemeProvider>
