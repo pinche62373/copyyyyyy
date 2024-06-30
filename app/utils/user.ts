@@ -50,8 +50,7 @@ export function userHasPermission(
   permission: Pick<Permission, "entity" | "action" | "scope">,
 ) {
   if (!user) return false;
-  console.log("Check if user has below permission:");
-  console.log(permission);
+  console.log(`Check permission | ${permission.action} | ${permission.entity} | ${permission.scope} |`);
 
   return user.roles.some((role) =>
     role.permissions.some(
