@@ -1,11 +1,9 @@
-import { PropsWithChildren } from "react";
-
 interface PropTypes {
   modalId: string;
+  children: React.ReactNode;
   className?: string;
   enabled?: boolean;
   title?: string;
-
 }
 
 export function ConfirmationLauncher({
@@ -15,7 +13,7 @@ export function ConfirmationLauncher({
   title,
   children,
   ...rest
-}: PropsWithChildren<PropTypes>) {
+}: PropTypes) {
   return (
     <>
       {enabled === true ? (

@@ -1,10 +1,9 @@
-import { PropsWithChildren } from "react";
-
-interface PropTypes extends PropsWithChildren {
+interface Props {
   label: string;
+  children: React.ReactNode;
 }
 
-export const FormInputTextReadOnly = ({ label, children }: PropTypes) => {
+export const FormInputTextReadOnly = ({ label, children }: Props) => {
   return (
     <div className="py-2.5 space-y-5">
       {/* Grid */}

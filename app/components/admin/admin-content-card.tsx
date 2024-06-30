@@ -1,16 +1,11 @@
-import { PropsWithChildren } from "react";
-
 import { cn } from "#app/utils/misc";
 
-interface IProps {
+interface Props {
+  children: React.ReactNode;
   className?: string;
 }
 
-export const AdminContentCard = ({
-  className,
-  children,
-  ...rest
-}: PropsWithChildren<IProps>) => {
+export const AdminContentCard = ({ className, children, ...rest }: Props) => {
   return (
     <div className="relative overflow-visible">
       <div
