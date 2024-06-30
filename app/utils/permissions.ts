@@ -2,15 +2,12 @@ import type {
   RoutePermissionFunctionArgs,
   ModelPermissionFunctionArgs,
 } from "#app/utils/permissions.types";
+import { Roles } from "#app/validations/role-schema";
 
 const C = "create";
-const R = "read";
+// const R = "read";
 const U = "update";
 const D = "delete";
-
-const ADMIN = "admin";
-const MOD = "moderator";
-const USER = "user";
 
 // ----------------------------------------------------------------------------
 // MODEL PERMISSIONS
@@ -19,31 +16,31 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [
   {
     entity: "country",
     actions: [C, U],
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
     entity: "country",
     actions: [D],
-    roles: [ADMIN],
+    roles: [Roles.ADMIN],
     scope: "any",
   },
   {
     entity: "language",
     actions: [C, U],
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
     entity: "language",
     actions: [D],
-    roles: [ADMIN],
+    roles: [Roles.ADMIN],
     scope: "any",
   },
   {
     entity: "region",
     actions: [C, U, D],
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
   },
 
@@ -56,52 +53,52 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [
 // ROUTE PERMISSIONS
 // ----------------------------------------------------------------------------
 export const routePermissions: RoutePermissionFunctionArgs[] = [
-  // ADMIN DASHBOARD
+  // Roles.ADMIN DASHBOARD
   {
     entity: "/admin",
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   // COUNTRIES
   {
     entity: "/admin/countries",
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
     entity: "/admin/countries/view",
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
     entity: "/admin/countries/edit",
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
-  },    
+  },
   {
     entity: "/admin/countries/new",
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   // LANGUAGES
   {
     entity: "/admin/languages",
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
     entity: "/admin/languages/view",
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
     entity: "/admin/languages/edit",
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
     entity: "/admin/languages/new",
-    roles: [ADMIN, MOD],
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
 
@@ -111,23 +108,23 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   // ROLES
   {
     entity: "/admin/rbac/roles",
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
   },
   {
     entity: "/admin/rbac/roles/view",
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
   },
   // PERMISSIONS
   {
     entity: "/admin/rbac/permissions",
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
   },
   {
     entity: "/admin/rbac/permissions/entity/view",
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
   },
   // --------------------------------------------------------------------------
@@ -137,28 +134,28 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   // REGIONS
   {
     entity: "/admin/regions",
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
   },
   {
     entity: "/admin/regions/view",
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
-  },  
+  },
   {
     entity: "/admin/regions/edit",
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
-  },  
+  },
   {
     entity: "/admin/regions/new",
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
   },
   // SYSTEM
   {
     entity: "/admin/system",
-    roles: ADMIN,
+    roles: Roles.ADMIN,
     scope: "any",
   },
 

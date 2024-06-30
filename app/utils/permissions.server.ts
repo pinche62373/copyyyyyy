@@ -9,11 +9,11 @@ import type {
   ModelPermission,
   ModelPermissionFunctionArgs,
   Permission,
-  Role,
   RoutePermission,
   RoutePermissionFunctionArgs,
 } from "#app/utils/permissions.types";
 import { userHasPermission } from "#app/utils/user";
+import { Role } from "#app/validations/role-schema";
 import { cuid } from "#prisma/seed/seed-utils";
 
 // ----------------------------------------------------------------------------
@@ -176,7 +176,7 @@ export const getPermissionsForRole = (
   role: Role,
 ): Permission[] => {
   const result = permissions.filter((permission) =>
-    permission.roles.includes(role),
+    permission.roles.includes({ name: role }),
   );
 
   return result;

@@ -8,10 +8,13 @@ import adminStyleSheet from "#app/styles/admin.css";
 import { authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { requireRole } from "#app/utils/permissions.server";
+import { Roles } from "#app/validations/role-schema";
 
 // import styles for the admin route
 export const links: LinksFunction = () => [
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: adminStyleSheet, as: "style" }] : []),
+  ...(cssBundleHref
+    ? [{ rel: "stylesheet", href: adminStyleSheet, as: "style" }]
+    : []),
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -21,7 +24,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
   });
 
-  await requireRole(request, ["admin", "moderator"]);
+  await requireRole(request, [Roles.ADMIN, Roles.MODERATOR]);
 
   return null;
 };

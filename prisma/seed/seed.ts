@@ -10,7 +10,7 @@ import {
   getPermissionsForRole,
   getSeedPermissions,
 } from "#app/utils/permissions.server";
-import { Role } from "#app/utils/permissions.types";
+import { Roles } from "#app/validations/role-schema";
 import { cuid, permaLink } from "#prisma/seed/seed-utils";
 import seedConfig from "#prisma/seed/seed.config";
 
@@ -22,19 +22,19 @@ const updatedBy = null;
 
 const accounts = [
   {
-    name: "admin",
+    name: Roles.ADMIN,
     email: "admin@remix.run",
     password: "adminpassword",
     description: "Administrators",
   },
   {
-    name: "moderator",
+    name: Roles.MODERATOR,
     email: "moderator@remix.run",
     password: "moderatorpassword",
     description: "Moderators",
   },
   {
-    name: "user",
+    name: Roles.USER,
     email: "user@remix.run",
     password: "userpassword",
     description: "Users",
@@ -114,23 +114,17 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Roles (ALWAYS) with Permissions (ALWAYS) and _RoleToUSer (DEV ONLY)
   // --------------------------------------------------------------------------
-  const adminPermissions = getPermissionsForRole(
-    seedPermissions,
-    "admin" as unknown as Role,
-  );
+  const adminPermissions = getPermissionsForRole(seedPermissions, Roles.ADMIN);
   const moderatorPermissions = getPermissionsForRole(
     seedPermissions,
-    "moderator" as unknown as Role,
+    Roles.MODERATOR,
   );
-  const userPermissions = getPermissionsForRole(
-    seedPermissions,
-    "user" as unknown as Role,
-  );
+  const userPermissions = getPermissionsForRole(seedPermissions, Roles.USER);
 
   await seed.role([
     {
-      id: cuid("admin"),
-      name: "admin",
+      id: cuid(Roles.ADMIN),
+      name: Roles.ADMIN,
       description: "Administrators",
       _PermissionToRole: adminPermissions.map((permission) => ({
         A: permission.id, // RBAC
@@ -139,7 +133,7 @@ const main = async () => {
         {
           B: cuid(
             accounts
-              .filter((account) => account.name === "admin")
+              .filter((account) => account.name === Roles.ADMIN)
               .map(({ email }) => email)
               .toString(),
           ),
@@ -147,8 +141,8 @@ const main = async () => {
       ],
     },
     {
-      id: cuid("moderator"),
-      name: "moderator",
+      id: cuid(Roles.MODERATOR),
+      name: Roles.MODERATOR,
       description: "Moderators",
       _PermissionToRole: moderatorPermissions.map((permission) => ({
         A: permission.id, // RBAC
@@ -157,7 +151,7 @@ const main = async () => {
         {
           B: cuid(
             accounts
-              .filter((account) => account.name === "moderator")
+              .filter((account) => account.name === Roles.MODERATOR)
               .map(({ email }) => email)
               .toString(),
           ),
@@ -165,8 +159,8 @@ const main = async () => {
       ],
     },
     {
-      id: cuid("user"),
-      name: "user",
+      id: cuid(Roles.USER),
+      name: Roles.USER,
       description: "Users",
       _PermissionToRole: userPermissions.map((permission) => ({
         A: permission.id, // RBAC
@@ -175,7 +169,7 @@ const main = async () => {
         {
           B: cuid(
             accounts
-              .filter((account) => account.name === "user")
+              .filter((account) => account.name === Roles.USER)
               .map(({ email }) => email)
               .toString(),
           ),
@@ -204,7 +198,7 @@ const main = async () => {
         updatedBy,
         createdBy: cuid(
           accounts
-            .filter((account) => account.name === "admin")
+            .filter((account) => account.name === Roles.ADMIN)
             .map(({ email }) => email)
             .toString(),
         ),
@@ -245,7 +239,7 @@ const main = async () => {
         updatedBy,
         createdBy: cuid(
           accounts
-            .filter((account) => account.name === "admin")
+            .filter((account) => account.name === Roles.ADMIN)
             .map(({ email }) => email)
             .toString(),
         ),
@@ -256,7 +250,7 @@ const main = async () => {
           updatedBy,
           createdBy: cuid(
             accounts
-              .filter((account) => account.name === "admin")
+              .filter((account) => account.name === Roles.ADMIN)
               .map(({ email }) => email)
               .toString(),
           ),
