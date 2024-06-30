@@ -6,22 +6,22 @@ type PropTypes =
   | {
       title: string;
       search?: boolean;
-      buttonNewText?: undefined;
-      buttonNewTo?: undefined;
+      buttonText?: undefined;
+      buttonTo?: undefined;
       className?: string;
     }
   | {
       title: string;
       search?: boolean;
-      buttonNewText: string;
-      buttonNewTo: string;
+      buttonText: string;
+      buttonTo: string;
       className?: string;
     };
 
 export const AdminPageTitle = ({
   title,
-  buttonNewText,
-  buttonNewTo,
+  buttonText,
+  buttonTo,
   search = false,
   className,
   ...rest
@@ -74,13 +74,13 @@ export const AdminPageTitle = ({
           {/* End Conditional Search */}
 
           {/* Conditionally render new button BUT ONLY if set AND user has route permission */}
-          {buttonNewText &&
+          {buttonText &&
             userHasPermission(user, {
-              entity: buttonNewTo,
+              entity: buttonTo,
               action: "access",
               scope: "any",
             }) && (
-              <Button type="button" text={buttonNewText} to={buttonNewTo} />
+              <Button type="button" text={buttonText} to={buttonTo} />
             )}
           {/* End Conditional New Button  */}
         </div>

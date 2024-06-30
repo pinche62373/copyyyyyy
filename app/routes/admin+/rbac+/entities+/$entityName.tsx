@@ -134,7 +134,7 @@ export default function Component() {
       <AdminPageTitle
         title={`${entityType} permissions for ${entityName}`}
         buttonText="Close"
-        buttonTarget={permissionCrud.routes.index}
+        buttonTo={permissionCrud.routes.index}
       />
 
       {/* Start Permissions Table*/}
