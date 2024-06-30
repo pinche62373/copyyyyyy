@@ -176,7 +176,7 @@ export const getPermissionsForRole = (
   role: Role,
 ): Permission[] => {
   const result = permissions.filter((permission) =>
-    permission.roles.includes( role ),
+    (permission.roles as unknown as Role[]).includes( role ),
   );
 
   return result;
