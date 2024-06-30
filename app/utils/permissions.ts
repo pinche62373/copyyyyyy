@@ -5,7 +5,6 @@ import type {
 import { Roles } from "#app/validations/role-schema";
 
 const C = "create";
-// const R = "read";
 const U = "update";
 const D = "delete";
 
@@ -72,12 +71,12 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   },
   {
     entity: "/admin/countries/edit",
-    roles: [Roles.ADMIN, Roles.MODERATOR],
+    roles: Roles.ADMIN,
     scope: "any",
   },
   {
     entity: "/admin/countries/new",
-    roles: [Roles.ADMIN, Roles.MODERATOR],
+    roles: Roles.ADMIN,
     scope: "any",
   },
   // LANGUAGES
@@ -93,12 +92,12 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   },
   {
     entity: "/admin/languages/edit",
-    roles: [Roles.ADMIN, Roles.MODERATOR],
+    roles: Roles.ADMIN,
     scope: "any",
   },
   {
     entity: "/admin/languages/new",
-    roles: [Roles.ADMIN, Roles.MODERATOR],
+    roles: Roles.ADMIN,
     scope: "any",
   },
 
@@ -134,12 +133,12 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   // REGIONS
   {
     entity: "/admin/regions",
-    roles: Roles.ADMIN,
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
     entity: "/admin/regions/view",
-    roles: Roles.ADMIN,
+    roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {

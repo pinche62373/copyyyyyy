@@ -176,7 +176,7 @@ export const getPermissionsForRole = (
   role: Role,
 ): Permission[] => {
   const result = permissions.filter((permission) =>
-    permission.roles.includes({ name: role }),
+    permission.roles.includes( role ),
   );
 
   return result;
