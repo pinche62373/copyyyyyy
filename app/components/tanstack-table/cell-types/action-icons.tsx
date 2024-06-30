@@ -32,7 +32,7 @@ export const getCellActionIcons = ({ info, crud, actions }: PropTypes) => {
   return (
     <>
       {/* Edit Button */}
-      {actions.edit === true && (
+      {actions.edit && (
         <IconContainerRound>
           <NavLink to={editUrl} title="Edit">
             <IconEdit />
