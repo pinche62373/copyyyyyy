@@ -4,7 +4,6 @@ import { SidebarFooter } from "#app/components/admin/sidebar/sidebar-footer";
 import { SidebarGroup } from "#app/components/admin/sidebar/sidebar-group";
 import { SidebarLink } from "#app/components/admin/sidebar/sidebar-link";
 import { SidebarSection } from "#app/components/admin/sidebar/sidebar-section";
-import { IconDog } from "#app/components/icons/icon-dog";
 import { IconEye } from "#app/components/icons/icon-eye";
 import { IconHome } from "#app/components/icons/icon-home";
 import { IconMovie } from "#app/components/icons/icon-movie";
@@ -47,17 +46,6 @@ export function AdminSidebar() {
 
               <SidebarLink to="#" nested>
                 Add User
-              </SidebarLink>
-            </SidebarGroup>
-
-            {/* Group: Animals */}
-            <SidebarGroup id="animals" caption="Animals" icon={<IconDog />}>
-              <SidebarLink to="#" nested>
-                Overview
-              </SidebarLink>
-
-              <SidebarLink to="#" nested>
-                Add Animal
               </SidebarLink>
             </SidebarGroup>
 
