@@ -140,8 +140,8 @@ export default function Component() {
     <>
       <AdminPageTitle
         title={crud.plural}
-        buttonText={`New ${crud.singular}`}
-        buttonTarget={`${crud.index}/new`}
+        buttonNewText={`New ${crud.singular}`}
+        buttonNewTo={`${crud.index}/new`}
       />
 
       <AdminContentCard>

@@ -1,30 +1,33 @@
 import { Button } from "#app/components/admin/button";
 import { cn } from "#app/utils/misc";
+import { useUser, userHasPermission } from "#app/utils/user";
 
 type PropTypes =
   | {
       title: string;
       search?: boolean;
-      buttonText?: undefined;
-      buttonTarget?: undefined;
+      buttonNewText?: undefined;
+      buttonNewTo?: undefined;
       className?: string;
     }
   | {
       title: string;
       search?: boolean;
-      buttonText: string;
-      buttonTarget: string;
+      buttonNewText: string;
+      buttonNewTo: string;
       className?: string;
     };
 
 export const AdminPageTitle = ({
   title,
-  buttonText,
-  buttonTarget,
+  buttonNewText,
+  buttonNewTo,
   search = false,
   className,
   ...rest
 }: PropTypes) => {
+  const user = useUser();
+
   return (
     <>
       {/* Header */}
@@ -70,11 +73,16 @@ export const AdminPageTitle = ({
           )}
           {/* End Conditional Search */}
 
-          {/* Conditional Add Button  */}
-          {buttonText && (
-            <Button type="button" text={buttonText} to={buttonTarget} />
-          )}
-          {/* End Conditional Add Button  */}
+          {/* Conditionally render new button BUT ONLY if set AND user has route permission */}
+          {buttonNewText &&
+            userHasPermission(user, {
+              entity: buttonNewTo,
+              action: "access",
+              scope: "any",
+            }) && (
+              <Button type="button" text={buttonNewText} to={buttonNewTo} />
+            )}
+          {/* End Conditional New Button  */}
         </div>
         {/* End Form Group  */}
       </div>
