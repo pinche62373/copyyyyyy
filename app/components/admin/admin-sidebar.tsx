@@ -51,7 +51,7 @@ export function AdminSidebar() {
             </SidebarGroup>
 
             {/* Group: Animals */}
-            <SidebarGroup id="actors" caption="Animals" icon={<IconDog />}>
+            <SidebarGroup id="animals" caption="Animals" icon={<IconDog />}>
               <SidebarLink to="#" nested>
                 Overview
               </SidebarLink>
@@ -68,7 +68,7 @@ export function AdminSidebar() {
             </SidebarLink>
 
             {/* Group: Movies */}
-            <SidebarGroup id="actors" caption="Movies" icon={<IconMovie />}>
+            <SidebarGroup id="movies" caption="Movies" icon={<IconMovie />}>
               <SidebarLink to="#" nested>
                 Overview
               </SidebarLink>
@@ -90,7 +90,7 @@ export function AdminSidebar() {
           <SidebarSection caption="Base Models">
             {/* Group: Actors */}
             <SidebarGroup
-              id="actors-base"
+              id="base-actors"
               caption="Actors"
               icon={<IconUsers />}
             >
@@ -100,7 +100,7 @@ export function AdminSidebar() {
             </SidebarGroup>
 
             {/* Group: General */}
-            <SidebarGroup id="general" caption="General" icon={<IconEye />}>
+            <SidebarGroup id="base-general" caption="General" icon={<IconEye />}>
               <SidebarLink to="/admin/countries" nested>
                 Countries
               </SidebarLink>
