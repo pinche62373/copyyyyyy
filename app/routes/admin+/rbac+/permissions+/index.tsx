@@ -25,16 +25,16 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getPermissions } from "#app/models/permission.server";
-import { getCrud } from "#app/utils/crud";
+import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   flattenPermissions,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
 
-const { crudPermission: crud } = getCrud();
+const { entityCrud, permissionCrud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.index);
+  await requireRoutePermission(request, permissionCrud.routes.index);
 
   const permissions = await getPermissions();
   const flattenedPermissions = flattenPermissions(permissions);
@@ -69,7 +69,7 @@ const columns = [
       getCellLink({
         id: row.original.entity,
         name: row.original.entity,
-        target: "/admin/rbac/permissions/entity",
+        target: entityCrud.routes.index,
       }),
   }),
   columnHelper.accessor("action", {
@@ -144,7 +144,7 @@ export default function Component() {
             onChange={(value: string | number) =>
               setGlobalFilter(String(value))
             }
-            placeholder={`Search ${crud.plural.toLowerCase()}...`}
+            placeholder={`Search ${permissionCrud.plural.toLowerCase()}...`}
           />
           <TableFilterDropdown />
         </TableBar>

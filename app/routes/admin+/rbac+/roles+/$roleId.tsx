@@ -29,12 +29,12 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getRoleWithPermissions } from "#app/models/role.server";
-import { getCrud } from "#app/utils/crud";
+import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-const { crudRole: crud } = getCrud();
+const { roleCrud, entityCrud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, `${crud.index}/view`);
+  await requireRoutePermission(request, roleCrud.routes.view);
 
   const roleId = z.coerce.string().parse(params.roleId);
 
@@ -70,9 +70,9 @@ const columns = [
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: ({ row }) =>
       getCellLink({
-        id: row.original.id,
+        id: row.original.entity,
         name: row.original.entity,
-        target: "/admin/rbac/entities",
+        target: entityCrud.routes.index,
       }),
   }),
   columnHelper.accessor("action", {
@@ -129,7 +129,7 @@ export default function Component() {
   return (
     <>
       {/* Start Database Fields */}
-      <AdminPageTitle title={`View ${crud.singular}`} />
+      <AdminPageTitle title={`View ${roleCrud.singular}`} />
 
       <AdminContentCard className="p-6">
         <FormInputTextReadOnly label="Name">{role.name}</FormInputTextReadOnly>
@@ -139,7 +139,7 @@ export default function Component() {
         </FormInputTextReadOnly>
 
         <FormFooter>
-          <Button type="button" text="Close" to={crud.index} />
+          <Button type="button" text="Close" to={roleCrud.routes.index} />
         </FormFooter>
       </AdminContentCard>
 

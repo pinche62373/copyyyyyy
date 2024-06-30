@@ -12,15 +12,15 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { requireUserId } from "#app/utils/auth.server";
-import { getCrud } from "#app/utils/crud";
+import { getAdminCrud } from "#app/utils/admin-crud";
 import { validatePageId, validateSubmission } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchemaUpdateForm } from "#app/validations/language-schema";
 
-const { crudLanguage: crud } = getCrud();
+const { languageCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, `${crud.index}/edit`);
+  await requireRoutePermission(request, crud.routes.edit);
 
   const languageId = validatePageId(params.languageId, languageSchemaUpdateForm);
 
@@ -34,7 +34,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  await requireRoutePermission(request, `${crud.index}/edit`);
+  await requireRoutePermission(request, crud.routes.edit);
 
   const userId = await requireUserId(request);
 
@@ -51,7 +51,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   return redirectWithSuccess(
-    crud.index,
+    crud.routes.index,
     `${crud.singular} updated successfully`,
   );
 };
@@ -85,7 +85,7 @@ export default function Component() {
           />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to={crud.index} secondary />
+            <Button type="button" text="Cancel" to={crud.routes.index} secondary />
             <Button
               type="submit"
               text="Save"

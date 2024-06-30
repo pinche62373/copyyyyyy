@@ -25,13 +25,13 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getRoles } from "#app/models/role.server";
-import { getCrud } from "#app/utils/crud";
+import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 
-const { crudRole: crud } = getCrud();
+const { roleCrud: crud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.index);
+  await requireRoutePermission(request, crud.routes.index);
 
   const roles = await getRoles();
   
@@ -64,7 +64,7 @@ const columns = [
       getCellLink({
         id: row.original.id,
         name: row.original.name,
-        target: crud.index,
+        target: crud.routes.index,
       }),
   }),
   columnHelper.accessor("description", {

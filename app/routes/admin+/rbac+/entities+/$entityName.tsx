@@ -23,16 +23,19 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getPermissionsByEntityName } from "#app/models/permission.server";
-import { getCrud } from "#app/utils/crud";
+import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   flattenPermissions,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
 
-const { crudPermission: crud } = getCrud();
+const { entityCrud, permissionCrud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, `${crud.index}/entity/view`);
+  await requireRoutePermission(
+    request,
+    entityCrud.routes.view
+  );
 
   const entityName = z.coerce.string().parse(params.entityName);
 
@@ -98,7 +101,7 @@ export default function Component() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([
     {
-      id: "entity", // MUST be here or global filter will not sort by rankingValue
+      id: "action", // MUST be here or global filter will not sort by rankingValue
       desc: false,
     },
   ]);
@@ -131,7 +134,7 @@ export default function Component() {
       <AdminPageTitle
         title={`${entityType} permissions for ${entityName}`}
         buttonText="Close"
-        buttonTarget={crud.index}
+        buttonTarget={permissionCrud.routes.index}
       />
 
       {/* Start Permissions Table*/}

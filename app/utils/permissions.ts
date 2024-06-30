@@ -104,6 +104,12 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   // --------------------------------------------------------------------------
   // RBAC STARTING BELOW
   // --------------------------------------------------------------------------
+  // ENTITIES
+  {
+    entity: "/admin/rbac/entities/view",
+    roles: Roles.ADMIN,
+    scope: "any",
+  },
   // ROLES
   {
     entity: "/admin/rbac/roles",
@@ -118,11 +124,6 @@ export const routePermissions: RoutePermissionFunctionArgs[] = [
   // PERMISSIONS
   {
     entity: "/admin/rbac/permissions",
-    roles: Roles.ADMIN,
-    scope: "any",
-  },
-  {
-    entity: "/admin/rbac/permissions/entity/view",
     roles: Roles.ADMIN,
     scope: "any",
   },

@@ -15,15 +15,15 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { requireUserId } from "#app/utils/auth.server";
-import { getCrud } from "#app/utils/crud";
+import { getAdminCrud } from "#app/utils/admin-crud";
 import { validateSubmission } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaCreateForm } from "#app/validations/country-schema";
 
-const { crudCountry: crud } = getCrud();
+const { countryCrud: crud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, `${crud.index}/new`);
+  await requireRoutePermission(request, crud.routes.new);
 
   const regions = await getRegions();
 
@@ -31,7 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  await requireRoutePermission(request, `${crud.index}/new`);
+  await requireRoutePermission(request, crud.routes.new);
 
   const userId = await requireUserId(request);
 
@@ -52,7 +52,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   return redirectWithSuccess(
-    crud.index,
+    crud.routes.index,
     `${crud.singular} created successfully`,
   );
 };
@@ -88,7 +88,7 @@ export default function Component() {
           />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to={crud.index} secondary />
+            <Button type="button" text="Cancel" to={crud.routes.index} secondary />
             <Button
               type="submit"
               text="Save"

@@ -29,14 +29,14 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getRegions } from "#app/models/region.server";
-import { getCrud } from "#app/utils/crud";
+import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { regionSchemaAdminTable } from "#app/validations/region-schema";
 
-const { crudRegion: crud } = getCrud();
+const { regionCrud: crud } = getAdminCrud();
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await requireRoutePermission(request, crud.index);
+  await requireRoutePermission(request, crud.routes.index);
 
   const regions = await getRegions();
 
@@ -63,7 +63,7 @@ const columns = [
       getCellLink({
         id: row.original.id,
         name: row.original.name,
-        target: crud.index,
+        target: crud.routes.index,
       }),
   }),
   columnHelper.accessor("createdAt", {
@@ -136,7 +136,7 @@ export default function Component() {
       <AdminPageTitle
         title={crud.plural}
         buttonNewText={`New ${crud.singular}`}
-        buttonNewTo={`${crud.index}/new`}
+        buttonNewTo={crud.routes.new}
       />
 
       <AdminContentCard>

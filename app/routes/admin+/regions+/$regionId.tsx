@@ -7,15 +7,15 @@ import { Button } from "#app/components/admin/button";
 import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
 import { getRegion } from "#app/models/region.server";
-import { getCrud } from "#app/utils/crud";
+import { getAdminCrud } from "#app/utils/admin-crud";
 import { validatePageId, timeStampToHuman } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { regionSchemaFull } from "#app/validations/region-schema";
 
-const { crudRegion: crud } = getCrud();
+const { regionCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, `${crud.index}/view`);
+  await requireRoutePermission(request, crud.routes.view);
 
   const regionId = validatePageId(params.regionId, regionSchemaFull);
 
@@ -55,7 +55,7 @@ export default function Component() {
         </FormInputTextReadOnly>
 
         <FormFooter>
-          <Button type="button" text="Close" to={crud.index} />
+          <Button type="button" text="Close" to={crud.routes.index} />
         </FormFooter>
       </AdminContentCard>
     </>
