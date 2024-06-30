@@ -91,7 +91,7 @@ const columns = [
 export default function Component() {
   const { entityName, permissions } = useLoaderData<typeof loader>();
 
-  const entityType = permissions[0].action === "access" ? "Route" : "Model";
+  const entityType = permissions[0].action === "access" ? "route" : "model";
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -132,7 +132,7 @@ export default function Component() {
   return (
     <>
       <AdminPageTitle
-        title={`${entityType} permissions for ${entityName}`}
+        title={`View ${entityType} permissions for ${entityName}`}
         buttonText="Close"
         buttonTo={permissionCrud.routes.index}
       />
