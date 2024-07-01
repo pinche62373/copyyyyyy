@@ -11,8 +11,8 @@ import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
-import { requireUserId } from "#app/utils/auth.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
+import { requireUserId } from "#app/utils/auth.server";
 import { validatePageId, validateSubmission } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchemaUpdateForm } from "#app/validations/language-schema";
@@ -22,7 +22,10 @@ const { languageCrud: crud } = getAdminCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, crud.routes.edit);
 
-  const languageId = validatePageId(params.languageId, languageSchemaUpdateForm);
+  const languageId = validatePageId(
+    params.languageId,
+    languageSchemaUpdateForm,
+  );
 
   const language = await getLanguage({ id: languageId });
 
@@ -85,7 +88,12 @@ export default function Component() {
           />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to={crud.routes.index} secondary />
+            <Button
+              type="button"
+              text="Cancel"
+              to={crud.routes.index}
+              secondary
+            />
             <Button
               type="submit"
               text="Save"

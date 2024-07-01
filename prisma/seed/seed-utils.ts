@@ -1,5 +1,5 @@
 import { copycat } from "@snaplet/copycat";
-import { Store, permissionScalars, roleScalars } from "@snaplet/seed";
+import { Store, permissionScalars, roleScalars } from "@snaplet/seed"
 import invariant from "tiny-invariant";
 
 /**

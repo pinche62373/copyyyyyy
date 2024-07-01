@@ -7,7 +7,7 @@ import { ConfirmationModal } from "#app/components/confirmation-modal";
 import { IconContainerRound } from "#app/components/icon-container-round";
 import { IconEdit } from "#app/components/icons/icon-edit";
 import { IconTrash } from "#app/components/icons/icon-trash";
-import { Crud } from "#app/utils/crud";
+import { Crud } from "#app/utils/admin-crud";
 
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */

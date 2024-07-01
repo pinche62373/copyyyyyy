@@ -14,8 +14,8 @@ import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
-import { requireUserId } from "#app/utils/auth.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
+import { requireUserId } from "#app/utils/auth.server";
 import { validateSubmission } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaCreateForm } from "#app/validations/country-schema";
@@ -88,7 +88,12 @@ export default function Component() {
           />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to={crud.routes.index} secondary />
+            <Button
+              type="button"
+              text="Cancel"
+              to={crud.routes.index}
+              secondary
+            />
             <Button
               type="submit"
               text="Save"
