@@ -50,8 +50,8 @@ jobs:
           cache-dependency-path: ./package.json
           node-version: 20
 
-      - name: 📥 Install deps
-        run: npm install
+      - name: 💃 Setup database
+        uses: ./.github/actions/database
 
       - name: 🔎 Type check
         run: npm run typecheck --if-present

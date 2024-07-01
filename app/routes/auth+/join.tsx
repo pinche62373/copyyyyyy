@@ -22,8 +22,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
   const email = formData.get("email");
+  const username = formData.get("username");
   const password = formData.get("password");
   const redirectTo = safeRedirect(formData.get("redirectTo"), "/");
+
+  if (typeof username !== "string" || username.length === 0) {
+    return json(
+      {
+        errors: {
+          email: null,
+          password: null,
+          username: "Username is required",
+        },
+      },
+      { status: 400 },
+    );
+  }
 
   if (!validateEmail(email)) {
     return json(
@@ -59,7 +73,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     );
   }
 
-  const user = await createUser(email, password);
+  const user = await createUser(email, username, password);
 
   return createUserSession({
     redirectTo,
