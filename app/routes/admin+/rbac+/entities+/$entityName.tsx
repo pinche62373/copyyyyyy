@@ -29,13 +29,10 @@ import {
   requireRoutePermission,
 } from "#app/utils/permissions.server";
 
-const { entityCrud, permissionCrud } = getAdminCrud();
+const { entityCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(
-    request,
-    entityCrud.routes.view
-  );
+  await requireRoutePermission(request, crud.routes.view);
 
   const entityName = z.coerce.string().parse(params.entityName);
 
@@ -133,8 +130,6 @@ export default function Component() {
     <>
       <AdminPageTitle
         title={`View ${entityType} permissions for ${entityName}`}
-        buttonText="Close"
-        buttonTo={permissionCrud.routes.index}
       />
 
       {/* Start Permissions Table*/}

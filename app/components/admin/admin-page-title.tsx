@@ -1,3 +1,5 @@
+import { useNavigate } from "@remix-run/react";
+
 import { Button } from "#app/components/admin/button";
 import { cn } from "#app/utils/misc";
 import { useUser, userHasPermission } from "#app/utils/user";
@@ -5,28 +7,33 @@ import { useUser, userHasPermission } from "#app/utils/user";
 type PropTypes =
   | {
       title: string;
-      search?: boolean;
-      buttonText?: undefined;
-      buttonTo?: undefined;
       className?: string;
+      button?: undefined;
+      search?: boolean;
+      noBackButton?: boolean;
     }
   | {
       title: string;
-      search?: boolean;
-      buttonText: string;
-      buttonTo: string;
       className?: string;
+      button: {
+        title: string;
+        to: string;
+      };
+      search?: boolean;
+      noBackButton?: boolean;
     };
 
 export const AdminPageTitle = ({
   title,
-  buttonText,
-  buttonTo,
+  noBackButton = false,
   search = false,
+  button,
   className,
   ...rest
 }: PropTypes) => {
   const user = useUser();
+  const navigate = useNavigate();
+  const goBack = () => navigate(-1);
 
   return (
     <>
@@ -44,7 +51,7 @@ export const AdminPageTitle = ({
 
         {/* Form Group */}
         <div className="flex sm:justify-end items-center gap-x-2">
-          {/* Conditional Search */}
+          {/* Search */}
           {search && (
             <div className="relative">
               <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-3">
@@ -71,17 +78,27 @@ export const AdminPageTitle = ({
               />
             </div>
           )}
-          {/* End Conditional Search */}
+          {/* End Search */}
 
-          {/* Conditionally render new button BUT ONLY if set AND user has route permission */}
-          {buttonText &&
+          {/* Back Button */}
+          {!noBackButton && (
+            <Button
+              text="Back"
+              type="button"
+              secondary
+              onClick={goBack}
+              className="size-sm px-3"
+            />
+          )}
+          {/* End Back Button */}
+
+          {/* Button */}
+          {button &&
             userHasPermission(user, {
-              entity: buttonTo,
+              entity: button.to,
               action: "access",
               scope: "any",
-            }) && (
-              <Button type="button" text={buttonText} to={buttonTo} />
-            )}
+            }) && <Button type="button" text={button.title} to={button.to} />}
           {/* End Conditional New Button  */}
         </div>
         {/* End Form Group  */}

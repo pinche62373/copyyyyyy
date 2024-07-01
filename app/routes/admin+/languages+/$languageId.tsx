@@ -3,12 +3,10 @@ import { useLoaderData } from "@remix-run/react";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import { Button } from "#app/components/admin/button";
-import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
 import { getLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
-import { validatePageId, timeStampToHuman } from "#app/utils/misc";
+import { timeStampToHuman, validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchemaFull } from "#app/validations/language-schema";
 
@@ -53,10 +51,6 @@ export default function Component() {
             </>
           )}
         </FormInputTextReadOnly>
-
-        <FormFooter>
-          <Button type="button" text="Close" to={crud.routes.index} />
-        </FormFooter>
       </AdminContentCard>
     </>
   );

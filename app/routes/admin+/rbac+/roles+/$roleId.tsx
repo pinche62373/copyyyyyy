@@ -14,8 +14,6 @@ import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import { Button } from "#app/components/admin/button";
-import { FormFooter } from "#app/components/admin/form/form-footer";
 import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
 import TanstackTable from "#app/components/tanstack-table";
 import {
@@ -137,14 +135,10 @@ export default function Component() {
         <FormInputTextReadOnly label="Description">
           {role.description}
         </FormInputTextReadOnly>
-
-        <FormFooter>
-          <Button type="button" text="Close" to={roleCrud.routes.index} />
-        </FormFooter>
       </AdminContentCard>
 
       {/* Start Permissions Table*/}
-      <AdminPageTitle title="Permissions" className="pt-4" />
+      <AdminPageTitle title="Permissions" className="pt-4" noBackButton/>
 
       <AdminContentCard>
         <TableBar>
