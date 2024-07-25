@@ -6,10 +6,13 @@ import { IconHeart } from "#app/components/icons/icon-heart";
 import { IconLogout } from "#app/components/icons/icon-logout";
 import { IconUser } from "#app/components/icons/icon-user";
 import { AUTH_LOGOUT_ROUTE } from "#app/utils/constants";
+import { useUser } from "#app/utils/user";
 
 import { DarkModeToggler } from "../darkmode-toggler";
 
 export const AdminHeader = () => {
+  const user = useUser()
+
   return (
     <header className="lg:ms-[260px] fixed top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 bg-white border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
       {/* Global Div */}
@@ -60,6 +63,7 @@ export const AdminHeader = () => {
                   id="@@id"
                   type="button"
                   className="size-[38px] inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+                  title={user.email}
                 >
                   <IconUser />
                 </button>
