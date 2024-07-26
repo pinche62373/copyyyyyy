@@ -71,7 +71,7 @@ export default function Component() {
       cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
     }),
     columnHelper.accessor("name", {
-      header: () => <span>Name</span>,
+      header: "Name",
       filterFn: "fuzzy", //using our custom fuzzy filter function
       sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
       cell: ({ row }) =>
@@ -82,12 +82,12 @@ export default function Component() {
         }),
     }),
     columnHelper.accessor("createdAt", {
-      header: () => <span>Created</span>,
+      header: "Created",
       enableGlobalFilter: false,
       cell: (info) => getCellCreatedAt(info),
     }),
     columnHelper.accessor("updatedAt", {
-      header: () => <span>Updated</span>,
+      header: "Updated",
       enableGlobalFilter: false,
       cell: (info) => getCellUpdatedAt(info),
     }),

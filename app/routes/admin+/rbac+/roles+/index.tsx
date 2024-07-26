@@ -57,7 +57,7 @@ const columns = [
     cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("name", {
-    header: () => <span>Name</span>,
+    header: "Name",
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: ({ row }) =>
@@ -68,7 +68,7 @@ const columns = [
       }),
   }),
   columnHelper.accessor("description", {
-    header: () => <span>Description</span>,
+    header: "Description",
     enableGlobalFilter: true,
     enableSorting: false,
     cell: (info) => info.getValue(),

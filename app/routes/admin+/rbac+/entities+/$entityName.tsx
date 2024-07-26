@@ -68,18 +68,18 @@ const columns = [
     cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("action", {
-    header: () => <span>Action</span>,
+    header: "Action",
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("scope", {
-    header: () => <span>Scope</span>,
+    header: "Scope",
     enableGlobalFilter: true,
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("role", {
-    header: () => <span>Role</span>,
+    header: "Role",
     enableGlobalFilter: true,
     cell: (info) => info.getValue(),
   }),
