@@ -13,3 +13,11 @@
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+/* 
+  Tables
+*/
+.table-column-fit-content {
+  width: 1%;
+  white-space: nowrap;
+}

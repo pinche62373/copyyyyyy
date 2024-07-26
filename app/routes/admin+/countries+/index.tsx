@@ -65,6 +65,9 @@ export default function Component() {
       header: "#",
       enableSorting: false,
       enableGlobalFilter: false,
+      meta: {
+        className: "table-column-fit-content",
+      },
       cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
     }),
     columnHelper.accessor("name", {
@@ -99,6 +102,9 @@ export default function Component() {
             header: "Actions",
             enableSorting: false,
             enableGlobalFilter: false,
+            meta: {
+              className: "table-column-fit-content",
+            },
             cell: (info) =>
               tableCellActions({
                 info,

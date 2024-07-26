@@ -12,7 +12,11 @@ const THead = () => {
         {table.getHeaderGroups().map((x) => {
           return x.headers.map((header) => {
             return (
-              <th key={header.id} scope="col" className="min-w-[20px]">
+              <th
+                key={header.id}
+                scope="col"
+                className={header.column.columnDef.meta?.className}
+              >
                 {header.isPlaceholder ? null : (
                   <div className="flex">
                     <div className="relative inline-flex w-full">

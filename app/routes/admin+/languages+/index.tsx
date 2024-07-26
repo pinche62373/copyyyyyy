@@ -50,8 +50,9 @@ export default function Component() {
 
   const user = useUser();
 
-  const columnHelper = createColumnHelper<z.infer<typeof languageSchemaAdminTable>>();
-  
+  const columnHelper =
+    createColumnHelper<z.infer<typeof languageSchemaAdminTable>>();
+
   const userActions = userTableCellActions({
     user,
     route: crud.routes.index,
@@ -64,6 +65,9 @@ export default function Component() {
       header: "#",
       enableSorting: false,
       enableGlobalFilter: false,
+      meta: {
+        className: "table-column-fit-content",
+      },
       cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
     }),
     columnHelper.accessor("name", {
@@ -93,6 +97,9 @@ export default function Component() {
             header: "Actions",
             enableSorting: false,
             enableGlobalFilter: false,
+            meta: {
+              className: "table-column-fit-content",
+            },
             cell: (info) =>
               tableCellActions({
                 info,
