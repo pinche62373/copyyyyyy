@@ -6,7 +6,7 @@ interface PropTypes {
   target: string;
 }
 
-export const getCellLink = ({ id, name, target }: PropTypes) => {
+export const tableCellLink = ({ id, name, target }: PropTypes) => {
   id = encodeURIComponent(id) // so we can use both cuids and strings
 
   return (

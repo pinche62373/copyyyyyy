@@ -16,11 +16,11 @@ import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import TanstackTable from "#app/components/tanstack-table";
 import {
-  getCellCreatedAt,
-  getCellLink,
-  getCellTypeVisibleRowIndex,
-  getCellUpdatedAt,
   tableCellActions,
+  tableCellCreatedAt,
+  tableCellLink,
+  tableCellUpdatedAt,
+  tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/fuzzy-sort";
@@ -74,14 +74,14 @@ export default function Component() {
           className: "table-column-fit-content",
         },
       },
-      cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
+      cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
     }),
     columnHelper.accessor("name", {
       header: "Name",
       filterFn: "fuzzy", //using our custom fuzzy filter function
       sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
       cell: ({ row }) =>
-        getCellLink({
+        tableCellLink({
           id: row.original.id,
           name: row.original.name,
           target: crud.routes.index,
@@ -95,12 +95,12 @@ export default function Component() {
     columnHelper.accessor("createdAt", {
       header: "Created",
       enableGlobalFilter: false,
-      cell: (info) => getCellCreatedAt(info),
+      cell: (info) => tableCellCreatedAt(info),
     }),
     columnHelper.accessor("updatedAt", {
       header: "Updated",
       enableGlobalFilter: false,
-      cell: (info) => getCellUpdatedAt(info),
+      cell: (info) => tableCellUpdatedAt(info),
     }),
     ...(userActions
       ? [
@@ -113,8 +113,8 @@ export default function Component() {
                 className: "table-column-fit-content",
               },
               cellProps: {
-                className: "text-center"
-              }
+                className: "text-center",
+              },
             },
             cell: (info) =>
               tableCellActions({

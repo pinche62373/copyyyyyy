@@ -15,7 +15,7 @@ import { z } from "zod";
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import TanstackTable from "#app/components/tanstack-table";
-import { getCellTypeVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
+import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/fuzzy-sort";
 import { TableBar } from "#app/components/tanstack-table/TableBar";
@@ -74,7 +74,7 @@ const columns = [
         className: "table-column-fit-content",
       },
     },    
-    cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
+    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("action", {
     header: "Action",

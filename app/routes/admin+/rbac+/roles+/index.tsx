@@ -15,8 +15,8 @@ import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import TanstackTable from "#app/components/tanstack-table";
 import {
-  getCellLink,
-  getCellTypeVisibleRowIndex,
+  tableCellLink,
+  tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/fuzzy-sort";
@@ -63,14 +63,14 @@ const columns = [
         className: "table-column-fit-content",
       },
     },    
-    cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
+    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("name", {
     header: "Name",
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: ({ row }) =>
-      getCellLink({
+      tableCellLink({
         id: row.original.id,
         name: row.original.name,
         target: crud.routes.index,

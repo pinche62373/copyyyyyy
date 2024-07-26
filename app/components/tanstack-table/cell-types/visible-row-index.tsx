@@ -7,7 +7,7 @@ interface PropTypes {
   table: Table<any>;
 }
 
-export const getCellTypeVisibleRowIndex = ({ row, table }: PropTypes) => {
+export const tableCellVisibleRowIndex = ({ row, table }: PropTypes) => {
   return (
     (table
       .getSortedRowModel()
