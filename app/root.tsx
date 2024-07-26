@@ -139,9 +139,11 @@ export default function AppWithProviders() {
 export function ErrorBoundary() {
   const data = useRouteLoaderData<typeof loader>("root");
 
+  const theme = data?.theme || Theme.LIGHT
+
   return (
-    <ThemeProvider specifiedTheme={data!.theme}>
-      <Document theme={data?.theme}>
+    <ThemeProvider specifiedTheme={theme}>
+      <Document theme={theme}>
         <GeneralErrorBoundary />
       </Document>
     </ThemeProvider>
