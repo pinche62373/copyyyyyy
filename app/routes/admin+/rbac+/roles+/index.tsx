@@ -26,6 +26,10 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getRoles } from "#app/models/role.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
+import {
+  ADMIN_TABLE_PAGE_INDEX,
+  ADMIN_TABLE_PAGE_SIZE,
+} from "#app/utils/constants";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 
 const { roleCrud: crud } = getAdminCrud();
@@ -34,7 +38,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, crud.routes.index);
 
   const roles = await getRoles();
-  
+
   return { roles };
 }
 
@@ -79,8 +83,8 @@ export default function Component() {
   const { roles } = useLoaderData<typeof loader>();
 
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 20,
+    pageIndex: ADMIN_TABLE_PAGE_INDEX,
+    pageSize: ADMIN_TABLE_PAGE_SIZE,
   });
 
   const [globalFilter, setGlobalFilter] = useState("");

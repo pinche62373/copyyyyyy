@@ -28,7 +28,12 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getRoleWithPermissions } from "#app/models/role.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
+import {
+  ADMIN_TABLE_PAGE_INDEX,
+  ADMIN_TABLE_PAGE_SIZE,
+} from "#app/utils/constants";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+
 const { roleCrud, entityCrud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -89,8 +94,8 @@ export default function Component() {
   const { role } = useLoaderData<typeof loader>();
 
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 20,
+    pageIndex: ADMIN_TABLE_PAGE_INDEX,
+    pageSize: ADMIN_TABLE_PAGE_SIZE,
   });
 
   const [globalFilter, setGlobalFilter] = useState("");
@@ -138,7 +143,7 @@ export default function Component() {
       </AdminContentCard>
 
       {/* Start Permissions Table*/}
-      <AdminPageTitle title="Permissions" className="pt-4" noBackButton/>
+      <AdminPageTitle title="Permissions" className="pt-4" noBackButton />
 
       <AdminContentCard>
         <TableBar>

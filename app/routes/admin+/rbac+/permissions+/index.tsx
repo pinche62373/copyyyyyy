@@ -27,6 +27,10 @@ import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInpu
 import { getPermissions } from "#app/models/permission.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
+  ADMIN_TABLE_PAGE_INDEX,
+  ADMIN_TABLE_PAGE_SIZE,
+} from "#app/utils/constants";
+import {
   flattenPermissions,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
@@ -98,8 +102,8 @@ export default function Component() {
   const { flattenedPermissions } = useLoaderData<typeof loader>();
 
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 20,
+    pageIndex: ADMIN_TABLE_PAGE_INDEX,
+    pageSize: ADMIN_TABLE_PAGE_SIZE,
   });
 
   const [globalFilter, setGlobalFilter] = useState("");

@@ -25,6 +25,10 @@ import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInpu
 import { getPermissionsByEntityName } from "#app/models/permission.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
+  ADMIN_TABLE_PAGE_INDEX,
+  ADMIN_TABLE_PAGE_SIZE,
+} from "#app/utils/constants";
+import {
   flattenPermissions,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
@@ -91,8 +95,8 @@ export default function Component() {
   const entityType = permissions[0].action === "access" ? "route" : "model";
 
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 20,
+    pageIndex: ADMIN_TABLE_PAGE_INDEX,
+    pageSize: ADMIN_TABLE_PAGE_SIZE,
   });
 
   const [globalFilter, setGlobalFilter] = useState("");

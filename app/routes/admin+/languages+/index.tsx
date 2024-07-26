@@ -31,6 +31,10 @@ import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInpu
 import { getLanguages } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { userTableCellActions } from "#app/utils/admin-table";
+import {
+  ADMIN_TABLE_PAGE_INDEX,
+  ADMIN_TABLE_PAGE_SIZE,
+} from "#app/utils/constants";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { useUser } from "#app/utils/user";
 import { languageSchemaAdminTable } from "#app/validations/language-schema";
@@ -112,8 +116,8 @@ export default function Component() {
   ];
 
   const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 20,
+    pageIndex: ADMIN_TABLE_PAGE_INDEX,
+    pageSize: ADMIN_TABLE_PAGE_SIZE,
   });
 
   const [globalFilter, setGlobalFilter] = useState("");

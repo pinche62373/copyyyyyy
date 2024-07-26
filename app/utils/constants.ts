@@ -8,3 +8,7 @@ export const AUTH_LOGOUT_ROUTE = "/auth/logout";
 // slug
 export const SLUG_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyz";
 export const SLUG_LENGTH = 5;
+
+// tables
+export const ADMIN_TABLE_PAGE_INDEX=0
+export const ADMIN_TABLE_PAGE_SIZE=20
