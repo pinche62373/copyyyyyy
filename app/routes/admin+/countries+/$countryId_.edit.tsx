@@ -80,7 +80,7 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title={`Edit ${crud.singular}`} noBackButton/>
+      <AdminPageTitle title={`Edit ${crud.singular}`} />
 
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
@@ -102,7 +102,12 @@ export default function Component() {
           />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to={crud.routes.index} secondary />
+            <Button
+              type="button"
+              text="Cancel"
+              to={crud.routes.index}
+              secondary
+            />
             <Button
               type="submit"
               text="Save"

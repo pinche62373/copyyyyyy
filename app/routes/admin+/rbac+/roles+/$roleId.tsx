@@ -69,7 +69,7 @@ const columns = [
       headerProps: {
         className: "table-column-fit-content",
       },
-    },    
+    },
     cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("entity", {
@@ -148,7 +148,7 @@ export default function Component() {
       </AdminContentCard>
 
       {/* Start Permissions Table*/}
-      <AdminPageTitle title="Permissions" className="pt-4" noBackButton />
+      <AdminPageTitle title="Permissions" className="pt-4" />
 
       <AdminContentCard>
         <TableBar>

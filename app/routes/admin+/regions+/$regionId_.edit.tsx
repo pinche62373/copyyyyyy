@@ -70,7 +70,7 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title={`Edit ${crud.singular}`} noBackButton />
+      <AdminPageTitle title={`Edit ${crud.singular}`} />
 
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>

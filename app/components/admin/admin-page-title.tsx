@@ -1,5 +1,3 @@
-import { useNavigate } from "@remix-run/react";
-
 import { Button } from "#app/components/admin/button";
 import { cn } from "#app/utils/misc";
 import { useUser, userHasPermission } from "#app/utils/user";
@@ -10,7 +8,6 @@ type PropTypes =
       className?: string;
       button?: undefined;
       search?: boolean;
-      noBackButton?: boolean;
     }
   | {
       title: string;
@@ -20,20 +17,16 @@ type PropTypes =
         to: string;
       };
       search?: boolean;
-      noBackButton?: boolean;
     };
 
 export const AdminPageTitle = ({
   title,
-  noBackButton = false,
   search = false,
   button,
   className,
   ...rest
 }: PropTypes) => {
   const user = useUser();
-  const navigate = useNavigate();
-  const goBack = () => navigate(-1);
 
   return (
     <>
@@ -79,18 +72,6 @@ export const AdminPageTitle = ({
             </div>
           )}
           {/* End Search */}
-
-          {/* Back Button */}
-          {!noBackButton && (
-            <Button
-              text="Back"
-              type="button"
-              secondary
-              onClick={goBack}
-              className="size-sm px-3"
-            />
-          )}
-          {/* End Back Button */}
 
           {/* Button */}
           {button &&
