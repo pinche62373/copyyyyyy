@@ -15,7 +15,7 @@ const THead = () => {
               <th
                 key={header.id}
                 scope="col"
-                className={header.column.columnDef.meta?.className}
+                className={header.column.columnDef.meta?.headerProps?.className}
               >
                 {header.isPlaceholder ? null : (
                   <div className="flex">

@@ -65,6 +65,11 @@ const columns = [
     header: "#",
     enableSorting: false,
     enableGlobalFilter: false,
+    meta: {
+      headerProps: {
+        className: "table-column-fit-content",
+      },
+    },    
     cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("entity", {

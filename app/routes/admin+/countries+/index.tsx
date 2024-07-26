@@ -70,7 +70,9 @@ export default function Component() {
       enableSorting: false,
       enableGlobalFilter: false,
       meta: {
-        className: "table-column-fit-content",
+        headerProps: {
+          className: "table-column-fit-content",
+        },
       },
       cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
     }),
@@ -107,7 +109,12 @@ export default function Component() {
             enableSorting: false,
             enableGlobalFilter: false,
             meta: {
-              className: "table-column-fit-content",
+              headerProps: {
+                className: "table-column-fit-content",
+              },
+              cellProps: {
+                className: "text-center"
+              }
             },
             cell: (info) =>
               tableCellActions({
