@@ -12,16 +12,20 @@ import { Crud } from "#app/utils/admin-crud";
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 // -----------------------------------------------------
-interface PropTypes {
+interface TableCellActionsFunctionArgs {
   info: CellContext<any, string>;
   crud: Crud;
   actions: {
-    edit: boolean;
-    delete: boolean;
+    edit?: boolean;
+    delete?: boolean;
   };
 }
 
-export const getCellActionIcons = ({ info, crud, actions }: PropTypes) => {
+export const tableCellActions = ({
+  info,
+  crud,
+  actions,
+}: TableCellActionsFunctionArgs) => {
   const editUrl = `${info.row.original.id}/edit`;
   const deleteFormId = "delete-form-" + info.row.original.id;
   const confirmDeleteId = "confirm-" + deleteFormId;

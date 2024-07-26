@@ -16,11 +16,11 @@ import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import TanstackTable from "#app/components/tanstack-table";
 import {
-  getCellActionIcons,
   getCellCreatedAt,
   getCellLink,
   getCellTypeVisibleRowIndex,
   getCellUpdatedAt,
+  tableCellActions,
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/fuzzy-sort";
@@ -30,7 +30,9 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getLanguages } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
+import { userTableCellActions } from "#app/utils/admin-table";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+import { useUser } from "#app/utils/user";
 import { languageSchemaAdminTable } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
@@ -43,57 +45,64 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return { languages };
 };
 
-type Language = z.infer<typeof languageSchemaAdminTable>;
-
-const columnHelper = createColumnHelper<Language>();
-
-const columns = [
-  columnHelper.display({
-    id: "index",
-    header: "#",
-    enableSorting: false,
-    enableGlobalFilter: false,
-    cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
-  }),
-  columnHelper.accessor("name", {
-    header: () => <span>Name</span>,
-    filterFn: "fuzzy", //using our custom fuzzy filter function
-    sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: ({ row }) =>
-      getCellLink({
-        id: row.original.id,
-        name: row.original.name,
-        target: crud.routes.index,
-      }),
-  }),
-  columnHelper.accessor("createdAt", {
-    header: () => <span>Created</span>,
-    enableGlobalFilter: false,
-    cell: (info) => getCellCreatedAt(info),
-  }),
-  columnHelper.accessor("updatedAt", {
-    header: () => <span>Updated</span>,
-    enableGlobalFilter: false,
-    cell: (info) => getCellUpdatedAt(info),
-  }),
-  columnHelper.display({
-    header: "Actions",
-    enableSorting: false,
-    enableGlobalFilter: false,
-    cell: (info) =>
-      getCellActionIcons({
-        info,
-        crud,
-        actions: {
-          edit: true,
-          delete: false,
-        },
-      }),
-  }),
-];
-
 export default function Component() {
   const { languages } = useLoaderData<typeof loader>();
+
+  const user = useUser();
+
+  const columnHelper = createColumnHelper<z.infer<typeof languageSchemaAdminTable>>();
+  
+  const userActions = userTableCellActions({
+    user,
+    route: crud.routes.index,
+    actions: "edit",
+  });
+
+  const columns = [
+    columnHelper.display({
+      id: "index",
+      header: "#",
+      enableSorting: false,
+      enableGlobalFilter: false,
+      cell: ({ row, table }) => getCellTypeVisibleRowIndex({ row, table }),
+    }),
+    columnHelper.accessor("name", {
+      header: () => <span>Name</span>,
+      filterFn: "fuzzy", //using our custom fuzzy filter function
+      sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
+      cell: ({ row }) =>
+        getCellLink({
+          id: row.original.id,
+          name: row.original.name,
+          target: crud.routes.index,
+        }),
+    }),
+    columnHelper.accessor("createdAt", {
+      header: () => <span>Created</span>,
+      enableGlobalFilter: false,
+      cell: (info) => getCellCreatedAt(info),
+    }),
+    columnHelper.accessor("updatedAt", {
+      header: () => <span>Updated</span>,
+      enableGlobalFilter: false,
+      cell: (info) => getCellUpdatedAt(info),
+    }),
+    ...(userActions
+      ? [
+          columnHelper.display({
+            header: "Actions",
+            enableSorting: false,
+            enableGlobalFilter: false,
+            cell: (info) =>
+              tableCellActions({
+                info,
+                crud,
+                actions: userActions,
+              }),
+          }),
+        ]
+      : []),
+  ];
 
   const [pagination, setPagination] = useState({
     pageIndex: 0,
