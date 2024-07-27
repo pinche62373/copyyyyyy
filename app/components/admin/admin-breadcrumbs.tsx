@@ -48,7 +48,8 @@ export const AdminBreadcrumbs = ({ ...props }) => {
                   </svg>
                 )}
                 {/* Render a link except for a single OR the last crumb */}
-                {i + 1 < breadcrumbs.length ? (
+                {i + 1 < breadcrumbs.length &&
+                !Object.prototype.hasOwnProperty.call(crumb, "noLink") ? (
                   <Link
                     itemProp="item"
                     to={crumb.key}

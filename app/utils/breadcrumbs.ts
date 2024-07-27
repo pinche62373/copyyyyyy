@@ -2,11 +2,15 @@ import { UIMatch } from "@remix-run/react";
 
 /**
  * Create custom breadcrumb routes for dynamic pages.
- * 
- * TODO move Home rename out of this function
+ *
+ * TODO move initial result out of this function
  */
 export const dynamicBreadcrumbRoutes = (routeMatches: UIMatch[]) => {
-  const result = [{ path: "/admin", breadcrumb: "Home" }];
+  const result = [
+    { path: "/admin", breadcrumb: "Home", props: {} },
+    { path: "/admin/rbac", props: { noLink: true } },
+    { path: "/admin/rbac/entities", props: { noLink: true } },
+  ];
 
   const activeRoute = routeMatches[routeMatches.length - 1];
 
@@ -29,6 +33,7 @@ export const dynamicBreadcrumbRoutes = (routeMatches: UIMatch[]) => {
   result.push({
     path: activeRoute.pathname.replace(regexDynamicPagePath, "$1"),
     breadcrumb: activeRouteData[modelName].name,
+    props: {},
   });
 
   return result;
