@@ -1,5 +1,6 @@
 import { Form } from "@remix-run/react";
 
+import { AdminBreadcrumbs } from "#app/components/admin/admin-breadcrumbs";
 import { IconCog } from "#app/components/icons/icon-cog";
 import { IconFolder } from "#app/components/icons/icon-folder";
 import { IconHeart } from "#app/components/icons/icon-heart";
@@ -11,7 +12,7 @@ import { useUser } from "#app/utils/user";
 import { DarkModeToggler } from "../darkmode-toggler";
 
 export const AdminHeader = () => {
-  const user = useUser()
+  const user = useUser();
 
   return (
     <header className="lg:ms-[260px] fixed top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 bg-white border-b border-gray-200 dark:bg-neutral-800 dark:border-neutral-700">
@@ -22,6 +23,10 @@ export const AdminHeader = () => {
       >
         {/* Menu Left */}
         <div className="xl:col-span-1 flex items-center md:gap-x-3">
+          <div className="items-left hidden lg:block">
+            <AdminBreadcrumbs />
+          </div>
+
           <div className="lg:hidden">
             {/* Sidebar Toggle */}
             <button
