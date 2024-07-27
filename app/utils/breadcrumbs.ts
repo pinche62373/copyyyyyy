@@ -1,40 +1,45 @@
 import { UIMatch } from "@remix-run/react";
 
+export interface CustomBreadcrumbRoute {
+  path: string;
+  breadcrumb?: string | null;
+  props?: {
+    noLink?: boolean;
+  };
+}
+
 /**
- * Create custom breadcrumb routes for dynamic pages.
+ * Returns enriched custom breadcrumb routes object:
  *
- * TODO move initial result out of this function
+ * - Replacing record id with record name for dynamic pages
  */
-export const dynamicBreadcrumbRoutes = (routeMatches: UIMatch[]) => {
-  const result = [
-    { path: "/admin", breadcrumb: "Home", props: {} },
-    { path: "/admin/rbac", props: { noLink: true } },
-    { path: "/admin/rbac/entities", props: { noLink: true } },
-  ];
+export const enhanceCustomBreadcrumbRoutes = (
+  routes: CustomBreadcrumbRoute[],
+  routeMatches: UIMatch[],
+): CustomBreadcrumbRoute[] => {
+  const activeRouteMatch = routeMatches[routeMatches.length - 1];
 
-  const activeRoute = routeMatches[routeMatches.length - 1];
+  const regexDynamicPage = activeRouteMatch.id.match(/\/\$([a-z]+)Id/);
 
-  const regexMatches = activeRoute.id.match(/\/\$([a-z]+)Id/);
-
-  if (!regexMatches) {
-    return result; // not a dynamic page
+  if (!regexDynamicPage) {
+    return routes; // not a dynamic page
   }
 
-  const modelName = regexMatches[1];
+  const modelName = regexDynamicPage[1];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const activeRouteData = activeRoute.data as any;
+  const activeRouteData = activeRouteMatch.data as any;
 
   // https://regex101.com/r/UhtWVi/1
   const regexDynamicPagePath = new RegExp(
     String.raw`(.+${activeRouteData[modelName].id}).*$`,
   );
 
-  result.push({
-    path: activeRoute.pathname.replace(regexDynamicPagePath, "$1"),
+  routes.push({
+    path: activeRouteMatch.pathname.replace(regexDynamicPagePath, "$1"),
     breadcrumb: activeRouteData[modelName].name,
     props: {},
   });
 
-  return result;
+  return routes;
 };

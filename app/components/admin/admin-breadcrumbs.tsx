@@ -2,14 +2,24 @@ import { Link, useMatches } from "@remix-run/react";
 import { Fragment, ReactElement } from "react";
 import useBreadcrumbs, { BreadcrumbData } from "use-react-router-breadcrumbs";
 
-import { dynamicBreadcrumbRoutes } from "#app/utils/breadcrumbs";
+import {
+  CustomBreadcrumbRoute,
+  enhanceCustomBreadcrumbRoutes,
+} from "#app/utils/breadcrumbs";
 
-export const AdminBreadcrumbs = ({ ...props }) => {
+interface AdminBreadcrumbsFunctionArgs {
+  routes: CustomBreadcrumbRoute[];
+}
+
+export const AdminBreadcrumbs = ({
+  routes,
+  ...props
+}: AdminBreadcrumbsFunctionArgs) => {
   const routeMatches = useMatches();
 
-  const breadcrumbs = useBreadcrumbs(dynamicBreadcrumbRoutes(routeMatches), {
-    excludePaths: ["/"],
-  });
+  const breadcrumbs = useBreadcrumbs(
+    enhanceCustomBreadcrumbRoutes(routes, routeMatches),
+  );
 
   return (
     <nav className="ml-5 mt-1">

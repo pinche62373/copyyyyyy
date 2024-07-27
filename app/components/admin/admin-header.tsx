@@ -24,7 +24,14 @@ export const AdminHeader = () => {
         {/* Menu Left */}
         <div className="xl:col-span-1 flex items-center md:gap-x-3">
           <div className="items-left hidden lg:block">
-            <AdminBreadcrumbs />
+            <AdminBreadcrumbs
+              routes={[
+                { path: "/", breadcrumb: null },
+                { path: "/admin", breadcrumb: "Home" },
+                { path: "/admin/rbac", props: { noLink: true } },
+                { path: "/admin/rbac/entities", props: { noLink: true } },
+              ]}
+            />
           </div>
 
           <div className="lg:hidden">
