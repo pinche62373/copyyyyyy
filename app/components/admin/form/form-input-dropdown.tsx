@@ -1,6 +1,7 @@
 import { type FormMetadata } from "@conform-to/react";
 import { clsx } from "clsx";
 import Select from "react-select";
+import { useHydrated } from "remix-utils/use-hydrated";
 
 // https://www.jussivirtanen.fi/writing/styling-react-select-with-tailwind
 const controlStyles = {
@@ -52,6 +53,9 @@ export const FormInputDropdown = ({
   items,
   defaultValue,
 }: PropTypes) => {
+  // https://github.com/JedWatson/react-select/issues/4706#issuecomment-1483820554
+  const isHydrated = useHydrated();
+
   const fieldName = label.toLowerCase() + "Id"; // e.g. `regionId`
 
   const options = items.map((item) => {
@@ -79,65 +83,68 @@ export const FormInputDropdown = ({
 
         {/* Test Col */}
         <div className="mt-0.5 sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
-          <Select
-            name={fieldName}
-            placeholder={`Select a ${label.toLowerCase()}...`}
-            options={options}
-            defaultValue={defaultOption}
-            unstyled
-            styles={{
-              input: (base) => ({
-                ...base,
-                fontSize: "14px",
-                "input:focus": {
-                  boxShadow: "none",
-                },
-              }),
-              // On mobile, the label will truncate automatically, so we want to
-              // override that behaviour.
-              multiValueLabel: (base) => ({
-                ...base,
-                whiteSpace: "normal",
-                overflow: "visible",
-              }),
-              control: (base) => ({
-                ...base,
-                fontSize: "14px",
-                transition: "none",
-              }),
-              option: (base) => ({
-                ...base,
-                fontSize: "14px",
-              }),
-            }}
-            classNames={{
-              control: ({ isFocused }) =>
-                clsx(
-                  isFocused ? controlStyles.focus : controlStyles.nonFocus,
-                  controlStyles.base,
-                ),
-              placeholder: () => placeholderStyles,
-              input: () => selectInputStyles,
-              valueContainer: () => valueContainerStyles,
-              singleValue: () => singleValueStyles,
-              multiValue: () => multiValueStyles,
-              multiValueLabel: () => multiValueLabelStyles,
-              multiValueRemove: () => multiValueRemoveStyles,
-              indicatorsContainer: () => indicatorsContainerStyles,
-              clearIndicator: () => clearIndicatorStyles,
-              indicatorSeparator: () => indicatorSeparatorStyles,
-              dropdownIndicator: () => dropdownIndicatorStyles,
-              menu: () => menuStyles,
-              groupHeading: () => groupHeadingStyles,
-              option: ({ isFocused, isSelected }) =>
-                clsx(
-                  isFocused && optionStyles.focus,
-                  isSelected && optionStyles.focus,
-                  optionStyles.base,
-                ),
-              noOptionsMessage: () => noOptionsMessageStyles,
-            }}
-          />
+          {isHydrated ? (
+            <Select
+              name={fieldName}
+              placeholder={`Select a ${label.toLowerCase()}...`}
+              options={options}
+              defaultValue={defaultOption}
+              unstyled
+              styles={{
+                input: (base) => ({
+                  ...base,
+                  fontSize: "14px",
+                  "input:focus": {
+                    boxShadow: "none",
+                  },
+                }),
+                // On mobile, the label will truncate automatically, so we want to
+                // override that behaviour.
+                multiValueLabel: (base) => ({
+                  ...base,
+                  whiteSpace: "normal",
+                  overflow: "visible",
+                }),
+                control: (base) => ({
+                  ...base,
+                  fontSize: "14px",
+                  transition: "none",
+                }),
+                option: (base) => ({
+                  ...base,
+                  fontSize: "14px",
+                }),
+              }}
+              classNames={{
+                control: ({ isFocused }) =>
+                  clsx(
+                    isFocused ? controlStyles.focus : controlStyles.nonFocus,
+                    controlStyles.base,
+                  ),
+                placeholder: () => placeholderStyles,
+                input: () => selectInputStyles,
+                valueContainer: () => valueContainerStyles,
+                singleValue: () => singleValueStyles,
+                multiValue: () => multiValueStyles,
+                multiValueLabel: () => multiValueLabelStyles,
+                multiValueRemove: () => multiValueRemoveStyles,
+                indicatorsContainer: () => indicatorsContainerStyles,
+                clearIndicator: () => clearIndicatorStyles,
+                indicatorSeparator: () => indicatorSeparatorStyles,
+                dropdownIndicator: () => dropdownIndicatorStyles,
+                menu: () => menuStyles,
+                groupHeading: () => groupHeadingStyles,
+                option: ({ isFocused, isSelected }) =>
+                  clsx(
+                    isFocused && optionStyles.focus,
+                    isSelected && optionStyles.focus,
+                    optionStyles.base,
+                  ),
+                noOptionsMessage: () => noOptionsMessageStyles,
+              }}
+            />
+          ) : null}
+
           {/* Validation Error */}
           <div className="pt-1 text-red-700 text-xs" id="name-error">
             {fields[fieldName].errors}
