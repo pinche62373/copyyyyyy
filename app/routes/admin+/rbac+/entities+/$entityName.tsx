@@ -138,7 +138,7 @@ export default function Component() {
   return (
     <>
       <AdminPageTitle
-        title={`View ${entityType} permissions for ${entityName}`}
+        title={`View ${entityType} permissions for entity ${entityName}`}
       />
 
       {/* Start Permissions Table*/}
