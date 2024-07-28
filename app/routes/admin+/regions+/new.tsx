@@ -13,7 +13,7 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { createRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
-import { validateSubmission } from "#app/utils/misc";
+import { humanize, validateSubmission } from "#app/utils/misc";
 import {
   requireModelPermission,
   requireRoutePermission,
@@ -61,7 +61,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return redirectWithSuccess(
     crud.routes.index,
-    `${crud.singular} created successfully`,
+    `${humanize(crud.singular)} created successfully`,
   );
 };
 

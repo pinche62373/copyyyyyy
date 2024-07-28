@@ -13,7 +13,7 @@ import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
-import { validatePageId, validateSubmission } from "#app/utils/misc";
+import { humanize, validatePageId, validateSubmission } from "#app/utils/misc";
 import {
   requireModelPermission,
   requireRoutePermission,
@@ -64,7 +64,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return redirectWithSuccess(
     crud.routes.index,
-    `${crud.singular} updated successfully`,
+    `${humanize(crud.singular)} updated successfully`,
   );
 };
 
@@ -82,7 +82,7 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title={`Edit ${crud.singular}`} />
+      <AdminPageTitle title={`Edit ${humanize(crud.singular)}`} />
 
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>

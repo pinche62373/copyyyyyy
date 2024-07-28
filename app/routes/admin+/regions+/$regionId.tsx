@@ -6,7 +6,7 @@ import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
 import { getRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
-import { timeStampToHuman, validatePageId } from "#app/utils/misc";
+import { humanize, timeStampToHuman, validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { regionSchemaFull } from "#app/validations/region-schema";
 
@@ -34,7 +34,7 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title={`View ${crud.singular}`} />
+      <AdminPageTitle title={`View ${humanize(crud.singular)}`} />
 
       <AdminContentCard className="p-6">
         <FormInputTextReadOnly label="Name">

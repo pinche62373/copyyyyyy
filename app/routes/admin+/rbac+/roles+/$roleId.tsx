@@ -32,6 +32,7 @@ import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
+import { humanize } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 
 const { roleCrud, entityCrud } = getAdminCrud();
@@ -140,7 +141,7 @@ export default function Component() {
   return (
     <>
       {/* Start Database Fields */}
-      <AdminPageTitle title={`View ${roleCrud.singular}`} />
+      <AdminPageTitle title={`View ${humanize(roleCrud.singular)}`} />
 
       <AdminContentCard className="p-6">
         <FormInputTextReadOnly label="Name">{role.name}</FormInputTextReadOnly>

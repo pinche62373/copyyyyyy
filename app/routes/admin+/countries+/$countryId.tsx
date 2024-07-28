@@ -6,9 +6,10 @@ import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
 import { getCountry } from "#app/models/country.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
-import { timeStampToHuman, validatePageId } from "#app/utils/misc";
+import { humanize, timeStampToHuman, validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaFull } from "#app/validations/country-schema";
+
 
 const { countryCrud: crud } = getAdminCrud();
 
@@ -34,7 +35,7 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title={`View ${crud.singular}`} />
+      <AdminPageTitle title={`View ${humanize(crud.singular)}`} />
 
       <AdminContentCard className="p-6">
         <FormInputTextReadOnly label="Name">

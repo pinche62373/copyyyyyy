@@ -35,6 +35,7 @@ import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
+import { humanize } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { useUser } from "#app/utils/user";
 import { languageSchemaAdminTable } from "#app/validations/language-schema";
@@ -164,8 +165,8 @@ export default function Component() {
   return (
     <>
       <AdminPageTitle
-        title={crud.plural}
-        button={{ title: `New ${crud.singular}`, to: crud.routes.new }}
+        title={humanize(crud.plural)}
+        button={{ title: `New ${humanize(crud.singular)}`, to: crud.routes.new }}
       />
 
       <AdminContentCard>
