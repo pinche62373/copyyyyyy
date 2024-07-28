@@ -38,10 +38,10 @@ export const links: LinksFunction = () => [
 // ----------------------------------------------------------------------------
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [
-    { title: data ? "mwa - movie database" : "Error | mwa" },
+    { title: data ? "mdb - movie database" : "Error | mdb" },
     {
       name: "description",
-      content: `MWA`,
+      content: `MDB`,
     },
   ];
 };
