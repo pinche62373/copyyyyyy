@@ -61,6 +61,7 @@ export const AdminHeader = () => {
             {/* End Sidebar Toggle */}
           </div>
         </div>
+        {/* End Menu Left */}
 
         {/* Menu Right */}
         <div className="xl:col-span-2 flex justify-end items-center gap-x-2">
@@ -70,7 +71,7 @@ export const AdminHeader = () => {
               <DarkModeToggler className="size-[38px] inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700" />
 
               {/* Account Dropdown */}
-              <div className="hs-dropdown relative inline-flex   [--strategy:absolute] [--auto-close:inside] [--placement:bottom-right]">
+              <div className="hs-dropdown relative inline-flex [--strategy:absolute] [--auto-close:inside] [--placement:bottom-right]">
                 <button
                   id="@@id"
                   type="button"
