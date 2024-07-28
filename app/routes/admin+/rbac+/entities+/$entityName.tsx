@@ -36,7 +36,10 @@ import {
 const { entityCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.routes.view);
+  await requireRoutePermission(request, {
+    entity: crud.routes.view,
+    scope: "any",
+  });
 
   const entityName = z.coerce.string().parse(params.entityName);
 
@@ -73,7 +76,7 @@ const columns = [
       headerProps: {
         className: "table-column-fit-content",
       },
-    },    
+    },
     cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("action", {

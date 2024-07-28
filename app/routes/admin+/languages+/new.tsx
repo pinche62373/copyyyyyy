@@ -20,13 +20,19 @@ import { languageSchemaCreateForm } from "#app/validations/language-schema";
 const { languageCrud: crud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.routes.new);
+  await requireRoutePermission(request, {
+    entity: crud.routes.new,
+    scope: "any",
+  });
 
   return null;
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  await requireRoutePermission(request, crud.routes.new);
+  await requireRoutePermission(request, {
+    entity: crud.routes.new,
+    scope: "any",
+  });
 
   const userId = await requireUserId(request);
 

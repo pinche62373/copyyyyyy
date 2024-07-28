@@ -35,7 +35,10 @@ import { requireRoutePermission } from "#app/utils/permissions.server";
 const { roleCrud: crud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.routes.index);
+  await requireRoutePermission(request, {
+    entity: crud.routes.index,
+    scope: "any",
+  });
 
   const roles = await getRoles();
 
@@ -62,7 +65,7 @@ const columns = [
       headerProps: {
         className: "table-column-fit-content",
       },
-    },    
+    },
     cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("name", {

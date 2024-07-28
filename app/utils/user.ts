@@ -47,6 +47,8 @@ export function userHasRole(
 
 /**
  * Internal function for checking all permissions, regardless of type
+ * 
+ * TODO add support for scope
  */
 function userHasPermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,

@@ -36,13 +36,14 @@ export async function requireRole(request: Request, role: string | string[]) {
 
 // ----------------------------------------------------------------------------
 // Throw 403 unless user has role with permission to access the route.
-//
-// TODO : differentiate between `any`and `own`
 // ----------------------------------------------------------------------------
-export async function requireRoutePermission(request: Request, route: string) {
+export async function requireRoutePermission(
+  request: Request,
+  permission: Pick<RoutePermission, "entity" | "scope">,
+) {
   const user = await getUser(request);
 
-  if (!userHasRoutePermission(user, { entity: route, scope: "any" })) {
+  if (!userHasRoutePermission(user, permission)) {
     throw json(null, { status: 403, statusText: "Forbidden" });
   }
 

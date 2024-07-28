@@ -37,7 +37,10 @@ import { requireRoutePermission } from "#app/utils/permissions.server";
 const { roleCrud, entityCrud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, roleCrud.routes.view);
+  await requireRoutePermission(request, {
+    entity: roleCrud.routes.view,
+    scope: "any",
+  });
 
   const roleId = z.coerce.string().parse(params.roleId);
 

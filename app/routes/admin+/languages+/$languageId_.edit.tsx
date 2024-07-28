@@ -20,7 +20,10 @@ import { languageSchemaUpdateForm } from "#app/validations/language-schema";
 const { languageCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.routes.edit);
+  await requireRoutePermission(request, {
+    entity: crud.routes.edit,
+    scope: "any",
+  });
 
   const languageId = validatePageId(
     params.languageId,
@@ -37,7 +40,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  await requireRoutePermission(request, crud.routes.edit);
+  await requireRoutePermission(request, {
+    entity: crud.routes.edit,
+    scope: "any",
+  });
 
   const userId = await requireUserId(request);
 

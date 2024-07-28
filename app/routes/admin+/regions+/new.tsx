@@ -20,13 +20,19 @@ import { regionSchemaCreateForm } from "#app/validations/region-schema";
 const { regionCrud: crud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.routes.new);
+  await requireRoutePermission(request, {
+    entity: crud.routes.new,
+    scope: "any",
+  });
 
   return null;
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  await requireRoutePermission(request, crud.routes.new);
+  await requireRoutePermission(request, {
+    entity: crud.routes.new,
+    scope: "any",
+  });
 
   const userId = await requireUserId(request);
 
@@ -37,7 +43,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   try {
-    await createRegion({ ...submission.value }, userId);
+    await createRegion(submission.value, userId);
   } catch (error) {
     return jsonWithError(null, "Unexpected error");
   }

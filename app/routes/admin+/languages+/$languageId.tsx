@@ -13,7 +13,10 @@ import { languageSchemaFull } from "#app/validations/language-schema";
 const { languageCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.routes.view);
+  await requireRoutePermission(request, {
+    entity: crud.routes.view,
+    scope: "any",
+  });
 
   const languageId = validatePageId(params.languageId, languageSchemaFull);
 

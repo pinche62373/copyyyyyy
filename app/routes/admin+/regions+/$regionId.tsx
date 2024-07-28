@@ -13,7 +13,10 @@ import { regionSchemaFull } from "#app/validations/region-schema";
 const { regionCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.routes.view);
+  await requireRoutePermission(request, {
+    entity: crud.routes.view,
+    scope: "any",
+  });
 
   const regionId = validatePageId(params.regionId, regionSchemaFull);
 

@@ -42,7 +42,10 @@ import { regionSchemaAdminTable } from "#app/validations/region-schema";
 const { regionCrud: crud } = getAdminCrud();
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await requireRoutePermission(request, crud.routes.index);
+  await requireRoutePermission(request, {
+    entity: crud.routes.index,
+    scope: "any",
+  });
 
   const regions = await getRegions();
 
@@ -108,8 +111,8 @@ export default function Component() {
                 className: "table-column-fit-content",
               },
               cellProps: {
-                className: "text-center"
-              }
+                className: "text-center",
+              },
             },
             cell: (info) =>
               tableCellActions({

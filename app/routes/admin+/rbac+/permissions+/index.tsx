@@ -38,7 +38,10 @@ import {
 const { entityCrud, permissionCrud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, permissionCrud.routes.index);
+  await requireRoutePermission(request, {
+    entity: permissionCrud.routes.index,
+    scope: "any",
+  });
 
   const permissions = await getPermissions();
   const flattenedPermissions = flattenPermissions(permissions);
@@ -67,7 +70,7 @@ const columns = [
       headerProps: {
         className: "table-column-fit-content",
       },
-    },    
+    },
     cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("entity", {

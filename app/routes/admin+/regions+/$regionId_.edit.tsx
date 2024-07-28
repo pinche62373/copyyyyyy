@@ -20,7 +20,10 @@ import { regionSchemaUpdateForm } from "#app/validations/region-schema";
 const { regionCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  await requireRoutePermission(request, crud.routes.edit);
+  await requireRoutePermission(request, {
+    entity: crud.routes.edit,
+    scope: "any",
+  });
 
   const regionId = validatePageId(params.regionId, regionSchemaUpdateForm);
 
@@ -34,7 +37,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  await requireRoutePermission(request, crud.routes.edit);
+  await requireRoutePermission(request, {
+    entity: crud.routes.edit,
+    scope: "any",
+  });
 
   const userId = await requireUserId(request);
 

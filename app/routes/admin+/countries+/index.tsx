@@ -42,7 +42,10 @@ import { countrySchemaAdminTable } from "#app/validations/country-schema";
 const { countryCrud: crud } = getAdminCrud();
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  await requireRoutePermission(request, crud.routes.index);
+  await requireRoutePermission(request, {
+    entity: crud.routes.index,
+    scope: "any",
+  });
 
   const countries = await getCountries();
 
