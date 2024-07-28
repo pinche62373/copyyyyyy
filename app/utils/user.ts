@@ -2,7 +2,7 @@ import { type SerializeFrom } from "@remix-run/node";
 import { useRouteLoaderData } from "@remix-run/react";
 
 import { type loader as rootLoader } from "#app/root.tsx";
-import { Permission } from "#app/utils/permissions.types";
+import { ModelPermission, Permission, RoutePermission } from "#app/utils/permissions.types";
 
 type UserType = SerializeFrom<typeof rootLoader>["user"];
 
@@ -70,7 +70,7 @@ function userHasPermission(
  */
 export function userHasRoutePermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
-  permission: Pick<Permission, "entity" | "scope">,
+  permission: Pick<RoutePermission, "entity" | "scope">,
 ) {
 
   return userHasPermission(user, {...permission, action: "access"})
@@ -81,7 +81,7 @@ export function userHasRoutePermission(
  */
 export function userHasModelPermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
-  permission: Pick<Permission, "entity" | "action" | "scope">,
+  permission: Pick<ModelPermission, "entity" | "action" | "scope">,
 ) {
 
   return userHasPermission(user, permission)
