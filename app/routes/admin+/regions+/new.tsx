@@ -14,7 +14,10 @@ import { createRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { validateSubmission } from "#app/utils/misc";
-import { requireRoutePermission } from "#app/utils/permissions.server";
+import {
+  requireModelPermission,
+  requireRoutePermission,
+} from "#app/utils/permissions.server";
 import { regionSchemaCreateForm } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
@@ -29,6 +32,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const intent = "create";
+
+  await requireModelPermission(request, {
+    entity: crud.singular,
+    action: intent,
+    scope: "any",
+  });
+
   await requireRoutePermission(request, {
     entity: crud.routes.new,
     scope: "any",
@@ -37,7 +48,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
   const submission = validateSubmission({
-    intent: "create",
+    intent,
     formData: await request.formData(),
     schema: regionSchemaCreateForm,
   });

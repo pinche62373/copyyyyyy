@@ -1,14 +1,10 @@
-// unions
-
 import { Role } from "#app/validations/role-schema";
 
-const modelEntities = ["country", "language", "region", "user"] as const;
-const modelActions = ["create", "read", "update", "delete"] as const;
-const modelScopes = ["own", "any"] as const;
-
-const routeEntities = ["admin", "admin/system"];
 const routeActions = ["access"] as const;
 const routeScopes = ["own", "any"] as const;
+
+const modelActions = ["create", "read", "update", "delete"] as const;
+const modelScopes = ["own", "any"] as const;
 
 export interface Permission {
   id: string;
@@ -29,7 +25,7 @@ export interface FlatPermission extends Omit<Permission, "roles"> {
 }
 
 export interface RoutePermission {
-  entity: (typeof routeEntities)[number];
+  entity: string;
   action: (typeof routeActions)[number];
   scope: (typeof routeScopes)[number];
   description?: string;
@@ -37,14 +33,14 @@ export interface RoutePermission {
 }
 
 export interface RoutePermissionFunctionArgs {
-  entity: (typeof routeEntities)[number];
+  entity: string;
   scope: (typeof routeScopes)[number];
   description?: string;
   roles: Role[number] | Role[number][];
 }
 
 export interface ModelPermission {
-  entity: (typeof modelEntities)[number];
+  entity: string;
   action: (typeof modelActions)[number];
   scope: (typeof modelScopes)[number];
   description?: string;
@@ -52,7 +48,7 @@ export interface ModelPermission {
 }
 
 export interface ModelPermissionFunctionArgs {
-  entity: (typeof modelEntities)[number];
+  entity: string;
   actions: (typeof modelActions)[number] | (typeof modelActions)[number][];
   scope: (typeof modelScopes)[number];
   description?: string;

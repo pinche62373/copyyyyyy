@@ -14,7 +14,10 @@ import { createLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { validateSubmission } from "#app/utils/misc";
-import { requireRoutePermission } from "#app/utils/permissions.server";
+import {
+  requireModelPermission,
+  requireRoutePermission,
+} from "#app/utils/permissions.server";
 import { languageSchemaCreateForm } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
@@ -29,15 +32,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  await requireRoutePermission(request, {
-    entity: crud.routes.new,
+  const intent = "create";
+
+  await requireModelPermission(request, {
+    entity: crud.singular,
+    action: intent,
     scope: "any",
   });
 
   const userId = await requireUserId(request);
 
   const submission = validateSubmission({
-    intent: "create",
+    intent,
     formData: await request.formData(),
     schema: languageSchemaCreateForm,
   });

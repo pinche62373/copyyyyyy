@@ -2,7 +2,11 @@ import { type SerializeFrom } from "@remix-run/node";
 import { useRouteLoaderData } from "@remix-run/react";
 
 import { type loader as rootLoader } from "#app/root.tsx";
-import { ModelPermission, Permission, RoutePermission } from "#app/utils/permissions.types";
+import {
+  ModelPermission,
+  Permission,
+  RoutePermission,
+} from "#app/utils/permissions.types";
 
 type UserType = SerializeFrom<typeof rootLoader>["user"];
 
@@ -47,15 +51,17 @@ export function userHasRole(
 
 /**
  * Internal function for checking all permissions, regardless of type
- * 
- * TODO add support for scope
+ *
+ * TODO support scope property
  */
 function userHasPermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
   permission: Pick<Permission, "entity" | "action" | "scope">,
 ) {
   if (!user) return false;
-  console.log(`Check permission | ${permission.action} | ${permission.entity} | ${permission.scope} |`);
+  console.log(
+    `Check permission | ${permission.action} | ${permission.entity} | ${permission.scope} |`,
+  );
 
   return user.roles.some((role) =>
     role.permissions.some(
@@ -74,8 +80,7 @@ export function userHasRoutePermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
   permission: Pick<RoutePermission, "entity" | "scope">,
 ) {
-
-  return userHasPermission(user, {...permission, action: "access"})
+  return userHasPermission(user, { ...permission, action: "access" });
 }
 
 /**
@@ -85,6 +90,5 @@ export function userHasModelPermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
   permission: Pick<ModelPermission, "entity" | "action" | "scope">,
 ) {
-
-  return userHasPermission(user, permission)
+  return userHasPermission(user, permission);
 }

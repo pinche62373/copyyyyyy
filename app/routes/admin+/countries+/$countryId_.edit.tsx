@@ -16,7 +16,7 @@ import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { validateSubmission } from "#app/utils/misc";
-import { requireRoutePermission } from "#app/utils/permissions.server";
+import { requireModelPermission, requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaUpdateForm } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
@@ -43,15 +43,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  await requireRoutePermission(request, {
-    entity: crud.routes.edit,
+  const intent = "update";
+
+  await requireModelPermission(request, {
+    entity: crud.singular,
+    action: intent,
     scope: "any",
   });
 
   const userId = await requireUserId(request);
 
   const submission = validateSubmission({
-    intent: "update",
+    intent,
     formData: await request.formData(),
     schema: countrySchemaUpdateForm,
   });

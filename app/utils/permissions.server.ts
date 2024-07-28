@@ -12,7 +12,10 @@ import type {
   RoutePermission,
   RoutePermissionFunctionArgs,
 } from "#app/utils/permissions.types";
-import { userHasRoutePermission } from "#app/utils/user";
+import {
+  userHasModelPermission,
+  userHasRoutePermission,
+} from "#app/utils/user";
 import { Role } from "#app/validations/role-schema";
 import { cuid } from "#prisma/seed/seed-utils";
 
@@ -44,6 +47,22 @@ export async function requireRoutePermission(
   const user = await getUser(request);
 
   if (!userHasRoutePermission(user, permission)) {
+    throw json(null, { status: 403, statusText: "Forbidden" });
+  }
+
+  return true;
+}
+
+// ----------------------------------------------------------------------------
+// Throw 403 unless user has role with permission for the model action.
+// ----------------------------------------------------------------------------
+export async function requireModelPermission(
+  request: Request,
+  permission: Pick<ModelPermission, "entity" | "action" | "scope">,
+) {
+  const user = await getUser(request);
+
+  if (!userHasModelPermission(user, permission)) {
     throw json(null, { status: 403, statusText: "Forbidden" });
   }
 

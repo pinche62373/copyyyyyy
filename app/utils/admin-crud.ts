@@ -4,6 +4,7 @@ export interface Crud {
   routes: Routes;
 }
 
+// TODO rename to CrudRoutes
 interface Routes {
   index: string;
   view: string;
@@ -27,38 +28,38 @@ const getRoutes = (indexRoute: string): Routes => {
 
 export function getAdminCrud(): CrudList {
   const countryCrud = {
-    singular: "Country",
-    plural: "Countries",
+    singular: "country",
+    plural: "countries",
     routes: getRoutes("/admin/countries"),
   };
 
   const entityCrud = {
-    singular: "Entity",
-    plural: "Entities",
+    singular: "entity",
+    plural: "entities",
     routes: getRoutes("/admin/rbac/entities"),
   };
 
   const languageCrud = {
-    singular: "Language",
-    plural: "Languages",
+    singular: "language",
+    plural: "languages",
     routes: getRoutes("/admin/languages"),
   };
 
   const permissionCrud = {
-    singular: "Permission",
-    plural: "Permissions",
+    singular: "permission",
+    plural: "permissions",
     routes: getRoutes("/admin/rbac/permissions"),
   };
 
   const regionCrud = {
-    singular: "Region",
-    plural: "Regions",
+    singular: "region",
+    plural: "regions",
     routes: getRoutes("/admin/regions"),
   };
 
   const roleCrud = {
-    singular: "Role",
-    plural: "Roles",
+    singular: "role",
+    plural: "roles",
     routes: getRoutes("/admin/rbac/roles"),
   };
 
