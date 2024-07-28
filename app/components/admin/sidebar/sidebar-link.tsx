@@ -1,7 +1,7 @@
 import { NavLink } from "@remix-run/react";
 
 import { cn } from "#app/utils/misc";
-import { userHasPermission, useUser } from "#app/utils/user";
+import { userHasRoutePermission, useUser } from "#app/utils/user";
 
 interface Args {
   to: string;
@@ -19,9 +19,7 @@ export function SidebarLink({
 }: Args) {
   const user = useUser();
 
-  if (
-    !userHasPermission(user, { entity: to, action: "access", scope: "any" })
-  ) {
+  if (!userHasRoutePermission(user, { entity: to, scope: "any" })) {
     return;
   }
   const liClass = nested === false && "px-5 mb-1.5";

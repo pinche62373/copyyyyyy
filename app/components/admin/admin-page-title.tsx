@@ -1,6 +1,6 @@
 import { Button } from "#app/components/admin/button";
 import { cn } from "#app/utils/misc";
-import { useUser, userHasPermission } from "#app/utils/user";
+import { useUser, userHasRoutePermission } from "#app/utils/user";
 
 type PropTypes =
   | {
@@ -75,9 +75,8 @@ export const AdminPageTitle = ({
 
           {/* Button */}
           {button &&
-            userHasPermission(user, {
+            userHasRoutePermission(user, {
               entity: button.to,
-              action: "access",
               scope: "any",
             }) && <Button type="button" text={button.title} to={button.to} />}
           {/* End Conditional New Button  */}

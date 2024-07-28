@@ -45,7 +45,10 @@ export function userHasRole(
   return user.roles.some((r) => role.includes(r.name));
 }
 
-export function userHasPermission(
+/**
+ * Main function for all permissions, regardless of type
+ */
+function userHasPermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
   permission: Pick<Permission, "entity" | "action" | "scope">,
 ) {
@@ -60,4 +63,15 @@ export function userHasPermission(
         p.scope === permission.scope,
     ),
   );
+}
+
+/**
+ * Helper function for checking route permissions.
+ */
+export function userHasRoutePermission(
+  user: Pick<ReturnType<typeof useUser>, "roles"> | null,
+  permission: Pick<Permission, "entity" | "scope">,
+) {
+
+  return userHasPermission(user, {...permission, action: "access"})
 }

@@ -12,7 +12,7 @@ import type {
   RoutePermission,
   RoutePermissionFunctionArgs,
 } from "#app/utils/permissions.types";
-import { userHasPermission } from "#app/utils/user";
+import { userHasRoutePermission } from "#app/utils/user";
 import { Role } from "#app/validations/role-schema";
 import { cuid } from "#prisma/seed/seed-utils";
 
@@ -42,13 +42,7 @@ export async function requireRole(request: Request, role: string | string[]) {
 export async function requireRoutePermission(request: Request, route: string) {
   const user = await getUser(request);
 
-  const permission = {
-    entity: route,
-    action: "access",
-    scope: "any",
-  };
-
-  if (!userHasPermission(user, permission)) {
+  if (!userHasRoutePermission(user, { entity: route, scope: "any" })) {
     throw json(null, { status: 403, statusText: "Forbidden" });
   }
 
@@ -176,7 +170,7 @@ export const getPermissionsForRole = (
   role: Role,
 ): Permission[] => {
   const result = permissions.filter((permission) =>
-    (permission.roles as unknown as Role[]).includes( role ),
+    (permission.roles as unknown as Role[]).includes(role),
   );
 
   return result;

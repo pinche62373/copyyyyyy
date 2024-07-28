@@ -1,10 +1,10 @@
 import isEmpty from "lodash.isempty";
 
 import { tableCellActions } from "#app/components/tanstack-table/cell-types/actions";
-import { useUser, userHasPermission } from "#app/utils/user";
+import { useUser, userHasRoutePermission } from "#app/utils/user";
 
 /**
- * Returns an object with allowed admin table cell actions (if userHasPermission)
+ * Returns an object with allowed admin table cell actions (if user has access to the route)
  */
 type TableActions = "edit" | "delete";
 
@@ -27,9 +27,8 @@ export const userTableCellActions = ({
 
   actions.forEach((action) => {
     if (
-      userHasPermission(user, {
+      userHasRoutePermission(user, {
         entity: `${route}/${action}`,
-        action: "access",
         scope: "any",
       })
     ) {
