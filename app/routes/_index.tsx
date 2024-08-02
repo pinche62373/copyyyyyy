@@ -10,10 +10,10 @@ export default function IndexPage() {
   const user = useOptionalUser();
 
   // TODO : remove when done
-  console.log(JSON.stringify(user, null, 2))
+  console.log(JSON.stringify(user, null, 2));
 
   return (
-    <main className="relative min-h-screen bg-white sm:flex sm:items-center sm:justify-center">
+    <main className="relative sm:flex sm:items-center sm:justify-center align-middle mt-20">
       <div className="relative sm:pb-16">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
