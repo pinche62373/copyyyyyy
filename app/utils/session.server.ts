@@ -2,6 +2,8 @@ import type { Cookie, CookieOptions, SessionData } from "@remix-run/node";
 import { createCookie, createSessionStorage } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
+import { COOKIE_DOMAIN, COOKIE_SECURE } from "#app/utils/constants";
+
 import { prisma } from "./db.server";
 invariant(
   process.env.COOKIE_SECRET,
@@ -16,8 +18,9 @@ export const sessionCookie = createCookie("__session", {
   path: "/",
   httpOnly: true,
   sameSite: "lax",
+  domain: COOKIE_DOMAIN,
+  secure: COOKIE_SECURE,
   secrets: [process.env.COOKIE_SECRET],
-  secure: process.env.NODE_ENV === "production",
 });
 
 export const createDatabaseSessionStorage = ({ cookie }: StoreGeneratorArg) => {
