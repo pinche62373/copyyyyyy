@@ -34,6 +34,7 @@ export const TableFooter = <T,>({
           </p>
           {/* Counter */}
           <input
+            aria-label="Page Size"
             id="table-footer-page-size-input"
             type="number"
             min="1"
@@ -60,6 +61,7 @@ export const TableFooter = <T,>({
       <nav className="flex justify-end items-center gap-x-1">
         <button
           type="button"
+          aria-label="Previous Page"
           className="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-stone-800 hover:bg-stone-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-100 dark:text-white dark:hover:bg-white/10 dark:focus:bg-neutral-700"
           disabled={!table.getCanPreviousPage()}
           onClick={() => table.previousPage()}
@@ -95,6 +97,7 @@ export const TableFooter = <T,>({
         </div>
         <button
           type="button"
+          aria-label="Previous Page"
           className="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-stone-800 hover:bg-stone-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-100 dark:text-white dark:hover:bg-white/10 dark:focus:bg-neutral-700"
           disabled={!table.getCanNextPage()}
           onClick={() => table.nextPage()}

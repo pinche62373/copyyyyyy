@@ -8,6 +8,7 @@ export function DarkModeToggler({ ...props }) {
 
   return (
     <button
+      aria-label="Toggle Theme"
       type="button"
       onClick={() =>
         setTheme((prev) => (prev === Theme.DARK ? Theme.LIGHT : Theme.DARK))
