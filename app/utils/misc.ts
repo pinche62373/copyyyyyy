@@ -43,14 +43,28 @@ export function cn(...inputs: ClassValue[]) {
   return customTwMerge(clsx(inputs));
 }
 
+export function mergeHeaders(
+  ...headers: (ResponseInit["headers"] | null | undefined)[]
+) {
+  const merged = new Headers();
+  for (const header of headers) {
+    if (!header) continue;
+    for (const [key, value] of new Headers(header).entries()) {
+      merged.set(key, value);
+    }
+  }
+  return merged;
+}
+
 /**
  * This method is "borrowed" from https://github.com/icd2k3/use-react-router-breadcrumbs.
  * as an alternative for the (bundle size of the) humanize-string package.
  */
-export const humanize = (str: string): string => str
-  .replace(/^[\s_]+|[\s_]+$/g, '')
-  .replace(/[-_\s]+/g, ' ')
-  .replace(/^[a-z]/, (m) => m.toUpperCase());
+export const humanize = (str: string): string =>
+  str
+    .replace(/^[\s_]+|[\s_]+$/g, "")
+    .replace(/[-_\s]+/g, " ")
+    .replace(/^[a-z]/, (m) => m.toUpperCase());
 
 export function getErrorMessage(error: unknown) {
   if (typeof error === "string") return error;

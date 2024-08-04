@@ -3,10 +3,27 @@ import { json, redirect } from "@remix-run/node";
 
 import { authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
+import { mergeHeaders } from "#app/utils/misc";
+import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
+
+  const deleteCookieHeaders = mergeHeaders([
+    [
+      "Set-Cookie",
+      await sessionCookie.serialize("", {
+        maxAge: 0,
+      }),
+    ],
+    [
+      "Set-Cookie",
+      await returnToCookie.serialize("", {
+        maxAge: 0,
+      }),
+    ],
+  ]);
 
   // delete orphaned client-side session cookie not existing in database to prevent breaking remix-auth
   if (sessionId) {
@@ -16,16 +33,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
     if (!databaseSessionExists) {
       return json(null, {
-        headers: {
-          "Set-Cookie": await sessionCookie.serialize("", {
-            maxAge: 0,
-          }),
-        },
+        headers: deleteCookieHeaders,
       });
     }
   }
 
-  await authenticator.logout(request, { redirectTo: "/" });
+  await authenticator.logout(request, {
+    redirectTo: "/",
+    headers: deleteCookieHeaders,
+  });
 };
 
 export const loader = async () => redirect("/");
