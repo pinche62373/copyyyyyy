@@ -78,6 +78,7 @@ export const getSeedPermissions = () => {
   const result = permissions.map((permission) => ({
     ...permission,
     id: cuid(permission.entity + permission.action + permission.scope),
+    updatedAt: null,
   }));
 
   return result;
