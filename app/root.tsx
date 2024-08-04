@@ -102,18 +102,16 @@ function App() {
   }, [toast]);
 
   return (
-    <>
-      <Layout>
-        <Outlet />
-        <Toaster
-          position="top-right"
-          richColors
-          expand
-          toastOptions={{ classNames: { title: "font-normal" } }}
-        />
-        {process.env.NODE_ENV === "development" && <LiveReload />}
-      </Layout>
-    </>
+    <Layout>
+      <Outlet />
+      <Toaster
+        position="top-right"
+        richColors
+        expand
+        toastOptions={{ classNames: { title: "font-normal" } }}
+      />
+      {process.env.NODE_ENV === "development" && <LiveReload />}
+    </Layout>
   );
 }
 
