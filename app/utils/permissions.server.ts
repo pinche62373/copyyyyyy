@@ -1,9 +1,9 @@
 import { json } from "@remix-run/node";
 
 import { getPermissions } from "#app/models/permission.server";
+import { getAllPermissions } from "#app/permissions/get-all-permissions";
 import { getUser, requireUserId } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
-import { modelPermissions, routePermissions } from "#app/utils/permissions";
 import type {
   FlatPermission,
   ModelPermission,
@@ -70,39 +70,6 @@ export async function requireModelPermission(
 }
 
 // ----------------------------------------------------------------------------
-// Returns a list of all (Model and Route) Permissions.
-// ----------------------------------------------------------------------------
-export const getAllPermissions = (): Permission[] => {
-  const result: Permission[] = [];
-
-  modelPermissions.forEach((permission) => {
-    generateModelPermissions(permission).forEach((generatedPermission) => {
-      if (isDuplicatePermission(result, generatedPermission)) {
-        throw new Error(
-          `Remix permission store already contains model permission: ${JSON.stringify(generatedPermission, null, 2)}`,
-        );
-      }
-
-      result.push(generatedPermission as unknown as Permission);
-    });
-  });
-
-  routePermissions.forEach((permission) => {
-    generateRoutePermissions(permission).forEach((generatedPermission) => {
-      if (isDuplicatePermission(result, generatedPermission)) {
-        throw new Error(
-          `Remix permission store already contains route permission: ${JSON.stringify(generatedPermission, null, 2)}`,
-        );
-      }
-
-      result.push(generatedPermission as unknown as Permission);
-    });
-  });
-
-  return result;
-};
-
-// ----------------------------------------------------------------------------
 // Add a deterministic id to each RBAC permission for seeding purposes.
 // ----------------------------------------------------------------------------
 export const getSeedPermissions = () => {
@@ -119,7 +86,7 @@ export const getSeedPermissions = () => {
 // ----------------------------------------------------------------------------
 // Helper function to generate ModelPermission objects.
 // ----------------------------------------------------------------------------
-const generateModelPermissions = ({
+export const generateModelPermissions = ({
   entity,
   actions,
   roles,
@@ -146,7 +113,7 @@ const generateModelPermissions = ({
 // ----------------------------------------------------------------------------
 // Helper function to generate RoutePermission objects.
 // ----------------------------------------------------------------------------
-const generateRoutePermissions = ({
+export const generateRoutePermissions = ({
   entity,
   scope,
   roles,
@@ -168,7 +135,7 @@ const generateRoutePermissions = ({
 // ----------------------------------------------------------------------------
 // Helper function to throw error if permission already exists in the seed store.
 // ----------------------------------------------------------------------------
-const isDuplicatePermission = (
+export const isDuplicatePermission = (
   store: Permission[],
   permission: ModelPermission | RoutePermission,
 ) => {
