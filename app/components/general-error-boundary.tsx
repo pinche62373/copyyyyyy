@@ -46,12 +46,12 @@ export function GeneralErrorBoundary() {
               type="button"
               secondary
               onClick={goBack}
-              className="mr-2"
+              className="py-1.5 px-3"
             />
 
             <Link
               type="button"
-              className="w-full sm:w-auto py-2 px-2 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+              className="w-full sm:w-auto py-1.5 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
               to="/"
             >
               {" "}
