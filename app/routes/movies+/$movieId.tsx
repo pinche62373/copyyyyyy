@@ -4,7 +4,6 @@ import { useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
-import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import { getMovie } from "#app/models/movie.server";
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -24,7 +23,10 @@ export default function Component() {
   return (
     <>
       <AdminContentCard className="p-6">
-        <AdminPageTitle title={movie.name + " - " + movie.slug} />
+        <ul>
+          <li>Title: {movie.name}</li>
+          <li>Slug: {movie.slug}</li>
+        </ul>
       </AdminContentCard>
     </>
   );

@@ -262,7 +262,7 @@ const main = async () => {
   // --------------------------------------------------------------------------
   // Movies (DEV ONLY)
   // --------------------------------------------------------------------------
-  const movies = ["Movie1", "Movie2", "Movie3"];
+  const movies = ["Movie 1", "Movie 2", "Movie 3"];
 
   if (prod === false) {
     await seed.movie(
