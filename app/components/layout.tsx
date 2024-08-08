@@ -15,7 +15,16 @@ import {
 import { LoaderData } from "#app/root";
 
 export function Layout({ children }: { children: React.ReactNode }) {
-  const data = useRouteLoaderData<LoaderData>("root");
+  let data = useRouteLoaderData<LoaderData | { theme: Theme }>("root");
+
+  // required for hard 404 errors
+  if (typeof window !== "undefined") {
+    if (data) {
+      localStorage.setItem("theme", data.theme as Theme);
+    } else {
+      data = { theme: localStorage.getItem("theme") as Theme };
+    }
+  }
 
   return (
     <ThemeProvider
@@ -42,6 +51,7 @@ function InnerLayout({
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
+        <PreventFlashOnWrongTheme ssrTheme={Boolean(ssrTheme)} />
         <Links />
       </head>
       <body
@@ -50,7 +60,6 @@ function InnerLayout({
       >
         {children}
         <ScrollRestoration />
-        <PreventFlashOnWrongTheme ssrTheme={ssrTheme} />
         <Scripts />
       </body>
     </html>

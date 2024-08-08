@@ -31,6 +31,9 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
 ];
 
+// root layout of the entire app, all other routes render inside its <Outlet />
+export { Layout };
+
 // ----------------------------------------------------------------------------
 // metadata
 // ----------------------------------------------------------------------------
@@ -84,7 +87,7 @@ if (typeof window !== "undefined") {
 }
 
 // ----------------------------------------------------------------------------
-// Themed App
+// App
 // ----------------------------------------------------------------------------
 function App() {
   const location = useLocation();
@@ -102,7 +105,7 @@ function App() {
   }, [toast]);
 
   return (
-    <Layout>
+    <>
       <Outlet />
       <Toaster
         position="top-right"
@@ -111,7 +114,7 @@ function App() {
         toastOptions={{ classNames: { title: "font-normal" } }}
       />
       {process.env.NODE_ENV === "development" && <LiveReload />}
-    </Layout>
+    </>
   );
 }
 
@@ -129,15 +132,9 @@ export default function AppWithProviders() {
 }
 
 export function ErrorBoundary() {
-  return (
-    <Layout>
-      <GeneralErrorBoundary />
-    </Layout>
-  );
+  return <GeneralErrorBoundary />;
 }
 
 export function HydrateFallback() {
-  <Layout>
-    return <h1>Loading...</h1>;
-  </Layout>;
+  return <h1>Loading...</h1>;
 }
