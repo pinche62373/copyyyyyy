@@ -2,11 +2,8 @@ import type {
   RoutePermissionFunctionArgs,
   ModelPermissionFunctionArgs,
 } from "#app/permissions/permission.types";
+import { C, D, U } from "#app/permissions/permission.types";
 import { Roles } from "#app/validations/role-schema";
-
-const C = "create";
-const U = "update";
-const D = "delete";
 
 // ----------------------------------------------------------------------------
 // MODEL PERMISSIONS

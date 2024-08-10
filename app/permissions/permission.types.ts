@@ -1,9 +1,15 @@
 import { Role } from "#app/validations/role-schema";
 
+// consts as used in the permission definitions
+export const C = "create" as const
+export const U = "update" as const
+export const D = "delete" as const
+
+// consts as used by the exported interfaces below
 const routeActions = ["access"] as const;
 const routeScopes = ["own", "any"] as const;
 
-const modelActions = ["create", "read", "update", "delete"] as const;
+const modelActions = ["create", "update", "delete"] as const;
 const modelScopes = ["own", "any"] as const;
 
 export interface Permission {
