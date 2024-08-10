@@ -1,16 +1,16 @@
-import { modelPermissions as adminPermissions } from "#app/permissions/admin.permissions";
-import { modelPermissions as countryPermissions } from "#app/permissions/country.permissions";
-import { modelPermissions as resourcePermissions } from "#app/permissions/resource.permissions";
-import { modelPermissions as languagePermissions } from "#app/permissions/language.permissions";
-import { modelPermissions as permissionPermissions } from "#app/permissions/permission.permissions";
-import { modelPermissions as regionPermissions } from "#app/permissions/region.permissions";
-import { modelPermissions as rolePermissions } from "#app/permissions/role.permissions";
-import { modelPermissions as systemPermissions } from "#app/permissions/system.permissions";
+import { modelPermissions as adminPermissions } from "#app/permissions/definitions/admin";
+import { modelPermissions as countryPermissions } from "#app/permissions/definitions/country";
+import { modelPermissions as languagePermissions } from "#app/permissions/definitions/language";
+import { modelPermissions as permissionPermissions } from "#app/permissions/definitions/permission";
+import { modelPermissions as regionPermissions } from "#app/permissions/definitions/region";
+import { modelPermissions as resourcePermissions } from "#app/permissions/definitions/resource";
+import { modelPermissions as rolePermissions } from "#app/permissions/definitions/role";
+import { modelPermissions as systemPermissions } from "#app/permissions/definitions/system";
+import { Permission } from "#app/permissions/permission.types";
 import {
   generateModelPermissions,
   isDuplicatePermission,
 } from "#app/utils/permissions.server";
-import { Permission } from "#app/permissions/permission.types";
 
 export const getModelPermissions = (): Permission[] => {
   const result: Permission[] = [];
@@ -39,15 +39,4 @@ export const getModelPermissions = (): Permission[] => {
     });
 
   return result;
-
-  // return Array.prototype.concat(
-  //   adminPermissions,
-  //   countryPermissions,
-  //   resourcePermissions,
-  //   languagePermissions,
-  //   permissionPermissions,
-  //   regionPermissions,
-  //   rolePermissions,
-  //   systemPermissions,
-  // );
 };

@@ -1,16 +1,16 @@
-import { routePermissions as adminPermissions } from "#app/permissions/admin.permissions";
-import { routePermissions as countryPermissions } from "#app/permissions/country.permissions";
-import { routePermissions as resourcePermissions } from "#app/permissions/resource.permissions";
-import { routePermissions as languagePermissions } from "#app/permissions/language.permissions";
-import { routePermissions as permissionPermissions } from "#app/permissions/permission.permissions";
-import { routePermissions as regionPermissions } from "#app/permissions/region.permissions";
-import { routePermissions as rolePermissions } from "#app/permissions/role.permissions";
-import { routePermissions as systemPermissions } from "#app/permissions/system.permissions";
+import { routePermissions as adminPermissions } from "#app/permissions/definitions/admin";
+import { routePermissions as countryPermissions } from "#app/permissions/definitions/country";
+import { routePermissions as languagePermissions } from "#app/permissions/definitions/language";
+import { routePermissions as permissionPermissions } from "#app/permissions/definitions/permission";
+import { routePermissions as regionPermissions } from "#app/permissions/definitions/region";
+import { routePermissions as resourcePermissions } from "#app/permissions/definitions/resource";
+import { routePermissions as rolePermissions } from "#app/permissions/definitions/role";
+import { routePermissions as systemPermissions } from "#app/permissions/definitions/system";
+import { Permission } from "#app/permissions/permission.types";
 import {
   generateRoutePermissions,
   isDuplicatePermission,
 } from "#app/utils/permissions.server";
-import { Permission } from "#app/permissions/permission.types";
 
 export const getRoutePermissions = (): Permission[] => {
   const result: Permission[] = [];
