@@ -4,9 +4,8 @@ import dayjs from "dayjs";
 import { extendTailwindMerge } from "tailwind-merge";
 import { z } from "zod";
 
+import { extendedTheme } from "#app/utils/extended-theme";
 import { Intent, validateFormIntent } from "#app/validations/form-intent";
-
-import { extendedTheme } from "./extended-theme";
 
 function formatColors() {
   const colors = [];

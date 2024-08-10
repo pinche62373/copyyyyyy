@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { userSchema } from "./user-schema";
+import { userSchema } from "#app/validations/user-schema";
 
 export const authRegisterSchema = userSchema.pick({
   email: true,

@@ -3,8 +3,8 @@ import { createCookie, createSessionStorage } from "@remix-run/node";
 import invariant from "tiny-invariant";
 
 import { COOKIE_DOMAIN, COOKIE_SECURE } from "#app/utils/constants";
+import { prisma } from "#app/utils/db.server";
 
-import { prisma } from "./db.server";
 invariant(
   process.env.COOKIE_SECRET,
   "Environment variable not found: COOKIE_SECRET",

@@ -1,6 +1,6 @@
 import { flexRender } from "@tanstack/react-table";
 
-import useTable from "./useTable";
+import useTable from "#app/components/tanstack-table/useTable";
 
 const THead = () => {
   const table = useTable();

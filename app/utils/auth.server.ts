@@ -6,12 +6,11 @@ import invariant from "tiny-invariant";
 import type { User } from "#app/models/user.server";
 import { getUserById, verifyLogin } from "#app/models/user.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
-
 import {
   createDatabaseSessionStorage,
   getSession,
   sessionCookie,
-} from "./session.server";
+} from "#app/utils/session.server";
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 
