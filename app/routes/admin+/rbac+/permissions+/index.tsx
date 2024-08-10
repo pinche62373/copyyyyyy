@@ -2,6 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
   createColumnHelper,
+  FilterFnOption,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -18,8 +19,9 @@ import {
   tableCellLink,
   tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
-import { fuzzyFilter } from "#app/components/tanstack-table/fuzzy-filter";
-import { fuzzySort } from "#app/components/tanstack-table/fuzzy-sort";
+import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy";
+import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type";
+import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { TableBar } from "#app/components/tanstack-table/TableBar";
 import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
@@ -87,7 +89,9 @@ const columns = [
   columnHelper.accessor("action", {
     header: "Action",
     enableGlobalFilter: true,
+    enableColumnFilter: true,
     cell: (info) => info.getValue(),
+    filterFn: permissionTypeFilter as FilterFnOption<FlatPermission>,
   }),
   columnHelper.accessor("scope", {
     header: "Scope",
@@ -126,7 +130,7 @@ export default function Component() {
     data: flattenedPermissions,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter,
     },
     state: {
       pagination,
@@ -144,6 +148,11 @@ export default function Component() {
     getPaginationRowModel: getPaginationRowModel(),
     onPaginationChange: setPagination,
   });
+
+  // passes value to the filter function set on the `action` column
+  // const handlePermissionTypeFilter = (value: string) => {
+  //   table.getColumn("action")?.setFilterValue(value);
+  // };
 
   return (
     <>

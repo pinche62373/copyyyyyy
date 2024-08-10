@@ -32,6 +32,7 @@ export const TableFilterDropdown = () => {
             <line x1="16" x2="16" y1="18" y2="22"></line>
           </svg>
           Filter
+          {/* TODO show counter if filters are active */}
           <span className="font-medium text-[10px] py-0.5 px-[5px] bg-gray-800 text-white leading-3 rounded-full dark:bg-neutral-500">
             5
           </span>

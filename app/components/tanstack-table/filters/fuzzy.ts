@@ -1,9 +1,10 @@
 import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 import { FilterFn } from "@tanstack/react-table";
 
+// NOTE: re-declaring the module will make the filter required in all tables
 declare module "@tanstack/react-table" {
   interface FilterFns {
-    fuzzy: FilterFn<unknown>; //add "fuzzy" filter to the filterFns options
+    fuzzy: FilterFn<unknown> | undefined; //add "fuzzy" filter to the filterFns options
   }
   interface FilterMeta {
     itemRank: RankingInfo;
@@ -18,7 +19,7 @@ export const fuzzyFilter: FilterFn<unknown> = (
   addMeta,
 ) => {
   // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value); 
+  const itemRank = rankItem(row.getValue(columnId), value);
 
   // Store the itemRank info
   addMeta({
