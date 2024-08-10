@@ -22,7 +22,7 @@ import { TableBar } from "#app/components/tanstack-table/TableBar";
 import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
-import { getPermissionsByEntityName } from "#app/models/permission.server";
+import { getPermissionsByResourceName } from "#app/models/permission.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,
@@ -33,17 +33,17 @@ import {
   requireRoutePermission,
 } from "#app/utils/permissions.server";
 
-const { entityCrud: crud } = getAdminCrud();
+const { resourceCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    entity: crud.routes.view,
+    resource: crud.routes.view,
     scope: "any",
   });
 
-  const entityName = z.coerce.string().parse(params.entityName);
+  const resourceName = z.coerce.string().parse(params.resourceName);
 
-  const permissions = await getPermissionsByEntityName(entityName);
+  const permissions = await getPermissionsByResourceName(resourceName);
 
   if (permissions.length === 0) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
@@ -52,7 +52,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const flattenedPermissions = flattenPermissions(permissions);
 
   return {
-    entityName,
+    resourceName,
     permissions: flattenedPermissions,
   };
 }
@@ -98,9 +98,9 @@ const columns = [
 ];
 
 export default function Component() {
-  const { entityName, permissions } = useLoaderData<typeof loader>();
+  const { resourceName, permissions } = useLoaderData<typeof loader>();
 
-  const entityType = permissions[0].action === "access" ? "route" : "model";
+  const resourceType = permissions[0].action === "access" ? "route" : "model";
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
@@ -141,7 +141,7 @@ export default function Component() {
   return (
     <>
       <AdminPageTitle
-        title={`View ${entityType} permissions for entity ${entityName}`}
+        title={`View ${resourceType} permissions for resource ${resourceName}`}
       />
 
       {/* Start Permissions Table*/}

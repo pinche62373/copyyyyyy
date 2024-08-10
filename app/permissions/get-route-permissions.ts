@@ -1,6 +1,6 @@
 import { routePermissions as adminPermissions } from "#app/permissions/admin.permissions";
 import { routePermissions as countryPermissions } from "#app/permissions/country.permissions";
-import { routePermissions as entityPermissions } from "#app/permissions/entity.permissions";
+import { routePermissions as resourcePermissions } from "#app/permissions/resource.permissions";
 import { routePermissions as languagePermissions } from "#app/permissions/language.permissions";
 import { routePermissions as permissionPermissions } from "#app/permissions/permission.permissions";
 import { routePermissions as regionPermissions } from "#app/permissions/region.permissions";
@@ -10,7 +10,7 @@ import {
   generateRoutePermissions,
   isDuplicatePermission,
 } from "#app/utils/permissions.server";
-import { Permission } from "#app/utils/permissions.types";
+import { Permission } from "#app/permissions/permission.types";
 
 export const getRoutePermissions = (): Permission[] => {
   const result: Permission[] = [];
@@ -19,7 +19,7 @@ export const getRoutePermissions = (): Permission[] => {
     .concat(
       adminPermissions,
       countryPermissions,
-      entityPermissions,
+      resourcePermissions,
       languagePermissions,
       permissionPermissions,
       regionPermissions,

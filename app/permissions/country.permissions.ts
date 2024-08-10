@@ -1,7 +1,7 @@
 import type {
   RoutePermissionFunctionArgs,
   ModelPermissionFunctionArgs,
-} from "#app/utils/permissions.types";
+} from "#app/permissions/permission.types";
 import { Roles } from "#app/validations/role-schema";
 
 // TODO move to file
@@ -14,13 +14,13 @@ const D = "delete";
 // ----------------------------------------------------------------------------
 export const modelPermissions: ModelPermissionFunctionArgs[] = [
   {
-    entity: "country",
+    resource: "country",
     actions: [C, U],
     roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
-    entity: "country",
+    resource: "country",
     actions: [D],
     roles: [Roles.ADMIN],
     scope: "any",
@@ -32,22 +32,22 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [
 // ----------------------------------------------------------------------------
 export const routePermissions: RoutePermissionFunctionArgs[] = [
   {
-    entity: "/admin/countries",
+    resource: "/admin/countries",
     roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
-    entity: "/admin/countries/view",
+    resource: "/admin/countries/view",
     roles: [Roles.ADMIN, Roles.MODERATOR],
     scope: "any",
   },
   {
-    entity: "/admin/countries/edit",
+    resource: "/admin/countries/edit",
     roles: Roles.ADMIN,
     scope: "any",
   },
   {
-    entity: "/admin/countries/new",
+    resource: "/admin/countries/new",
     roles: Roles.ADMIN,
     scope: "any",
   },

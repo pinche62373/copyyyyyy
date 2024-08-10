@@ -35,11 +35,11 @@ import {
   requireRoutePermission,
 } from "#app/utils/permissions.server";
 
-const { entityCrud, permissionCrud } = getAdminCrud();
+const { resourceCrud, permissionCrud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    entity: permissionCrud.routes.index,
+    resource: permissionCrud.routes.index,
     scope: "any",
   });
 
@@ -51,7 +51,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 interface FlatPermission {
   id: string;
-  entity: string;
+  resource: string;
   action: string;
   scope: string;
   role: string;
@@ -73,15 +73,15 @@ const columns = [
     },
     cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
   }),
-  columnHelper.accessor("entity", {
-    header: "Entity",
+  columnHelper.accessor("resource", {
+    header: "Resource",
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: ({ row }) =>
       tableCellLink({
-        id: row.original.entity,
-        name: row.original.entity,
-        target: entityCrud.routes.index,
+        id: row.original.resource,
+        name: row.original.resource,
+        target: resourceCrud.routes.index,
       }),
   }),
   columnHelper.accessor("action", {
@@ -117,7 +117,7 @@ export default function Component() {
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([
     {
-      id: "entity", // MUST be here or global filter will not sort by rankingValue
+      id: "resource", // MUST be here or global filter will not sort by rankingValue
       desc: false,
     },
   ]);

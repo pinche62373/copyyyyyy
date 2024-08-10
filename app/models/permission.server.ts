@@ -19,7 +19,7 @@ export function getPermission({ id }: Pick<Permission, "id">) {
 
 export function getPermissions() {
   return prisma.permission.findMany({
-    orderBy: { entity: "asc" },
+    orderBy: { resource: "asc" },
     include: {
       roles: {
         select: {
@@ -32,12 +32,12 @@ export function getPermissions() {
   });
 }
 
-export function getPermissionsByEntityName(entityName: string) {
+export function getPermissionsByResourceName(resourceName: string) {
   return prisma.permission.findMany({
     where: {
-      entity: entityName,
+      resource: resourceName,
     },
-    orderBy: { entity: "asc" },
+    orderBy: { resource: "asc" },
     include: {
       roles: {
         select: {

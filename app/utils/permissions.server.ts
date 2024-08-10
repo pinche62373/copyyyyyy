@@ -11,7 +11,7 @@ import type {
   Permission,
   RoutePermission,
   RoutePermissionFunctionArgs,
-} from "#app/utils/permissions.types";
+} from "#app/permissions/permission.types";
 import {
   userHasModelPermission,
   userHasRoutePermission,
@@ -42,7 +42,7 @@ export async function requireRole(request: Request, role: string | string[]) {
 // ----------------------------------------------------------------------------
 export async function requireRoutePermission(
   request: Request,
-  permission: Pick<RoutePermission, "entity" | "scope">,
+  permission: Pick<RoutePermission, "resource" | "scope">,
 ) {
   const user = await getUser(request);
 
@@ -58,7 +58,7 @@ export async function requireRoutePermission(
 // ----------------------------------------------------------------------------
 export async function requireModelPermission(
   request: Request,
-  permission: Pick<ModelPermission, "entity" | "action" | "scope">,
+  permission: Pick<ModelPermission, "resource" | "action" | "scope">,
 ) {
   const user = await getUser(request);
 
@@ -77,7 +77,7 @@ export const getSeedPermissions = () => {
 
   const result = permissions.map((permission) => ({
     ...permission,
-    id: cuid(permission.entity + permission.action + permission.scope),
+    id: cuid(permission.resource + permission.action + permission.scope),
     updatedAt: null,
   }));
 
@@ -88,7 +88,7 @@ export const getSeedPermissions = () => {
 // Helper function to generate ModelPermission objects.
 // ----------------------------------------------------------------------------
 export const generateModelPermissions = ({
-  entity,
+  resource,
   actions,
   roles,
   scope,
@@ -101,7 +101,7 @@ export const generateModelPermissions = ({
 
   for (const action of actions) {
     result.push({
-      entity,
+      resource,
       action,
       scope,
       description,
@@ -115,7 +115,7 @@ export const generateModelPermissions = ({
 // Helper function to generate RoutePermission objects.
 // ----------------------------------------------------------------------------
 export const generateRoutePermissions = ({
-  entity,
+  resource,
   scope,
   roles,
   description,
@@ -124,7 +124,7 @@ export const generateRoutePermissions = ({
 
   return [
     {
-      entity,
+      resource,
       action: "access",
       scope,
       description,
@@ -143,7 +143,7 @@ export const isDuplicatePermission = (
   const result =
     store.find(
       (p) =>
-        p.entity === permission.entity &&
+        p.resource === permission.resource &&
         p.action === permission.action &&
         p.scope === permission.scope,
     ) !== undefined;

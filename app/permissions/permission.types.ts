@@ -8,7 +8,7 @@ const modelScopes = ["own", "any"] as const;
 
 export interface Permission {
   id: string;
-  entity: string;
+  resource: string;
   action: string;
   scope: string;
   description: string;
@@ -25,7 +25,7 @@ export interface FlatPermission extends Omit<Permission, "roles"> {
 }
 
 export interface RoutePermission {
-  entity: string;
+  resource: string;
   action: (typeof routeActions)[number];
   scope: (typeof routeScopes)[number];
   description?: string;
@@ -33,14 +33,14 @@ export interface RoutePermission {
 }
 
 export interface RoutePermissionFunctionArgs {
-  entity: string;
+  resource: string;
   scope: (typeof routeScopes)[number];
   description?: string;
   roles: Role[number] | Role[number][];
 }
 
 export interface ModelPermission {
-  entity: string;
+  resource: string;
   action: (typeof modelActions)[number];
   scope: (typeof modelScopes)[number];
   description?: string;
@@ -48,7 +48,7 @@ export interface ModelPermission {
 }
 
 export interface ModelPermissionFunctionArgs {
-  entity: string;
+  resource: string;
   actions: (typeof modelActions)[number] | (typeof modelActions)[number][];
   scope: (typeof modelScopes)[number];
   description?: string;

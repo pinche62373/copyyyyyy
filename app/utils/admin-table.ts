@@ -28,7 +28,7 @@ export const userTableCellActions = ({
   actions.forEach((action) => {
     if (
       userHasRoutePermission(user, {
-        entity: `${route}/${action}`,
+        resource: `${route}/${action}`,
         scope: "any",
       })
     ) {

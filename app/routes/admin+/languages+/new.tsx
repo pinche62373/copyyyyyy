@@ -24,7 +24,7 @@ const { languageCrud: crud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    entity: crud.routes.new,
+    resource: crud.routes.new,
     scope: "any",
   });
 
@@ -35,7 +35,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const intent = "create";
 
   await requireModelPermission(request, {
-    entity: crud.singular,
+    resource: crud.singular,
     action: intent,
     scope: "any",
   });

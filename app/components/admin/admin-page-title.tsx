@@ -76,7 +76,7 @@ export const AdminPageTitle = ({
           {/* Button */}
           {button &&
             userHasRoutePermission(user, {
-              entity: button.to,
+              resource: button.to,
               scope: "any",
             }) && <Button type="button" text={button.title} to={button.to} />}
           {/* End Conditional New Button  */}

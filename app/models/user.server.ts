@@ -16,12 +16,12 @@ export async function getUserById(id: User["id"]) {
           name: true,
           permissions: {
             select: {
-              entity: true,
+              resource: true,
               action: true,
               scope: true,
             },
             orderBy: {
-              entity: "asc",
+              resource: "asc",
             },
           },
         },

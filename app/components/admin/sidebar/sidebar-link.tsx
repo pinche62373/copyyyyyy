@@ -19,7 +19,7 @@ export function SidebarLink({
 }: Args) {
   const user = useUser();
 
-  if (!userHasRoutePermission(user, { entity: to, scope: "any" })) {
+  if (!userHasRoutePermission(user, { resource: to, scope: "any" })) {
     return;
   }
   const liClass = nested === false && "px-5 mb-1.5";

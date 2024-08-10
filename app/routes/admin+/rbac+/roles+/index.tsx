@@ -36,7 +36,7 @@ const { roleCrud: crud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    entity: crud.routes.index,
+    resource: crud.routes.index,
     scope: "any",
   });
 

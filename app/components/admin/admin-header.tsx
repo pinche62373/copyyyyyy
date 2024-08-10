@@ -32,7 +32,7 @@ export const AdminHeader = () => {
                 { path: "/", breadcrumb: null },
                 { path: "/admin", breadcrumb: "Home" },
                 { path: "/admin/rbac", props: { noLink: true } },
-                { path: "/admin/rbac/entities", props: { noLink: true } },
+                { path: "/admin/rbac/resources", props: { noLink: true } },
               ]}
             />
           </div>

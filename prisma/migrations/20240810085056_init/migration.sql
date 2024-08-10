@@ -36,7 +36,7 @@ CREATE TABLE "Role" (
 -- CreateTable
 CREATE TABLE "Permission" (
     "id" TEXT NOT NULL PRIMARY KEY,
-    "entity" TEXT NOT NULL,
+    "resource" TEXT NOT NULL,
     "action" TEXT NOT NULL,
     "scope" TEXT NOT NULL,
     "description" TEXT NOT NULL DEFAULT '',
@@ -130,7 +130,7 @@ CREATE INDEX "Session_userId_idx" ON "Session"("userId");
 CREATE UNIQUE INDEX "Role_name_key" ON "Role"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Permission_action_entity_scope_key" ON "Permission"("action", "entity", "scope");
+CREATE UNIQUE INDEX "Permission_action_resource_scope_key" ON "Permission"("action", "resource", "scope");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Country_name_key" ON "Country"("name");

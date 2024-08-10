@@ -24,7 +24,7 @@ const { regionCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    entity: crud.routes.edit,
+    resource: crud.routes.edit,
     scope: "any",
   });
 
@@ -43,7 +43,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const intent = "update";
 
   await requireModelPermission(request, {
-    entity: crud.singular,
+    resource: crud.singular,
     action: intent,
     scope: "any",
   });

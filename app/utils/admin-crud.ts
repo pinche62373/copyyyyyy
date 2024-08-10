@@ -33,10 +33,10 @@ export function getAdminCrud(): CrudList {
     routes: getRoutes("/admin/countries"),
   };
 
-  const entityCrud = {
-    singular: "entity",
-    plural: "entities",
-    routes: getRoutes("/admin/rbac/entities"),
+  const resourceCrud = {
+    singular: "resource",
+    plural: "resources",
+    routes: getRoutes("/admin/rbac/resources"),
   };
 
   const languageCrud = {
@@ -65,7 +65,7 @@ export function getAdminCrud(): CrudList {
 
   return {
     countryCrud,
-    entityCrud,
+    resourceCrud,
     languageCrud,
     permissionCrud,
     regionCrud,

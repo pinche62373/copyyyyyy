@@ -1,7 +1,7 @@
 import type {
   RoutePermissionFunctionArgs,
   ModelPermissionFunctionArgs,
-} from "#app/utils/permissions.types";
+} from "#app/permissions/permission.types";
 import { Roles } from "#app/validations/role-schema";
 
 // ----------------------------------------------------------------------------
@@ -14,7 +14,7 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [];
 // ----------------------------------------------------------------------------
 export const routePermissions: RoutePermissionFunctionArgs[] = [
   {
-    entity: "/admin/rbac/permissions",
+    resource: "/admin/rbac/permissions",
     roles: Roles.ADMIN,
     scope: "any",
   },

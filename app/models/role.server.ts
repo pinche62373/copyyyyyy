@@ -19,7 +19,7 @@ export function getRoleWithPermissions({ id }: Pick<Role, "id">) {
     where: { id },
     include: {
       permissions: {
-        orderBy: { entity: "asc" },
+        orderBy: { resource: "asc" },
       },
     },
   });
@@ -31,9 +31,9 @@ export function getRolesWithPermissions() {
     include: {
       permissions: {
         select: {
-          entity: true,
+          resource: true,
         },
-        orderBy: { entity: "asc" },
+        orderBy: { resource: "asc" },
       },
     },
   });

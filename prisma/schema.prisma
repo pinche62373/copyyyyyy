@@ -65,17 +65,17 @@ model Role {
 
 model Permission {
   id          String @id @default(cuid())
-  entity      String // e.g. note, user, admin/system, user/profile etc.
+  resource    String // e.g. note, user, admin/system, user/profile etc.
   action      String // create, read, update, delete OR access (for routes)
   scope       String // own or any
   description String @default("")
 
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 
   roles Role[]
 
-  @@unique([action, entity, scope])
+  @@unique([action, resource, scope])
 }
 
 model Country {

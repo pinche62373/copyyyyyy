@@ -1,6 +1,6 @@
 import { modelPermissions as adminPermissions } from "#app/permissions/admin.permissions";
 import { modelPermissions as countryPermissions } from "#app/permissions/country.permissions";
-import { modelPermissions as entityPermissions } from "#app/permissions/entity.permissions";
+import { modelPermissions as resourcePermissions } from "#app/permissions/resource.permissions";
 import { modelPermissions as languagePermissions } from "#app/permissions/language.permissions";
 import { modelPermissions as permissionPermissions } from "#app/permissions/permission.permissions";
 import { modelPermissions as regionPermissions } from "#app/permissions/region.permissions";
@@ -10,7 +10,7 @@ import {
   generateModelPermissions,
   isDuplicatePermission,
 } from "#app/utils/permissions.server";
-import { Permission } from "#app/utils/permissions.types";
+import { Permission } from "#app/permissions/permission.types";
 
 export const getModelPermissions = (): Permission[] => {
   const result: Permission[] = [];
@@ -19,7 +19,7 @@ export const getModelPermissions = (): Permission[] => {
     .concat(
       adminPermissions,
       countryPermissions,
-      entityPermissions,
+      resourcePermissions,
       languagePermissions,
       permissionPermissions,
       regionPermissions,
@@ -43,7 +43,7 @@ export const getModelPermissions = (): Permission[] => {
   // return Array.prototype.concat(
   //   adminPermissions,
   //   countryPermissions,
-  //   entityPermissions,
+  //   resourcePermissions,
   //   languagePermissions,
   //   permissionPermissions,
   //   regionPermissions,

@@ -6,7 +6,7 @@ import {
   ModelPermission,
   Permission,
   RoutePermission,
-} from "#app/utils/permissions.types";
+} from "#app/permissions/permission.types";
 
 type UserType = SerializeFrom<typeof rootLoader>["user"];
 
@@ -56,17 +56,17 @@ export function userHasRole(
  */
 function userHasPermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
-  permission: Pick<Permission, "entity" | "action" | "scope">,
+  permission: Pick<Permission, "resource" | "action" | "scope">,
 ) {
   if (!user) return false;
   console.log(
-    `Check permission | ${permission.action} | ${permission.entity} | ${permission.scope} |`,
+    `Check permission | ${permission.action} | ${permission.resource} | ${permission.scope} |`,
   );
 
   return user.roles.some((role) =>
     role.permissions.some(
       (p) =>
-        p.entity === permission.entity &&
+        p.resource === permission.resource &&
         p.action === permission.action &&
         p.scope === permission.scope,
     ),
@@ -78,7 +78,7 @@ function userHasPermission(
  */
 export function userHasRoutePermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
-  permission: Pick<RoutePermission, "entity" | "scope">,
+  permission: Pick<RoutePermission, "resource" | "scope">,
 ) {
   return userHasPermission(user, { ...permission, action: "access" });
 }
@@ -88,7 +88,7 @@ export function userHasRoutePermission(
  */
 export function userHasModelPermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
-  permission: Pick<ModelPermission, "entity" | "action" | "scope">,
+  permission: Pick<ModelPermission, "resource" | "action" | "scope">,
 ) {
   return userHasPermission(user, permission);
 }

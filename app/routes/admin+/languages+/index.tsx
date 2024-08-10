@@ -44,7 +44,7 @@ const { languageCrud: crud } = getAdminCrud();
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireRoutePermission(request, {
-    entity: crud.routes.index,
+    resource: crud.routes.index,
     scope: "any",
   });
 
