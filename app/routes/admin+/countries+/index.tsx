@@ -22,7 +22,7 @@ import {
   tableCellUpdatedAt,
   tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
-import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy";
+import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { TableBar } from "#app/components/tanstack-table/TableBar";
 import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";

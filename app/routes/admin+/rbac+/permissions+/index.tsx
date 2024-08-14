@@ -19,11 +19,11 @@ import {
   tableCellLink,
   tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
-import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy";
-import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type";
+import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
+import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter";
+import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { TableBar } from "#app/components/tanstack-table/TableBar";
-import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getPermissions } from "#app/models/permission.server";
@@ -149,10 +149,10 @@ export default function Component() {
     onPaginationChange: setPagination,
   });
 
-  // passes value to the filter function set on the `action` column
-  // const handlePermissionTypeFilter = (value: string) => {
-  //   table.getColumn("action")?.setFilterValue(value);
-  // };
+  // passes selected value to the filter function set on the `action` column
+  const handleFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    table.getColumn("action")?.setFilterValue(e.target.value);
+  };
 
   return (
     <>
@@ -167,7 +167,12 @@ export default function Component() {
             }
             placeholder={`Search ${permissionCrud.plural}...`}
           />
-          <TableFilterDropdown />
+
+          <PermissionTypeFilterComponent
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              handleFilter(e)
+            }
+          />
         </TableBar>
 
         <TanstackTable.Table table={table}>

@@ -6,9 +6,9 @@ import {
   useRouteLoaderData,
 } from "@remix-run/react";
 import {
+  PreventFlashOnWrongTheme,
   type Theme,
   ThemeProvider,
-  PreventFlashOnWrongTheme,
   useTheme,
 } from "remix-themes";
 
