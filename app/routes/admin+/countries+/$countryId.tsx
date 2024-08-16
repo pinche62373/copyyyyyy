@@ -10,7 +10,6 @@ import { humanize, timeStampToHuman, validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { countrySchemaFull } from "#app/validations/country-schema";
 
-
 const { countryCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -35,7 +34,11 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title={`View ${humanize(crud.singular)}`} />
+      <AdminPageTitle
+        title={`View ${humanize(crud.singular)}`}
+        buttonTitle="Edit"
+        buttonTo={`${crud.routes.index}/${country.id}/edit`}
+      />
 
       <AdminContentCard className="p-6">
         <FormInputTextReadOnly label="Name">

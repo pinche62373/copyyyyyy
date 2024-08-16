@@ -1,12 +1,13 @@
 import { type SerializeFrom } from "@remix-run/node";
 import { useRouteLoaderData } from "@remix-run/react";
 
-import { type loader as rootLoader } from "#app/root.tsx";
+import { normalizePermission } from "#app/permissions/normalize-permission";
 import {
   ModelPermission,
   Permission,
   RoutePermission,
 } from "#app/permissions/permission.types";
+import { type loader as rootLoader } from "#app/root.tsx";
 
 type UserType = SerializeFrom<typeof rootLoader>["user"];
 
@@ -51,24 +52,31 @@ export function userHasRole(
 
 /**
  * Internal function for checking all permissions, regardless of type
- *
- * TODO support scope property
  */
 function userHasPermission(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
   permission: Pick<Permission, "resource" | "action" | "scope">,
 ) {
   if (!user) return false;
-  console.log(
-    `Check permission | ${permission.action} | ${permission.resource} | ${permission.scope} |`,
-  );
+
+  // ALWAYS normalize first so permission.resource format will match the permission definition files
+  const perm = normalizePermission(permission);
+
+  console.log("Checking permission", perm);
+
+  // TODO check record owner, then same check as above
+  if (perm.scope === "own") {
+    console.log("TODO => IMPLEMENT SUPPORT FOR PERMISSION SCOPE 'OWN'");
+
+    return false;
+  }
 
   return user.roles.some((role) =>
     role.permissions.some(
       (p) =>
-        p.resource === permission.resource &&
-        p.action === permission.action &&
-        p.scope === permission.scope,
+        p.resource === perm.resource &&
+        p.action === perm.action &&
+        p.scope === perm.scope,
     ),
   );
 }

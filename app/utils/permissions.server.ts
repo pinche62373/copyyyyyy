@@ -2,8 +2,6 @@ import { json } from "@remix-run/node";
 
 import { getPermissions } from "#app/models/permission.server";
 import { getAllPermissions } from "#app/permissions/get-all-permissions";
-import { getUser, requireUserId } from "#app/utils/auth.server";
-import { prisma } from "#app/utils/db.server";
 import type {
   FlatPermission,
   ModelPermission,
@@ -12,6 +10,8 @@ import type {
   RoutePermission,
   RoutePermissionFunctionArgs,
 } from "#app/permissions/permission.types";
+import { getUser, requireUserId } from "#app/utils/auth.server";
+import { prisma } from "#app/utils/db.server";
 import {
   userHasModelPermission,
   userHasRoutePermission,

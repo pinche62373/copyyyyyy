@@ -1,7 +1,7 @@
 /**
  * Splat route to fix 404 FOUC/hydration error
  *
- * @link {@see https://github.com/remix-run/remix/discussions/5186#discussioncomment-4748778}
+ * @see {@link https://github.com/remix-run/remix/discussions/5186#discussioncomment-4748778}
  */
 
 import { json } from "@remix-run/node";
