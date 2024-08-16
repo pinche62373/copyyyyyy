@@ -41,7 +41,7 @@ const { resourceCrud, permissionCrud } = getAdminCrud();
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    resource: permissionCrud.routes.index,
+    resource: new URL(request.url).pathname,
     scope: "any",
   });
 

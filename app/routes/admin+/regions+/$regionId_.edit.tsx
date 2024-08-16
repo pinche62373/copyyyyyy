@@ -24,7 +24,7 @@ const { regionCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    resource: crud.routes.edit,
+    resource: new URL(request.url).pathname,
     scope: "any",
   });
 

@@ -15,7 +15,7 @@ import { validateFormIntent } from "#app/validations/form-intent";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    resource: "/admin/system",
+    resource: new URL(request.url).pathname,
     scope: "any",
   });
 

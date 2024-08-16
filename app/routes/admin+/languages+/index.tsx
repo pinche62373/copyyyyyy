@@ -44,7 +44,7 @@ const { languageCrud: crud } = getAdminCrud();
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireRoutePermission(request, {
-    resource: crud.routes.index,
+    resource: new URL(request.url).pathname,
     scope: "any",
   });
 
@@ -166,7 +166,8 @@ export default function Component() {
     <>
       <AdminPageTitle
         title={humanize(crud.plural)}
-        button={{ title: `New ${humanize(crud.singular)}`, to: crud.routes.new }}
+        buttonTitle={`New ${humanize(crud.singular)}`}
+        buttonTo={crud.routes.new}
       />
 
       <AdminContentCard>

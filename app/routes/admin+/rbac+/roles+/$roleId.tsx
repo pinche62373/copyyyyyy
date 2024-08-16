@@ -39,7 +39,7 @@ const { roleCrud, resourceCrud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    resource: roleCrud.routes.view,
+    resource: new URL(request.url).pathname,
     scope: "any",
   });
 

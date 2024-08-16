@@ -33,9 +33,10 @@ export function normalizePermission(
     }
 
     if (routePermissionWithId.groups?.viewId) {
+      console.log
       return {
         ...permission,
-        resource: `${routePermissionWithId.groups.viewPath}/edit`,
+        resource: `${routePermissionWithId.groups.viewPath}/view`,
         recordId: routePermissionWithId.groups.viewId,
       };
     }

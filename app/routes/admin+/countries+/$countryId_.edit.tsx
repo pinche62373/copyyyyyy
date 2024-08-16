@@ -16,14 +16,17 @@ import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize, validateSubmission } from "#app/utils/misc";
-import { requireModelPermission, requireRoutePermission } from "#app/utils/permissions.server";
+import {
+  requireModelPermission,
+  requireRoutePermission,
+} from "#app/utils/permissions.server";
 import { countrySchemaUpdateForm } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
-    resource: crud.routes.edit,
+    resource: new URL(request.url).pathname,
     scope: "any",
   });
 
