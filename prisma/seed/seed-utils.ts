@@ -2,14 +2,16 @@ import { copycat } from "@snaplet/copycat";
 import { Store, permissionScalars, roleScalars } from "@snaplet/seed";
 import invariant from "tiny-invariant";
 
+import * as Constants from "#app/utils/constants";
+
 /**
  * Generates a deterministic cuid "like" id.
  */
 export const cuid = (
   input: string,
-  options: { length?: number } = { length: 25 },
+  options: { length?: number } = { length: Constants.CUID_LENGTH },
 ) => {
-  const length = options.length || 25; // Length of the desired cuid
+  const length = options.length || Constants.CUID_LENGTH; // Length of the desired cuid
 
   return copycat.someOf(input, [length, length], alphaNumAlphabet).join("");
 };
