@@ -64,7 +64,7 @@ function userHasPermission(
   if (permission.scope === "own" && permission.recordId === null) {
     throw new Error(
       "Permission scope is 'own' but recordId is null. " +
-        JSON.stringify(permission, null, 2),
+        JSON.stringify({ ...permission, user: user.id }, null, 2),
     );
   }
 
