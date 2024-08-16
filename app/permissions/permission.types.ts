@@ -50,6 +50,7 @@ export interface ModelPermission {
   resource: string;
   action: (typeof modelActions)[number];
   scope: (typeof modelScopes)[number];
+  recordId?: string;
   description?: string;
   roles: Role[number] | Role[number][];
 }

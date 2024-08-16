@@ -13,6 +13,8 @@ import {
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { validateFormIntent } from "#app/validations/form-intent";
 
+const intent = "purge";
+
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
@@ -29,11 +31,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     resource: "/admin/system",
     scope: "any",
   });
-
   
   const formData = await request.formData();
 
-  validateFormIntent({ formData, intent: "purge" });
+  validateFormIntent({ formData, intent});
 
   try {
     await deleteExpiredSessions();
@@ -59,7 +60,7 @@ export default function Component() {
 
       <AdminContentCard className="px-5 py-3">
         <Form id={formId} method="POST" action="/admin/system">
-          <FormInputHidden name="intent" value="purge" />
+          <FormInputHidden name="intent" value={intent} />
 
           <FormInputActionButton
             formId={formId}

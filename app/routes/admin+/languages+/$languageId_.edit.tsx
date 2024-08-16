@@ -22,6 +22,8 @@ import { languageSchemaUpdateForm } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
+const intent = "update";
+
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
@@ -43,20 +45,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const intent = "update";
-
-  await requireModelPermission(request, {
-    resource: crud.singular,
-    action: intent,
-    scope: "any",
-  });
-
   const userId = await requireUserId(request);
 
   const submission = validateSubmission({
     intent,
     formData: await request.formData(),
     schema: languageSchemaUpdateForm,
+  });
+
+  await requireModelPermission(request, {
+    resource: crud.singular,
+    action: intent,
+    scope: "any",
   });
 
   try {
@@ -89,7 +89,7 @@ export default function Component() {
 
       <AdminContentCard className="p-6">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <FormInputHidden name="intent" value="update" />
+          <FormInputHidden name="intent" value={intent} />
           <FormInputHidden name="id" value={language.id} />
 
           <FormInputText

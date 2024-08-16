@@ -25,6 +25,8 @@ import { countrySchemaCreateForm } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
+const intent = "create"
+
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
@@ -37,15 +39,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const intent = "create"
+  const userId = await requireUserId(request);
 
   await requireModelPermission(request, {
     resource: crud.singular,
     action: intent,
     scope: "any",
   });
-
-  const userId = await requireUserId(request);
 
   const submission = validateSubmission({
     intent,

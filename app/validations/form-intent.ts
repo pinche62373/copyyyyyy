@@ -4,7 +4,7 @@ interface Args {
   formData: FormData;
   intent: Intent;
 }
-export function validateFormIntent({ intent, formData }: Args) {
+export function validateFormIntent({ formData, intent }: Args) {
   if (formData.get("intent") !== intent) {
     throw new Response("Unprocessable Entity", {
       status: 422,

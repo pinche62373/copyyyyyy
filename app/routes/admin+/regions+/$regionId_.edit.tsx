@@ -22,6 +22,8 @@ import { regionSchemaUpdateForm } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
 
+const intent = "update";
+
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
@@ -40,20 +42,18 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const intent = "update";
-
-  await requireModelPermission(request, {
-    resource: crud.singular,
-    action: intent,
-    scope: "any",
-  });
-
   const userId = await requireUserId(request);
 
   const submission = validateSubmission({
     intent,
     formData: await request.formData(),
     schema: regionSchemaUpdateForm,
+  });
+
+  await requireModelPermission(request, {
+    resource: crud.singular,
+    action: intent,
+    scope: "any",
   });
 
   try {

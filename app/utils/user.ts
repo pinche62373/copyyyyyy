@@ -1,7 +1,7 @@
 import { type SerializeFrom } from "@remix-run/node";
 import { useRouteLoaderData } from "@remix-run/react";
 
-import { normalizePermission } from "#app/permissions/normalize-permission";
+import { normalizeRoutePermission } from "#app/permissions/normalize-route-permission";
 import {
   ModelPermission,
   Permission,
@@ -54,49 +54,62 @@ export function userHasRole(
  * Internal function for checking all permissions, regardless of type
  */
 function userHasPermission(
-  user: Pick<ReturnType<typeof useUser>, "roles"> | null,
-  permission: Pick<Permission, "resource" | "action" | "scope">,
+  user: Pick<ReturnType<typeof useUser>, "roles" | "id"> | null,
+  permission: Pick<Permission, "resource" | "action" | "scope" | "recordId">,
 ) {
   if (!user) return false;
 
-  // ALWAYS normalize first so permission.resource format will match the permission definition files
-  const perm = normalizePermission(permission);
+  console.log("Checking permission", { ...permission, user: user.id });
 
-  console.log("Checking permission", perm);
-
-  // TODO check record owner, then same check as above
-  if (perm.scope === "own") {
-    console.log("TODO => IMPLEMENT SUPPORT FOR PERMISSION SCOPE 'OWN'");
-
-    return false;
+  if (permission.scope === "own" && permission.recordId === null) {
+    throw new Error(
+      "Permission scope is 'own' but recordId is null. " +
+        JSON.stringify(permission, null, 2),
+    );
   }
 
-  return user.roles.some((role) =>
-    role.permissions.some(
-      (p) =>
-        p.resource === perm.resource &&
-        p.action === perm.action &&
-        p.scope === perm.scope,
-    ),
-  );
+  if (permission.scope === "any") {
+    return user.roles.some((role) =>
+      role.permissions.some(
+        (p) =>
+          p.resource === permission.resource &&
+          p.action === permission.action &&
+          p.scope === permission.scope,
+      ),
+    );
+  }
+
+  // TODO check record owner, then same check as above.
+  console.log("TODO => IMPLEMENT SUPPORT FOR PERMISSION SCOPE 'OWN'");
 }
 
 /**
  * Helper function for checking route permissions.
  */
 export function userHasRoutePermission(
-  user: Pick<ReturnType<typeof useUser>, "roles"> | null,
+  user: Pick<ReturnType<typeof useUser>, "roles" | "id"> | null,
   permission: Pick<RoutePermission, "resource" | "scope">,
 ) {
-  return userHasPermission(user, { ...permission, action: "access" });
+  return userHasPermission(
+    user,
+    normalizeRoutePermission({ ...permission, action: "access" }), // sets recordId property
+  );
 }
 
 /**
  * Helper function for checking model permissions.
  */
 export function userHasModelPermission(
-  user: Pick<ReturnType<typeof useUser>, "roles"> | null,
-  permission: Pick<ModelPermission, "resource" | "action" | "scope">,
+  user: Pick<ReturnType<typeof useUser>, "roles" | "id"> | null,
+  permission: Pick<
+    ModelPermission,
+    "resource" | "action" | "scope" | "recordId"
+  >,
 ) {
-  return userHasPermission(user, permission);
+  const recordId = permission.recordId || null;
+
+  return userHasPermission(user, {
+    ...permission,
+    recordId,
+  });
 }

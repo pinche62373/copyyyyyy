@@ -22,6 +22,8 @@ import { languageSchemaCreateForm } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
+const intent = "create";
+
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
@@ -32,20 +34,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const intent = "create";
-
-  await requireModelPermission(request, {
-    resource: crud.singular,
-    action: intent,
-    scope: "any",
-  });
-
   const userId = await requireUserId(request);
 
   const submission = validateSubmission({
     intent,
     formData: await request.formData(),
     schema: languageSchemaCreateForm,
+  });
+
+  await requireModelPermission(request, {
+    resource: crud.singular,
+    action: intent,
+    scope: "any",
   });
 
   try {
@@ -78,7 +78,7 @@ export default function Component() {
 
       <AdminContentCard className="p-5">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <FormInputHidden name="intent" value="create" />
+          <FormInputHidden name="intent" value={intent} />
 
           <FormInputText label="Name" fieldName="name" fields={fields} />
 

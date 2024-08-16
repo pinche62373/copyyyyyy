@@ -58,7 +58,7 @@ export async function requireRoutePermission(
 // ----------------------------------------------------------------------------
 export async function requireModelPermission(
   request: Request,
-  permission: Pick<ModelPermission, "resource" | "action" | "scope">,
+  permission: Pick<ModelPermission, "resource" | "action" | "scope" | "recordId">,
 ) {
   const user = await getUser(request);
 

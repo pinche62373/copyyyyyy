@@ -1,7 +1,7 @@
 import { Permission } from "#app/permissions/permission.types";
 
 /**
- * This regex extracts below named capturing groups for VIEW and EDIT route permissions:
+ * This regex creates below named capturing groups for VIEW and EDIT route permissions:
  *  - editPath
  *  - editId
  *  - viewPath
@@ -14,9 +14,9 @@ const groupRoutePermissionWithIdRegex = new RegExp(
 );
 
 /**
- * Adds `recordId` property to permission objects.
+ * If a record id is found in the URL, it is moved to permission property `recordId`.
  */
-export function normalizePermission(
+export function normalizeRoutePermission(
   permission: Pick<Permission, "resource" | "action" | "scope">,
 ): Pick<Permission, "resource" | "scope" | "action" | "recordId"> {
   const routePermissionWithId = groupRoutePermissionWithIdRegex.exec(
@@ -33,7 +33,7 @@ export function normalizePermission(
     }
 
     if (routePermissionWithId.groups?.viewId) {
-      console.log
+      console.log;
       return {
         ...permission,
         resource: `${routePermissionWithId.groups.viewPath}/view`,
@@ -47,6 +47,5 @@ export function normalizePermission(
     );
   }
 
-  // TODO handle model permissions
   return { ...permission, recordId: null };
 }

@@ -24,6 +24,8 @@ import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
 import { validateFormIntent } from "#app/validations/form-intent";
 
+const intent = "login";
+
 const validator = withZod(authLoginSchema);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -67,7 +69,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  validateFormIntent({ formData, intent: "login" });
+  validateFormIntent({ formData, intent });
 
   // honeypot
   try {
@@ -125,7 +127,7 @@ export default function LoginPage() {
           className="space-y-6"
           noValidate // disable native HTML validations
         >
-          <FormInputHidden name="intent" value="login" />
+          <FormInputHidden name="intent" value={intent} />
 
           <FormInput name="email" label="Email" placeholder="Your email..." />
           <FormInput
