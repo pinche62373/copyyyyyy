@@ -2,27 +2,40 @@ import { Button } from "#app/components/admin/button";
 import { cn } from "#app/utils/misc";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
 
-type PropTypes =
-  | {
+interface PropTypes {
       title: string;
       className?: string;
-      buttonTitle?: undefined;
-      buttonTo?: undefined;
+      button?: {
+        title: string;
+        to: string;
+        scope: "own" | "any";
+      };
       search?: boolean;
     }
-  | {
-      title: string;
-      className?: string;
-      buttonTitle: string;
-      buttonTo: string;
-      search?: boolean;
-    };
+
+
+// type PropTypes =
+//   | {
+//       title: string;
+//       className?: string;
+//       button?: undefined;
+//       search?: boolean;
+//     }
+//   | {
+//       title: string;
+//       className?: string;
+//       button: {
+//         title: string;
+//         to: string;
+//         scope: "own" | "any";
+//       };
+//       search?: boolean;
+//     };
 
 export const AdminPageTitle = ({
   title,
   search = false,
-  buttonTitle,
-  buttonTo,
+  button,
   className,
   ...rest
 }: PropTypes) => {
@@ -74,11 +87,11 @@ export const AdminPageTitle = ({
           {/* End Search */}
 
           {/* Button */}
-          {buttonTitle &&
+          {button &&
             userHasRoutePermission(user, {
-              resource: buttonTo,
-              scope: "any",
-            }) && <Button type="button" text={buttonTitle} to={buttonTo} />}
+              resource: button.to,
+              scope: button.scope,
+            }) && <Button type="button" text={button.title} to={button.to} />}
           {/* End Conditional New Button  */}
         </div>
         {/* End Form Group  */}

@@ -166,8 +166,11 @@ export default function Component() {
     <>
       <AdminPageTitle
         title={humanize(crud.plural)}
-        buttonTitle={`New ${humanize(crud.singular)}`}
-        buttonTo={crud.routes.new}
+        button={{
+          title: `New ${humanize(crud.singular)}`,
+          to: crud.routes.new,
+          scope: "any",
+        }}
       />
 
       <AdminContentCard>

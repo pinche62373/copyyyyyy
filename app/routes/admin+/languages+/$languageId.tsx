@@ -36,8 +36,11 @@ export default function Component() {
     <>
       <AdminPageTitle
         title={`View ${humanize(crud.singular)}`}
-        buttonTitle="Edit"
-        buttonTo={`${crud.routes.index}/${language.id}/edit`}
+        button={{
+          title: "Edit",
+          to: `${crud.routes.index}/${language.id}/edit`,
+          scope: "any",
+        }}
       />
 
       <AdminContentCard className="p-6">
