@@ -1,36 +1,18 @@
 import { Button } from "#app/components/admin/button";
+import { RoutePermission } from "#app/permissions/permission.types";
 import { cn } from "#app/utils/misc";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
 
 interface PropTypes {
-      title: string;
-      className?: string;
-      button?: {
-        title: string;
-        to: string;
-        scope: "own" | "any";
-      };
-      search?: boolean;
-    }
-
-
-// type PropTypes =
-//   | {
-//       title: string;
-//       className?: string;
-//       button?: undefined;
-//       search?: boolean;
-//     }
-//   | {
-//       title: string;
-//       className?: string;
-//       button: {
-//         title: string;
-//         to: string;
-//         scope: "own" | "any";
-//       };
-//       search?: boolean;
-//     };
+  title: string;
+  className?: string;
+  button?: {
+    title: string;
+    to: RoutePermission["resource"];
+    scope: RoutePermission["scope"];
+  };
+  search?: boolean;
+}
 
 export const AdminPageTitle = ({
   title,
