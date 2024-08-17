@@ -7,6 +7,16 @@ import { z } from "zod";
 import { extendedTheme } from "#app/utils/extended-theme";
 import { Intent, validateFormIntent } from "#app/validations/form-intent";
 
+/**
+ * Merges two union types into single a union without duplicates.
+ *
+ * @example MergeUnion<ModelPermission["scope"] | RoutePermission["scope"]>
+ */
+export type MergeUnion<T> = { [K in unknown & keyof T]: T[K] };
+
+/**
+ * Tailwind helper
+ */
 function formatColors() {
   const colors = [];
   for (const [key, color] of Object.entries(extendedTheme.colors)) {
@@ -22,6 +32,9 @@ function formatColors() {
   return colors;
 }
 
+/**
+ * Tailwind helper
+ */
 const customTwMerge = extendTailwindMerge<string, string>({
   extend: {
     theme: {
@@ -38,10 +51,16 @@ const customTwMerge = extendTailwindMerge<string, string>({
   },
 });
 
+/**
+ * Merge two classes.
+ */
 export function cn(...inputs: ClassValue[]) {
   return customTwMerge(clsx(inputs));
 }
 
+/**
+ * Merge two remix headers, useful for e.g. expiring two cookies.
+ */
 export function mergeHeaders(
   ...headers: (ResponseInit["headers"] | null | undefined)[]
 ) {

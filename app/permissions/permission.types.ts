@@ -1,3 +1,4 @@
+import { type MergeUnion } from "#app/utils/misc";
 import { Role } from "#app/validations/role-schema";
 
 // consts as used in the permission definitions
@@ -12,11 +13,12 @@ const routeScopes = ["own", "any"] as const;
 const modelActions = ["create", "update", "delete"] as const;
 const modelScopes = ["own", "any"] as const;
 
+// interfaces
 export interface Permission {
   id: string;
   resource: string;
-  action: string;
-  scope: string;
+  action: MergeUnion<ModelPermission["action"] | RoutePermission["action"]>;
+  scope: MergeUnion<ModelPermission["scope"] | RoutePermission["scope"]>;
   recordId: string | null;
   description: string;
   createdAt: Date;
