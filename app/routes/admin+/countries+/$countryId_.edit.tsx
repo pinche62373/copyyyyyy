@@ -8,8 +8,8 @@ import { AdminContentCard } from "#app/components/admin/admin-content-card";
 import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import { Button } from "#app/components/admin/button";
 import { FormFooter } from "#app/components/admin/form/form-footer";
-import { FormInputDropdown } from "#app/components/admin/form/form-input-dropdown";
 import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
+import { FormInputSelect } from "#app/components/admin/form/form-input-select";
 import { FormInputText } from "#app/components/admin/form/form-input-text";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
@@ -106,7 +106,7 @@ export default function Component() {
             defaultValue={data.country.name}
           />
 
-          <FormInputDropdown
+          <FormInputSelect
             label="Region"
             items={data.regions}
             fields={fields}

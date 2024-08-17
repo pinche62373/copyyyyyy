@@ -47,7 +47,7 @@ interface PropTypes {
   defaultValue?: string;
 }
 
-export const FormInputDropdown = ({
+export const FormInputSelect = ({
   label,
   fields,
   items,
