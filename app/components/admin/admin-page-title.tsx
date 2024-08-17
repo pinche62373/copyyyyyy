@@ -28,8 +28,8 @@ export const AdminPageTitle = ({
       {/* Header */}
       <div
         className={cn(
-          className,
           "ml-5 pb-5 grid sm:flex sm:justify-between sm:items-center gap-2",
+          className,
         )}
         {...rest}
       >
