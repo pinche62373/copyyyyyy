@@ -1,7 +1,7 @@
 import { Form, NavLink } from "@remix-run/react";
 import { CellContext } from "@tanstack/react-table";
 
-import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
+import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
 import { ConfirmationLauncher } from "#app/components/confirmation-launcher";
 import { ConfirmationModal } from "#app/components/confirmation-modal";
 import { IconContainerRound } from "#app/components/icon-container-round";

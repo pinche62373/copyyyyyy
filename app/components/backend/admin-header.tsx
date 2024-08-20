@@ -1,6 +1,6 @@
-import { AdminBreadcrumbs } from "#app/components/admin/admin-breadcrumbs";
-import { DarkModeToggler } from "#app/components/darkmode-toggler";
-import { UserMenu } from "#app/components/user-menu";
+import { AdminBreadcrumbs } from "#app/components/backend/admin-breadcrumbs";
+import { DarkModeToggler } from "#app/components/shared/darkmode-toggler";
+import { UserMenu } from "#app/components/shared/user-menu";
 import { cn } from "#app/utils/misc";
 
 interface Props {

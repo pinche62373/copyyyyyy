@@ -1,6 +1,6 @@
 import { Outlet } from "@remix-run/react";
 
-import { AdminHeader } from "#app/components/admin/admin-header";
+import { AdminHeader } from "#app/components/backend/admin-header";
 
 export default function PublicLayout() {
   return (

@@ -12,8 +12,8 @@ import {
 import { useState } from "react";
 import { z } from "zod";
 
-import { AdminContentCard } from "#app/components/admin/admin-content-card";
-import { AdminPageTitle } from "#app/components/admin/admin-page-title";
+import { AdminContentCard } from "#app/components/backend/admin-content-card";
+import { AdminPageTitle } from "#app/components/backend/admin-page-title";
 import TanstackTable from "#app/components/tanstack-table";
 import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";

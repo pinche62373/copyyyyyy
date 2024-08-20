@@ -4,12 +4,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
-import { AdminContentCard } from "#app/components/admin/admin-content-card";
-import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import { Button } from "#app/components/admin/button";
-import { FormFooter } from "#app/components/admin/form/form-footer";
-import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
-import { FormInputText } from "#app/components/admin/form/form-input-text";
+import { AdminContentCard } from "#app/components/backend/admin-content-card";
+import { AdminPageTitle } from "#app/components/backend/admin-page-title";
+import { Button } from "#app/components/backend/button";
+import { FormFooter } from "#app/components/backend/form/form-footer";
+import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
+import { FormInputText } from "#app/components/backend/form/form-input-text";
 import { createRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";

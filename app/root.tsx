@@ -17,8 +17,8 @@ import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { HoneypotInputProps } from "remix-utils/honeypot/server";
 import { Toaster, toast as notify } from "sonner";
 
-import { GeneralErrorBoundary } from "#app/components/general-error-boundary";
-import { Layout } from "#app/components/layout";
+import { Document } from "#app/components/document";
+import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
 import stylesheet from "#app/tailwind.css";
 import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
@@ -32,7 +32,7 @@ export const links: LinksFunction = () => [
 ];
 
 // root layout of the entire app, all other routes render inside its <Outlet />
-export { Layout };
+export { Document as Layout };
 
 // ----------------------------------------------------------------------------
 // metadata
@@ -132,7 +132,7 @@ export default function AppWithProviders() {
 }
 
 export function ErrorBoundary() {
-  return <GeneralErrorBoundary />;
+  return <ErrorBoundaryRoot />;
 }
 
 export function HydrateFallback() {

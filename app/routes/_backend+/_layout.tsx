@@ -2,8 +2,8 @@ import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
-import { AdminHeader } from "#app/components/admin/admin-header";
-import { AdminSidebar } from "#app/components/admin/admin-sidebar";
+import { AdminHeader } from "#app/components/backend/admin-header";
+import { AdminSidebar } from "#app/components/backend/admin-sidebar";
 import adminStyleSheet from "#app/styles/admin.css";
 import { authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";

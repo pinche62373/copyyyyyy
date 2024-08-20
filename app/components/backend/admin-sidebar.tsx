@@ -1,9 +1,9 @@
 import { NavLink } from "@remix-run/react";
 
-import { SidebarFooter } from "#app/components/admin/sidebar/sidebar-footer";
-import { SidebarGroup } from "#app/components/admin/sidebar/sidebar-group";
-import { SidebarLink } from "#app/components/admin/sidebar/sidebar-link";
-import { SidebarSection } from "#app/components/admin/sidebar/sidebar-section";
+import { SidebarFooter } from "#app/components/backend/sidebar/sidebar-footer";
+import { SidebarGroup } from "#app/components/backend/sidebar/sidebar-group";
+import { SidebarLink } from "#app/components/backend/sidebar/sidebar-link";
+import { SidebarSection } from "#app/components/backend/sidebar/sidebar-section";
 import { IconEye } from "#app/components/icons/icon-eye";
 import { IconHome } from "#app/components/icons/icon-home";
 import { IconMovie } from "#app/components/icons/icon-movie";

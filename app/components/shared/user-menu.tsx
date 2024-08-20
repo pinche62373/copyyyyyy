@@ -1,7 +1,7 @@
 import { Form } from "@remix-run/react";
 import { useHydrated } from "remix-utils/use-hydrated";
 
-import { Button } from "#app/components/admin/button";
+import { Button } from "#app/components/backend/button";
 import { IconCog } from "#app/components/icons/icon-cog";
 import { IconFolder } from "#app/components/icons/icon-folder";
 import { IconHeart } from "#app/components/icons/icon-heart";

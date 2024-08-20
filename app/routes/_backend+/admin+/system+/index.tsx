@@ -2,10 +2,10 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
-import { AdminContentCard } from "#app/components/admin/admin-content-card";
-import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import { FormInputActionButton } from "#app/components/admin/form/form-input-action-button";
-import { FormInputHidden } from "#app/components/admin/form/form-input-hidden";
+import { AdminContentCard } from "#app/components/backend/admin-content-card";
+import { AdminPageTitle } from "#app/components/backend/admin-page-title";
+import { FormInputActionButton } from "#app/components/backend/form/form-input-action-button";
+import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
 import {
   deleteExpiredSessions,
   getExpiredSessionCount,

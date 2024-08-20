@@ -5,10 +5,10 @@ import {
   useRouteError,
 } from "@remix-run/react";
 
-import { Button } from "#app/components/admin/button";
+import { Button } from "#app/components/backend/button";
 import { getErrorMessage } from "#app/utils/misc";
 
-export function GeneralErrorBoundary() {
+export function ErrorBoundaryRoot() {
   const error = useRouteError();
   const navigate = useNavigate();
   const goBack = () => navigate(-1);

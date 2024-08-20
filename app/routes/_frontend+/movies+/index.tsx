@@ -1,6 +1,6 @@
 import { useLoaderData, NavLink } from "@remix-run/react";
 
-import { AdminContentCard } from "#app/components/admin/admin-content-card";
+import { AdminContentCard } from "#app/components/backend/admin-content-card";
 import { getMovies } from "#app/models/movie.server";
 
 export const loader = async () => {

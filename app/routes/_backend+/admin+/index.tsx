@@ -1,6 +1,6 @@
 import { useLoaderData } from "@remix-run/react";
 
-import { DashboardCounterCard } from "#app/components/admin/dashboard/counter-card";
+import { DashboardCounterCard } from "#app/components/backend/dashboard/counter-card";
 import { IconCog } from "#app/components/icons/icon-cog";
 import { prisma } from "#app/utils/db.server";
 

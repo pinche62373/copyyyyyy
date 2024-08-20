@@ -12,9 +12,9 @@ import {
 import { useState } from "react";
 import { z } from "zod";
 
-import { AdminContentCard } from "#app/components/admin/admin-content-card";
-import { AdminPageTitle } from "#app/components/admin/admin-page-title";
-import { FormInputTextReadOnly } from "#app/components/admin/form/form-input-text-readonly";
+import { AdminContentCard } from "#app/components/backend/admin-content-card";
+import { AdminPageTitle } from "#app/components/backend/admin-page-title";
+import { FormInputTextReadOnly } from "#app/components/backend/form/form-input-text-readonly";
 import TanstackTable from "#app/components/tanstack-table";
 import {
   tableCellLink,

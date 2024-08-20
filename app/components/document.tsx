@@ -14,7 +14,7 @@ import {
 
 import { LoaderData } from "#app/root";
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Document({ children }: { children: React.ReactNode }) {
   let data = useRouteLoaderData<LoaderData | { theme: Theme }>("root");
 
   // required for hard 404 errors
