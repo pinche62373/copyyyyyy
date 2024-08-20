@@ -1,13 +1,15 @@
 import { Outlet } from "@remix-run/react";
 
-import { BackendHeader } from "#app/components/backend/header";
+import { FrontendHeader } from "#app/components/frontend/header";
 
 export default function PublicLayout() {
   return (
     <>
-      <BackendHeader className="bg-red-200"/>
+      <FrontendHeader />
 
-      <Outlet />
+      <main id="content">
+        <Outlet />
+      </main>
     </>
   );
 }
