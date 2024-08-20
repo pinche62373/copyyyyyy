@@ -1,7 +1,6 @@
 import { useLoaderData, NavLink } from "@remix-run/react";
 
 import { AdminContentCard } from "#app/components/admin/admin-content-card";
-import { AdminPageTitle } from "#app/components/admin/admin-page-title";
 import { getMovies } from "#app/models/movie.server";
 
 export const loader = async () => {
@@ -16,7 +15,7 @@ export default function MovieIndexPage() {
   return (
     <>
       <AdminContentCard className="p-6">
-        <AdminPageTitle title={"Movies"} />
+        <h1 className="mt-12 mb-4">Movie Index:</h1>
 
         <ul className="ml-10 list-disc">
           {movies.map((movie, i) => (
