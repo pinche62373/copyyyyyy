@@ -26,7 +26,6 @@ import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
 import { validateFormIntent } from "#app/validations/form-intent";
 
-
 const intent = "login";
 
 const validator = withZod(authLoginSchema);
@@ -144,6 +143,7 @@ export default function LoginPage() {
             fieldName="email"
             placeholder="Your email..."
             fields={fields}
+            autoFocus
           />
 
           <FormInputTextStacked
@@ -151,6 +151,7 @@ export default function LoginPage() {
             fieldName="password"
             placeholder="Your password..."
             fields={fields}
+            type="password"
           />
 
           <HoneypotInputs />
