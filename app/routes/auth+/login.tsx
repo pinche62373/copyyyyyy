@@ -1,20 +1,22 @@
+import { useForm } from "@conform-to/react";
+import { parseWithZod } from "@conform-to/zod";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useNavigation } from "@remix-run/react";
+import { Form, useNavigation } from "@remix-run/react";
 import { withZod } from "@remix-validated-form/with-zod";
 import { AuthorizationError } from "remix-auth";
 import { jsonWithError } from "remix-toast";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { SpamError } from "remix-utils/honeypot/server";
-import { ValidatedForm, validationError } from "remix-validated-form";
+import { validationError } from "remix-validated-form";
 
 import { FormFooter } from "#app/components/backend/form/form-footer";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
-import { FormInput } from "#app/components/form-input";
+import { FormInputTextStacked } from "#app/components/backend/form/form-input-text-stacked";
 import { Button } from "#app/components/shared/button";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
@@ -23,6 +25,7 @@ import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
 import { validateFormIntent } from "#app/validations/form-intent";
+
 
 const intent = "login";
 
@@ -118,23 +121,36 @@ export const meta: MetaFunction = () => [{ title: "Login" }];
 export default function LoginPage() {
   const navigation = useNavigation();
 
+  const [form, fields] = useForm({
+    shouldRevalidate: "onBlur",
+    onValidate({ formData }) {
+      return parseWithZod(formData, { schema: authLoginSchema });
+    },
+  });
+
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
-        <ValidatedForm
-          method="POST"
-          validator={validator}
+        <Form
+          method="post"
+          id={form.id}
+          onSubmit={form.onSubmit}
           className="space-y-6"
-          noValidate // disable native HTML validations
         >
           <FormInputHidden name="intent" value={intent} />
 
-          <FormInput name="email" label="Email" placeholder="Your email..." />
-          <FormInput
-            name="password"
+          <FormInputTextStacked
+            label="Email"
+            fieldName="email"
+            placeholder="Your email..."
+            fields={fields}
+          />
+
+          <FormInputTextStacked
             label="Password"
-            type="password"
+            fieldName="password"
             placeholder="Your password..."
+            fields={fields}
           />
 
           <HoneypotInputs />
@@ -147,8 +163,7 @@ export default function LoginPage() {
               disabled={navigation.state === "submitting"}
             />
           </FormFooter>
-        </ValidatedForm>
-        {/* </Form> */}
+        </Form>
       </div>
     </div>
   );
