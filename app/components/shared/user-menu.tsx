@@ -1,12 +1,12 @@
 import { Form } from "@remix-run/react";
 import { useHydrated } from "remix-utils/use-hydrated";
 
-import { Button } from "#app/components/backend/button";
 import { IconCog } from "#app/components/icons/icon-cog";
 import { IconFolder } from "#app/components/icons/icon-folder";
 import { IconHeart } from "#app/components/icons/icon-heart";
 import { IconLogout } from "#app/components/icons/icon-logout";
 import { IconUser } from "#app/components/icons/icon-user";
+import { Button } from "#app/components/shared/button";
 import { AUTH_LOGIN_ROUTE, AUTH_LOGOUT_ROUTE } from "#app/utils/constants";
 import { cn } from "#app/utils/misc";
 import { useOptionalUser } from "#app/utils/user";

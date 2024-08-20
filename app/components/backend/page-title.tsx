@@ -1,4 +1,4 @@
-import { Button } from "#app/components/backend/button";
+import { Button } from "#app/components/shared/button";
 import { RoutePermission } from "#app/permissions/permission.types";
 import { cn } from "#app/utils/misc";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
