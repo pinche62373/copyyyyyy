@@ -3,7 +3,7 @@ import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import { BackendHeader } from "#app/components/backend/header";
-import { BackendSidebar } from "#app/components/backend/sidebar";
+import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
 import adminStyleSheet from "#app/styles/admin.css";
 import { authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
