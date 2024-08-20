@@ -2,8 +2,8 @@ import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
-import { AdminHeader } from "#app/components/backend/admin-header";
-import { AdminSidebar } from "#app/components/backend/admin-sidebar";
+import { BackendHeader } from "#app/components/backend/header";
+import { BackendSidebar } from "#app/components/backend/sidebar";
 import adminStyleSheet from "#app/styles/admin.css";
 import { authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
@@ -32,9 +32,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function AdminLayout() {
   return (
     <>
-      <AdminHeader />
+      <BackendHeader />
 
-      <AdminSidebar />
+      <BackendSidebar />
 
       <main id="content" className="lg:ps-[260px] pt-[59px] lg:pt-0">
         <div className="relative px-5 py-4 lg:mt-16">

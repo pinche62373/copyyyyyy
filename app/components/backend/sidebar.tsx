@@ -10,7 +10,7 @@ import { IconMovie } from "#app/components/icons/icon-movie";
 import { IconUsers } from "#app/components/icons/icon-users";
 import { Roles } from "#app/validations/role-schema";
 
-export function AdminSidebar() {
+export function BackendSidebar() {
   return (
     <aside
       id="hs-pro-sidebar"

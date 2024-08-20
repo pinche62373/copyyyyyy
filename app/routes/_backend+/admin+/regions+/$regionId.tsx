@@ -1,9 +1,9 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { AdminContentCard } from "#app/components/backend/admin-content-card";
-import { AdminPageTitle } from "#app/components/backend/admin-page-title";
+import { BackendContentContainer } from "#app/components/backend/content-container";
 import { FormInputTextReadOnly } from "#app/components/backend/form/form-input-text-readonly";
+import { BackendPageTitle } from "#app/components/backend/page-title";
 import { getRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize, timeStampToHuman, validatePageId } from "#app/utils/misc";
@@ -34,7 +34,7 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle
+      <BackendPageTitle
         title={`View ${humanize(crud.singular)}`}
         button={{
           title: "Edit",
@@ -43,7 +43,7 @@ export default function Component() {
         }}
       />
 
-      <AdminContentCard className="p-6">
+      <BackendContentContainer className="p-6">
         <FormInputTextReadOnly label="Name">
           {region.name}
         </FormInputTextReadOnly>
@@ -61,7 +61,7 @@ export default function Component() {
             </>
           )}
         </FormInputTextReadOnly>
-      </AdminContentCard>
+      </BackendContentContainer>
     </>
   );
 }

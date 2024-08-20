@@ -12,9 +12,9 @@ import {
 import { useState } from "react";
 import { z } from "zod";
 
-import { AdminContentCard } from "#app/components/backend/admin-content-card";
-import { AdminPageTitle } from "#app/components/backend/admin-page-title";
+import { BackendContentContainer } from "#app/components/backend/content-container";
 import { FormInputTextReadOnly } from "#app/components/backend/form/form-input-text-readonly";
+import { BackendPageTitle } from "#app/components/backend/page-title";
 import TanstackTable from "#app/components/tanstack-table";
 import {
   tableCellLink,
@@ -141,20 +141,20 @@ export default function Component() {
   return (
     <>
       {/* Start Database Fields */}
-      <AdminPageTitle title={`View ${humanize(roleCrud.singular)}`} />
+      <BackendPageTitle title={`View ${humanize(roleCrud.singular)}`} />
 
-      <AdminContentCard className="p-6">
+      <BackendContentContainer className="p-6">
         <FormInputTextReadOnly label="Name">{role.name}</FormInputTextReadOnly>
 
         <FormInputTextReadOnly label="Description">
           {role.description}
         </FormInputTextReadOnly>
-      </AdminContentCard>
+      </BackendContentContainer>
 
       {/* Start Permissions Table*/}
-      <AdminPageTitle title="Permissions" className="pt-4" />
+      <BackendPageTitle title="Permissions" className="pt-4" />
 
-      <AdminContentCard>
+      <BackendContentContainer>
         <TableBar>
           <TableSearchInput
             value={globalFilter ?? ""}
@@ -170,7 +170,7 @@ export default function Component() {
           <TanstackTable.THead />
           <TanstackTable.TBody />
         </TanstackTable.Table>
-      </AdminContentCard>
+      </BackendContentContainer>
 
       <TableFooter table={table} />
     </>

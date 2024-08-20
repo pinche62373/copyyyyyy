@@ -2,10 +2,10 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
-import { AdminContentCard } from "#app/components/backend/admin-content-card";
-import { AdminPageTitle } from "#app/components/backend/admin-page-title";
+import { BackendContentContainer } from "#app/components/backend/content-container";
 import { FormInputActionButton } from "#app/components/backend/form/form-input-action-button";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
+import { BackendPageTitle } from "#app/components/backend/page-title";
 import {
   deleteExpiredSessions,
   getExpiredSessionCount,
@@ -56,9 +56,9 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title="System" />
+      <BackendPageTitle title="System" />
 
-      <AdminContentCard className="px-5 py-3">
+      <BackendContentContainer className="px-5 py-3">
         <Form id={formId} method="POST" action="/admin/system">
           <FormInputHidden name="intent" value={intent} />
 
@@ -69,7 +69,7 @@ export default function Component() {
             enabled={expiredSessionCount > 0}
           />
         </Form>
-      </AdminContentCard>
+      </BackendContentContainer>
     </>
   );
 }

@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 
-import { AdminContentCard } from "#app/components/backend/admin-content-card";
+import { BackendContentContainer } from "#app/components/backend/content-container";
 import { getMovie } from "#app/models/movie.server";
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -22,12 +22,12 @@ export default function Component() {
 
   return (
     <>
-      <AdminContentCard className="p-6">
+      <BackendContentContainer className="p-6">
         <ul>
           <li>Title: {movie.name}</li>
           <li>Slug: {movie.slug}</li>
         </ul>
-      </AdminContentCard>
+      </BackendContentContainer>
     </>
   );
 }

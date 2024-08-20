@@ -5,7 +5,7 @@ interface Props {
   className?: string;
 }
 
-export const AdminContentCard = ({ className, children, ...rest }: Props) => {
+export const BackendContentContainer = ({ className, children, ...rest }: Props) => {
   return (
     <div className="relative overflow-visible">
       <div

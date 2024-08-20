@@ -11,7 +11,7 @@ interface AdminBreadcrumbsFunctionArgs {
   routes: CustomBreadcrumbRoute[];
 }
 
-export const AdminBreadcrumbs = ({
+export const Breadcrumbs = ({
   routes,
   ...props
 }: AdminBreadcrumbsFunctionArgs) => {

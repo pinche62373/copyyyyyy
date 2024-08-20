@@ -4,12 +4,12 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
-import { AdminContentCard } from "#app/components/backend/admin-content-card";
-import { AdminPageTitle } from "#app/components/backend/admin-page-title";
 import { Button } from "#app/components/backend/button";
+import { BackendContentContainer } from "#app/components/backend/content-container";
 import { FormFooter } from "#app/components/backend/form/form-footer";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
 import { FormInputText } from "#app/components/backend/form/form-input-text";
+import { BackendPageTitle } from "#app/components/backend/page-title";
 import { createRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
@@ -74,9 +74,9 @@ export default function Component() {
 
   return (
     <>
-      <AdminPageTitle title={`New ${crud.singular}`} />
+      <BackendPageTitle title={`New ${crud.singular}`} />
 
-      <AdminContentCard className="p-5">
+      <BackendContentContainer className="p-5">
         <Form method="post" id={form.id} onSubmit={form.onSubmit}>
           <FormInputHidden name="intent" value={intent} />
 
@@ -96,7 +96,7 @@ export default function Component() {
             />
           </FormFooter>
         </Form>
-      </AdminContentCard>
+      </BackendContentContainer>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { AdminBreadcrumbs } from "#app/components/backend/admin-breadcrumbs";
+import { Breadcrumbs } from "#app/components/shared/breadcrumbs";
 import { DarkModeToggler } from "#app/components/shared/darkmode-toggler";
 import { UserMenu } from "#app/components/shared/user-menu";
 import { cn } from "#app/utils/misc";
@@ -7,7 +7,7 @@ interface Props {
   className?: string;
 }
 
-export const AdminHeader = ({ className }: Props) => {
+export const BackendHeader = ({ className }: Props) => {
   return (
     <header
       className={cn(
@@ -23,7 +23,7 @@ export const AdminHeader = ({ className }: Props) => {
         {/* Menu Left */}
         <div className="xl:col-span-1 flex items-center md:gap-x-3">
           <div className="items-left hidden lg:block">
-            <AdminBreadcrumbs
+            <Breadcrumbs
               routes={[
                 { path: "/", breadcrumb: null },
                 { path: "/admin", breadcrumb: "Home" },

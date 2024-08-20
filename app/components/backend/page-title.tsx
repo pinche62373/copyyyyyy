@@ -14,7 +14,7 @@ interface PropTypes {
   search?: boolean;
 }
 
-export const AdminPageTitle = ({
+export const BackendPageTitle = ({
   title,
   search = false,
   button,

@@ -1,11 +1,11 @@
 import { Outlet } from "@remix-run/react";
 
-import { AdminHeader } from "#app/components/backend/admin-header";
+import { BackendHeader } from "#app/components/backend/header";
 
 export default function PublicLayout() {
   return (
     <>
-      <AdminHeader className="bg-red-200"/>
+      <BackendHeader className="bg-red-200"/>
 
       <Outlet />
     </>
