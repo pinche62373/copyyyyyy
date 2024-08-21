@@ -1,6 +1,23 @@
+import { LoaderFunctionArgs } from "@remix-run/node";
+
 import { FrontendSection } from "#app/components/frontend/section";
+import { authenticator } from "#app/utils/auth.server";
+import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
+import { useUser } from "#app/utils/user";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const url = new URL(request.url);
+
+  await authenticator.isAuthenticated(request, {
+    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
+  });
+
+  return null;
+};
 
 export default function SettingsIndexPage() {
+  const user = useUser();
+
   return (
     <FrontendSection>
       {/* Personal Info */}
@@ -26,7 +43,7 @@ export default function SettingsIndexPage() {
               id="hs-pro-dappiun"
               type="text"
               className="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600"
-              placeholder="Enter username"
+              value={user.email}
             />
           </div>
           {/* End Col */}

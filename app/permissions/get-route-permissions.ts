@@ -1,3 +1,4 @@
+import { routePermissions as accountPermissions } from "#app/permissions/definitions/account";
 import { routePermissions as adminPermissions } from "#app/permissions/definitions/admin";
 import { routePermissions as countryPermissions } from "#app/permissions/definitions/country";
 import { routePermissions as languagePermissions } from "#app/permissions/definitions/language";
@@ -17,6 +18,7 @@ export const getRoutePermissions = (): Permission[] => {
 
   Array.prototype
     .concat(
+      accountPermissions,
       adminPermissions,
       countryPermissions,
       resourcePermissions,

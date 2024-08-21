@@ -1,3 +1,4 @@
+import { modelPermissions as accountPermissions } from "#app/permissions/definitions/account";
 import { modelPermissions as adminPermissions } from "#app/permissions/definitions/admin";
 import { modelPermissions as countryPermissions } from "#app/permissions/definitions/country";
 import { modelPermissions as languagePermissions } from "#app/permissions/definitions/language";
@@ -17,6 +18,7 @@ export const getModelPermissions = (): Permission[] => {
 
   Array.prototype
     .concat(
+      accountPermissions,
       adminPermissions,
       countryPermissions,
       resourcePermissions,
