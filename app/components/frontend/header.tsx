@@ -1,3 +1,5 @@
+import { NavLink } from "@remix-run/react";
+
 import { DarkModeToggler } from "#app/components/shared/darkmode-toggler";
 import { UserMenu } from "#app/components/shared/user-menu";
 import { cn } from "#app/utils/misc";
@@ -22,9 +24,15 @@ export const FrontendHeader = ({ className }: Props) => {
         >
           {/* Menu Left */}
           <div className="xl:col-span-1 flex items-center md:gap-x-3">
-            <div className="items-left hidden lg:block">
-              {/* PLACEHOLDER FOR LOGO AND NAV */}
-            </div>
+            {/* Logo */}
+            <NavLink
+              to="/"
+              className="flex-none rounded-md text-xl inline-block font-semibold focus:outline-none focus:opacity-80"
+              aria-label="Preline"
+            >
+              Logo
+            </NavLink>
+            {/* End Logo */}
           </div>
           {/* End Menu Left */}
 
