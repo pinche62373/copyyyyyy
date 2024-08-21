@@ -1,4 +1,3 @@
-import { Breadcrumbs } from "#app/components/shared/breadcrumbs";
 import { DarkModeToggler } from "#app/components/shared/darkmode-toggler";
 import { UserMenu } from "#app/components/shared/user-menu";
 import { cn } from "#app/utils/misc";
@@ -24,12 +23,7 @@ export const FrontendHeader = ({ className }: Props) => {
           {/* Menu Left */}
           <div className="xl:col-span-1 flex items-center md:gap-x-3">
             <div className="items-left hidden lg:block">
-              <Breadcrumbs
-                routes={[
-                  { path: "/", breadcrumb: "Home" },
-                  { path: "/movies", breadcrumb: "Movies" },
-                ]}
-              />
+              {/* PLACEHOLDER FOR LOGO AND NAV */}
             </div>
           </div>
           {/* End Menu Left */}
