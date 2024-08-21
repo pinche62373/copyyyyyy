@@ -1,4 +1,3 @@
-import { modelPermissions as accountPermissions } from "#app/permissions/definitions/account";
 import { modelPermissions as adminPermissions } from "#app/permissions/definitions/admin";
 import { modelPermissions as countryPermissions } from "#app/permissions/definitions/country";
 import { modelPermissions as languagePermissions } from "#app/permissions/definitions/language";
@@ -7,6 +6,7 @@ import { modelPermissions as regionPermissions } from "#app/permissions/definiti
 import { modelPermissions as resourcePermissions } from "#app/permissions/definitions/resource";
 import { modelPermissions as rolePermissions } from "#app/permissions/definitions/role";
 import { modelPermissions as systemPermissions } from "#app/permissions/definitions/system";
+import { modelPermissions as userPermissions } from "#app/permissions/definitions/user";
 import { Permission } from "#app/permissions/permission.types";
 import {
   generateModelPermissions,
@@ -18,7 +18,6 @@ export const getModelPermissions = (): Permission[] => {
 
   Array.prototype
     .concat(
-      accountPermissions,
       adminPermissions,
       countryPermissions,
       resourcePermissions,
@@ -27,6 +26,7 @@ export const getModelPermissions = (): Permission[] => {
       regionPermissions,
       rolePermissions,
       systemPermissions,
+      userPermissions,
     )
     .forEach((permission) => {
       generateModelPermissions(permission).forEach((generatedPermission) => {

@@ -3,6 +3,7 @@ import { LoaderFunctionArgs } from "@remix-run/node";
 import { FrontendSection } from "#app/components/frontend/section";
 import { authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
+import { requireRoutePermission } from "#app/utils/permissions.server";
 import { useUser } from "#app/utils/user";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -10,6 +11,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   await authenticator.isAuthenticated(request, {
     failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
+  });
+
+  await requireRoutePermission(request, {
+    resource: url.pathname,
+    scope: "any",
   });
 
   return null;

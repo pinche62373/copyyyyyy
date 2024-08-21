@@ -14,17 +14,17 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [];
 // ----------------------------------------------------------------------------
 export const routePermissions: RoutePermissionFunctionArgs[] = [
   {
-    resource: "/account/collection",
+    resource: "/user/collection",
     roles: [Roles.ADMIN, Roles.MODERATOR, Roles.USER],
     scope: "any", // no need for own because the route only fetches authenticated user data
   },
   {
-    resource: "/account/likes",
+    resource: "/user/likes",
     roles: [Roles.ADMIN, Roles.MODERATOR, Roles.USER],
     scope: "any",
   },
   {
-    resource: "/account/settings",
+    resource: "/user/settings",
     roles: [Roles.ADMIN, Roles.MODERATOR, Roles.USER],
     scope: "any",
   },
