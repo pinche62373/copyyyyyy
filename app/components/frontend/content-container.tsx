@@ -14,9 +14,11 @@ export const FrontendContentContainer = ({
   ...rest
 }: Props) => {
   return (
-    <div className="max-w-[82rem] basis-full items-center w-full mx-auto px-4 sm:px-6 lg:px-8 bg-indigo-200 flex flex-wrap md:justify-start md:flex-nowrap z-50 dark:bg-neutral-800">
-      <div className={cn("bg-white dark:bg-neutral-800", className)} {...rest}>
-        {children}
+    <div className="w-full dark:bg-black">
+      <div className="max-w-[80rem] basis-full items-center w-full mx-auto px-4 sm:px-6 lg:px-8 bg-indigo-200 flex flex-wrap md:justify-start md:flex-nowrap z-50 dark:bg-black">
+        <div className={cn("bg-white dark:bg-black", className)} {...rest}>
+          {children}
+        </div>
       </div>
     </div>
   );

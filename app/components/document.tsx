@@ -54,10 +54,7 @@ function InnerLayout({
         <PreventFlashOnWrongTheme ssrTheme={Boolean(ssrTheme)} />
         <Links />
       </head>
-      <body
-        className="bg-white text-black dark:bg-neutral-800 dark:text-white"
-        suppressHydrationWarning
-      >
+      <body suppressHydrationWarning>
         {children}
         <ScrollRestoration />
         <Scripts />

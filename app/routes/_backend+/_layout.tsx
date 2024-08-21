@@ -4,16 +4,16 @@ import { Outlet } from "@remix-run/react";
 
 import { BackendHeader } from "#app/components/backend/header";
 import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
-import adminStyleSheet from "#app/styles/admin.css";
+import backendStyleSheet from "#app/styles/backend.css";
 import { authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { requireRole } from "#app/utils/permissions.server";
 import { Roles } from "#app/validations/role-schema";
 
-// import styles for the admin route
+// import styles for the backend route
 export const links: LinksFunction = () => [
   ...(cssBundleHref
-    ? [{ rel: "stylesheet", href: adminStyleSheet, as: "style" }]
+    ? [{ rel: "stylesheet", href: backendStyleSheet, as: "style" }]
     : []),
 ];
 
@@ -29,7 +29,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return null;
 };
 
-export default function AdminLayout() {
+export default function BackendLayout() {
   return (
     <>
       <BackendHeader />

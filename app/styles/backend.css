@@ -1,3 +1,7 @@
+body {
+  @apply bg-white text-black dark:bg-neutral-800 dark:text-white;
+}
+
 /* 
   Remove spin buttons from number inputs with 'no-spin' class
 */
