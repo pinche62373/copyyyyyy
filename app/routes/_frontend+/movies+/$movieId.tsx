@@ -3,7 +3,7 @@ import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { z } from "zod";
 
-import { FrontendContentContainer } from "#app/components/frontend/content-container";
+import { FrontendSection } from "#app/components/frontend/section";
 import { getMovie } from "#app/models/movie.server";
 
 export async function loader({ params }: LoaderFunctionArgs) {
@@ -22,12 +22,12 @@ export default function Component() {
 
   return (
     <>
-      <FrontendContentContainer>
+      <FrontendSection>
         <ul>
           <li>Title: {movie.name}</li>
           <li>Slug: {movie.slug}</li>
         </ul>
-      </FrontendContentContainer>
+      </FrontendSection>
     </>
   );
 }

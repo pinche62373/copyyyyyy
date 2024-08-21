@@ -1,6 +1,6 @@
 import { useLoaderData, NavLink } from "@remix-run/react";
 
-import { FrontendContentContainer } from "#app/components/frontend/content-container";
+import { FrontendSection } from "#app/components/frontend/section";
 import { getMovies } from "#app/models/movie.server";
 
 export const loader = async () => {
@@ -14,7 +14,7 @@ export default function MovieIndexPage() {
 
   return (
     <>
-      <FrontendContentContainer>
+      <FrontendSection>
         <h1 className="mb-4">Movie Index:</h1>
 
         <ul className="ml-10 list-disc">
@@ -26,7 +26,11 @@ export default function MovieIndexPage() {
             </li>
           ))}
         </ul>
-      </FrontendContentContainer>
+      </FrontendSection>
+
+      <FrontendSection>
+          <p>Wat doen we woeleh?</p>
+        </FrontendSection>
     </>
   );
 }

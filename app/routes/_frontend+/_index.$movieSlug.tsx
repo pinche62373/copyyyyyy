@@ -4,6 +4,9 @@ import invariant from "tiny-invariant";
 import { getMovieIdBySlug } from "#app/models/movie.server";
 import { slug as slugSchema } from "#app/validations/movie-schema";
 
+/**
+ * Loader only component used to redirect permalinks to movie pages.
+ */
 export async function loader({ params }: LoaderFunctionArgs) {
   const slug = params.movieSlug;
 

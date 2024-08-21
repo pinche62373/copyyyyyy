@@ -18,7 +18,7 @@ export const FrontendHeader = ({ className }: Props) => {
       >
         {/* Global Div */}
         <div
-          className="flex justify-between xl:grid xl:grid-cols-3 basis-full items-center w-full py-2.5 px-2 sm:px-5"
+          className="flex justify-between xl:grid xl:grid-cols-3 basis-full items-center w-full py-2.5"
           aria-label="Global"
         >
           {/* Menu Left */}
