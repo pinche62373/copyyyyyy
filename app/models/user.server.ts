@@ -11,6 +11,7 @@ export async function getUserById(id: User["id"]) {
     select: {
       id: true,
       email: true,
+      username: true,
       roles: {
         select: {
           name: true,
