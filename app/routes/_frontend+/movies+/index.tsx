@@ -27,10 +27,6 @@ export default function MovieIndexPage() {
           ))}
         </ul>
       </FrontendSection>
-
-      <FrontendSection>
-          <p>Wat doen we woeleh?</p>
-        </FrontendSection>
     </>
   );
 }
