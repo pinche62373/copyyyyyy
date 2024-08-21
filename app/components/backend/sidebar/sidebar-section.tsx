@@ -6,20 +6,20 @@ interface Args {
   children: React.ReactNode;
   className?: string;
   caption?: string;
-  require?: Role | Role[];
+  requireRole?: Role | Role[];
 }
 
 export function SidebarSection({
   children,
   className,
   caption,
-  require,
+  requireRole,
   ...rest
 }: Args) {
   const user = useUser();
 
-  if (require) {
-    if (!userHasRole(user, require)) {
+  if (requireRole) {
+    if (!userHasRole(user, requireRole)) {
       return;
     }
   }

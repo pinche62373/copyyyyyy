@@ -1,4 +1,4 @@
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import { useHydrated } from "remix-utils/use-hydrated";
 
 import { IconCog } from "#app/components/icons/icon-cog";
@@ -9,7 +9,8 @@ import { IconUser } from "#app/components/icons/icon-user";
 import { Button } from "#app/components/shared/button";
 import { AUTH_LOGIN_ROUTE, AUTH_LOGOUT_ROUTE } from "#app/utils/constants";
 import { cn } from "#app/utils/misc";
-import { useOptionalUser } from "#app/utils/user";
+import { useOptionalUser, userHasRole } from "#app/utils/user";
+import { Roles } from "#app/validations/role-schema";
 
 interface Props {
   className?: string;
@@ -60,31 +61,42 @@ export const UserMenu = ({ className }: Props) => {
             {/* Account Dropdown Items Group 1 */}
             <div className="p-1">
               {/* My Likes */}
-              <a
+              <Link
+                to="/"
                 className="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                href="/"
               >
                 <IconHeart />
                 My Likes
-              </a>
+              </Link>
 
               {/* My Collection */}
-              <a
+              <Link
+                to="/"
                 className="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                href="/"
               >
                 <IconFolder />
                 My Collection
-              </a>
+              </Link>
+
+              {/* Admin Dashboard */}
+              {userHasRole(user, [Roles.ADMIN, Roles.MODERATOR]) && (
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                >
+                  <IconCog />
+                  Admin
+                </Link>
+              )}
 
               {/* Settings */}
-              <a
+              <Link
+                to="/account/settings"
                 className="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                href="/account/settings"
               >
                 <IconCog />
                 Settings
-              </a>
+              </Link>
             </div>
             {/* End Account Dropdown Items Group 1 */}
 

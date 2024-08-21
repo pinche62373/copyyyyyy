@@ -88,7 +88,11 @@ export function BackendSidebar() {
             </SidebarGroup>
 
             {/* Group: General */}
-            <SidebarGroup id="base-general" caption="General" icon={<IconEye />}>
+            <SidebarGroup
+              id="base-general"
+              caption="General"
+              icon={<IconEye />}
+            >
               <SidebarLink to="/admin/countries" nested>
                 Countries
               </SidebarLink>
@@ -105,7 +109,7 @@ export function BackendSidebar() {
           {/* End Section Base Models */}
 
           {/* Section: Admin */}
-          <SidebarSection caption="Admin" require={Roles.ADMIN}>
+          <SidebarSection caption="Admin" requireRole={Roles.ADMIN}>
             <SidebarLink to="/admin/rbac/permissions">
               <IconEye className="flex-shrink-0 mt-0.5 size-4" />
               Permissions
