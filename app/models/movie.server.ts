@@ -6,7 +6,6 @@ const model = "movie";
 
 export function getMovie({ id }: Pick<Movie, "id">) {
   return prisma[model].findFirst({
-    select: { id: true, name: true, slug: true },
     where: { id },
   });
 }

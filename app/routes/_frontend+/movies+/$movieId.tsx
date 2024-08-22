@@ -26,6 +26,7 @@ export default function Component() {
         <ul>
           <li>Title: {movie.name}</li>
           <li>Slug: {movie.slug}</li>
+          <li>CreatedBy: {movie.createdBy}</li>
         </ul>
       </FrontendSection>
     </>
