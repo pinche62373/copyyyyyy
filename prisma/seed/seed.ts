@@ -271,6 +271,13 @@ const main = async () => {
         name: movie,
         slug: permaLink(movie),
         updatedAt,
+        updatedBy, 
+        createdBy: cuid(
+          accounts
+            .filter((account) => account.name === Roles.ADMIN)
+            .map(({ email }) => email)
+            .toString(),
+        ),
       })),
     );
   }

@@ -26,6 +26,9 @@ model User {
   languageCreatedBy Language[] @relation("CreatedLanguages")
   languageUpdatedBy Language[] @relation("UpdatedLanguages")
 
+  movieCreatedBy Movie[] @relation("CreatedMovies")
+  movieUpdatedBy Movie[] @relation("UpdatedMovies")
+
   regionCreatedBy Region[] @relation("CreatedRegions")
   regionUpdatedBy Region[] @relation("UpdatedRegions")
 }
@@ -128,7 +131,12 @@ model Movie {
   slug String @unique
 
   createdAt DateTime  @default(now())
+  createdBy String
   updatedAt DateTime? @updatedAt
+  updatedBy String?
+
+  movieCreatedBy User  @relation("CreatedMovies", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  movieUpdatedBy User? @relation("UpdatedMovies", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 // memory table to ensure historically unique permalinks

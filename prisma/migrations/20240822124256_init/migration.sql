@@ -88,7 +88,11 @@ CREATE TABLE "Movie" (
     "name" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" DATETIME
+    "createdBy" TEXT NOT NULL,
+    "updatedAt" DATETIME,
+    "updatedBy" TEXT,
+    CONSTRAINT "Movie_createdBy_fkey" FOREIGN KEY ("createdBy") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT "Movie_updatedBy_fkey" FOREIGN KEY ("updatedBy") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 -- CreateTable
