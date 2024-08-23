@@ -88,3 +88,16 @@ export async function verifyLogin(
 
   return userWithoutPassword;
 }
+
+export function updateUserAccountSettings({
+  id,
+  username,
+}: Pick<User, "id" | "username">) {
+  return prisma.user.update({
+    where: { id },
+    data: {
+      id,
+      username,
+    },
+  });
+}

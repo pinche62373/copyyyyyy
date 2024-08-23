@@ -14,11 +14,11 @@ const groupRoutePermissionWithIdRegex = new RegExp(
 );
 
 /**
- * If a record id is found in the URL, it is moved to permission property `recordId`.
+ * If a record id is found in the URL, it is moved to permission property `resourceId`.
  */
 export function normalizeRoutePermission(
   permission: Pick<Permission, "resource" | "action" | "scope">,
-): Pick<Permission, "resource" | "scope" | "action" | "recordId"> {
+): Pick<Permission, "resource" | "scope" | "action" | "resourceId"> {
   const routePermissionWithId = groupRoutePermissionWithIdRegex.exec(
     permission.resource,
   );
@@ -28,7 +28,7 @@ export function normalizeRoutePermission(
       return {
         ...permission,
         resource: `${routePermissionWithId.groups.editPath}/edit`,
-        recordId: routePermissionWithId.groups.editId,
+        resourceId: routePermissionWithId.groups.editId,
       };
     }
 
@@ -37,7 +37,7 @@ export function normalizeRoutePermission(
       return {
         ...permission,
         resource: `${routePermissionWithId.groups.viewPath}/view`,
-        recordId: routePermissionWithId.groups.viewId,
+        resourceId: routePermissionWithId.groups.viewId,
       };
     }
 
@@ -47,5 +47,5 @@ export function normalizeRoutePermission(
     );
   }
 
-  return { ...permission, recordId: null };
+  return { ...permission, resourceId: undefined };
 }

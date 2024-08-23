@@ -2,12 +2,26 @@ import type {
   RoutePermissionFunctionArgs,
   ModelPermissionFunctionArgs,
 } from "#app/permissions/permission.types";
+import { U } from "#app/permissions/permission.types";
 import { Roles } from "#app/validations/role-schema";
 
 // ----------------------------------------------------------------------------
 // MODEL PERMISSIONS
 // ----------------------------------------------------------------------------
-export const modelPermissions: ModelPermissionFunctionArgs[] = [];
+export const modelPermissions: ModelPermissionFunctionArgs[] = [
+  {
+    resource: "user",
+    actions: [U],
+    roles: [Roles.ADMIN],
+    scope: "any",
+  },
+  {
+    resource: "user",
+    actions: [U],
+    roles: [Roles.MODERATOR, Roles.USER],
+    scope: "own",
+  },
+];
 
 // ----------------------------------------------------------------------------
 // ROUTE PERMISSIONS

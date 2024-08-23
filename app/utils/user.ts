@@ -1,5 +1,6 @@
-import { type SerializeFrom } from "@remix-run/node";
+import { json, type SerializeFrom } from "@remix-run/node";
 import { useRouteLoaderData } from "@remix-run/react";
+import invariant from "tiny-invariant";
 
 import { normalizeRoutePermission } from "#app/permissions/normalize-route-permission";
 import {
@@ -8,6 +9,7 @@ import {
   RoutePermission,
 } from "#app/permissions/permission.types";
 import { type loader as rootLoader } from "#app/root.tsx";
+import { prisma } from "#app/utils/db.server";
 
 type UserType = SerializeFrom<typeof rootLoader>["user"];
 
@@ -52,35 +54,25 @@ export function userHasRole(
 
 /**
  * Internal function for checking all permissions, regardless of type
+ *
+ * Please note: own-check executed by calling userHasRoutePermission() or userHasModelPermission()
  */
 function userHasPermission(
   user: Pick<ReturnType<typeof useUser>, "roles" | "id"> | null,
-  permission: Pick<Permission, "resource" | "action" | "scope" | "recordId">,
+  permission: Pick<Permission, "resource" | "action" | "scope" | "resourceId">,
 ) {
   if (!user) return false;
 
   console.log("Checking permission", { ...permission, user: user.id });
 
-  if (permission.scope === "own" && permission.recordId === null) {
-    throw new Error(
-      "Permission scope is 'own' but recordId is null. " +
-        JSON.stringify({ ...permission, user: user.id }, null, 2),
-    );
-  }
-
-  if (permission.scope === "any") {
-    return user.roles.some((role) =>
-      role.permissions.some(
-        (p) =>
-          p.resource === permission.resource &&
-          p.action === permission.action &&
-          p.scope === permission.scope,
-      ),
-    );
-  }
-
-  // TODO check record owner, then same check as above.
-  console.log("TODO => IMPLEMENT SUPPORT FOR PERMISSION SCOPE 'OWN'");
+  return user.roles.some((role) =>
+    role.permissions.some(
+      (p) =>
+        p.resource === permission.resource &&
+        p.action === permission.action &&
+        p.scope === permission.scope,
+    ),
+  );
 }
 
 /**
@@ -92,24 +84,49 @@ export function userHasRoutePermission(
 ) {
   return userHasPermission(
     user,
-    normalizeRoutePermission({ ...permission, action: "access" }), // sets recordId property
+    normalizeRoutePermission({ ...permission, action: "access" }), // sets resourceId property
   );
 }
 
 /**
  * Helper function for checking model permissions.
  */
-export function userHasModelPermission(
+export async function userHasModelPermission(
   user: Pick<ReturnType<typeof useUser>, "roles" | "id"> | null,
   permission: Pick<
     ModelPermission,
-    "resource" | "action" | "scope" | "recordId"
+    "resource" | "action" | "scope" | "resourceId"
   >,
 ) {
-  const recordId = permission.recordId || null;
+  if (permission.scope === "own") {
+    if (!(await userHasOwnPermission(user, permission as Permission))) {
+      throw json(null, { status: 403, statusText: `Forbidden` });
+    }
+  }
 
   return userHasPermission(user, {
     ...permission,
-    recordId,
+    resourceId: permission.resourceId,
+  });
+}
+
+/**
+ * Checks if user is owner of requested permission.resource.
+ */
+export async function userHasOwnPermission(
+  user: Pick<ReturnType<typeof useUser>, "id"> | null,
+  permission: Pick<Permission, "resource" | "action" | "scope" | "resourceId">,
+) {
+  invariant(user, "userHasOwnPermission() requires a user");
+
+  // do not query for User table because it does not have `createdBy` field
+  if (permission.resource === "user") {
+    return permission.resourceId === user.id;
+  }
+
+  // @ts-expect-error: No typing for variable as table name (https://github.com/prisma/prisma/issues/11940)
+  return prisma[permission.resource].findUnique({
+    select: { id: true },
+    where: { id: permission.resourceId, createdBy: user.id },
   });
 }

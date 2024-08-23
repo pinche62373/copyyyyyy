@@ -19,7 +19,7 @@ export interface Permission {
   resource: string;
   action: MergeUnion<ModelPermission["action"] | RoutePermission["action"]>;
   scope: MergeUnion<ModelPermission["scope"] | RoutePermission["scope"]>;
-  recordId: string | null;
+  resourceId: string | undefined;
   description: string;
   createdAt: Date;
   updatedAt: Date;
@@ -52,7 +52,7 @@ export interface ModelPermission {
   resource: string;
   action: (typeof modelActions)[number];
   scope: (typeof modelScopes)[number];
-  recordId?: string;
+  resourceId?: string;
   description?: string;
   roles: Role[number] | Role[number][];
 }

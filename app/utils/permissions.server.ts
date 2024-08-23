@@ -58,11 +58,14 @@ export async function requireRoutePermission(
 // ----------------------------------------------------------------------------
 export async function requireModelPermission(
   request: Request,
-  permission: Pick<ModelPermission, "resource" | "action" | "scope" | "recordId">,
+  permission: Pick<
+    ModelPermission,
+    "resource" | "action" | "scope" | "resourceId"
+  >,
 ) {
   const user = await getUser(request);
 
-  if (!userHasModelPermission(user, permission)) {
+  if ((await userHasModelPermission(user, permission)) === null) {
     throw json(null, { status: 403, statusText: "Forbidden" });
   }
 
