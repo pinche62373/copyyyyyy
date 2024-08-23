@@ -8,6 +8,8 @@ import {
   useLoaderData,
   useLocation,
 } from "@remix-run/react";
+import reactMenuStyleSheet from "@szhsin/react-menu/dist/index.css";
+import reactMenuTransitionStylesheet from "@szhsin/react-menu/dist/transitions/zoom.css";
 import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
 import { type Theme } from "remix-themes";
@@ -20,6 +22,7 @@ import { Toaster, toast as notify } from "sonner";
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
 import frontendStyleSheet from "#app/styles/frontend.css";
+import sharedStyleSheet from "#app/styles/shared.css";
 import stylesheet from "#app/tailwind.css";
 import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
@@ -32,6 +35,9 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref
     ? [
         { rel: "stylesheet", href: cssBundleHref },
+        { rel: "stylesheet", href: reactMenuStyleSheet, as: "style" },
+        { rel: "stylesheet", href: reactMenuTransitionStylesheet, as: "style" },
+        { rel: "stylesheet", href: sharedStyleSheet, as: "style" },
         { rel: "stylesheet", href: frontendStyleSheet },
       ]
     : []),
