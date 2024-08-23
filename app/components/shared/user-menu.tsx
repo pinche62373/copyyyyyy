@@ -78,17 +78,6 @@ export const UserMenu = ({ className }: Props) => {
                 My Collection
               </Link>
 
-              {/* Admin Dashboard */}
-              {userHasRole(user, [Roles.ADMIN, Roles.MODERATOR]) && (
-                <Link
-                  to="/admin"
-                  className="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                >
-                  <IconCog />
-                  Admin
-                </Link>
-              )}
-
               {/* Settings */}
               <Link
                 to="/user/settings"
@@ -102,6 +91,21 @@ export const UserMenu = ({ className }: Props) => {
 
             {/* Account Dropdown Items Group 2 */}
             <div className="p-1 border-t border-gray-200 dark:border-neutral-800">
+              {/* Admin Dashboard */}
+              {userHasRole(user, [Roles.ADMIN, Roles.MODERATOR]) && (
+                <Link
+                  to="/admin"
+                  className="flex items-center gap-x-3 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                >
+                  <IconCog />
+                  Admin
+                </Link>
+              )}
+            </div>
+            {/* End Account Dropdown Items Group 2 */}
+
+            {/* Account Dropdown Items Group 3 */}
+            <div className="p-1 border-t border-gray-200 dark:border-neutral-800">
               <Form action={AUTH_LOGOUT_ROUTE} method="post">
                 <button
                   type="submit"
@@ -113,7 +117,7 @@ export const UserMenu = ({ className }: Props) => {
                 </button>
               </Form>
             </div>
-            {/* End Account Dropdown Items Group 2 */}
+            {/* End Account Dropdown Items Group 3 */}
           </div>
           {/* End Account Dropdown Items */}
         </div>
