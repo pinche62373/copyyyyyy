@@ -3,8 +3,11 @@ import { z } from "zod";
 export const userSchema = z.object({
   id: z.string().cuid2(),
   email: z.string().email(),
-  username: z.string(), // TODO determine length + allowed characters
-  password: z.string().min(6, "Must contain at least 6 chars"),
+  username: z
+    .string()
+    .min(3, "Must be at least 6 characters")
+    .max(25, "Cannot be more than 25 characters"),
+  password: z.string().min(6, "Must be at least 6 characters"),
 });
 
 export const userSchemaUpdateUsername = userSchema.pick({
