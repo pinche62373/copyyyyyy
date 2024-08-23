@@ -19,6 +19,7 @@ import { Toaster, toast as notify } from "sonner";
 
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
+import frontendStyleSheet from "#app/styles/frontend.css";
 import stylesheet from "#app/tailwind.css";
 import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
@@ -28,7 +29,12 @@ import "@fontsource-variable/inter/wght.css";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
-  ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
+  ...(cssBundleHref
+    ? [
+        { rel: "stylesheet", href: cssBundleHref },
+        { rel: "stylesheet", href: frontendStyleSheet },
+      ]
+    : []),
 ];
 
 // root layout of the entire app, all other routes render inside its <Outlet />
