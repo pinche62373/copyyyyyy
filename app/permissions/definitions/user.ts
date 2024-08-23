@@ -12,13 +12,7 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [
   {
     resource: "user",
     actions: [U],
-    roles: [Roles.ADMIN],
-    scope: "any",
-  },
-  {
-    resource: "user",
-    actions: [U],
-    roles: [Roles.MODERATOR, Roles.USER],
+    roles: [Roles.ADMIN, Roles.MODERATOR, Roles.USER],
     scope: "own",
   },
 ];
