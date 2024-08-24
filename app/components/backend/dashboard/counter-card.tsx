@@ -1,4 +1,4 @@
-import { cn } from "#app/utils/misc";
+import { cn } from "#app/utils/lib/cn";
 
 interface Args {
   title: string;

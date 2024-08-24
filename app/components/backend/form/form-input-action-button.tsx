@@ -1,6 +1,6 @@
 import { ConfirmationLauncher } from "#app/components/confirmation-launcher";
 import { ConfirmationModal } from "#app/components/confirmation-modal";
-import { cn } from "#app/utils/misc";
+import { cn } from "#app/utils/lib/cn";
 
 interface PropTypes {
   formId: string;

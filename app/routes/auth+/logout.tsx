@@ -3,7 +3,7 @@ import { json, redirect } from "@remix-run/node";
 
 import { authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
-import { mergeHeaders } from "#app/utils/misc";
+import { mergeHeaders } from "#app/utils/lib/merge-headers";
 import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 

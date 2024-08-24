@@ -1,7 +1,7 @@
 import { flexRender } from "@tanstack/react-table";
 
 import useTable from "#app/components/tanstack-table/useTable";
-import { cn } from "#app/utils/misc";
+import { cn } from "#app/utils/lib/cn";
 
 const TBody = () => {
   const table = useTable();

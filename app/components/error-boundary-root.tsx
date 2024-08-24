@@ -6,7 +6,7 @@ import {
 } from "@remix-run/react";
 
 import { Button } from "#app/components/shared/button";
-import { getErrorMessage } from "#app/utils/misc";
+import { getErrorMessage } from "#app/utils/lib/get-error-message";
 
 export function ErrorBoundaryRoot() {
   const error = useRouteError();

@@ -1,4 +1,4 @@
-import { cn } from "#app/utils/misc";
+import { cn } from "#app/utils/lib/cn";
 import { useUser, userHasRole } from "#app/utils/user";
 import { Role } from "#app/validations/role-schema";
 

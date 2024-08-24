@@ -1,4 +1,4 @@
-import { type MergeUnion } from "#app/utils/misc";
+import { type MergeUnion } from "#app/utils/lib/merge-union";
 import { Role } from "#app/validations/role-schema";
 
 // consts as used in the permission definitions

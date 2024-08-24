@@ -13,7 +13,8 @@ import { Button } from "#app/components/shared/button";
 import { createRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
-import { humanize, validateSubmission } from "#app/utils/misc";
+import { humanize } from "#app/utils/lib/humanize";
+import { validateSubmission } from "#app/utils/misc";
 import {
   requireModelPermission,
   requireRoutePermission,

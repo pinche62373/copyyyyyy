@@ -1,7 +1,7 @@
 import { Breadcrumbs } from "#app/components/shared/breadcrumbs";
 import { DarkModeToggler } from "#app/components/shared/darkmode-toggler";
 import { UserMenu } from "#app/components/shared/user-menu";
-import { cn } from "#app/utils/misc";
+import { cn } from "#app/utils/lib/cn";
 
 interface Props {
   className?: string;

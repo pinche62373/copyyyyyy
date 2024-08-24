@@ -1,7 +1,7 @@
 import { NavLink } from "@remix-run/react";
 import type { ButtonHTMLAttributes } from "react";
 
-import { cn } from "#app/utils/misc";
+import { cn } from "#app/utils/lib/cn";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   type: "submit" | "reset" | "button";

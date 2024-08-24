@@ -1,6 +1,6 @@
 import { NavLink } from "@remix-run/react";
 
-import { cn } from "#app/utils/misc";
+import { cn } from "#app/utils/lib/cn";
 import { userHasRoutePermission, useUser } from "#app/utils/user";
 
 interface Args {

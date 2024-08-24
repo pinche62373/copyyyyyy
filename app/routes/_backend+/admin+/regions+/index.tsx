@@ -35,7 +35,7 @@ import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
-import { humanize } from "#app/utils/misc";
+import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { useUser } from "#app/utils/user";
 import { regionSchemaAdminTable } from "#app/validations/region-schema";

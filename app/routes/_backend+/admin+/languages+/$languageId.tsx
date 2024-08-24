@@ -6,7 +6,9 @@ import { FormInputTextReadOnly } from "#app/components/backend/form/form-input-t
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { getLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
-import { humanize, timeStampToHuman, validatePageId } from "#app/utils/misc";
+import { humanize } from "#app/utils/lib/humanize";
+import { validatePageId } from "#app/utils/misc";
+import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchemaFull } from "#app/validations/language-schema";
 

@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 import { useHydrated } from "remix-utils/use-hydrated";
 
-import { cn } from "#app/utils/misc";
+import { cn } from "#app/utils/lib/cn";
 interface IProps {
   className?: string;
 }

@@ -1,6 +1,6 @@
 import { CellContext } from "@tanstack/react-table";
 
-import { timeStampToHuman } from "#app/utils/misc";
+import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 
 // -----------------------------------------------------
 /* eslint-disable  @typescript-eslint/no-explicit-any */

@@ -15,7 +15,8 @@ import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
-import { humanize, validateSubmission } from "#app/utils/misc";
+import { humanize } from "#app/utils/lib/humanize";
+import { validateSubmission } from "#app/utils/misc";
 import {
   requireModelPermission,
   requireRoutePermission,

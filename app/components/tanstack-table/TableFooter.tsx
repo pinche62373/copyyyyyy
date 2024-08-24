@@ -1,7 +1,7 @@
 import { PropsWithChildren } from "react";
 
 import { t_table } from "#app/components/tanstack-table/types";
-import { cn } from "#app/utils/misc";
+import { cn } from "#app/utils/lib/cn";
 
 interface IProps<T> {
   table: t_table<T>;

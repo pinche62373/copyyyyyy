@@ -32,7 +32,7 @@ import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
-import { humanize } from "#app/utils/misc";
+import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 
 const { roleCrud, resourceCrud } = getAdminCrud();
