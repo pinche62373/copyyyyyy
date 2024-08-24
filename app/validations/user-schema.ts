@@ -5,17 +5,25 @@ export const userSchema = z.object({
   email: z.string().email(),
   username: z
     .string()
-    .min(3, "Must be at least 6 characters")
+    .min(3, "Must be at least 3 characters")
     .max(25, "Cannot be more than 25 characters"),
   password: z.string().min(6, "Must be at least 6 characters"),
 });
 
-export const userSchemaUpdateUsername = userSchema.pick({
-  id: true,
-  username: true,
-});
+export const userSchemaUpdateUsername = userSchema
+  .pick({
+    id: true,
+    username: true,
+  })
+  .extend({
+    intent: z.literal("update"),
+  });
 
-export const userSchemaUpdateEmail = userSchema.pick({
-  id: true,
-  email: true,
-});
+export const userSchemaUpdateEmail = userSchema
+  .pick({
+    id: true,
+    email: true,
+  })
+  .extend({
+    intent: z.literal("update"),
+  });

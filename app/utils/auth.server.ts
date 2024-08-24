@@ -68,6 +68,14 @@ export async function getUser(request: Request) {
   throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
 }
 
+export async function getUserOrDie(request: Request) {
+  const user = await getUser(request);
+  if (user === null) {
+    throw new Error("User cannot be null here");
+  }
+  return user;
+}
+
 export async function requireUserId(
   request: Request,
   { redirectTo }: { redirectTo?: string | null } = {},
@@ -78,7 +86,7 @@ export async function requireUserId(
     redirectTo =
       redirectTo === null
         ? null
-        : redirectTo ?? `${requestUrl.pathname}${requestUrl.search}`;
+        : (redirectTo ?? `${requestUrl.pathname}${requestUrl.search}`);
     const loginParams = redirectTo ? new URLSearchParams({ redirectTo }) : null;
     const loginRedirect = ["/login", loginParams?.toString()]
       .filter(Boolean)

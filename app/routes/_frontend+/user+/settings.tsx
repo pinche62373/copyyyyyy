@@ -1,26 +1,26 @@
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useNavigation } from "@remix-run/react";
+import { useActionData, useLoaderData } from "@remix-run/react";
+import { FormProvider, useForm as useFormRVF } from "@rvf/remix";
+import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { FormFooter } from "#app/components/backend/form/form-footer";
-import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
-import { FormInputText } from "#app/components/backend/form/form-input-text";
+import { GenericInput } from "#app/components/backend/form/input-generic";
 import { FrontendSection } from "#app/components/frontend/section";
 import { Button } from "#app/components/shared/button";
 import { updateUserAccountSettings } from "#app/models/user.server";
-import { authenticator } from "#app/utils/auth.server";
+import { authenticator, getUserOrDie } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
-import { validateSubmission } from "#app/utils/misc";
+import { isValidationErrorResponse } from "#app/utils/lib/is-validation-error-response";
 import {
   requireModelPermission,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
-import { useUser } from "#app/utils/user";
 import { userSchemaUpdateUsername } from "#app/validations/user-schema";
 
 const intent = "update";
+
+const validator = withZod(userSchemaUpdateUsername);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -34,48 +34,54 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     scope: "any",
   });
 
-  return null;
+  const { id, username } = await getUserOrDie(request);
+
+  return {
+    intent,
+    id,
+    username,
+  };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const submission = validateSubmission({
-    intent,
-    formData: await request.formData(),
-    schema: userSchemaUpdateUsername,
-  });
+  const validated = await validator.validate(await request.formData());
+
+  if (validated.error)
+    return jsonWithError(validated.error, "Form data rejected by server", {
+      status: 422,
+    });
 
   await requireModelPermission(request, {
     resource: "user",
     action: intent,
     scope: "own",
-    resourceId: submission.value.id,
+    resourceId: validated.data.id,
   });
 
   try {
-    await updateUserAccountSettings(submission.value);
+    await updateUserAccountSettings(validated.data);
   } catch (error) {
-    return jsonWithError(null, "Unexpected error");
+    return jsonWithError(validated.data, "Server error while saving your data");
   }
 
-  return jsonWithSuccess(null, `Settings updated successfully`);
+  return jsonWithSuccess(validated.data, `Settings updated successfully`);
 };
 
 export default function SettingsIndexPage() {
-  const user = useUser();
-  const navigation = useNavigation();
+  const actionData = useActionData<typeof action>();
 
-  const [usernameForm, usernameFields] = useForm({
-    shouldRevalidate: "onBlur",
-    onValidate({ formData }) {
-      return parseWithZod(formData, {
-        schema: userSchemaUpdateUsername,
-      });
+  const form = useFormRVF({
+    method: "post",
+    validator,
+    defaultValues: useLoaderData<typeof loader>(),
+    onSubmitSuccess: async () => {
+      !isValidationErrorResponse(actionData) && form.resetForm(actionData);
     },
   });
 
   return (
     <FrontendSection>
-      {/* Profile Settings Container */}
+      {/* Profile Container */}
       <div className="py-6 sm:py-8 space-y-5 border-t border-gray-200 first:border-t-0 dark:border-neutral-700">
         {/* Profile Header */}
         <h2 className="font-semibold text-gray-800 dark:text-neutral-200">
@@ -83,31 +89,40 @@ export default function SettingsIndexPage() {
         </h2>
 
         {/* Profile Form */}
-        <Form
-          method="post"
-          id={usernameForm.id}
-          onSubmit={usernameForm.onSubmit}
-        >
-          <FormInputHidden name="intent" value={"update"} />
-          <FormInputHidden name="id" value={user.id} />
-
-          <FormInputText
-            label="Username"
-            fieldName="username"
-            fields={usernameFields}
-            defaultValue={user.username}
-          />
-
-          <FormFooter>
-            <Button
-              type="submit"
-              text="Save Changes"
-              disabled={navigation.state === "submitting"}
+        <FormProvider scope={form.scope()}>
+          <form {...form.getFormProps()}>
+            <GenericInput
+              scope={form.scope("id")}
+              name="id"
+              type="hidden"
+              label={""}
             />
-          </FormFooter>
-        </Form>
+            <GenericInput
+              scope={form.scope("intent")}
+              name="intent"
+              type="hidden"
+              label={""}
+            />
+
+            <GenericInput
+              name="username"
+              scope={form.scope("username")}
+              label={"Username"}
+            />
+
+            <FormFooter>
+              <Button type="reset" text="Reset Form" secondary />
+
+              <Button
+                type="submit"
+                text="Save Changes"
+                disabled={form.formState.isSubmitting}
+              />
+            </FormFooter>
+          </form>
+        </FormProvider>
       </div>
-      {/* End Profile Setting Container */}
+      {/* End Profile Container */}
     </FrontendSection>
   );
 }
