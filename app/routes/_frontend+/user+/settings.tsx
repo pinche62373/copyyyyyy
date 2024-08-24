@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
-import { FormProvider, useForm as useFormRVF } from "@rvf/remix";
+import { FormProvider, useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
@@ -70,7 +70,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function SettingsIndexPage() {
   const actionData = useActionData<typeof action>();
 
-  const form = useFormRVF({
+  const form = useForm({
     method: "post",
     validator,
     defaultValues: useLoaderData<typeof loader>(),
