@@ -4,10 +4,10 @@ import { FormProvider, useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
-import { FormFooter } from "#app/components/backend/form/form-footer";
-import { GenericInput } from "#app/components/backend/form/input-generic";
 import { FrontendSection } from "#app/components/frontend/section";
 import { Button } from "#app/components/shared/button";
+import { FormFooter } from "#app/components/shared/form/footer";
+import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { updateUserAccountSettings } from "#app/models/user.server";
 import { authenticator, getUserOrDie } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
@@ -91,14 +91,14 @@ export default function SettingsIndexPage() {
         {/* Profile Form */}
         <FormProvider scope={form.scope()}>
           <form {...form.getFormProps()}>
-            <GenericInput scope={form.scope("id")} name="id" type="hidden" />
-            <GenericInput
+            <InputGeneric scope={form.scope("id")} name="id" type="hidden" />
+            <InputGeneric
               scope={form.scope("intent")}
               name="intent"
               type="hidden"
             />
 
-            <GenericInput
+            <InputGeneric
               name="username"
               scope={form.scope("username")}
               label={"Username"}

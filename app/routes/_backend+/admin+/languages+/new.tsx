@@ -5,11 +5,11 @@ import { Form, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormFooter } from "#app/components/backend/form/form-footer";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
 import { FormInputText } from "#app/components/backend/form/form-input-text";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { Button } from "#app/components/shared/button";
+import { FormFooter } from "#app/components/shared/form/footer";
 import { createLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";

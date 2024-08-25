@@ -5,12 +5,12 @@ import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormFooter } from "#app/components/backend/form/form-footer";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
-import { FormInputSelect } from "#app/components/backend/form/form-input-select";
 import { FormInputText } from "#app/components/backend/form/form-input-text";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { Button } from "#app/components/shared/button";
+import { FormFooter } from "#app/components/shared/form/footer";
+import { InputSelect } from "#app/components/shared/form/input-select";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -107,7 +107,7 @@ export default function Component() {
             defaultValue={data.country.name}
           />
 
-          <FormInputSelect
+          <InputSelect
             label="Region"
             items={data.regions}
             fields={fields}

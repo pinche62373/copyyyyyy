@@ -89,4 +89,4 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
 
 MyInputImpl.displayName = "MyInput";
 
-export const GenericInput = MyInputImpl as InputType;
+export const InputGeneric = MyInputImpl as InputType;

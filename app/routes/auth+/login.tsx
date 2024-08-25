@@ -14,10 +14,10 @@ import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { SpamError } from "remix-utils/honeypot/server";
 import { validationError } from "remix-validated-form";
 
-import { FormFooter } from "#app/components/backend/form/form-footer";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
 import { FormInputTextStacked } from "#app/components/backend/form/form-input-text-stacked";
 import { Button } from "#app/components/shared/button";
+import { FormFooter } from "#app/components/shared/form/footer";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
