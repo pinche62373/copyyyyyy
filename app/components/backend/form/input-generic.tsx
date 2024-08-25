@@ -5,20 +5,24 @@ import { ComponentPropsWithRef, forwardRef, useId } from "react";
 // You can make futher changes here to suite your needs.
 type BaseInputProps = Omit<ComponentPropsWithRef<"input">, "type">;
 
-interface MyInputProps<Type extends string> extends BaseInputProps {
+interface DefaultInputProps<Type extends string> extends BaseInputProps {
   label: string;
   type?: Type;
+  scope: FormScope<ValueOfInputType<Type>>;
+}
+
+interface HiddenInputPropsTwo<Type extends string> extends BaseInputProps {
+  type: "hidden";
   scope: FormScope<ValueOfInputType<Type>>;
 }
 
 // We need to do this in order to get a generic type out of `forwardRef`.
 // In React 19, you won't need this anymore.
 type InputType = <Type extends string>(
-  props: MyInputProps<Type>,
-  //   props: InputProps<Type> | InputPropsHidden<Type>,
+  props: DefaultInputProps<Type> | HiddenInputPropsTwo<Type>,
 ) => React.ReactNode;
 
-const MyInputImpl = forwardRef<HTMLInputElement, MyInputProps<string>>(
+const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
   ({ label, scope, type, ...rest }, ref) => {
     const field = useField(scope);
     const inputId = useId();

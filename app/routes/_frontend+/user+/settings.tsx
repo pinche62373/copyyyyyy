@@ -91,17 +91,11 @@ export default function SettingsIndexPage() {
         {/* Profile Form */}
         <FormProvider scope={form.scope()}>
           <form {...form.getFormProps()}>
-            <GenericInput
-              scope={form.scope("id")}
-              name="id"
-              type="hidden"
-              label={""}
-            />
+            <GenericInput scope={form.scope("id")} name="id" type="hidden" />
             <GenericInput
               scope={form.scope("intent")}
               name="intent"
               type="hidden"
-              label={""}
             />
 
             <GenericInput
