@@ -2,7 +2,7 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
-import { jsonWithError, redirectWithSuccess } from "remix-toast";
+import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
@@ -73,8 +73,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Unexpected error");
   }
 
-  return redirectWithSuccess(
-    crud.routes.index,
+  return jsonWithSuccess(
+    null,
     `${humanize(crud.singular)} updated successfully`,
   );
 };
@@ -111,7 +111,9 @@ export default function Component() {
             label="Region"
             items={data.regions}
             fields={fields}
-            defaultValue={data.country.region.id}
+            initialSelectedItem={data.regions.find(
+              (region) => region.id === data.country.region.id,
+            )}
           />
 
           <FormFooter>

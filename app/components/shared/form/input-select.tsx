@@ -1,41 +1,10 @@
 import { type FormMetadata } from "@conform-to/react";
-import { clsx } from "clsx";
-import Select from "react-select";
-import { useHydrated } from "remix-utils/use-hydrated";
+import { autoUpdate, size, useFloating } from "@floating-ui/react-dom";
+import { useCombobox } from "downshift";
+import React from "react";
 
-// https://www.jussivirtanen.fi/writing/styling-react-select-with-tailwind
-const controlStyles = {
-  base: "border rounded-lg bg-white hover:cursor-pointer text-sm pl-1",
-  nonFocus:
-    "border-gray-200 placeholder:text-gray-400 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60",
-  focus: "border-blue-500 ring-1 ring-blue-500 dark:ring-neutral-600",
-};
-
-const placeholderStyles = "text-gray-500 pl-1 py-0.5 text-sm";
-const selectInputStyles = "pl-1 py-0.5";
-const valueContainerStyles = "p-1 gap-1";
-const singleValueStyles = "leading-7 ml-1";
-const multiValueStyles =
-  "bg-gray-100 rounded items-center py-0.5 pl-2 pr-1 gap-1.5";
-const multiValueLabelStyles = "leading-6 py-0.5";
-const multiValueRemoveStyles =
-  "border border-gray-200 bg-white hover:bg-red-50 hover:text-red-800 text-gray-500 hover:border-red-300 rounded-md";
-const indicatorsContainerStyles = "p-1 gap-1";
-const clearIndicatorStyles =
-  "text-gray-500 p-1 rounded-md hover:bg-red-50 hover:text-red-800";
-const indicatorSeparatorStyles = "none"; // "bg-gray-300";
-const dropdownIndicatorStyles =
-  "p-1 hover:bg-gray-100 text-gray-500 rounded-md hover:text-black";
-const menuStyles = "p-1 mt-2 border border-gray-200 bg-white rounded-lg";
-const groupHeadingStyles = "ml-3 mt-2 mb-1 text-gray-500 text-sm";
-const optionStyles = {
-  base: "hover:cursor-pointer px-3 py-2 rounded dark:text-neutral-400",
-  focus: "bg-gray-100 active:bg-gray-200",
-  // selected:
-  //   "after:content-['✔'] after:ml-2 after:text-green-500 text-gray-500",
-};
-const noOptionsMessageStyles =
-  "text-gray-500 p-2 bg-gray-50 border border-dashed border-gray-200 rounded-sm";
+import { IconChevronDown } from "#app/components/icons/icon-chevron-down";
+import { cn } from "#app/utils/lib/cn";
 
 interface PropTypes {
   label: string;
@@ -44,116 +13,174 @@ interface PropTypes {
     id: string;
     name: string;
   }[];
-  defaultValue?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- allow any record type
+  initialSelectedItem?: any;
 }
 
-export const InputSelect = ({
+export function InputSelect({
   label,
+  items: data,
   fields,
-  items,
-  defaultValue,
-}: PropTypes) => {
-  // https://github.com/JedWatson/react-select/issues/4706#issuecomment-1483820554
-  const isHydrated = useHydrated();
+  initialSelectedItem,
+}: PropTypes) {
+  const baseClass =
+    "text-sm font-normal hover:cursor-pointer font-normal text-black dark:text-neutral-300";
 
-  const fieldName = label.toLowerCase() + "Id"; // e.g. `regionId`
+  function getNameFilter(inputValue: string) {
+    const lowerCasedInputValue = inputValue.toLowerCase();
 
-  const options = items.map((item) => {
-    return {
-      value: item.id,
-      label: item.name,
+    return function nameFilter(filterObject: { id: string; name: string }) {
+      return (
+        !inputValue ||
+        filterObject.name.toLowerCase().includes(lowerCasedInputValue)
+      );
     };
-  });
+  }
 
-  const defaultOption = options.find(function (option) {
-    return option.value === defaultValue;
-  });
+  function ComboBox() {
+    const [items, setItems] = React.useState(data);
 
-  return (
-    <div className="py-2 space-y-5">
-      {/* Grid */}
-      <div className="grid sm:grid-cols-12 gap-y-1.5 sm:gap-y-0 sm:gap-x-5">
-        {/* Col Name Label*/}
-        <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-1">
-          <label className="sm:mt-2.5 inline-block text-sm text-gray-500 dark:text-neutral-500">
-            {label}
-          </label>
-        </div>
-        {/* End Col Name Label*/}
+    const fieldName = label.toLowerCase() + "Id"; // e.g. `regionId`
 
-        {/* Test Col */}
-        <div className="mt-0.5 sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
-          {isHydrated ? (
-            <Select
-              name={fieldName}
-              placeholder={`Select a ${label.toLowerCase()}...`}
-              options={options}
-              defaultValue={defaultOption}
-              unstyled
-              styles={{
-                input: (base) => ({
-                  ...base,
-                  fontSize: "14px",
-                  "input:focus": {
-                    boxShadow: "none",
-                  },
-                }),
-                // On mobile, the label will truncate automatically, so we want to
-                // override that behaviour.
-                multiValueLabel: (base) => ({
-                  ...base,
-                  whiteSpace: "normal",
-                  overflow: "visible",
-                }),
-                control: (base) => ({
-                  ...base,
-                  fontSize: "14px",
-                  transition: "none",
-                }),
-                option: (base) => ({
-                  ...base,
-                  fontSize: "14px",
-                }),
-              }}
-              classNames={{
-                control: ({ isFocused }) =>
-                  clsx(
-                    isFocused ? controlStyles.focus : controlStyles.nonFocus,
-                    controlStyles.base,
-                  ),
-                placeholder: () => placeholderStyles,
-                input: () => selectInputStyles,
-                valueContainer: () => valueContainerStyles,
-                singleValue: () => singleValueStyles,
-                multiValue: () => multiValueStyles,
-                multiValueLabel: () => multiValueLabelStyles,
-                multiValueRemove: () => multiValueRemoveStyles,
-                indicatorsContainer: () => indicatorsContainerStyles,
-                clearIndicator: () => clearIndicatorStyles,
-                indicatorSeparator: () => indicatorSeparatorStyles,
-                dropdownIndicator: () => dropdownIndicatorStyles,
-                menu: () => menuStyles,
-                groupHeading: () => groupHeadingStyles,
-                option: ({ isFocused, isSelected }) =>
-                  clsx(
-                    isFocused && optionStyles.focus,
-                    isSelected && optionStyles.focus,
-                    optionStyles.base,
-                  ),
-                noOptionsMessage: () => noOptionsMessageStyles,
-              }}
-            />
-          ) : null}
+    const {
+      isOpen,
+      getToggleButtonProps,
+      getLabelProps,
+      getMenuProps,
+      getInputProps,
+      highlightedIndex,
+      getItemProps,
+      selectedItem,
+    } = useCombobox({
+      items,
+      itemToString(item) {
+        return item ? item.name : "";
+      },
+      onInputValueChange({ inputValue }) {
+        setItems(items.filter(getNameFilter(inputValue)));
+      },
+      onStateChange() {
+        // reset filter after user selects an entry
+        !isOpen && setItems(data);
+      },
+      initialSelectedItem, // full region object, comes as component prop
+    });
 
-          {/* Validation Error */}
-          <div className="pt-1 text-red-700 text-xs" id="name-error">
-            {fields[fieldName].errors}
+    // floating-ui size() for responsive full-width list items
+    const { refs, floatingStyles } = useFloating({
+      whileElementsMounted: autoUpdate,
+      middleware: [
+        size({
+          apply({ rects, elements }) {
+            Object.assign(elements.floating.style, {
+              width: `${rects.reference.width}px`,
+            });
+          },
+        }),
+      ],
+    });
+
+    return (
+      <>
+        <div className="py-2 space-y-5">
+          {/* Grid */}
+          <div className="grid sm:grid-cols-12 gap-y-1.5 sm:gap-y-0 sm:gap-x-5">
+            {/* Label Column*/}
+            <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-1">
+              <label
+                htmlFor="null"
+                {...getLabelProps()}
+                className={cn(
+                  baseClass,
+                  "sm:mt-2.5 inline-block font-normal text-gray-500 dark:text-neutral-500",
+                )}
+              >
+                {label}
+              </label>
+            </div>
+            {/* End Label Column*/}
+
+            {/* Combo Column */}
+            <div className="mt-0.5 sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
+              <div className="flex bg-white gap-0.5 border border-gray-200 rounded-lg focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500  dark:focus-within:ring-1 dark:border-neutral-700 dark:text-neutral-300 dark:focus-within:ring-neutral-600 dark:bg-neutral-800">
+                {/* User Input */}
+                <input
+                  placeholder="Select a region..."
+                  className={cn(
+                    baseClass,
+                    "py-2 px-3 block w-full border-gray-200 rounded-lg placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600 border-none focus:ring-0",
+                  )}
+                  {...getInputProps()}
+                />
+
+                {/* Form Input */}
+                <input type="hidden" name={fieldName} value={selectedItem ? selectedItem.id : ""} />
+
+                {/* Dropdown Button */}
+                <button
+                  aria-label="toggle menu"
+                  className="px-1 mt-1 mb-1 mr-1 text-gray-500 rounded-md dark:text-neutral-400 hover:bg-gray-100 hover:text-black dark:hover:bg-neutral-700 dark:hover:text-neutral-400"
+                  type="button"
+                  {...getToggleButtonProps()}
+                >
+                  {/* {isOpen ? <>&#8593;</> : <>&#8595;</>} */}
+                  <IconChevronDown
+                    className=""
+                    height="20"
+                    width="20"
+                    viewBox="0 0 20 20"
+                    aria-hidden="true"
+                    focusable="false"
+                  />
+                </button>
+              </div>
+
+              <ul
+                className={`p-1 mr-5 z-10 bg-white dark:bg-neutral-900 dark:border-neutral-800 border rounded-lg mt-2 max-h-80 overflow-auto ${
+                  !(isOpen && items.length) && "hidden"
+                }`}
+                {...getMenuProps({}, { suppressRefError: true })}
+                ref={refs.setFloating}
+                style={floatingStyles}
+              >
+                {
+                  //isOpen &&
+                  items.map((item, index) => (
+                    <li
+                      className={cn(
+                        baseClass,
+                        highlightedIndex === index &&
+                          baseClass &&
+                          "bg-gray-100 dark:bg-neutral-800 rounded-md",
+                        selectedItem === item &&
+                          "bg-gray-100 dark:bg-neutral-800 rounded-md",
+                        "py-2 px-3",
+                      )}
+                      key={item.id}
+                      {...getItemProps({ item, index })}
+                    >
+                      <span>{item.name}</span>
+                    </li>
+                  ))
+                }
+              </ul>
+
+              {/* Downshift refs */}
+              <div ref={refs.setReference} />
+
+              {/* Validation Error */}
+              <div className="pt-1 text-red-700 text-xs" id="name-error">
+                {fields[fieldName].errors}
+              </div>
+              {/* End Validation Error */}
+            </div>
+            {/* End Combo Column */}
           </div>
-          {/* End Validation Error */}
+          {/* End Grid */}
         </div>
-        {/* End Test Col */}
-      </div>
-      {/* End Grid */}
-    </div>
-  );
-};
+      </>
+    );
+  }
+
+  return <ComboBox />;
+}

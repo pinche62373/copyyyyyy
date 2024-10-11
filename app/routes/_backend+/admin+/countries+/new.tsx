@@ -3,7 +3,7 @@ import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
-import { jsonWithError, redirectWithSuccess } from "remix-toast";
+import { jsonWithError, jsonWithSuccess, redirectWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
@@ -58,14 +58,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Invalid relationship");
   }
 
+  let created = null
+
   try {
-    await createCountry(submission.value, userId);
+    created = await createCountry(submission.value, userId);
   } catch (error) {
     return jsonWithError(null, "Unexpected error");
   }
 
+  // return jsonWithSuccess(null, `${humanize(crud.singular)} created successfully`)
+
   return redirectWithSuccess(
-    crud.routes.index,
+    `${crud.routes.index}/${created.id}/edit`,
     `${humanize(crud.singular)} created successfully`,
   );
 };
