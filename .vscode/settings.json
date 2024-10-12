@@ -2,5 +2,8 @@
 // https://github.com/microsoft/vscode-css-languageservice/blob/main/docs/customData.md
 //
 {
-  "css.customData": ["./app/styles/custom-data.json"]
+  "css.customData": ["./app/styles/custom-data.json"],
+  "tailwindCSS.experimental.classRegex": [
+    ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
+  ]
 }

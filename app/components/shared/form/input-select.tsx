@@ -2,6 +2,7 @@ import { type FormMetadata } from "@conform-to/react";
 import { autoUpdate, size, useFloating } from "@floating-ui/react-dom";
 import { useCombobox } from "downshift";
 import React from "react";
+import { tv } from "tailwind-variants";
 
 import { IconChevronDown } from "#app/components/icons/icon-chevron-down";
 import { cn } from "#app/utils/lib/cn";
@@ -23,8 +24,30 @@ export function InputSelect({
   fields,
   initialSelectedItem,
 }: PropTypes) {
-  const baseClass =
-    "text-sm font-normal hover:cursor-pointer font-normal text-black dark:text-neutral-300";
+  const twBase = tv({
+    base: "text-sm font-normal hover:cursor-pointer text-black dark:text-neutral-300",
+  });
+
+  const twLabel = tv({
+    extend: twBase,
+    base: "sm:mt-2.5 inline-block text-gray-500 dark:text-neutral-500",
+  });
+
+  const twInput = tv({
+    extend: twBase,
+    base: "py-2 px-3 block w-full border-gray-200 rounded-lg placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600 border-none focus:ring-0",
+  });
+
+  const twListItem = tv({
+    extend: twBase,
+    base: "rounded-md py-2 px-3",
+    variants: {
+      state: {
+        hover: "bg-gray-100 dark:bg-neutral-800",
+        selected: "bg-gray-100 dark:bg-neutral-800",
+      },
+    },
+  });
 
   function getNameFilter(inputValue: string) {
     const lowerCasedInputValue = inputValue.toLowerCase();
@@ -87,14 +110,7 @@ export function InputSelect({
           <div className="grid sm:grid-cols-12 gap-y-1.5 sm:gap-y-0 sm:gap-x-5">
             {/* Label Column*/}
             <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-1">
-              <label
-                htmlFor="null"
-                {...getLabelProps()}
-                className={cn(
-                  baseClass,
-                  "sm:mt-2.5 inline-block font-normal text-gray-500 dark:text-neutral-500",
-                )}
-              >
+              <label htmlFor="null" className={twLabel()} {...getLabelProps()}>
                 {label}
               </label>
             </div>
@@ -106,15 +122,16 @@ export function InputSelect({
                 {/* User Input */}
                 <input
                   placeholder="Select a region..."
-                  className={cn(
-                    baseClass,
-                    "py-2 px-3 block w-full border-gray-200 rounded-lg placeholder:text-gray-500 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600 border-none focus:ring-0",
-                  )}
+                  className={twInput()}
                   {...getInputProps()}
                 />
 
                 {/* Form Input */}
-                <input type="hidden" name={fieldName} value={selectedItem ? selectedItem.id : ""} />
+                <input
+                  type="hidden"
+                  name={fieldName}
+                  value={selectedItem ? selectedItem.id : ""}
+                />
 
                 {/* Dropdown Button */}
                 <button
@@ -148,13 +165,11 @@ export function InputSelect({
                   items.map((item, index) => (
                     <li
                       className={cn(
-                        baseClass,
+                        twListItem(),
                         highlightedIndex === index &&
-                          baseClass &&
-                          "bg-gray-100 dark:bg-neutral-800 rounded-md",
+                          twListItem({ state: "hover" }),
                         selectedItem === item &&
-                          "bg-gray-100 dark:bg-neutral-800 rounded-md",
-                        "py-2 px-3",
+                          twListItem({ state: "selected" }),
                       )}
                       key={item.id}
                       {...getItemProps({ item, index })}
@@ -169,7 +184,7 @@ export function InputSelect({
               <div ref={refs.setReference} />
 
               {/* Validation Error */}
-              <div className="pt-1 text-red-700 text-xs" id="name-error">
+              <div className="pt-1 text-xs text-red-700" id="name-error">
                 {fields[fieldName].errors}
               </div>
               {/* End Validation Error */}
