@@ -80,7 +80,7 @@ export function InputSelect({
         return item ? item.name : "";
       },
       onInputValueChange({ inputValue }) {
-        setItems(items.filter(getNameFilter(inputValue)));
+        setItems(data.filter(getNameFilter(inputValue)));
       },
       onStateChange() {
         // reset filter after user selects an entry
