@@ -12,7 +12,7 @@ export default function IndexPage() {
   console.log(JSON.stringify(user, null, 2));
 
   return (
-    <main className="relative sm:flex sm:items-center sm:justify-center align-middle mt-20">
+    <main className="relative mt-20 align-middle sm:flex sm:items-center sm:justify-center">
       <div className="relative sm:pb-16">
         <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
           <div className="relative shadow-xl sm:overflow-hidden sm:rounded-2xl">
@@ -38,7 +38,7 @@ export default function IndexPage() {
                 <img
                   src="https://user-images.githubusercontent.com/1500684/158298926-e45dafff-3544-4b69-96d6-d3bcc33fc76a.svg"
                   alt="Remix"
-                  className="mx-auto mt-16 w-full max-w-[12rem] md:max-w-[16rem]"
+                  className="mx-auto mt-16 w-full max-w-48 md:max-w-64"
                 />
               </a>
             </div>

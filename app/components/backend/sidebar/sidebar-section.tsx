@@ -28,14 +28,14 @@ export function SidebarSection({
     <nav
       className={cn(
         "hs-accordion-group w-full flex flex-col flex-wrap",
-        className,
+        className
       )}
       data-hs-accordion-always-open
       {...rest}
     >
       <ul>
         {caption && (
-          <li className="pt-5 pb-2 px-8 mt-2 mb-1.5 border-t border-gray-200 dark:border-neutral-700">
+          <li className="mb-1.5 mt-2 border-t border-gray-200 px-8 pb-2 pt-5 dark:border-neutral-700">
             <span className="block text-xs uppercase text-gray-500 dark:text-neutral-500">
               {caption}
             </span>

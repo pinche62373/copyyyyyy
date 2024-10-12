@@ -3,7 +3,7 @@ import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
-import { jsonWithError, jsonWithSuccess, redirectWithSuccess } from "remix-toast";
+import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
@@ -20,18 +20,18 @@ import { humanize } from "#app/utils/lib/humanize";
 import { validateSubmission } from "#app/utils/misc";
 import {
   requireModelPermission,
-  requireRoutePermission,
+  requireRoutePermission
 } from "#app/utils/permissions.server";
 import { countrySchemaCreateForm } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
-const intent = "create"
+const intent = "create";
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any",
+    scope: "any"
   });
 
   const regions = await getRegions();
@@ -45,20 +45,20 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   await requireModelPermission(request, {
     resource: crud.singular,
     action: intent,
-    scope: "any",
+    scope: "any"
   });
 
   const submission = validateSubmission({
     intent,
     formData: await request.formData(),
-    schema: countrySchemaCreateForm,
+    schema: countrySchemaCreateForm
   });
 
   if ((await getRegionById(submission.value.regionId)) === null) {
     return jsonWithError(null, "Invalid relationship");
   }
 
-  let created = null
+  let created = null;
 
   try {
     created = await createCountry(submission.value, userId);
@@ -66,11 +66,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Unexpected error");
   }
 
-  // return jsonWithSuccess(null, `${humanize(crud.singular)} created successfully`)
-
   return redirectWithSuccess(
     `${crud.routes.index}/${created.id}/edit`,
-    `${humanize(crud.singular)} created successfully`,
+    `${humanize(crud.singular)} created successfully`
   );
 };
 
@@ -83,9 +81,9 @@ export default function Component() {
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
       return parseWithZod(formData, {
-        schema: countrySchemaCreateForm,
+        schema: countrySchemaCreateForm
       });
-    },
+    }
   });
 
   return (
@@ -98,11 +96,7 @@ export default function Component() {
 
           <FormInputText label="Name" fieldName="name" fields={fields} />
 
-          <InputSelect
-            label="Region"
-            items={data.regions}
-            fields={fields}
-          />
+          <InputSelect label="Region" items={data.regions} fields={fields} />
 
           <FormFooter>
             <Button

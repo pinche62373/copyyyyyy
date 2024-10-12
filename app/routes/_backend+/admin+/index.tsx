@@ -16,7 +16,7 @@ export default function AdminIndexPage() {
   return (
     <>
       {/* CounterCard Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-3 lg:gap-5">
+      <div className="grid grid-cols-2 gap-2 md:gap-3 lg:grid-cols-4 lg:gap-5">
         <DashboardCounterCard title="Movies" count={1214} icon={<IconCog />} />
         <DashboardCounterCard title="Actors" count={29} icon={<IconCog />} />
         <DashboardCounterCard

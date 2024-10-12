@@ -29,7 +29,7 @@ export const BackendPageTitle = ({
       <div
         className={cn(
           "ml-5 pb-5 grid sm:flex sm:justify-between sm:items-center gap-2",
-          className,
+          className
         )}
         {...rest}
       >
@@ -38,13 +38,13 @@ export const BackendPageTitle = ({
         </h1>
 
         {/* Form Group */}
-        <div className="flex sm:justify-end items-center gap-x-2">
+        <div className="flex items-center gap-x-2 sm:justify-end">
           {/* Search */}
           {search && (
             <div className="relative">
-              <div className="absolute inset-y-0 start-0 flex items-center pointer-events-none z-20 ps-3">
+              <div className="pointer-events-none absolute inset-y-0 start-0 z-20 flex items-center ps-3">
                 <svg
-                  className="flex-shrink-0 size-4 text-gray-500 dark:text-neutral-400"
+                  className="size-4 shrink-0 text-gray-500 dark:text-neutral-400"
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -61,7 +61,7 @@ export const BackendPageTitle = ({
               </div>
               <input
                 type="text"
-                className="py-1.5 px-3 ps-8 w-40 sm:w-full block bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:border-transparent dark:text-neutral-400 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-600"
+                className="block w-40 rounded-lg border-transparent bg-gray-100 px-3 py-1.5 ps-8 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 sm:w-full dark:border-transparent dark:bg-neutral-700 dark:text-neutral-400 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-600"
                 placeholder="Search"
               />
             </div>
@@ -72,7 +72,7 @@ export const BackendPageTitle = ({
           {button &&
             userHasRoutePermission(user, {
               resource: button.to,
-              scope: button.scope,
+              scope: button.scope
             }) && <Button type="button" text={button.title} to={button.to} />}
           {/* End Conditional New Button  */}
         </div>

@@ -15,7 +15,7 @@ export function DarkModeToggler({ ...props }) {
         <button
           aria-label="Toggle Theme"
           type="button"
-          className="size-[38px] inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent text-gray-500 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+          className="inline-flex size-[38px] items-center justify-center gap-x-2 rounded-full border border-transparent text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
           onClick={() =>
             setTheme((prev) => (prev === Theme.DARK ? Theme.LIGHT : Theme.DARK))
           }

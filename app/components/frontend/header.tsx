@@ -14,20 +14,20 @@ export const FrontendHeader = ({ className }: Props) => {
       <div
         className={cn(
           "max-w-[80rem] basis-full items-center w-full mx-auto px-4 sm:px-6 mb-6 lg:px-8 bg-red-200 flex flex-wrap md:justify-start md:flex-nowrap z-50 dark:bg-neutral-900",
-          className,
+          className
         )}
       >
         {/* Global Div */}
         <div
-          className="flex justify-between xl:grid xl:grid-cols-3 basis-full items-center w-full py-2.5"
+          className="flex w-full basis-full items-center justify-between py-2.5 xl:grid xl:grid-cols-3"
           aria-label="Global"
         >
           {/* Menu Left */}
-          <div className="xl:col-span-1 flex items-center md:gap-x-3">
+          <div className="flex items-center md:gap-x-3 xl:col-span-1">
             {/* Logo */}
             <NavLink
               to="/"
-              className="flex-none rounded-md text-xl inline-block font-semibold focus:outline-none focus:opacity-80"
+              className="inline-block flex-none rounded-md text-xl font-semibold focus:opacity-80 focus:outline-none"
               aria-label="Preline"
             >
               Logo
@@ -37,10 +37,10 @@ export const FrontendHeader = ({ className }: Props) => {
           {/* End Menu Left */}
 
           {/* Menu Right */}
-          <div className="xl:col-span-2 flex justify-end items-center gap-x-2">
+          <div className="flex items-center justify-end gap-x-2 xl:col-span-2">
             <div className="flex items-center">
               {/* Icon List */}
-              <div className="h-[38px] flex">
+              <div className="flex h-[38px]">
                 <DarkModeToggler />
 
                 <UserMenu />

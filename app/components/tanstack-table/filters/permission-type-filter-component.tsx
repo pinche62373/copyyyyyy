@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useHydrated } from "remix-utils/use-hydrated";
 
 interface Args {
-  onChange: (e:React.ChangeEvent<HTMLSelectElement>) => void
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 export const PermissionTypeFilterComponent = ({ onChange }: Args) => {
@@ -23,7 +23,7 @@ export const PermissionTypeFilterComponent = ({ onChange }: Args) => {
   return (
     <>
       {isHydrated ? (
-        <div className="flex justify-end items-center gap-x-2 pr-3">
+        <div className="flex items-center justify-end gap-x-2 pr-3">
           <div className="relative inline-block">
             <select
               id="hs-pro-select-minibar"
@@ -43,9 +43,9 @@ export const PermissionTypeFilterComponent = ({ onChange }: Args) => {
               <option value="route">Route permissions</option>
             </select>
 
-            <div className="absolute top-1/2 end-1.5 -translate-y-1/2">
+            <div className="absolute end-1.5 top-1/2 -translate-y-1/2">
               <svg
-                className="shrink-0 size-3.5 text-gray-600 dark:text-neutral-400"
+                className="size-3.5 shrink-0 text-gray-600 dark:text-neutral-400"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"

@@ -14,7 +14,7 @@ import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { isValidationErrorResponse } from "#app/utils/lib/is-validation-error-response";
 import {
   requireModelPermission,
-  requireRoutePermission,
+  requireRoutePermission
 } from "#app/utils/permissions.server";
 import { userSchemaUpdateUsername } from "#app/validations/user-schema";
 
@@ -26,12 +26,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
   await authenticator.isAuthenticated(request, {
-    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
+    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`
   });
 
   await requireRoutePermission(request, {
     resource: url.pathname,
-    scope: "any",
+    scope: "any"
   });
 
   const { id, username } = await getUserOrDie(request);
@@ -39,7 +39,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return {
     intent,
     id,
-    username,
+    username
   };
 };
 
@@ -48,14 +48,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
-      status: 422,
+      status: 422
     });
 
   await requireModelPermission(request, {
     resource: "user",
     action: intent,
     scope: "own",
-    resourceId: validated.data.id,
+    resourceId: validated.data.id
   });
 
   try {
@@ -76,13 +76,13 @@ export default function SettingsIndexPage() {
     defaultValues: useLoaderData<typeof loader>(),
     onSubmitSuccess: async () => {
       !isValidationErrorResponse(actionData) && form.resetForm(actionData);
-    },
+    }
   });
 
   return (
     <FrontendSection>
       {/* Profile Container */}
-      <div className="py-6 sm:py-8 space-y-5 border-t border-gray-200 first:border-t-0 dark:border-neutral-700">
+      <div className="space-y-5 border-t border-gray-200 py-6 first:border-t-0 sm:py-8 dark:border-neutral-700">
         {/* Profile Header */}
         <h2 className="font-semibold text-gray-800 dark:text-neutral-200">
           Profile

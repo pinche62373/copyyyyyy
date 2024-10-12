@@ -10,11 +10,11 @@ export function SidebarFooter({ className, ...rest }: Args) {
     <footer
       className={cn(
         "hidden lg:block absolute bottom-0 inset-x-0 border-t border-gray-200 dark:border-neutral-700",
-        className,
+        className
       )}
       {...rest}
     >
-      <p className="w-full text-sm inline-flex items-center py-3 px-7 text-start text-gray-800 align-middle disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-100 dark:hover:bg-neutral-700 dark:text-white dark:focus:bg-neutral-700">
+      <p className="inline-flex w-full items-center px-7 py-3 text-start align-middle text-sm text-gray-800 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
         Version {Constants.VERSION}
       </p>
     </footer>

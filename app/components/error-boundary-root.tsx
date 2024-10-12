@@ -2,7 +2,7 @@ import {
   Link,
   isRouteErrorResponse,
   useNavigate,
-  useRouteError,
+  useRouteError
 } from "@remix-run/react";
 
 import { Button } from "#app/components/shared/button";
@@ -14,10 +14,10 @@ export function ErrorBoundaryRoot() {
   const goBack = () => navigate(-1);
 
   return (
-    <div className="max-w-[50rem] flex flex-col mx-auto size-full">
+    <div className="mx-auto flex size-full max-w-[50rem] flex-col">
       {/* <!-- ========== MAIN CONTENT ========== --> */}
       <main id="content" className="mt-10">
-        <div className="text-center py-10 px-4 sm:px-6 lg:px-8">
+        <div className="px-4 py-10 text-center sm:px-6 lg:px-8">
           {/* Status code */}
           <h1 className="block text-7xl font-bold text-gray-800 sm:text-9xl dark:text-white">
             {isRouteErrorResponse(error) ? error.status : 500}
@@ -40,18 +40,18 @@ export function ErrorBoundaryRoot() {
               </p>
             )}
 
-          <div className="mt-5 flex flex-col justify-center items-center gap-2 sm:flex-row sm:gap-3">
+          <div className="mt-5 flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-3">
             <Button
               text="Back"
               type="button"
               secondary
               onClick={goBack}
-              className="py-1.5 px-3"
+              className="px-3 py-1.5"
             />
 
             <Link
               type="button"
-              className="w-full sm:w-auto py-1.5 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+              className="inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-1.5 text-sm font-semibold text-white hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 sm:w-auto"
               to="/"
             >
               {" "}
@@ -62,8 +62,8 @@ export function ErrorBoundaryRoot() {
       </main>
 
       {/* <!-- ========== FOOTER ========== --> */}
-      <footer className="mt-auto text-center py-5">
-        <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
+      <footer className="mt-auto py-5 text-center">
+        <div className="mx-auto max-w-[85rem] px-4 sm:px-6 lg:px-8">
           <p className="text-sm text-gray-500 dark:text-neutral-500">
             © All Rights Reserved. 2024.
           </p>

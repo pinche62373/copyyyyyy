@@ -3,9 +3,6 @@
 //
 {
   "css.customData": ["./app/styles/custom-data.json"],
-  "tailwindCSS.experimental.classRegex": [
-    ["([\"'`][^\"'`]*.*?[\"'`])", "[\"'`]([^\"'`]*).*?[\"'`]"]
-  ],
 
   // https://github.com/idahogurl/vs-code-prettier-eslint
   "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",

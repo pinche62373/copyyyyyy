@@ -7,8 +7,8 @@ import { BackendPageTitle } from "#app/components/backend/page-title";
 import { getLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
-import { validatePageId } from "#app/utils/misc";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
+import { validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { languageSchemaFull } from "#app/validations/language-schema";
 
@@ -17,7 +17,7 @@ const { languageCrud: crud } = getAdminCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any",
+    scope: "any"
   });
 
   const languageId = validatePageId(params.languageId, languageSchemaFull);
@@ -41,7 +41,7 @@ export default function Component() {
         button={{
           title: "Edit",
           to: `${crud.routes.index}/${language.id}/edit`,
-          scope: "any",
+          scope: "any"
         }}
       />
 

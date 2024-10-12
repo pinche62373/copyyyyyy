@@ -4,7 +4,7 @@ import { FilterFn } from "@tanstack/react-table";
 export const permissionTypeFilter: FilterFn<unknown> = (
   row,
   columnId,
-  value,
+  value
 ) => {
   if (value === "route") {
     return row.getValue(columnId) === "access";

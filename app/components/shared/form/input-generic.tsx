@@ -19,7 +19,7 @@ interface HiddenInputPropsTwo<Type extends string> extends BaseInputProps {
 // We need to do this in order to get a generic type out of `forwardRef`.
 // In React 19, you won't need this anymore.
 type InputType = <Type extends string>(
-  props: DefaultInputProps<Type> | HiddenInputPropsTwo<Type>,
+  props: DefaultInputProps<Type> | HiddenInputPropsTwo<Type>
 ) => React.ReactNode;
 
 const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
@@ -35,7 +35,7 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
             type,
             id: inputId,
             ref,
-            ...rest,
+            ...rest
           })}
         />
       );
@@ -43,14 +43,14 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
 
     return (
       <>
-        <div className="input-container py-2.5 space-y-5">
+        <div className="space-y-5 py-2.5">
           {/* Grid */}
-          <div className="grid sm:grid-cols-12 gap-y-1.5 sm:gap-y-0 sm:gap-x-5">
+          <div className="grid gap-y-1.5 sm:grid-cols-12 sm:gap-x-5 sm:gap-y-0">
             {/* Column Label*/}
             <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-1">
               <label
                 htmlFor={inputId}
-                className="sm:mt-2.5 inline-block text-sm text-gray-500 dark:text-neutral-500"
+                className="inline-block text-sm text-gray-500 sm:mt-2.5 dark:text-neutral-500"
               >
                 {label}
               </label>
@@ -61,19 +61,19 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
             <div className="mt-0.5 sm:col-span-10 md:col-span-10 lg:col-span-10 xl:col-span-11">
               {/* Input */}
               <input
-                className="py-2 px-3 block w-full border-gray-200 rounded-lg text-sm placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600"
+                className="block w-full rounded-lg border-gray-200 px-3 py-2 text-sm placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-transparent dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600"
                 {...field.getInputProps({
                   type,
                   id: inputId,
                   ref,
                   "aria-describedby": errorId,
                   "aria-invalid": !!field.error(),
-                  ...rest,
+                  ...rest
                 })}
               />
 
               {/* Validation Errors */}
-              <div id={errorId} className="pt-1 text-red-700 text-xs">
+              <div id={errorId} className="pt-1 text-xs text-red-700">
                 {field.error()}
               </div>
             </div>
@@ -84,7 +84,7 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
         {/* End Container */}
       </>
     );
-  },
+  }
 );
 
 MyInputImpl.displayName = "MyInput";

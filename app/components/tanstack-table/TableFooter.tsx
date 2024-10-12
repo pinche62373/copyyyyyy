@@ -21,7 +21,7 @@ export const TableFooter = <T,>({
     <div
       className={cn(
         "mt-4 flex flex-wrap justify-between items-center gap-2 pl-2",
-        className,
+        className
       )}
       {...rest}
     >
@@ -37,7 +37,7 @@ export const TableFooter = <T,>({
             id="table-footer-page-size-input"
             type="number"
             min="1"
-            className="no-spin-button p-2 w-11 text-sm font-medium focus:outline-none  focus:bg-stone-100 bg-white border border-gray-200 rounded-lg text-center focus:ring-0 text-stone-800 dark:text-neutral-200 dark:bg-neutral-700 dark:focus:bg-neutral-700 dark:border-neutral-700"
+            className="no-spin-button w-11 rounded-lg border border-gray-200 bg-white  p-2 text-center text-sm font-medium text-stone-800 focus:bg-stone-100 focus:outline-none focus:ring-0 dark:border-neutral-700 dark:bg-neutral-700 dark:text-neutral-200 dark:focus:bg-neutral-700"
             defaultValue={table.getState().pagination.pageSize}
             onChange={(e) => {
               table.setPageSize(Number(e.target.value));
@@ -57,16 +57,16 @@ export const TableFooter = <T,>({
       {/* End Page Size */}
 
       {/* Page Navigation */}
-      <nav className="flex justify-end items-center gap-x-1">
+      <nav className="flex items-center justify-end gap-x-1">
         <button
           type="button"
           aria-label="Previous Page"
-          className="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-stone-800 hover:bg-stone-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-100 dark:text-white dark:hover:bg-white/10 dark:focus:bg-neutral-700"
+          className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-stone-800 hover:bg-stone-100 focus:bg-stone-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white dark:hover:bg-white/10 dark:focus:bg-neutral-700"
           disabled={!table.getCanPreviousPage()}
           onClick={() => table.previousPage()}
         >
           <svg
-            className="flex-shrink-0 size-3.5"
+            className="size-3.5 shrink-0"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -84,20 +84,20 @@ export const TableFooter = <T,>({
           </span>
         </button>
         <div className="flex items-center gap-x-1">
-          <span className="min-h-[38px] min-w-[38px] flex justify-center items-center bg-stone-100  py-2 px-3 text-sm font-medium rounded-lg disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 text-stone-800 dark:text-neutral-200">
+          <span className="flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg  bg-stone-100 px-3 py-2 text-sm font-medium text-stone-800 disabled:pointer-events-none disabled:opacity-50 dark:bg-neutral-700 dark:text-neutral-200">
             {currentPageIndex}
           </span>
-          <span className="min-h-[38px] flex justify-center items-center text-stone-500 py-2 px-1.5 text-sm dark:text-neutral-500">
+          <span className="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-stone-500 dark:text-neutral-500">
             of
           </span>
-          <span className="min-h-[38px] flex justify-center items-center text-stone-500 py-2 px-1.5 text-sm dark:text-neutral-500">
+          <span className="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-stone-500 dark:text-neutral-500">
             {totalPageCount}
           </span>
         </div>
         <button
           type="button"
           aria-label="Previous Page"
-          className="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-stone-800 hover:bg-stone-100 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-stone-100 dark:text-white dark:hover:bg-white/10 dark:focus:bg-neutral-700"
+          className="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-stone-800 hover:bg-stone-100 focus:bg-stone-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white dark:hover:bg-white/10 dark:focus:bg-neutral-700"
           disabled={!table.getCanNextPage()}
           onClick={() => table.nextPage()}
         >
@@ -105,7 +105,7 @@ export const TableFooter = <T,>({
             Next
           </span>
           <svg
-            className="flex-shrink-0 size-3.5"
+            className="size-3.5 shrink-0"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"

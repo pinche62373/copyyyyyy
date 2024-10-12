@@ -22,18 +22,18 @@ const THead = () => {
                     <div className="relative inline-flex w-full">
                       <button
                         type="button"
-                        className="px-5 py-2.5 text-start w-full flex items-center gap-x-1 text-sm font-normal focus:outline-none focus:bg-gray-100 dark:focus:bg-neutral-700   "
+                        className="flex w-full items-center gap-x-1 px-5 py-2.5 text-start text-sm font-normal focus:bg-gray-100 focus:outline-none dark:focus:bg-neutral-700   "
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(
                           header.column.columnDef.header,
-                          header.getContext(),
+                          header.getContext()
                         )}
 
                         {/* Conditional Sort Icon */}
                         {header.column.getCanSort() && (
                           <svg
-                            className="flex-shrink-0 size-3.5"
+                            className="size-3.5 shrink-0"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"

@@ -18,21 +18,21 @@ export function ConfirmationModal({
   return (
     <div
       id={id}
-      className="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto"
+      className="hs-overlay fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden"
       {...rest}
     >
-      <div className="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all md:max-w-xl md:w-full m-3 md:mx-auto">
+      <div className="m-3 mt-0 opacity-0 transition-all ease-out hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 md:mx-auto md:w-full md:max-w-xl">
         {/* Close Button */}
-        <div className="relative flex flex-col bg-white border shadow-sm rounded-xl overflow-hidden dark:bg-neutral-900 dark:border-neutral-800">
-          <div className="absolute top-2 end-2">
+        <div className="relative flex flex-col overflow-hidden rounded-xl border bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+          <div className="absolute end-2 top-2">
             <button
               type="button"
-              className="flex justify-center items-center size-7 text-sm font-semibold rounded-lg border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:border-transparent dark:hover:bg-neutral-700"
+              className="flex size-7 items-center justify-center rounded-lg border border-transparent text-sm font-semibold text-gray-800 hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50 dark:border-transparent dark:text-white dark:hover:bg-neutral-700"
               data-hs-overlay={"#" + id}
             >
               <span className="sr-only">Close</span>
               <svg
-                className="flex-shrink-0 size-4"
+                className="size-4 shrink-0"
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
                 height="24"
@@ -48,12 +48,12 @@ export function ConfirmationModal({
               </svg>
             </button>
           </div>
-          <div className="p-4 sm:p-10 overflow-y-auto">
+          <div className="overflow-y-auto p-4 sm:p-10">
             <div className="flex gap-x-4 md:gap-x-7">
               {/* <!-- Icon --> */}
-              <span className="flex-shrink-0 inline-flex justify-center items-center size-[46px] sm:w-[62px] sm:h-[62px] rounded-full border-4 border-red-50 bg-red-100 text-red-500 dark:bg-red-700 dark:border-red-600 dark:text-red-100">
+              <span className="inline-flex size-[46px] shrink-0 items-center justify-center rounded-full border-4 border-red-50 bg-red-100 text-red-500 sm:size-[62px] dark:border-red-600 dark:bg-red-700 dark:text-red-100">
                 <svg
-                  className="flex-shrink-0 size-5"
+                  className="size-5 shrink-0"
                   xmlns="http://www.w3.org/2000/svg"
                   width="16"
                   height="16"
@@ -81,10 +81,10 @@ export function ConfirmationModal({
             </div>
           </div>
 
-          <div className="flex justify-end items-center gap-x-2 py-3 px-4 bg-gray-50 border-t dark:bg-neutral-950 dark:border-neutral-800">
+          <div className="flex items-center justify-end gap-x-2 border-t bg-gray-50 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950">
             <button
               type="button"
-              className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-800 dark:text-white dark:hover:bg-neutral-800"
+              className="inline-flex items-center gap-x-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-white dark:hover:bg-neutral-800"
               data-hs-overlay={"#" + id}
             >
               Cancel
@@ -92,7 +92,7 @@ export function ConfirmationModal({
             <button
               type="submit"
               form={formId}
-              className="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-500 text-white hover:bg-red-600 disabled:opacity-50 disabled:pointer-events-none"
+              className="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-600 disabled:pointer-events-none disabled:opacity-50"
               data-hs-overlay={"#" + id}
             >
               {confirmButtonText || "Confirm"}

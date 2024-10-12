@@ -14,14 +14,14 @@ import { Roles } from "#app/validations/role-schema";
 export const links: LinksFunction = () => [
   ...(cssBundleHref
     ? [{ rel: "stylesheet", href: backendStyleSheet, as: "style" }]
-    : []),
+    : [])
 ];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
   await authenticator.isAuthenticated(request, {
-    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
+    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`
   });
 
   await requireRole(request, [Roles.ADMIN, Roles.MODERATOR]);
@@ -36,7 +36,7 @@ export default function BackendLayout() {
 
       <BackendSidebar />
 
-      <main id="content" className="lg:ps-[260px] pt-[59px] lg:pt-0">
+      <main id="content" className="pt-[59px] lg:ps-[260px] lg:pt-0">
         <div className="relative px-5 py-4 lg:mt-16">
           <Outlet />
         </div>
