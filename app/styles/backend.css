@@ -1,5 +1,5 @@
 body {
-  @apply bg-white text-black dark:bg-neutral-800 dark:text-white;
+  @apply bg-white text-black dark:bg-slate-950 dark:text-white;
 }
 
 /* 

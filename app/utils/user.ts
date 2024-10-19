@@ -6,7 +6,7 @@ import { normalizeRoutePermission } from "#app/permissions/normalize-route-permi
 import {
   ModelPermission,
   Permission,
-  RoutePermission,
+  RoutePermission
 } from "#app/permissions/permission.types";
 import { type loader as rootLoader } from "#app/root.tsx";
 import { prisma } from "#app/utils/db.server";
@@ -34,7 +34,7 @@ export function useUser() {
   const maybeUser = useOptionalUser();
   if (!maybeUser) {
     throw new Error(
-      "No user found in root loader, but user is required by useUser. If user is optional, try useOptionalUser instead.",
+      "No user found in root loader, but user is required by useUser. If user is optional, try useOptionalUser instead."
     );
   }
 
@@ -43,7 +43,7 @@ export function useUser() {
 
 export function userHasRole(
   user: Pick<ReturnType<typeof useUser>, "roles"> | null,
-  role: string | string[],
+  role: string | string[]
 ) {
   if (!user) return false;
 
@@ -59,19 +59,19 @@ export function userHasRole(
  */
 function userHasPermission(
   user: Pick<ReturnType<typeof useUser>, "roles" | "id"> | null,
-  permission: Pick<Permission, "resource" | "action" | "scope" | "resourceId">,
+  permission: Pick<Permission, "resource" | "action" | "scope" | "resourceId">
 ) {
   if (!user) return false;
 
-  console.log("Checking permission", { ...permission, user: user.id });
+  // console.log("Checking permission", { ...permission, user: user.id });
 
   return user.roles.some((role) =>
     role.permissions.some(
       (p) =>
         p.resource === permission.resource &&
         p.action === permission.action &&
-        p.scope === permission.scope,
-    ),
+        p.scope === permission.scope
+    )
   );
 }
 
@@ -80,11 +80,11 @@ function userHasPermission(
  */
 export function userHasRoutePermission(
   user: Pick<ReturnType<typeof useUser>, "roles" | "id"> | null,
-  permission: Pick<RoutePermission, "resource" | "scope">,
+  permission: Pick<RoutePermission, "resource" | "scope">
 ) {
   return userHasPermission(
     user,
-    normalizeRoutePermission({ ...permission, action: "access" }), // sets resourceId property
+    normalizeRoutePermission({ ...permission, action: "access" }) // sets resourceId property
   );
 }
 
@@ -96,7 +96,7 @@ export async function userHasModelPermission(
   permission: Pick<
     ModelPermission,
     "resource" | "action" | "scope" | "resourceId"
-  >,
+  >
 ) {
   if (permission.scope === "own") {
     if (!(await userHasOwnPermission(user, permission as Permission))) {
@@ -106,7 +106,7 @@ export async function userHasModelPermission(
 
   return userHasPermission(user, {
     ...permission,
-    resourceId: permission.resourceId,
+    resourceId: permission.resourceId
   });
 }
 
@@ -115,7 +115,7 @@ export async function userHasModelPermission(
  */
 export async function userHasOwnPermission(
   user: Pick<ReturnType<typeof useUser>, "id"> | null,
-  permission: Pick<Permission, "resource" | "action" | "scope" | "resourceId">,
+  permission: Pick<Permission, "resource" | "action" | "scope" | "resourceId">
 ) {
   invariant(user, "userHasOwnPermission() requires a user");
 
@@ -127,6 +127,6 @@ export async function userHasOwnPermission(
   // @ts-expect-error: No typing for variable as table name (https://github.com/prisma/prisma/issues/11940)
   return prisma[permission.resource].findUnique({
     select: { id: true },
-    where: { id: permission.resourceId, createdBy: user.id },
+    where: { id: permission.resourceId, createdBy: user.id }
   });
 }

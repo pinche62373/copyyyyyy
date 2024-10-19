@@ -5,13 +5,17 @@ interface Props {
   className?: string;
 }
 
-export const BackendContentContainer = ({ className, children, ...rest }: Props) => {
+export const BackendContentContainer = ({
+  className,
+  children,
+  ...rest
+}: Props) => {
   return (
     <div className="relative overflow-visible">
       <div
         className={cn(
-          "bg-white border border-stone-200 rounded-xl shadow-sm dark:bg-neutral-800 dark:border-neutral-700",
-          className,
+          "bg-white border border-stone-200 rounded-md shadow-sm dark:border-gray-800 dark:bg-gray-900",
+          className
         )}
         {...rest}
       >

@@ -2,7 +2,7 @@ import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { Form, useLoaderData, useNavigation } from "@remix-run/react";
-import { jsonWithError, redirectWithSuccess } from "remix-toast";
+import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
@@ -14,10 +14,10 @@ import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
-import { validateSubmission , validatePageId } from "#app/utils/misc";
+import { validateSubmission, validatePageId } from "#app/utils/misc";
 import {
   requireModelPermission,
-  requireRoutePermission,
+  requireRoutePermission
 } from "#app/utils/permissions.server";
 import { languageSchemaUpdateForm } from "#app/validations/language-schema";
 
@@ -28,12 +28,12 @@ const intent = "update";
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any",
+    scope: "any"
   });
 
   const languageId = validatePageId(
     params.languageId,
-    languageSchemaUpdateForm,
+    languageSchemaUpdateForm
   );
 
   const language = await getLanguage({ id: languageId });
@@ -51,13 +51,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const submission = validateSubmission({
     intent,
     formData: await request.formData(),
-    schema: languageSchemaUpdateForm,
+    schema: languageSchemaUpdateForm
   });
 
   await requireModelPermission(request, {
     resource: crud.singular,
     action: intent,
-    scope: "any",
+    scope: "any"
   });
 
   try {
@@ -66,9 +66,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Unexpected error");
   }
 
-  return redirectWithSuccess(
-    crud.routes.index,
-    `${humanize(crud.singular)} updated successfully`,
+  return jsonWithSuccess(
+    null,
+    `${humanize(crud.singular)} updated successfully`
   );
 };
 
@@ -81,7 +81,7 @@ export default function Component() {
     shouldRevalidate: "onBlur",
     onValidate({ formData }) {
       return parseWithZod(formData, { schema: languageSchemaUpdateForm });
-    },
+    }
   });
 
   return (
