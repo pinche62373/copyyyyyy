@@ -61,16 +61,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return jsonWithError(null, "Invalid relationship");
   }
 
-  let created = null;
-
   try {
-    created = await createCountry(submission.value, userId);
+    await createCountry(submission.value, userId);
   } catch (error) {
     return jsonWithError(null, "Unexpected error");
   }
 
   return redirectWithSuccess(
-    `${crud.routes.index}/${created.id}/edit`,
+    crud.routes.index,
     `${humanize(crud.singular)} created successfully`
   );
 };
