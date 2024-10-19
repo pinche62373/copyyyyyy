@@ -95,6 +95,7 @@ declare global {
   }
 }
 if (typeof window !== "undefined") {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   require("preline/preline");
 }
 

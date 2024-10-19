@@ -1,3 +1,5 @@
+import tailwindForms from "@tailwindcss/forms"
+import preline from "preline/plugin"
 import type { Config } from "tailwindcss";
 
 export default {
@@ -6,5 +8,5 @@ export default {
     extend: {}
   },
   darkMode: ["selector", '[data-theme="dark"]'],
-  plugins: [require("preline/plugin"), require("@tailwindcss/forms")]
+  plugins: [preline , tailwindForms]
 } satisfies Config;

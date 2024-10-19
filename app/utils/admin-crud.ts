@@ -14,7 +14,6 @@ interface Routes {
 }
 
 type CrudList = Record<string, Crud>;
-[];
 
 const getRoutes = (indexRoute: string): Routes => {
   return {

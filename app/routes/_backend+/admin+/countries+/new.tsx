@@ -63,7 +63,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     await createCountry(submission.value, userId);
-  } catch (error) {
+  } catch {
     return jsonWithError(null, "Unexpected error");
   }
 

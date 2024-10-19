@@ -38,7 +38,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     await deleteExpiredSessions();
-  } catch (error) {
+  } catch {
     return jsonWithError(null, "Unexpected error");
   }
 

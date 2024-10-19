@@ -33,7 +33,6 @@ export function normalizeRoutePermission(
     }
 
     if (routePermissionWithId.groups?.viewId) {
-      console.log;
       return {
         ...permission,
         resource: `${routePermissionWithId.groups.viewPath}/view`,

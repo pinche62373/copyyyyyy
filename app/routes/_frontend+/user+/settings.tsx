@@ -60,7 +60,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     await updateUserAccountSettings(validated.data);
-  } catch (error) {
+  } catch {
     return jsonWithError(validated.data, "Server error while saving your data");
   }
 
@@ -75,7 +75,9 @@ export default function SettingsIndexPage() {
     validator,
     defaultValues: useLoaderData<typeof loader>(),
     onSubmitSuccess: async () => {
-      !isValidationErrorResponse(actionData) && form.resetForm(actionData);
+      if (!isValidationErrorResponse(actionData)) {
+        form.resetForm(actionData)
+      }
     }
   });
 

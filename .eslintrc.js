@@ -51,7 +51,6 @@ module.exports = {
           ],
         },
       },
-      rules: {},
     },
 
     // Typescript
@@ -87,6 +86,7 @@ module.exports = {
           },
         ],
         "jsx-a11y/no-autofocus": "off",
+        "no-unused-expressions": ["error", { allowShortCircuit: true, allowTernary: true }],
       },
     },
 
@@ -94,7 +94,7 @@ module.exports = {
     {
       files: ["**/*.md"],
       plugins: ["markdown"],
-      extends: ["plugin:markdown/recommended", "prettier"],
+      extends: ["plugin:markdown/recommended-legacy", "prettier"],
     },
 
     // Jest/Vitest

@@ -58,16 +58,14 @@ const main = async () => {
   // Execute dry run unless --force argument was passed
   const dryRun = force === true ? false : true;
 
-  dryRun ? console.log("Dry running") : console.log(`Not dry running`);
+  console.log(dryRun ? "Dry running" : "Not dry running")
 
   // --------------------------------------------------------------------------
   // Handle production mode
   // --------------------------------------------------------------------------
   const prod = process.env.NODE_ENV === "production" ? true : false;
 
-  prod
-    ? console.log("Running production mode")
-    : console.log(`Not running production mode`);
+  console.log(prod ? "Running production mode" : "Not running production mode")
 
   // --------------------------------------------------------------------------
   // Create seed client
