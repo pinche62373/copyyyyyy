@@ -18,7 +18,7 @@ import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
-import { zodDeepPick } from "#app/utils/lib/zod-deep-pick";
+import { validatePageId } from "#app/utils/misc";
 import {
   requireModelPermission,
   requireRoutePermission
@@ -37,9 +37,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     scope: "any"
   });
 
-  const countryId = zodDeepPick(countrySchemaUpdate, "country.id").parse(
-    params.countryId
-  );
+  const countryId = validatePageId(params.countryId, countrySchemaUpdate);
 
   const country = await getCountry({ id: countryId });
 
