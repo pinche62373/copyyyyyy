@@ -1,11 +1,11 @@
 import { cn } from "#app/utils/lib/cn";
 
-interface PropTypes {
-  children: React.ReactNode;
+interface InputProps {
   className?: string;
+  children: React.ReactNode;
 }
 
-const Input = ({ className, children }: PropTypes) => {
+const Input = ({ className, children }: InputProps) => {
   return (
     <div className={cn("space-y-5 py-2", className)}>
       {/* Grid */}
@@ -16,20 +16,33 @@ const Input = ({ className, children }: PropTypes) => {
   );
 };
 
-const Label = ({ className, children }: PropTypes) => {
+interface LabelProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+const Label = ({ className, children }: LabelProps) => {
   return (
-    <div
-      className={cn(
-        "sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-1",
-        className
-      )}
-    >
-      {children}
+    <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-1">
+      <label
+        htmlFor="null"
+        className={cn(
+          "inline-block text-sm font-normal text-gray-500 sm:mt-2.5 dark:text-neutral-500",
+          className
+        )}
+      >
+        {children}
+      </label>
     </div>
   );
 };
 
-const Field = ({ className, children }: PropTypes) => {
+interface FieldProps {
+  className?: string;
+  children: React.ReactNode;
+}
+
+const Field = ({ className, children }: FieldProps) => {
   return (
     <div
       className={cn(

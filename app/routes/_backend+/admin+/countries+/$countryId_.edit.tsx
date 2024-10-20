@@ -7,12 +7,11 @@ import { jsonWithError, jsonWithSuccess } from "remix-toast";
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { Button } from "#app/components/shared/button";
-import { ComboBox } from "#app/components/shared/form/combobox";
-import { ComboBoxItem } from "#app/components/shared/form/combobox-item";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
-import { Label } from "#app/components/shared/form/label";
+import { ComboBox } from "#app/components/shared/form/inputs/combobox";
+import { ComboBoxItem } from "#app/components/shared/form/inputs/combobox-item";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -111,10 +110,7 @@ export default function Component() {
 
           {/* country.name */}
           <Input>
-            <Input.Label>
-              <Label label="Name2" />
-            </Input.Label>
-
+            <Input.Label>Name</Input.Label>
             <Input.Field>
               <InputGeneric scope={form.scope("country.name")}></InputGeneric>
             </Input.Field>
@@ -122,10 +118,7 @@ export default function Component() {
 
           {/* country.regionId  */}
           <Input>
-            <Input.Label>
-              <Label label="Region" />
-            </Input.Label>
-
+            <Input.Label>Region</Input.Label>
             <Input.Field>
               <ComboBox
                 {...form.getControlProps("country.regionId")}

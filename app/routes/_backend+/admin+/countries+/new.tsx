@@ -10,11 +10,10 @@ import { FormInputHidden } from "#app/components/backend/form/form-input-hidden"
 import { FormInputText } from "#app/components/backend/form/form-input-text";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { Button } from "#app/components/shared/button";
-import { ComboBox } from "#app/components/shared/form/combobox";
-import { ComboBoxItem } from "#app/components/shared/form/combobox-item";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
-import { Label } from "#app/components/shared/form/label";
+import { ComboBox } from "#app/components/shared/form/inputs/combobox";
+import { ComboBoxItem } from "#app/components/shared/form/inputs/combobox-item";
 import { createCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -98,10 +97,7 @@ export default function Component() {
           <FormInputText label="Name" fieldName="name" fields={fields} />
 
           <Input>
-            <Input.Label>
-              <Label label="Region" />
-            </Input.Label>
-
+            <Input.Label>Region</Input.Label>
             <Input.Field>
               <ComboBox
                 name="regionId"
@@ -109,6 +105,7 @@ export default function Component() {
                 menuTrigger="focus"
                 defaultItems={data.regions}
               >
+                {/* @ts-expect-error: Property 'name' does not exist on type 'object'.ts(2339) due to Spectrum ListBox Collection */}
                 {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
               </ComboBox>
             </Input.Field>
