@@ -10,17 +10,17 @@ import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { countrySchemaFull } from "#app/validations/country-schema";
+import { countrySchema } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any",
+    scope: "any"
   });
 
-  const countryId = validatePageId(params.countryId, countrySchemaFull);
+  const countryId = validatePageId(params.countryId, countrySchema);
 
   const country = await getCountry({ id: countryId });
 
@@ -41,7 +41,7 @@ export default function Component() {
         button={{
           title: "Edit",
           to: `${crud.routes.index}/${country.id}/edit`,
-          scope: "any",
+          scope: "any"
         }}
       />
 

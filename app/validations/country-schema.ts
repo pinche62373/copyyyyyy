@@ -7,13 +7,13 @@ import { z } from "zod";
 import { regionSchemaFull } from "#app/validations/region-schema";
 import { userSchema } from "#app/validations/user-schema";
 
-export const countrySchemaFull = z.object({
+export const countrySchema = z.object({
   id: z.string().cuid2(),
   name: z
     .string({ required_error: "Country is required" })
     .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, {
       message:
-        "This field only allows capitalized Latin words, separated by single spaces.",
+        "This field only allows capitalized Latin words, separated by single spaces."
     }),
   regionId: z.string({ required_error: "You must select a region" }).cuid2(),
   createdAt: z.string().datetime(),
@@ -22,25 +22,28 @@ export const countrySchemaFull = z.object({
   updatedBy: userSchema.pick({ id: true }).nullable(),
   region: regionSchemaFull.pick({
     id: true,
-    name: true,
-  }),
+    name: true
+  })
 });
 
-export const countrySchemaAdminTable = countrySchemaFull.pick({
+export const countrySchemaAdminTable = countrySchema.pick({
   id: true,
   name: true,
   createdAt: true,
   updatedAt: true,
-  region: true,
+  region: true
 });
 
-export const countrySchemaCreateForm = countrySchemaFull.pick({
+export const countrySchemaCreateForm = countrySchema.pick({
   name: true,
-  regionId: true,
+  regionId: true
 });
 
-export const countrySchemaUpdateForm = countrySchemaFull.pick({
-  id: true,
-  name: true,
-  regionId: true,
+export const countrySchemaUpdate = z.object({
+  intent: z.literal("update"),
+  country: countrySchema.pick({
+    id: true,
+    name: true,
+    regionId: true
+  })
 });

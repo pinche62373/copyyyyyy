@@ -1,34 +1,35 @@
-import { useForm, getFormProps } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useForm } from "@rvf/remix";
+import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
-import { FormInputText } from "#app/components/backend/form/form-input-text";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { Button } from "#app/components/shared/button";
 import { ComboBox } from "#app/components/shared/form/combobox";
 import { ComboBoxItem } from "#app/components/shared/form/combobox-item";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
+import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { Label } from "#app/components/shared/form/label";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
-import { validateSubmission } from "#app/utils/misc";
+import { zodDeepPick } from "#app/utils/lib/zod-deep-pick";
 import {
   requireModelPermission,
   requireRoutePermission
 } from "#app/utils/permissions.server";
-import { countrySchemaUpdateForm } from "#app/validations/country-schema";
+import { countrySchemaUpdate } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
 const intent = "update";
+
+const validator = withZod(countrySchemaUpdate);
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
@@ -36,9 +37,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     scope: "any"
   });
 
-  const countryId = countrySchemaUpdateForm
-    .pick({ id: true })
-    .parse({ id: params.countryId }).id;
+  const countryId = zodDeepPick(countrySchemaUpdate, "country.id").parse(
+    params.countryId
+  );
 
   const country = await getCountry({ id: countryId });
 
@@ -48,17 +49,22 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const regions = await getRegions();
 
-  return { country, regions };
+  return {
+    intent,
+    country,
+    regions
+  };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
-  const submission = validateSubmission({
-    intent,
-    formData: await request.formData(),
-    schema: countrySchemaUpdateForm
-  });
+  const validated = await validator.validate(await request.formData());
+
+  if (validated.error)
+    return jsonWithError(validated.error, "Form data rejected by server", {
+      status: 422
+    });
 
   await requireModelPermission(request, {
     resource: crud.singular,
@@ -66,12 +72,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     scope: "any"
   });
 
-  if ((await getRegionById(submission.value.regionId)) === null) {
+  if ((await getRegionById(validated.data.country.regionId)) === null) {
     return jsonWithError(null, "Invalid relationship");
   }
 
   try {
-    await updateCountry(submission.value, userId);
+    await updateCountry(validated.data.country, userId);
   } catch {
     return jsonWithError(null, "Unexpected error");
   }
@@ -83,15 +89,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
-  const [form, fields] = useForm({
-    shouldRevalidate: "onBlur",
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: countrySchemaUpdateForm });
-    }
+  const form = useForm({
+    method: "post",
+    validator,
+    defaultValues: loaderData
   });
 
   return (
@@ -99,17 +104,25 @@ export default function Component() {
       <BackendPageTitle title={`Edit ${humanize(crud.singular)}`} />
 
       <BackendContentContainer className="p-6">
-        <Form method="POST" {...getFormProps(form)}>
-          <FormInputHidden name="intent" value={intent} />
-          <FormInputHidden name="id" value={data.country.id} />
+        <form {...form.getFormProps()}>
+          {/* intent */}
+          <InputGeneric scope={form.scope("intent")} type="hidden" />
 
-          <FormInputText
-            label="Name"
-            fieldName="name"
-            fields={fields}
-            defaultValue={data.country.name}
-          />
+          {/* country.id */}
+          <InputGeneric scope={form.scope("country.id")} type="hidden" />
 
+          {/* country.name */}
+          <Input>
+            <Input.Label>
+              <Label label="Name2" />
+            </Input.Label>
+
+            <Input.Field>
+              <InputGeneric scope={form.scope("country.name")}></InputGeneric>
+            </Input.Field>
+          </Input>
+
+          {/* country.regionId  */}
           <Input>
             <Input.Label>
               <Label label="Region" />
@@ -117,16 +130,17 @@ export default function Component() {
 
             <Input.Field>
               <ComboBox
-                name="regionId"
+                {...form.getControlProps("country.regionId")}
                 ariaLabel="Regions"
                 menuTrigger="focus"
-                defaultItems={data.regions}
+                defaultItems={loaderData.regions}
                 defaultSelectedKey={
-                  data.regions.find(
-                    (region) => region.id === data.country.region.id
+                  loaderData.regions.find(
+                    (region) => region.id === loaderData.country.regionId
                   )?.id
                 }
               >
+                {/* @ts-expect-error: Property 'name' does not exist on type 'object'.ts(2339) due to Spectrum ListBox Collection */}
                 {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
               </ComboBox>
             </Input.Field>
@@ -145,7 +159,7 @@ export default function Component() {
               disabled={navigation.state === "submitting"}
             />
           </FormFooter>
-        </Form>
+        </form>
       </BackendContentContainer>
     </>
   );
