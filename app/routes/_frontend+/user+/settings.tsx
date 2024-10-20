@@ -1,6 +1,6 @@
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useActionData, useLoaderData } from "@remix-run/react";
-import { FormProvider, useForm } from "@rvf/remix";
+import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
@@ -16,11 +16,11 @@ import {
   requireModelPermission,
   requireRoutePermission
 } from "#app/utils/permissions.server";
-import { userSchemaUpdateUsername } from "#app/validations/user-schema";
+import { userSchemaUpdateAccount } from "#app/validations/user-schema";
 
 const intent = "update";
 
-const validator = withZod(userSchemaUpdateUsername);
+const validator = withZod(userSchemaUpdateAccount);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -34,12 +34,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     scope: "any"
   });
 
-  const { id, username } = await getUserOrDie(request);
-
   return {
     intent,
-    id,
-    username
+    user: await getUserOrDie(request)
   };
 };
 
@@ -55,11 +52,11 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     resource: "user",
     action: intent,
     scope: "own",
-    resourceId: validated.data.id
+    resourceId: validated.data.user.id
   });
 
   try {
-    await updateUserAccountSettings(validated.data);
+    await updateUserAccountSettings(validated.data.user);
   } catch {
     return jsonWithError(validated.data, "Server error while saving your data");
   }
@@ -71,12 +68,12 @@ export default function SettingsIndexPage() {
   const actionData = useActionData<typeof action>();
 
   const form = useForm({
-    method: "post",
+    method: "POST",
     validator,
     defaultValues: useLoaderData<typeof loader>(),
     onSubmitSuccess: async () => {
       if (!isValidationErrorResponse(actionData)) {
-        form.resetForm(actionData)
+        form.resetForm(actionData);
       }
     }
   });
@@ -91,32 +88,26 @@ export default function SettingsIndexPage() {
         </h2>
 
         {/* Profile Form */}
-        <FormProvider scope={form.scope()}>
-          <form {...form.getFormProps()}>
-            <InputGeneric scope={form.scope("id")} name="id" type="hidden" />
-            <InputGeneric
-              scope={form.scope("intent")}
-              name="intent"
-              type="hidden"
+        <form {...form.getFormProps()}>
+          <InputGeneric name="id" scope={form.scope("user.id")} type="hidden" />
+          <InputGeneric
+            name="intent"
+            scope={form.scope("intent")}
+            type="hidden"
+          />
+
+          <InputGeneric name="username" scope={form.scope("user.username")} />
+
+          <FormFooter>
+            <Button type="reset" text="Reset Form" secondary />
+
+            <Button
+              type="submit"
+              text="Save Changes"
+              disabled={form.formState.isSubmitting}
             />
-
-            <InputGeneric
-              name="username"
-              scope={form.scope("username")}
-              label={"Username"}
-            />
-
-            <FormFooter>
-              <Button type="reset" text="Reset Form" secondary />
-
-              <Button
-                type="submit"
-                text="Save Changes"
-                disabled={form.formState.isSubmitting}
-              />
-            </FormFooter>
-          </form>
-        </FormProvider>
+          </FormFooter>
+        </form>
       </div>
       {/* End Profile Container */}
     </FrontendSection>
