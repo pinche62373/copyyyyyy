@@ -121,7 +121,7 @@ function App() {
     <>
       <Outlet />
       <Toaster
-        position="top-right"
+        position="bottom-right"
         richColors
         expand
         toastOptions={{ classNames: { title: "font-normal" } }}
