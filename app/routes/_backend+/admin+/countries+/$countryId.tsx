@@ -2,8 +2,9 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormInputTextReadOnly } from "#app/components/backend/form/form-input-text-readonly";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import { Input } from "#app/components/shared/form/input.tsx";
+import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
 import { getCountry } from "#app/models/country.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
@@ -46,27 +47,43 @@ export default function Component() {
       />
 
       <BackendContentContainer className="p-6">
-        <FormInputTextReadOnly label="Name">
-          {country.name}
-        </FormInputTextReadOnly>
+        <Input>
+          <Input.Label>Name</Input.Label>
+          <Input.Field>
+            <ReadOnly>{country.name}</ReadOnly>
+          </Input.Field>
+        </Input>
 
-        <FormInputTextReadOnly label="Region">
-          {country.region.name}
-        </FormInputTextReadOnly>
+        <Input>
+          <Input.Label>Region</Input.Label>
+          <Input.Field>
+            <ReadOnly>{country.region.name}</ReadOnly>
+          </Input.Field>
+        </Input>
 
-        <FormInputTextReadOnly label="Created By">
-          {country.countryCreatedBy.username} at{" "}
-          {timeStampToHuman(country.createdAt)}
-        </FormInputTextReadOnly>
+        <Input>
+          <Input.Label>Created By</Input.Label>
+          <Input.Field>
+            <ReadOnly>
+              {country.countryCreatedBy.username} at {" "}
+              {timeStampToHuman(country.createdAt)}
+            </ReadOnly>
+          </Input.Field>
+        </Input>
 
-        <FormInputTextReadOnly label="Updated By">
-          {country.updatedAt !== null && (
-            <>
-              {country.countryUpdatedBy?.username} at{" "}
-              {timeStampToHuman(country.updatedAt)}
-            </>
-          )}
-        </FormInputTextReadOnly>
+        <Input>
+          <Input.Label>Updated By</Input.Label>
+          <Input.Field>
+            <ReadOnly>
+              {country.updatedAt !== null && (
+                <>
+                  {country.countryUpdatedBy?.username} at{" "}
+                  {timeStampToHuman(country.updatedAt)}
+                </>
+              )}
+            </ReadOnly>
+          </Input.Field>
+        </Input>
       </BackendContentContainer>
     </>
   );

@@ -2,8 +2,9 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormInputTextReadOnly } from "#app/components/backend/form/form-input-text-readonly";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import { Input } from "#app/components/shared/form/input.tsx";
+import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
 import { getRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
@@ -17,7 +18,7 @@ const { regionCrud: crud } = getAdminCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any",
+    scope: "any"
   });
 
   const regionId = validatePageId(params.regionId, regionSchemaFull);
@@ -41,28 +42,41 @@ export default function Component() {
         button={{
           title: "Edit",
           to: `${crud.routes.index}/${region.id}/edit`,
-          scope: "any",
+          scope: "any"
         }}
       />
 
       <BackendContentContainer className="p-6">
-        <FormInputTextReadOnly label="Name">
-          {region.name}
-        </FormInputTextReadOnly>
+        <Input>
+          <Input.Label>Name</Input.Label>
+          <Input.Field>
+            <ReadOnly>{region.name}</ReadOnly>
+          </Input.Field>
+        </Input>
 
-        <FormInputTextReadOnly label="Created By">
-          {region.regionCreatedBy.username} at{" "}
-          {timeStampToHuman(region.createdAt)}
-        </FormInputTextReadOnly>
+        <Input>
+          <Input.Label>Created By</Input.Label>
+          <Input.Field>
+            <ReadOnly>
+              {region.regionCreatedBy.username} at{" "}
+              {timeStampToHuman(region.createdAt)}
+            </ReadOnly>
+          </Input.Field>
+        </Input>
 
-        <FormInputTextReadOnly label="Updated By">
-          {region.updatedAt !== null && (
-            <>
-              {region.regionupdatedBy?.username} at{" "}
-              {timeStampToHuman(region.updatedAt)}
-            </>
-          )}
-        </FormInputTextReadOnly>
+        <Input>
+          <Input.Label>Updated By</Input.Label>
+          <Input.Field>
+            <ReadOnly>
+              {region.updatedAt !== null && (
+                <>
+                  {region.regionupdatedBy?.username} at{" "}
+                  {timeStampToHuman(region.updatedAt)}
+                </>
+              )}
+            </ReadOnly>
+          </Input.Field>
+        </Input>
       </BackendContentContainer>
     </>
   );

@@ -7,18 +7,19 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
-  useReactTable,
+  useReactTable
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormInputTextReadOnly } from "#app/components/backend/form/form-input-text-readonly";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import { Input } from "#app/components/shared/form/input.tsx";
+import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
 import TanstackTable from "#app/components/tanstack-table";
 import {
   tableCellLink,
-  tableCellVisibleRowIndex,
+  tableCellVisibleRowIndex
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
@@ -30,7 +31,7 @@ import { getRoleWithPermissions } from "#app/models/role.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,
-  ADMIN_TABLE_PAGE_SIZE,
+  ADMIN_TABLE_PAGE_SIZE
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
@@ -40,7 +41,7 @@ const { roleCrud, resourceCrud } = getAdminCrud();
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any",
+    scope: "any"
   });
 
   const roleId = z.coerce.string().parse(params.roleId);
@@ -71,10 +72,10 @@ const columns = [
     enableGlobalFilter: false,
     meta: {
       headerProps: {
-        className: "table-column-fit-content",
-      },
+        className: "table-column-fit-content"
+      }
     },
-    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
+    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table })
   }),
   columnHelper.accessor("resource", {
     header: () => <span>Resource</span>,
@@ -84,19 +85,19 @@ const columns = [
       tableCellLink({
         id: row.original.resource,
         name: row.original.resource,
-        target: resourceCrud.routes.index,
-      }),
+        target: resourceCrud.routes.index
+      })
   }),
   columnHelper.accessor("action", {
     header: () => <span>Action</span>,
     enableGlobalFilter: true,
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue()
   }),
   columnHelper.accessor("scope", {
     header: () => <span>Scope</span>,
     enableGlobalFilter: true,
-    cell: (info) => info.getValue(),
-  }),
+    cell: (info) => info.getValue()
+  })
 ];
 
 export default function Component() {
@@ -104,27 +105,27 @@ export default function Component() {
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
-    pageSize: ADMIN_TABLE_PAGE_SIZE,
+    pageSize: ADMIN_TABLE_PAGE_SIZE
   });
 
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "resource", // MUST be here or global filter will not sort by rankingValue
-      desc: false,
-    },
+      desc: false
+    }
   ]);
 
   const table = useReactTable({
     data: role.permissions,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter //define as a filter function that can be used in column definitions
     },
     state: {
       pagination,
       globalFilter,
-      sorting,
+      sorting
     },
     enableGlobalFilter: true,
     globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter
@@ -135,7 +136,7 @@ export default function Component() {
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
+    onPaginationChange: setPagination
   });
 
   return (
@@ -144,11 +145,19 @@ export default function Component() {
       <BackendPageTitle title={`View ${humanize(roleCrud.singular)}`} />
 
       <BackendContentContainer className="p-6">
-        <FormInputTextReadOnly label="Name">{role.name}</FormInputTextReadOnly>
+        <Input>
+          <Input.Label>Name</Input.Label>
+          <Input.Field>
+            <ReadOnly>{role.name}</ReadOnly>
+          </Input.Field>
+        </Input>
 
-        <FormInputTextReadOnly label="Description">
-          {role.description}
-        </FormInputTextReadOnly>
+        <Input>
+          <Input.Label>Description</Input.Label>
+          <Input.Field>
+            <ReadOnly>{role.description}</ReadOnly>
+          </Input.Field>
+        </Input>
       </BackendContentContainer>
 
       {/* Start Permissions Table*/}
