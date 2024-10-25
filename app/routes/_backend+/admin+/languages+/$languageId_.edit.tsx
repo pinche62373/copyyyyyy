@@ -54,7 +54,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
       status: 422
-    });
+    }); 
 
   await requireModelPermission(request, {
     resource: crud.singular,
