@@ -12,26 +12,29 @@ export const languageSchemaFull = z.object({
     .string({ required_error: "Language name is required" })
     .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, {
       message:
-        "This field only allows capitalized Latin words, separated by single spaces.",
+        "This field only allows capitalized Latin words, separated by single spaces."
     }),
   createdAt: z.string().datetime(),
   createdBy: userSchema.pick({ id: true }),
   updatedAt: z.string().datetime().nullable(),
-  updatedBy: userSchema.pick({ id: true }).nullable(),
+  updatedBy: userSchema.pick({ id: true }).nullable()
 });
 
 export const languageSchemaAdminTable = languageSchemaFull.pick({
   id: true,
   name: true,
   createdAt: true,
-  updatedAt: true,
+  updatedAt: true
 });
 
-export const languageSchemaCreateForm = languageSchemaFull.pick({
-  name: true,
+export const languageSchemaCreate = z.object({
+  intent: z.literal("create"),
+  language: languageSchemaFull.pick({
+    name: true
+  })
 });
 
 export const languageSchemaUpdateForm = languageSchemaFull.pick({
   id: true,
-  name: true,
+  name: true
 });

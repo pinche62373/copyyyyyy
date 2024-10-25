@@ -1,76 +1,81 @@
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useNavigation } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useForm } from "@rvf/remix";
+import { withZod } from "@rvf/zod";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
-import { FormInputText } from "#app/components/backend/form/form-input-text";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
+import { Input } from "#app/components/shared/form/input";
+import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { createLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
-import { validateSubmission } from "#app/utils/misc";
 import {
   requireModelPermission,
-  requireRoutePermission,
+  requireRoutePermission
 } from "#app/utils/permissions.server";
-import { languageSchemaCreateForm } from "#app/validations/language-schema";
+import { languageSchemaCreate } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
 const intent = "create";
 
+const validator = withZod(languageSchemaCreate);
+
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any",
+    scope: "any"
   });
 
-  return null;
+  return {
+    language: {
+      name: null as unknown as string
+    }
+  };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
-  const submission = validateSubmission({
-    intent,
-    formData: await request.formData(),
-    schema: languageSchemaCreateForm,
-  });
+  const validated = await validator.validate(await request.formData());
+
+  if (validated.error)
+    return jsonWithError(validated.error, "Form data rejected by server", {
+      status: 422
+    });
 
   await requireModelPermission(request, {
     resource: crud.singular,
     action: intent,
-    scope: "any",
+    scope: "any"
   });
 
   try {
-    await createLanguage(submission.value, userId);
+    await createLanguage(validated.data.language, userId);
   } catch {
     return jsonWithError(null, "Unexpected error");
   }
 
   return redirectWithSuccess(
     crud.routes.index,
-    `${humanize(crud.singular)} created successfully`,
+    `${humanize(crud.singular)} created successfully`
   );
 };
 
 export default function Component() {
+  const loaderData = useLoaderData<typeof loader>();
+
   const navigation = useNavigation();
 
-  const [form, fields] = useForm({
-    shouldRevalidate: "onBlur",
-    onValidate({ formData }) {
-      return parseWithZod(formData, {
-        schema: languageSchemaCreateForm,
-      });
-    },
+  const form = useForm({
+    method: "post",
+    validator,
+    defaultValues: { intent, ...loaderData }
   });
 
   return (
@@ -78,10 +83,16 @@ export default function Component() {
       <BackendPageTitle title={`New ${crud.singular}`} />
 
       <BackendContentContainer className="p-5">
-        <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <FormInputHidden name="intent" value={intent} />
+        <form {...form.getFormProps()}>
+          <InputGeneric scope={form.scope("intent")} type="hidden" />
 
-          <FormInputText label="Name" fieldName="name" fields={fields} />
+          {/* language.name */}
+          <Input>
+            <Input.Label>Name</Input.Label>
+            <Input.Field>
+              <InputGeneric scope={form.scope("language.name")}></InputGeneric>
+            </Input.Field>
+          </Input>
 
           <FormFooter>
             <Button
@@ -96,7 +107,7 @@ export default function Component() {
               disabled={navigation.state === "submitting"}
             />
           </FormFooter>
-        </Form>
+        </form>
       </BackendContentContainer>
     </>
   );

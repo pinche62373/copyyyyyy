@@ -102,7 +102,6 @@ export default function Component() {
 
       <BackendContentContainer className="p-6">
         <form {...form.getFormProps()}>
-          {/* intent */}
           <InputGeneric scope={form.scope("intent")} type="hidden" />
 
           {/* country.id */}

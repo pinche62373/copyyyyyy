@@ -34,9 +34,12 @@ export const countrySchemaAdminTable = countrySchema.pick({
   region: true
 });
 
-export const countrySchemaCreateForm = countrySchema.pick({
-  name: true,
-  regionId: true
+export const countrySchemaCreate = z.object({
+  intent: z.literal("create"),
+  country: countrySchema.pick({
+    name: true,
+    regionId: true
+  })
 });
 
 export const countrySchemaUpdate = z.object({

@@ -1,17 +1,16 @@
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useForm } from "@rvf/remix";
+import { withZod } from "@rvf/zod";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
-import { FormInputText } from "#app/components/backend/form/form-input-text";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
+import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { ComboBox } from "#app/components/shared/form/inputs/combobox";
 import { ComboBoxItem } from "#app/components/shared/form/inputs/combobox-item";
 import { createCountry } from "#app/models/country.server";
@@ -19,16 +18,17 @@ import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
-import { validateSubmission } from "#app/utils/misc";
 import {
   requireModelPermission,
   requireRoutePermission
 } from "#app/utils/permissions.server";
-import { countrySchemaCreateForm } from "#app/validations/country-schema";
+import { countrySchemaCreate } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
 const intent = "create";
+
+const validator = withZod(countrySchemaCreate);
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
@@ -38,11 +38,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const regions = await getRegions();
 
-  return { regions };
+  return {
+    country: {
+      name: null as unknown as string,
+      regionId: null as unknown as string
+    },
+    regions
+  };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
+
+  const validated = await validator.validate(await request.formData());
+
+  if (validated.error)
+    return jsonWithError(validated.error, "Form data rejected by server", {
+      status: 422
+    });
 
   await requireModelPermission(request, {
     resource: crud.singular,
@@ -50,18 +63,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     scope: "any"
   });
 
-  const submission = validateSubmission({
-    intent,
-    formData: await request.formData(),
-    schema: countrySchemaCreateForm
-  });
-
-  if ((await getRegionById(submission.value.regionId)) === null) {
+  if ((await getRegionById(validated.data.country.regionId)) === null) {
     return jsonWithError(null, "Invalid relationship");
   }
 
   try {
-    await createCountry(submission.value, userId);
+    await createCountry(validated.data.country, userId);
   } catch {
     return jsonWithError(null, "Unexpected error");
   }
@@ -73,17 +80,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Component() {
-  const data = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
-  const [form, fields] = useForm({
-    shouldRevalidate: "onBlur",
-    onValidate({ formData }) {
-      return parseWithZod(formData, {
-        schema: countrySchemaCreateForm
-      });
-    }
+  const form = useForm({
+    method: "post",
+    validator,
+    defaultValues: { intent, ...loaderData }
   });
 
   return (
@@ -91,19 +95,26 @@ export default function Component() {
       <BackendPageTitle title={`New ${crud.singular}`} />
 
       <BackendContentContainer className="p-5">
-        <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <FormInputHidden name="intent" value="create" />
+        <form {...form.getFormProps()}>
+          <InputGeneric scope={form.scope("intent")} type="hidden" />
 
-          <FormInputText label="Name" fieldName="name" fields={fields} />
+          {/* country.name */}
+          <Input>
+            <Input.Label>Name</Input.Label>
+            <Input.Field>
+              <InputGeneric scope={form.scope("country.name")}></InputGeneric>
+            </Input.Field>
+          </Input>
 
+          {/* country.regionId  */}
           <Input>
             <Input.Label>Region</Input.Label>
             <Input.Field>
               <ComboBox
-                name="regionId"
+                {...form.getControlProps("country.regionId")}
                 ariaLabel="Regions"
                 menuTrigger="focus"
-                defaultItems={data.regions}
+                defaultItems={loaderData.regions}
               >
                 {/* @ts-expect-error: Property 'name' does not exist on type 'object'.ts(2339) due to Spectrum ListBox Collection */}
                 {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
@@ -124,7 +135,7 @@ export default function Component() {
               disabled={navigation.state === "submitting"}
             />
           </FormFooter>
-        </Form>
+        </form>
       </BackendContentContainer>
     </>
   );
