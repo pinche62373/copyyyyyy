@@ -1,29 +1,31 @@
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useForm } from "@rvf/remix";
+import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
-import { FormInputText } from "#app/components/backend/form/form-input-text";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
+import { Input } from "#app/components/shared/form/input";
+import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
-import { validateSubmission, validatePageId } from "#app/utils/misc";
+import { validatePageId } from "#app/utils/misc";
 import {
   requireModelPermission,
   requireRoutePermission
 } from "#app/utils/permissions.server";
-import { languageSchemaUpdateForm } from "#app/validations/language-schema";
+import { languageSchemaUpdate } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
 const intent = "update";
+
+const validator = withZod(languageSchemaUpdate);
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
@@ -31,10 +33,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     scope: "any"
   });
 
-  const languageId = validatePageId(
-    params.languageId,
-    languageSchemaUpdateForm
-  );
+  const languageId = validatePageId(params.languageId, languageSchemaUpdate);
 
   const language = await getLanguage({ id: languageId });
 
@@ -42,17 +41,20 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return { language };
+  return {
+    language
+  };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
-  const submission = validateSubmission({
-    intent,
-    formData: await request.formData(),
-    schema: languageSchemaUpdateForm
-  });
+  const validated = await validator.validate(await request.formData());
+
+  if (validated.error)
+    return jsonWithError(validated.error, "Form data rejected by server", {
+      status: 422
+    });
 
   await requireModelPermission(request, {
     resource: crud.singular,
@@ -61,7 +63,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   try {
-    await updateLanguage(submission.value, userId);
+    await updateLanguage(validated.data.language, userId);
   } catch {
     return jsonWithError(null, "Unexpected error");
   }
@@ -73,15 +75,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Component() {
-  const { language } = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
-  const [form, fields] = useForm({
-    shouldRevalidate: "onBlur",
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: languageSchemaUpdateForm });
-    }
+  const form = useForm({
+    method: "post",
+    validator,
+    defaultValues: { intent, ...loaderData }
   });
 
   return (
@@ -89,16 +90,17 @@ export default function Component() {
       <BackendPageTitle title={`Edit ${humanize(crud.singular)}`} />
 
       <BackendContentContainer className="p-6">
-        <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <FormInputHidden name="intent" value={intent} />
-          <FormInputHidden name="id" value={language.id} />
+        <form {...form.getFormProps()}>
+          <InputGeneric scope={form.scope("intent")} type="hidden" />
+          <InputGeneric scope={form.scope("language.id")} type="hidden" />
 
-          <FormInputText
-            label="Name"
-            fieldName="name"
-            fields={fields}
-            defaultValue={language.name}
-          />
+          {/* language.name */}
+          <Input>
+            <Input.Label>Name</Input.Label>
+            <Input.Field>
+              <InputGeneric scope={form.scope("language.name")}></InputGeneric>
+            </Input.Field>
+          </Input>
 
           <FormFooter>
             <Button
@@ -113,7 +115,7 @@ export default function Component() {
               disabled={navigation.state === "submitting"}
             />
           </FormFooter>
-        </Form>
+        </form>
       </BackendContentContainer>
     </>
   );

@@ -34,7 +34,10 @@ export const regionSchemaCreate = z.object({
   })
 });
 
-export const regionSchemaUpdateForm = regionSchemaFull.pick({
-  id: true,
-  name: true
+export const regionSchemaUpdate = z.object({
+  intent: z.literal("update"),
+  region: regionSchemaFull.pick({
+    id: true,
+    name: true
+  })
 });

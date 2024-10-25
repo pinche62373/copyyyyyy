@@ -34,7 +34,10 @@ export const languageSchemaCreate = z.object({
   })
 });
 
-export const languageSchemaUpdateForm = languageSchemaFull.pick({
-  id: true,
-  name: true
+export const languageSchemaUpdate = z.object({
+  intent: z.literal("update"),
+  language: languageSchemaFull.pick({
+    id: true,
+    name: true
+  })
 });

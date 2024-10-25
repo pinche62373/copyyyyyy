@@ -47,7 +47,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const regions = await getRegions();
 
   return {
-    intent,
     country,
     regions
   };
@@ -93,7 +92,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator,
-    defaultValues: loaderData
+    defaultValues: { intent, ...loaderData }
   });
 
   return (
@@ -103,8 +102,6 @@ export default function Component() {
       <BackendContentContainer className="p-6">
         <form {...form.getFormProps()}>
           <InputGeneric scope={form.scope("intent")} type="hidden" />
-
-          {/* country.id */}
           <InputGeneric scope={form.scope("country.id")} type="hidden" />
 
           {/* country.name */}

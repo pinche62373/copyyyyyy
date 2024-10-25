@@ -1,37 +1,39 @@
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useForm } from "@rvf/remix";
+import { withZod } from "@rvf/zod";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
-import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
-import { FormInputText } from "#app/components/backend/form/form-input-text";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
+import { Input } from "#app/components/shared/form/input";
+import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
-import { validateSubmission , validatePageId } from "#app/utils/misc";
+import { validatePageId } from "#app/utils/misc";
 import {
   requireModelPermission,
-  requireRoutePermission,
+  requireRoutePermission
 } from "#app/utils/permissions.server";
-import { regionSchemaUpdateForm } from "#app/validations/region-schema";
+import { regionSchemaUpdate } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
 
 const intent = "update";
 
+const validator = withZod(regionSchemaUpdate);
+
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any",
+    scope: "any"
   });
 
-  const regionId = validatePageId(params.regionId, regionSchemaUpdateForm);
+  const regionId = validatePageId(params.regionId, regionSchemaUpdate);
 
   const region = await getRegion({ id: regionId });
 
@@ -39,46 +41,48 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return { region };
+  return {
+    region
+  };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
-  const submission = validateSubmission({
-    intent,
-    formData: await request.formData(),
-    schema: regionSchemaUpdateForm,
-  });
+  const validated = await validator.validate(await request.formData());
+
+  if (validated.error)
+    return jsonWithError(validated.error, "Form data rejected by server", {
+      status: 422
+    });
 
   await requireModelPermission(request, {
     resource: crud.singular,
     action: intent,
-    scope: "any",
+    scope: "any"
   });
 
   try {
-    await updateRegion(submission.value, userId);
+    await updateRegion(validated.data.region, userId);
   } catch {
     return jsonWithError(null, "Unexpected error");
   }
 
   return redirectWithSuccess(
     crud.routes.index,
-    `${humanize(crud.singular)} updated successfully`,
+    `${humanize(crud.singular)} updated successfully`
   );
 };
 
 export default function Component() {
-  const { region } = useLoaderData<typeof loader>();
+  const loaderData = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
-  const [form, fields] = useForm({
-    shouldRevalidate: "onBlur",
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: regionSchemaUpdateForm });
-    },
+  const form = useForm({
+    method: "post",
+    validator,
+    defaultValues: { intent, ...loaderData }
   });
 
   return (
@@ -86,16 +90,17 @@ export default function Component() {
       <BackendPageTitle title={`Edit ${humanize(crud.singular)}`} />
 
       <BackendContentContainer className="p-6">
-        <Form method="post" id={form.id} onSubmit={form.onSubmit}>
-          <FormInputHidden name="intent" value="update" />
-          <FormInputHidden name="id" value={region.id} />
+        <form {...form.getFormProps()}>
+          <InputGeneric scope={form.scope("intent")} type="hidden" />
+          <InputGeneric scope={form.scope("region.id")} type="hidden" />
 
-          <FormInputText
-            label="Name"
-            fieldName="name"
-            fields={fields}
-            defaultValue={region.name}
-          />
+          {/* region.name */}
+          <Input>
+            <Input.Label>Name</Input.Label>
+            <Input.Field>
+              <InputGeneric scope={form.scope("region.name")}></InputGeneric>
+            </Input.Field>
+          </Input>
 
           <FormFooter>
             <Button
@@ -110,7 +115,7 @@ export default function Component() {
               disabled={navigation.state === "submitting"}
             />
           </FormFooter>
-        </Form>
+        </form>
       </BackendContentContainer>
     </>
   );
