@@ -1,30 +1,27 @@
-import { useForm } from "@conform-to/react";
-import { parseWithZod } from "@conform-to/zod";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
-  MetaFunction,
+  MetaFunction
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useNavigation } from "@remix-run/react";
-import { withZod } from "@remix-validated-form/with-zod";
+import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useForm } from "@rvf/remix";
+import { withZod } from "@rvf/zod";
 import { AuthorizationError } from "remix-auth";
 import { jsonWithError } from "remix-toast";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { SpamError } from "remix-utils/honeypot/server";
-import { validationError } from "remix-validated-form";
 
-import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
-import { FormInputTextStacked } from "#app/components/backend/form/form-input-text-stacked";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
+import { Input } from "#app/components/shared/form/input";
+import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 import { authLoginSchema } from "#app/validations/auth-schema";
-import { validateFormIntent } from "#app/validations/form-intent";
 
 const intent = "login";
 
@@ -36,16 +33,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // prevent orphaned client-side session cookies not existing in database breaking remix-auth
   if (sessionId) {
     const databaseSessionExists = await prisma.session.findUnique({
-      where: { id: sessionId },
+      where: { id: sessionId }
     });
 
     if (!databaseSessionExists) {
       return json(null, {
         headers: {
           "Set-Cookie": await sessionCookie.serialize("", {
-            maxAge: 0,
-          }),
-        },
+            maxAge: 0
+          })
+        }
       });
     }
   }
@@ -61,17 +58,34 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   // send already authenticated users back to the homepage
   await authenticator.isAuthenticated(request, {
-    successRedirect: "/",
+    successRedirect: "/"
   });
 
   // otherwise, create redirectCookie and continue
-  return json(null, { headers });
+  return json(
+    {
+      user: {
+        email: null as unknown as string,
+        password: null as unknown as string
+      }
+    },
+    { headers }
+  );
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  validateFormIntent({ formData, intent });
+  console.log("entered action with", formData);
+
+  const validated = await validator.validate(formData);
+
+  console.log("validated:", validated);
+
+  if (validated.error)
+    return jsonWithError(validated.error, "Form data rejected by server", {
+      status: 422
+    });
 
   // honeypot
   try {
@@ -80,16 +94,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (error instanceof SpamError) {
       throw new Response("Invalid form data", {
         status: 400,
-        statusText: "Invalid Form Data",
+        statusText: "Invalid Form Data"
       });
     }
     throw error; // rethrow
   }
 
-  // validate
-  const fieldValues = await validator.validate(formData);
-
-  if (fieldValues.error) return validationError(fieldValues.error);
+  console.log("passed the honey");
 
   const returnTo = await returnToCookie.parse(request.headers.get("Cookie"));
 
@@ -98,7 +109,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
       throwOnError: true,
       context: { formData },
-      successRedirect: returnTo || "/",
+      successRedirect: returnTo || "/"
     });
   } catch (error) {
     // Because redirects work by throwing a Response, you need to check if the
@@ -118,41 +129,44 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const meta: MetaFunction = () => [{ title: "Login" }];
 
 export default function LoginPage() {
+  const loaderData = useLoaderData<typeof loader>();
+
   const navigation = useNavigation();
 
-  const [form, fields] = useForm({
-    shouldRevalidate: "onBlur",
-    onValidate({ formData }) {
-      return parseWithZod(formData, { schema: authLoginSchema });
-    },
+  const form = useForm({
+    method: "post",
+    validator,
+    defaultValues: { intent, ...loaderData }
   });
 
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
-        <Form
-          method="post"
-          id={form.id}
-          onSubmit={form.onSubmit}
-          className="space-y-6"
-        >
-          <FormInputHidden name="intent" value={intent} />
+        <form {...form.getFormProps()}>
+          <InputGeneric scope={form.scope("intent")} type="hidden" />
 
-          <FormInputTextStacked
-            label="Email"
-            fieldName="email"
-            placeholder="Your email..."
-            fields={fields}
-            autoFocus
-          />
+          {/* user.email */}
+          <Input>
+            <Input.Label>Email</Input.Label>
+            <Input.Field>
+              <InputGeneric
+                scope={form.scope("user.email")}
+                placeholder="Your email..."
+              ></InputGeneric>
+            </Input.Field>
+          </Input>
 
-          <FormInputTextStacked
-            label="Password"
-            fieldName="password"
-            placeholder="Your password..."
-            fields={fields}
-            type="password"
-          />
+          {/* user.password */}
+          <Input>
+            <Input.Label>Password</Input.Label>
+            <Input.Field>
+              <InputGeneric
+                scope={form.scope("user.password")}
+                type="password"
+                placeholder="Your password..."
+              ></InputGeneric>
+            </Input.Field>
+          </Input>
 
           <HoneypotInputs />
 
@@ -164,7 +178,7 @@ export default function LoginPage() {
               disabled={navigation.state === "submitting"}
             />
           </FormFooter>
-        </Form>
+        </form>
       </div>
     </div>
   );

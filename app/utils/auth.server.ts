@@ -9,24 +9,24 @@ import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import {
   createDatabaseSessionStorage,
   getSession,
-  sessionCookie,
+  sessionCookie
 } from "#app/utils/session.server";
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 
 export const authenticator = new Authenticator<User>(
   createDatabaseSessionStorage({
-    cookie: sessionCookie,
+    cookie: sessionCookie
   }),
   {
-    sessionKey: "user",
-  },
+    sessionKey: "user"
+  }
 );
 
 authenticator.use(
   new FormStrategy(async ({ form }) => {
-    const email = form.get("email");
-    const password = form.get("password");
+    const email = form.get("user.email");
+    const password = form.get("user.password");
 
     invariant(typeof email === "string", "email must be a string");
     invariant(typeof password === "string", "email must be a string");
@@ -39,11 +39,11 @@ authenticator.use(
 
     return user;
   }),
-  EMAIL_PASSWORD_STRATEGY,
+  EMAIL_PASSWORD_STRATEGY
 );
 
 export async function getUserId(
-  request: Request,
+  request: Request
 ): Promise<User["id"] | undefined> {
   const session = await getSession(request.headers.get("cookie"));
 
@@ -78,7 +78,7 @@ export async function getUserOrDie(request: Request) {
 
 export async function requireUserId(
   request: Request,
-  { redirectTo }: { redirectTo?: string | null } = {},
+  { redirectTo }: { redirectTo?: string | null } = {}
 ) {
   const userId = await getUserId(request);
   if (!userId) {
@@ -105,7 +105,7 @@ export async function createUserSession({
   request,
   userId,
   remember,
-  redirectTo,
+  redirectTo
 }: {
   request: Request;
   userId: string;
@@ -121,8 +121,8 @@ export async function createUserSession({
       "Set-Cookie": await sessionStorage.commitSession(session, {
         maxAge: remember
           ? 60 * 60 * 24 * 7 // 7 days
-          : undefined,
-      }),
-    },
+          : undefined
+      })
+    }
   });
 }
