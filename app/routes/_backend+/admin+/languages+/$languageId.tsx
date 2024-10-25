@@ -11,7 +11,7 @@ import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { languageSchemaFull } from "#app/validations/language-schema";
+import { languageSchema } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
@@ -21,7 +21,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     scope: "any"
   });
 
-  const languageId = validatePageId(params.languageId, languageSchemaFull);
+  const languageId = validatePageId(params.languageId, languageSchema);
 
   const language = await getLanguage({ id: languageId });
 

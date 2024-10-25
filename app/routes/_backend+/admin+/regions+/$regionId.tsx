@@ -11,7 +11,7 @@ import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { regionSchemaFull } from "#app/validations/region-schema";
+import { regionSchema } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
 
@@ -21,7 +21,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     scope: "any"
   });
 
-  const regionId = validatePageId(params.regionId, regionSchemaFull);
+  const regionId = validatePageId(params.regionId, regionSchema);
 
   const region = await getRegion({ id: regionId });
 

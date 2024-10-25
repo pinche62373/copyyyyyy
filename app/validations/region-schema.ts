@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import { userSchema } from "#app/validations/user-schema";
 
-export const regionSchemaFull = z.object({
+export const regionSchema = z.object({
   id: z.string().cuid2(),
   name: z
     .string({ required_error: "Region name is required" })
@@ -20,7 +20,7 @@ export const regionSchemaFull = z.object({
   updatedBy: userSchema.pick({ id: true }).nullable()
 });
 
-export const regionSchemaAdminTable = regionSchemaFull.pick({
+export const regionSchemaAdminTable = regionSchema.pick({
   id: true,
   name: true,
   createdAt: true,
@@ -29,14 +29,14 @@ export const regionSchemaAdminTable = regionSchemaFull.pick({
 
 export const regionSchemaCreate = z.object({
   intent: z.literal("create"),
-  region: regionSchemaFull.pick({
+  region: regionSchema.pick({
     name: true
   })
 });
 
 export const regionSchemaUpdate = z.object({
   intent: z.literal("update"),
-  region: regionSchemaFull.pick({
+  region: regionSchema.pick({
     id: true,
     name: true
   })

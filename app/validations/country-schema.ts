@@ -4,7 +4,7 @@
 //
 import { z } from "zod";
 
-import { regionSchemaFull } from "#app/validations/region-schema";
+import { regionSchema } from "#app/validations/region-schema";
 import { userSchema } from "#app/validations/user-schema";
 
 export const countrySchema = z.object({
@@ -20,7 +20,7 @@ export const countrySchema = z.object({
   createdBy: userSchema.pick({ id: true }),
   updatedAt: z.string().datetime().nullable(),
   updatedBy: userSchema.pick({ id: true }).nullable(),
-  region: regionSchemaFull.pick({
+  region: regionSchema.pick({
     id: true,
     name: true
   })

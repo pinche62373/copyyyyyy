@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import { userSchema } from "#app/validations/user-schema";
 
-export const languageSchemaFull = z.object({
+export const languageSchema = z.object({
   id: z.string().cuid2(),
   name: z
     .string({ required_error: "Language name is required" })
@@ -20,7 +20,7 @@ export const languageSchemaFull = z.object({
   updatedBy: userSchema.pick({ id: true }).nullable()
 });
 
-export const languageSchemaAdminTable = languageSchemaFull.pick({
+export const languageSchemaAdminTable = languageSchema.pick({
   id: true,
   name: true,
   createdAt: true,
@@ -29,14 +29,14 @@ export const languageSchemaAdminTable = languageSchemaFull.pick({
 
 export const languageSchemaCreate = z.object({
   intent: z.literal("create"),
-  language: languageSchemaFull.pick({
+  language: languageSchema.pick({
     name: true
   })
 });
 
 export const languageSchemaUpdate = z.object({
   intent: z.literal("update"),
-  language: languageSchemaFull.pick({
+  language: languageSchema.pick({
     id: true,
     name: true
   })
