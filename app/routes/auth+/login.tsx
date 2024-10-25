@@ -76,11 +76,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  console.log("entered action with", formData);
-
   const validated = await validator.validate(formData);
-
-  console.log("validated:", validated);
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
@@ -99,8 +95,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
     throw error; // rethrow
   }
-
-  console.log("passed the honey");
 
   const returnTo = await returnToCookie.parse(request.headers.get("Cookie"));
 
