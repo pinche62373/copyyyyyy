@@ -42,7 +42,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    language
+    language, // TODO only required for BreadCrumb generation, remove when fixed
+    form: {
+      language
+    }
   };
 }
 
@@ -82,7 +85,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData }
+    defaultValues: { intent, ...loaderData.form }
   });
 
   return (

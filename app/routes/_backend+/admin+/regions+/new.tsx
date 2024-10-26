@@ -33,8 +33,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   return {
-    region: {
-      name: null as unknown as string
+    form: {
+      region: {
+        name: null as unknown as string
+      }
     }
   };
 }
@@ -75,7 +77,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData }
+    defaultValues: { intent, ...loaderData.form }
   });
 
   return (

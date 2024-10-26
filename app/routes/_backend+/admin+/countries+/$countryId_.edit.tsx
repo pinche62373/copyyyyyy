@@ -50,7 +50,10 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const regions = await getRegions();
 
   return {
-    country,
+    country, // TODO only required for BreadCrumb generation, remove when fixed
+    form: {
+      country,
+    },
     regions
   };
 }
@@ -95,7 +98,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData }
+    defaultValues: { intent, ...loaderData.form }
   });
 
   return (
@@ -130,7 +133,7 @@ export default function Component() {
                 defaultItems={loaderData.regions}
                 defaultSelectedKey={
                   loaderData.regions.find(
-                    (region) => region.id === loaderData.country.regionId
+                    (region) => region.id === loaderData.form.country.regionId
                   )?.id
                 }
               >

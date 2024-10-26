@@ -35,10 +35,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   if (userId) return redirect("/");
 
   return json({
-    user: {
-      email: null as unknown as string,
-      username: null as unknown as string,
-      password: null as unknown as string
+    form: {
+      user: {
+        email: null as unknown as string,
+        username: null as unknown as string,
+        password: null as unknown as string
+      }
     }
   });
 };
@@ -117,7 +119,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData }
+    defaultValues: { intent, ...loaderData.form }
   });
 
   return (

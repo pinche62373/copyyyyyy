@@ -17,6 +17,8 @@ export const Breadcrumbs = ({
 }: AdminBreadcrumbsFunctionArgs) => {
   const routeMatches = useMatches();
 
+  console.log("routeMatches:", routeMatches)
+
   const breadcrumbs = useBreadcrumbs(
     enhanceCustomBreadcrumbRoutes(routes, routeMatches)
   );

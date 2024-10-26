@@ -39,9 +39,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const regions = await getRegions();
 
   return {
-    country: {
-      name: null as unknown as string,
-      regionId: null as unknown as string
+    form: {
+      country: {
+        name: null as unknown as string,
+        regionId: null as unknown as string
+      },
     },
     regions
   };
@@ -87,7 +89,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData }
+    defaultValues: { intent, ...loaderData.form }
   });
 
   return (

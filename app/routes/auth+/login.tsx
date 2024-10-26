@@ -64,9 +64,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // otherwise, create redirectCookie and continue
   return json(
     {
-      user: {
-        email: null as unknown as string,
-        password: null as unknown as string
+      form: {
+        user: {
+          email: null as unknown as string,
+          password: null as unknown as string
+        }
       }
     },
     { headers }
@@ -130,7 +132,7 @@ export default function LoginPage() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData }
+    defaultValues: { intent, ...loaderData?.form }
   });
 
   return (
