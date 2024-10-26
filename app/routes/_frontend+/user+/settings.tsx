@@ -20,7 +20,7 @@ import { userSchemaUpdateAccount } from "#app/validations/user-schema";
 
 const intent = "update";
 
-const validator = withZod(userSchemaUpdateAccount);
+const formValidator = withZod(userSchemaUpdateAccount);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -41,7 +41,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const validated = await validator.validate(await request.formData());
+  const validated = await formValidator.validate(await request.formData());
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
@@ -71,7 +71,7 @@ export default function SettingsIndexPage() {
 
   const form = useForm({
     method: "POST",
-    validator,
+    validator: formValidator,
     defaultValues: loaderData,
     onSubmitSuccess: async () => {
       if (!isValidationErrorResponse(actionData)) {

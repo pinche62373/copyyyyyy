@@ -25,7 +25,7 @@ import { userSchemaLogin } from "#app/validations/user-schema";
 
 const intent = "login";
 
-const validator = withZod(userSchemaLogin);
+const formValidator = withZod(userSchemaLogin);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
@@ -76,7 +76,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  const validated = await validator.validate(formData);
+  const validated = await formValidator.validate(formData);
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
@@ -129,7 +129,7 @@ export default function LoginPage() {
 
   const form = useForm({
     method: "post",
-    validator,
+    validator: formValidator,
     defaultValues: { intent, ...loaderData }
   });
 

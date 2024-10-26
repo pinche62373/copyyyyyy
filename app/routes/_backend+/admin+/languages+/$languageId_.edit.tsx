@@ -25,7 +25,7 @@ const { languageCrud: crud } = getAdminCrud();
 
 const intent = "update";
 
-const validator = withZod(languageSchemaUpdate);
+const formValidator = withZod(languageSchemaUpdate);
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const languageId = validatePageId(params.languageId, languageSchema);
@@ -49,7 +49,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
-  const validated = await validator.validate(await request.formData());
+  const validated = await formValidator.validate(await request.formData());
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
@@ -81,7 +81,7 @@ export default function Component() {
 
   const form = useForm({
     method: "post",
-    validator,
+    validator: formValidator,
     defaultValues: { intent, ...loaderData }
   });
 

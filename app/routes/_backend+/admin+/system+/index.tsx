@@ -17,7 +17,7 @@ import { requireRoutePermission } from "#app/utils/permissions.server";
 
 const intent = "purge";
 
-const validator = withZod(
+const formValidator = withZod(
   z.object({
     intent: z.literal(intent)
   })
@@ -37,7 +37,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const validated = await validator.validate(await request.formData());
+  const validated = await formValidator.validate(await request.formData());
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
@@ -64,7 +64,7 @@ export default function Component() {
 
   const form = useForm({
     method: "post",
-    validator,
+    validator: formValidator,
     action: "/admin/system",
     id: formId
   });

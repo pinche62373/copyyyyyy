@@ -27,7 +27,7 @@ import { userSchemaRegister } from "#app/validations/user-schema";
 
 const intent = "register";
 
-const validator = withZod(userSchemaRegister);
+const formValidator = withZod(userSchemaRegister);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getUserId(request);
@@ -46,7 +46,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export const action = async ({ request }: ActionFunctionArgs) => {
   const formData = await request.formData();
 
-  const validated = await validator.validate(formData);
+  const validated = await formValidator.validate(formData);
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
@@ -116,7 +116,7 @@ export default function Component() {
 
   const form = useForm({
     method: "post",
-    validator,
+    validator: formValidator,
     defaultValues: { intent, ...loaderData }
   });
 
