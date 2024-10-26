@@ -9,19 +9,19 @@ import { getCountry } from "#app/models/country.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
-import { validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+import { validatePageId } from "#app/utils/validate-page-id";
 import { countrySchema } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  const countryId = validatePageId(params.countryId, countrySchema);
+
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
     scope: "any"
   });
-
-  const countryId = validatePageId(params.countryId, countrySchema);
 
   const country = await getCountry({ id: countryId });
 
@@ -65,7 +65,7 @@ export default function Component() {
           <Input.Label>Created By</Input.Label>
           <Input.Field>
             <ReadOnly>
-              {country.countryCreatedBy.username} at {" "}
+              {country.countryCreatedBy.username} at{" "}
               {timeStampToHuman(country.createdAt)}
             </ReadOnly>
           </Input.Field>

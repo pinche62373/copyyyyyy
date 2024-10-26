@@ -11,8 +11,7 @@ export function validatePageId(
       statusText: "Bad Request"
     });
   }
-
-  if (!schema.pick({ id: true }).safeParse({ id }).success) {
+  if (schema.pick({ id: true }).safeParse({ id }).success === false) {
     throw new Response("Bad Request", {
       status: 400,
       statusText: "Bad Request"

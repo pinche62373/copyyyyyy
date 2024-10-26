@@ -9,19 +9,19 @@ import { getLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
-import { validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+import { validatePageId } from "#app/utils/validate-page-id";
 import { languageSchema } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  const languageId = validatePageId(params.languageId, languageSchema);
+
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
     scope: "any"
   });
-
-  const languageId = validatePageId(params.languageId, languageSchema);
 
   const language = await getLanguage({ id: languageId });
 

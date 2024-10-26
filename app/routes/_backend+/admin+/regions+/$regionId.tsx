@@ -9,19 +9,19 @@ import { getRegion } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
-import { validatePageId } from "#app/utils/misc";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+import { validatePageId } from "#app/utils/validate-page-id";
 import { regionSchema } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  const regionId = validatePageId(params.regionId, regionSchema);
+
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
     scope: "any"
   });
-
-  const regionId = validatePageId(params.regionId, regionSchema);
 
   const region = await getRegion({ id: regionId });
 

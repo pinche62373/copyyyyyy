@@ -14,12 +14,12 @@ import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
-import { validatePageId } from "#app/utils/misc";
 import {
   requireModelPermission,
   requireRoutePermission
 } from "#app/utils/permissions.server";
-import { languageSchemaUpdate } from "#app/validations/language-schema";
+import { validatePageId } from "#app/utils/validate-page-id";
+import { languageSchema, languageSchemaUpdate } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
@@ -28,12 +28,12 @@ const intent = "update";
 const validator = withZod(languageSchemaUpdate);
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  const languageId = validatePageId(params.languageId, languageSchema);
+
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
     scope: "any"
   });
-
-  const languageId = validatePageId(params.languageId, languageSchemaUpdate);
 
   const language = await getLanguage({ id: languageId });
 

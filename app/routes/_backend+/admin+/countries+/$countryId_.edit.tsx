@@ -17,12 +17,15 @@ import { getRegionById, getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
-import { validatePageId } from "#app/utils/misc";
 import {
   requireModelPermission,
   requireRoutePermission
 } from "#app/utils/permissions.server";
-import { countrySchemaUpdate } from "#app/validations/country-schema";
+import { validatePageId } from "#app/utils/validate-page-id";
+import {
+  countrySchema,
+  countrySchemaUpdate
+} from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
@@ -31,12 +34,12 @@ const intent = "update";
 const validator = withZod(countrySchemaUpdate);
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  const countryId = validatePageId(params.countryId, countrySchema);
+
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
     scope: "any"
   });
-
-  const countryId = validatePageId(params.countryId, countrySchemaUpdate);
 
   const country = await getCountry({ id: countryId });
 
