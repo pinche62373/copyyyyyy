@@ -9,7 +9,7 @@ interface PropTypes {
   enabled?: boolean;
 }
 
-export const FormInputActionButton = ({
+export const ActionButton = ({
   formId,
   label,
   buttonLabel,
