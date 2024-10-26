@@ -10,6 +10,23 @@ export const userSchema = z.object({
   password: z.string().min(6, "Must be at least 6 characters")
 });
 
+export const userSchemaLogin = z.object({
+  intent: z.literal("login"),
+  user: userSchema.pick({
+    email: true,
+    password: true
+  })
+});
+
+export const userSchemaRegister = z.object({
+  intent: z.literal("register"),
+  user: userSchema.pick({
+    email: true,
+    username: true,
+    password: true
+  })
+});
+
 export const userSchemaUpdateAccount = z.object({
   intent: z.literal("update"),
   user: userSchema.pick({

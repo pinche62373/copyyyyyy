@@ -3,7 +3,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction
 } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
 import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
@@ -16,61 +16,31 @@ import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
-import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
-import { prisma } from "#app/utils/db.server";
+import { createUser, getUserByEmail } from "#app/models/user.server";
+import {
+  EMAIL_PASSWORD_STRATEGY,
+  authenticator,
+  getUserId
+} from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
-import { returnToCookie } from "#app/utils/return-to.server";
-import { sessionCookie } from "#app/utils/session.server";
-import { userSchemaLogin } from "#app/validations/user-schema";
+import { userSchemaRegister } from "#app/validations/user-schema";
 
-const intent = "login";
+const intent = "register";
 
-const validator = withZod(userSchemaLogin);
+const validator = withZod(userSchemaRegister);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
+  const userId = await getUserId(request);
 
-  // prevent orphaned client-side session cookies not existing in database breaking remix-auth
-  if (sessionId) {
-    const databaseSessionExists = await prisma.session.findUnique({
-      where: { id: sessionId }
-    });
+  if (userId) return redirect("/");
 
-    if (!databaseSessionExists) {
-      return json(null, {
-        headers: {
-          "Set-Cookie": await sessionCookie.serialize("", {
-            maxAge: 0
-          })
-        }
-      });
+  return json({
+    user: {
+      email: null as unknown as string,
+      username: null as unknown as string,
+      password: null as unknown as string
     }
-  }
-
-  // create returnTo cookie
-  const url = new URL(request.url);
-  const returnTo = url.searchParams.get("returnTo");
-
-  const headers = new Headers();
-  if (returnTo) {
-    headers.append("Set-Cookie", await returnToCookie.serialize(returnTo));
-  }
-
-  // send already authenticated users back to the homepage
-  await authenticator.isAuthenticated(request, {
-    successRedirect: "/"
   });
-
-  // otherwise, create redirectCookie and continue
-  return json(
-    {
-      user: {
-        email: null as unknown as string,
-        password: null as unknown as string
-      }
-    },
-    { headers }
-  );
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -96,14 +66,31 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw error; // rethrow
   }
 
-  const returnTo = await returnToCookie.parse(request.headers.get("Cookie"));
+  const existingUser = await getUserByEmail(validated.data.user.email);
+  if (existingUser) {
+    return json(
+      {
+        errors: {
+          email: "A user already exists with this email",
+          password: null
+        }
+      },
+      { status: 400 }
+    );
+  }
+
+  await createUser(
+    validated.data.user.email,
+    validated.data.user.username,
+    validated.data.user.password
+  );
 
   // IMPORTANT: do not use `failureRedirect` or remix-auth will crash trying to save the error to database session using empty `createData()`
   try {
     return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
       throwOnError: true,
       context: { formData },
-      successRedirect: returnTo || "/"
+      successRedirect: "/"
     });
   } catch (error) {
     // Because redirects work by throwing a Response, you need to check if the
@@ -120,9 +107,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
-export const meta: MetaFunction = () => [{ title: "Login" }];
+export const meta: MetaFunction = () => [{ title: "Sign Up" }];
 
-export default function LoginPage() {
+export default function Component() {
   const loaderData = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
@@ -154,14 +141,25 @@ export default function LoginPage() {
             </Input.Field>
           </Input>
 
+          {/* user.username */}
+          <Input>
+            <Input.Label>Username</Input.Label>
+            <Input.Field>
+              <InputGeneric
+                scope={form.scope("user.username")}
+                placeholder="Your username..."
+              ></InputGeneric>
+            </Input.Field>
+          </Input>
+
           {/* user.password */}
           <Input>
             <Input.Label>Password</Input.Label>
             <Input.Field>
               <InputGeneric
                 scope={form.scope("user.password")}
-                type="password"
                 placeholder="Your password..."
+                type="password"
               ></InputGeneric>
             </Input.Field>
           </Input>
