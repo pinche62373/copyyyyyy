@@ -1,12 +1,15 @@
-import { Form, NavLink } from "@remix-run/react";
+import { NavLink } from "@remix-run/react";
+import { ValidatedForm } from "@rvf/remix";
+import { withZod } from "@rvf/zod";
 import { CellContext } from "@tanstack/react-table";
+import { z } from "zod";
 
-import { FormInputHidden } from "#app/components/backend/form/form-input-hidden";
 import { ConfirmationLauncher } from "#app/components/confirmation-launcher";
 import { ConfirmationModal } from "#app/components/confirmation-modal";
 import { IconContainerRound } from "#app/components/icon-container-round";
 import { IconEdit } from "#app/components/icons/icon-edit";
 import { IconTrash } from "#app/components/icons/icon-trash";
+import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { Crud } from "#app/utils/admin-crud";
 
 // -----------------------------------------------------
@@ -24,11 +27,23 @@ interface TableCellActionsFunctionArgs {
 export const tableCellActions = ({
   info,
   crud,
-  actions,
+  actions
 }: TableCellActionsFunctionArgs) => {
   const editUrl = `${info.row.original.id}/edit`;
+
+  // deleteForm
+  const deleteFormValidator = withZod(
+    z.object({
+      intent: z.literal("delete"),
+      record: z.object({
+        id: z.string().cuid2()
+      })
+    })
+  );
   const deleteFormId = "delete-form-" + info.row.original.id;
   const confirmDeleteId = "confirm-" + deleteFormId;
+
+  actions.delete = true;
 
   return (
     <>
@@ -45,14 +60,32 @@ export const tableCellActions = ({
       {actions.delete === true && (
         <>
           <IconContainerRound>
-            <Form method="POST" id={deleteFormId} action={crud.routes.index}>
-              <FormInputHidden name="intent" value="delete" />
-              <FormInputHidden name="id" value={info.row.original.id} />
+            <ValidatedForm
+              method="POST"
+              id={deleteFormId}
+              action={crud.routes.index}
+              validator={deleteFormValidator}
+              className="hidden"
+            >
+              {(form) => (
+                <>
+                  <InputGeneric
+                    scope={form.scope("intent")}
+                    type="hidden"
+                    value="delete"
+                  />
+                  <InputGeneric
+                    scope={form.scope("record.id")}
+                    type="hidden"
+                    value={info.row.original.id}
+                  />
+                </>
+              )}
+            </ValidatedForm>
 
-              <ConfirmationLauncher modalId={confirmDeleteId} title="Delete">
-                <IconTrash />
-              </ConfirmationLauncher>
-            </Form>
+            <ConfirmationLauncher modalId={confirmDeleteId} title="Delete">
+              <IconTrash />
+            </ConfirmationLauncher>
           </IconContainerRound>
 
           {/* Delete Confirmation */}

@@ -64,7 +64,9 @@ export default function Component() {
   const userActions = userTableCellActions({
     user,
     route: crud.routes.index,
-    actions: "edit",
+    actions: {
+      edit: true
+    }
   });
 
   const columns = [

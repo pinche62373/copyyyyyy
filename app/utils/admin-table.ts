@@ -1,44 +1,48 @@
-import isEmpty from "lodash.isempty";
-
 import { tableCellActions } from "#app/components/tanstack-table/cell-types/actions";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
-
-/**
- * Returns an object with allowed admin table cell actions (if user has access to the route)
- */
-type TableActions = "edit" | "delete";
 
 type TableActionsResult = Parameters<typeof tableCellActions>[0]["actions"];
 
 interface TableActionsFunctionArgs {
   user: ReturnType<typeof useUser>;
   route: string;
-  actions: TableActions | TableActions[];
+  actions: TableActionsResult;
 }
 
+/**
+ * Returns an object with allowed admin table cell actions
+ * but only if user has access to the route. Will change
+ * passed value to `false` if user does not have access.
+ *
+ * TODO : change to model permission (because delete does not have a route)?
+ */
 export const userTableCellActions = ({
   user,
   route,
-  actions,
-}: TableActionsFunctionArgs): TableActionsResult | undefined => {
-  actions = Array.isArray(actions) ? actions : [actions];
-
+  actions
+}: TableActionsFunctionArgs): TableActionsResult => {
   const result: TableActionsResult = {};
 
-  actions.forEach((action) => {
+  Object.keys(actions).forEach((action) => {
+    // ignore action set to false
+    if (actions[action as keyof TableActionsResult] === false) {
+      return;
+    }
+
+    // check user access to determine action boolean
     if (
       userHasRoutePermission(user, {
         resource: `${route}/${action}`,
-        scope: "any",
+        scope: "any"
       })
     ) {
-      result[action] = true;
-    }
-  });
+      result[action as keyof TableActionsResult] = true;
 
-  if (isEmpty(result)) {
-    return undefined;
-  }
+      return;
+    }
+
+    result[action as keyof TableActionsResult] = false;
+  });
 
   return result;
 };
