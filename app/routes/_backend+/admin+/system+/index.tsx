@@ -14,9 +14,14 @@ import {
   getExpiredSessionCount
 } from "#app/models/session";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { validateFormIntent } from "#app/validations/form-intent";
 
 const intent = "purge";
+
+const validator = withZod(
+  z.object({
+    intent: z.literal(intent)
+  })
+);
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
@@ -32,14 +37,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const validated = await validator.validate(await request.formData());
+
+  if (validated.error)
+    return jsonWithError(validated.error, "Form data rejected by server", {
+      status: 422
+    });
+
   await requireRoutePermission(request, {
     resource: "/admin/system",
     scope: "any"
   });
-
-  const formData = await request.formData();
-
-  validateFormIntent({ formData, intent });
 
   try {
     await deleteExpiredSessions();
@@ -56,13 +64,9 @@ export default function Component() {
 
   const form = useForm({
     method: "post",
+    validator,
     action: "/admin/system",
-    id: formId,
-    validator: withZod(
-      z.object({
-        intent: z.literal("purge")
-      })
-    )
+    id: formId
   });
 
   const invalidSessionsLabel =
