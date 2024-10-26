@@ -54,7 +54,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
       status: 422
-    }); 
+    });
 
   await requireModelPermission(request, {
     resource: crud.singular,
@@ -91,7 +91,11 @@ export default function Component() {
 
       <BackendContentContainer className="p-6">
         <form {...form.getFormProps()}>
-          <InputGeneric scope={form.scope("intent")} type="hidden" />
+          <InputGeneric
+            scope={form.scope("intent")}
+            type="hidden"
+            value={intent}
+          />
           <InputGeneric scope={form.scope("language.id")} type="hidden" />
 
           {/* language.name */}

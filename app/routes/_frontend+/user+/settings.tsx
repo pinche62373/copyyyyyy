@@ -65,12 +65,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function SettingsIndexPage() {
+  const loaderData = useLoaderData<typeof loader>();
+
   const actionData = useActionData<typeof action>();
 
   const form = useForm({
     method: "POST",
     validator,
-    defaultValues: useLoaderData<typeof loader>(),
+    defaultValues: loaderData,
     onSubmitSuccess: async () => {
       if (!isValidationErrorResponse(actionData)) {
         form.resetForm(actionData);
@@ -89,11 +91,18 @@ export default function SettingsIndexPage() {
 
         {/* Profile Form */}
         <form {...form.getFormProps()}>
-          <InputGeneric name="id" scope={form.scope("user.id")} type="hidden" />
           <InputGeneric
             name="intent"
             scope={form.scope("intent")}
             type="hidden"
+            value={intent}
+          />
+
+          <InputGeneric
+            name="id"
+            scope={form.scope("user.id")}
+            type="hidden"
+            value={loaderData.user.id}
           />
 
           <InputGeneric name="username" scope={form.scope("user.username")} />

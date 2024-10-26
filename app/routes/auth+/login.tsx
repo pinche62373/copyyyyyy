@@ -137,7 +137,11 @@ export default function LoginPage() {
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
         <form {...form.getFormProps()}>
-          <InputGeneric scope={form.scope("intent")} type="hidden" />
+          <InputGeneric
+            scope={form.scope("intent")}
+            type="hidden"
+            value={intent}
+          />
 
           {/* user.email */}
           <Input>
