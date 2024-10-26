@@ -17,7 +17,3 @@ export function useMatchesData(
   );
   return route?.data as Record<string, unknown>;
 }
-
-export function validateEmail(email: unknown): email is string {
-  return typeof email === "string" && email.length > 3 && email.includes("@");
-}
