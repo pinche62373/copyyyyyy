@@ -3,6 +3,7 @@ import { useLoaderData } from "@remix-run/react";
 import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
+import { namedAction } from "remix-utils/named-action";
 import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
@@ -37,25 +38,29 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const validated = await formValidator.validate(await request.formData());
+  return namedAction(request, {
+    async purge() {
+      const validated = await formValidator.validate(await request.formData());
 
-  if (validated.error)
-    return jsonWithError(validated.error, "Form data rejected by server", {
-      status: 422
-    });
+      if (validated.error)
+        return jsonWithError(validated.error, "Form data rejected by server", {
+          status: 422
+        });
 
-  await requireRoutePermission(request, {
-    resource: "/admin/system",
-    scope: "any"
+      await requireRoutePermission(request, {
+        resource: "/admin/system",
+        scope: "any"
+      });
+
+      try {
+        await deleteExpiredSessions();
+      } catch {
+        return jsonWithError(null, "Unexpected error");
+      }
+
+      return jsonWithSuccess(null, `Expired sessions deleted successfully`);
+    }
   });
-
-  try {
-    await deleteExpiredSessions();
-  } catch {
-    return jsonWithError(null, "Unexpected error");
-  }
-
-  return jsonWithSuccess(null, `Expired sessions deleted successfully`);
 };
 
 export default function Component() {
