@@ -3,6 +3,8 @@ import { useLoaderData } from "@remix-run/react";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import { Button } from "#app/components/shared/button";
+import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
 import { getCountry } from "#app/models/country.server";
@@ -39,11 +41,6 @@ export default function Component() {
     <>
       <BackendPageTitle
         title={`View ${humanize(crud.singular)}`}
-        button={{
-          title: "Edit",
-          to: `${crud.routes.index}/${country.id}/edit`,
-          scope: "any"
-        }}
       />
 
       <BackendContentContainer className="p-6">
@@ -84,6 +81,15 @@ export default function Component() {
             </ReadOnly>
           </Input.Field>
         </Input>
+
+        <FormFooter>
+          <Button type="button" text="Close" to={crud.routes.index} secondary />
+          <Button
+            type="button"
+            text="Edit"
+            to={`${crud.routes.index}/${country.id}/edit`}
+          />
+        </FormFooter>        
       </BackendContentContainer>
     </>
   );
