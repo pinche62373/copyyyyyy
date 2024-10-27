@@ -12,6 +12,7 @@ import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+import { userHasRoutePermission , useUser } from "#app/utils/user";
 import { validatePageId } from "#app/utils/validate-page-id";
 import { countrySchema } from "#app/validations/country-schema";
 
@@ -37,11 +38,11 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 export default function Component() {
   const { country } = useLoaderData<typeof loader>();
 
+  const user = useUser();
+
   return (
     <>
-      <BackendPageTitle
-        title={`View ${humanize(crud.singular)}`}
-      />
+      <BackendPageTitle title={`View ${humanize(crud.singular)}`} />
 
       <BackendContentContainer className="p-6">
         <Input>
@@ -84,12 +85,18 @@ export default function Component() {
 
         <FormFooter>
           <Button type="button" text="Close" to={crud.routes.index} secondary />
-          <Button
-            type="button"
-            text="Edit"
-            to={`${crud.routes.index}/${country.id}/edit`}
-          />
-        </FormFooter>        
+
+          {userHasRoutePermission(user, {
+            resource: crud.routes.edit,
+            scope: "any"
+          }) && (
+            <Button
+              type="button"
+              text="Edit"
+              to={`${crud.routes.index}/${country.id}/edit`}
+            />
+          )}
+        </FormFooter>
       </BackendContentContainer>
     </>
   );
