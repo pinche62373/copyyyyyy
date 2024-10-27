@@ -52,50 +52,50 @@ export const UserMenu = () => {
           position="anchor"
           transition
         >
-          <MenuItem className={menuItemClass}>
-            <Link
-              to="/"
-              className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
-            >
+          <Link
+            to="/"
+            className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
+          >
+            <MenuItem className={menuItemClass}>
               <IconHeart className={iconClass} />
               My Likes
-            </Link>
-          </MenuItem>
+            </MenuItem>
+          </Link>
 
-          <MenuItem className={menuItemClass}>
-            <Link
-              to="/"
-              className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
-            >
+          <Link
+            to="/"
+            className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
+          >
+            <MenuItem className={menuItemClass}>
               <IconFolder className={iconClass} />
               My Collection
-            </Link>
-          </MenuItem>
+            </MenuItem>
+          </Link>
 
-          <MenuItem className={menuItemClass}>
-            <Link
-              to="/user/settings"
-              className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
-            >
+          <Link
+            to="/user/settings"
+            className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
+          >
+            <MenuItem className={menuItemClass}>
               <IconCog className={iconClass} />
               Settings
-            </Link>
-          </MenuItem>
+            </MenuItem>
+          </Link>
 
           {/* Link to Admin Dashboard */}
           {userHasRole(user, [Roles.ADMIN, Roles.MODERATOR]) && (
             <>
               <MenuDivider className={dividerClass} />
 
-              <MenuItem className={menuItemClass}>
-                <Link
-                  to="/admin"
-                  className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
-                >
+              <Link
+                to="/admin"
+                className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
+              >
+                <MenuItem className={menuItemClass}>
                   <IconCog className={iconClass} />
                   Admin
-                </Link>
-              </MenuItem>
+                </MenuItem>
+              </Link>
             </>
           )}
 
