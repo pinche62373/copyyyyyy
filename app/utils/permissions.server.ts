@@ -8,13 +8,13 @@ import type {
   ModelPermissionFunctionArgs,
   Permission,
   RoutePermission,
-  RoutePermissionFunctionArgs,
+  RoutePermissionFunctionArgs
 } from "#app/permissions/permission.types";
 import { getUser, requireUserId } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import {
   userHasModelPermission,
-  userHasRoutePermission,
+  userHasRoutePermission
 } from "#app/utils/user";
 import { Role } from "#app/validations/role-schema";
 import { cuid } from "#prisma/seed/seed-utils";
@@ -29,7 +29,7 @@ export async function requireRole(request: Request, role: string | string[]) {
 
   const user = await prisma.user.findFirst({
     select: { id: true },
-    where: { id: userId, roles: { some: { name: { in: role } } } },
+    where: { id: userId, roles: { some: { name: { in: role } } } }
   });
   if (!user) {
     throw json(null, { status: 403, statusText: "Forbidden" });
@@ -42,7 +42,7 @@ export async function requireRole(request: Request, role: string | string[]) {
 // ----------------------------------------------------------------------------
 export async function requireRoutePermission(
   request: Request,
-  permission: Pick<RoutePermission, "resource" | "scope">,
+  permission: Pick<RoutePermission, "resource" | "scope">
 ) {
   const user = await getUser(request);
 
@@ -61,7 +61,7 @@ export async function requireModelPermission(
   permission: Pick<
     ModelPermission,
     "resource" | "action" | "scope" | "resourceId"
-  >,
+  >
 ) {
   const user = await getUser(request);
 
@@ -81,7 +81,7 @@ export const getSeedPermissions = () => {
   const result = permissions.map((permission) => ({
     ...permission,
     id: cuid(permission.resource + permission.action + permission.scope),
-    updatedAt: null,
+    updatedAt: null
   }));
 
   return result;
@@ -95,7 +95,7 @@ export const generateModelPermissions = ({
   actions,
   roles,
   scope,
-  description,
+  description
 }: ModelPermissionFunctionArgs): ModelPermission[] => {
   actions = Array.isArray(actions) ? actions : [actions];
   roles = Array.isArray(roles) ? roles : [roles];
@@ -108,7 +108,7 @@ export const generateModelPermissions = ({
       action,
       scope,
       description,
-      roles,
+      roles
     });
   }
   return result;
@@ -121,7 +121,7 @@ export const generateRoutePermissions = ({
   resource,
   scope,
   roles,
-  description,
+  description
 }: RoutePermissionFunctionArgs): RoutePermission[] => {
   roles = Array.isArray(roles) ? roles : [roles];
 
@@ -131,8 +131,8 @@ export const generateRoutePermissions = ({
       action: "access",
       scope,
       description,
-      roles,
-    },
+      roles
+    }
   ];
 };
 
@@ -141,14 +141,14 @@ export const generateRoutePermissions = ({
 // ----------------------------------------------------------------------------
 export const isDuplicatePermission = (
   store: Permission[],
-  permission: ModelPermission | RoutePermission,
+  permission: ModelPermission | RoutePermission
 ) => {
   const result =
     store.find(
       (p) =>
         p.resource === permission.resource &&
         p.action === permission.action &&
-        p.scope === permission.scope,
+        p.scope === permission.scope
     ) !== undefined;
   return result;
 };
@@ -158,10 +158,10 @@ export const isDuplicatePermission = (
 // ----------------------------------------------------------------------------
 export const getPermissionsForRole = (
   permissions: Permission[],
-  role: Role,
+  role: Role
 ): Permission[] => {
   const result = permissions.filter((permission) =>
-    (permission.roles as unknown as Role[]).includes(role),
+    (permission.roles as unknown as Role[]).includes(role)
   );
 
   return result;

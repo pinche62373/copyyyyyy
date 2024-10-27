@@ -29,21 +29,26 @@ export const tableCellActions = ({
   crud,
   actions
 }: TableCellActionsFunctionArgs) => {
+  // edit button
   const editUrl = `${info.row.original.id}/edit`;
 
-  // deleteForm
-  const deleteFormValidator = withZod(
-    z.object({
-      intent: z.literal("delete"),
-      record: z.object({
-        id: z.string().cuid2()
-      })
-    })
-  );
+  // delete button
   const deleteFormId = "delete-form-" + info.row.original.id;
   const confirmDeleteId = "confirm-" + deleteFormId;
+  const deleteFormValidator = withZod(
+    z
+      .object({
+        intent: z.literal("delete"),
+        rvfFormId: z.string()
+      })
+      .catchall(
+        z.object({
+          id: z.string().cuid2()
+        })
+      )
+  );
 
-  actions.delete = true;
+  actions.delete = true
 
   return (
     <>
@@ -74,8 +79,9 @@ export const tableCellActions = ({
                     type="hidden"
                     value="delete"
                   />
+
                   <InputGeneric
-                    scope={form.scope("record.id")}
+                    scope={form.scope(`${crud.singular}.id`)}
                     type="hidden"
                     value={info.row.original.id}
                   />

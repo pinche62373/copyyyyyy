@@ -41,3 +41,10 @@ export const languageSchemaUpdate = z.object({
     name: true
   })
 });
+
+export const languageSchemaDelete = z.object({
+  intent: z.literal("delete"),
+  language: languageSchema.pick({
+    id: true
+  })
+});

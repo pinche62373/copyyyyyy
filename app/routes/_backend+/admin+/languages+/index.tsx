@@ -1,5 +1,6 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
+import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
+import { withZod } from "@rvf/zod";
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -10,6 +11,8 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { jsonWithError, jsonWithSuccess } from "remix-toast";
+import { namedAction } from "remix-utils/named-action";
 import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
@@ -28,19 +31,30 @@ import { TableBar } from "#app/components/tanstack-table/TableBar";
 import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
-import { getLanguages } from "#app/models/language.server";
+import { deleteLanguage, getLanguages } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { userTableCellActions } from "#app/utils/admin-table";
+import { requireUserId } from "#app/utils/auth.server";
 import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
-import { requireRoutePermission } from "#app/utils/permissions.server";
+import {
+  requireModelPermission,
+  requireRoutePermission
+} from "#app/utils/permissions.server";
 import { useUser } from "#app/utils/user";
-import { languageSchemaAdminTable } from "#app/validations/language-schema";
+import {
+  languageSchemaAdminTable,
+  languageSchemaDelete
+} from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
+
+const intent = "delete";
+
+const formValidator = withZod(languageSchemaDelete);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireRoutePermission(request, {
@@ -51,6 +65,38 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const languages = await getLanguages();
 
   return { languages };
+};
+
+export const action = async ({ request }: ActionFunctionArgs) => {
+  return namedAction(request, {
+    async delete() {
+      await requireUserId(request);
+
+      const validated = await formValidator.validate(await request.formData());
+
+      if (validated.error)
+        return jsonWithError(validated.error, "Form data rejected by server", {
+          status: 422
+        });
+
+      await requireModelPermission(request, {
+        resource: crud.singular,
+        action: intent,
+        scope: "any"
+      });
+
+      try {
+        await deleteLanguage(validated.data.language);
+      } catch {
+        return jsonWithError(null, "Unexpected error");
+      }
+
+      return jsonWithSuccess(
+        null,
+        `${humanize(crud.singular)} deleted successfully`
+      );
+    }
+  });
 };
 
 export default function Component() {
