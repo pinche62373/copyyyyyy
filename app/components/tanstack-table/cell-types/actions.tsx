@@ -52,45 +52,45 @@ export const tableCellActions = ({
     <>
       {/* Edit Button */}
       {actions.edit && (
-        <IconContainerRound>
-          <NavLink to={editUrl} title="Edit">
+        <NavLink to={editUrl} title="Edit">
+          <IconContainerRound>
             <IconEdit />
-          </NavLink>
-        </IconContainerRound>
+          </IconContainerRound>
+        </NavLink>
       )}
 
       {/* Optional Delete Button  */}
       {actions.delete === true && (
         <>
-          <IconContainerRound>
-            <ValidatedForm
-              method="POST"
-              id={deleteFormId}
-              action={crud.routes.index}
-              validator={deleteFormValidator}
-              className="hidden"
-            >
-              {(form) => (
-                <>
-                  <InputGeneric
-                    scope={form.scope("intent")}
-                    type="hidden"
-                    value="delete"
-                  />
+          <ConfirmationLauncher modalId={confirmDeleteId} title="Delete">
+            <IconContainerRound>
+              <ValidatedForm
+                method="POST"
+                id={deleteFormId}
+                action={crud.routes.index}
+                validator={deleteFormValidator}
+                className="hidden"
+              >
+                {(form) => (
+                  <>
+                    <InputGeneric
+                      scope={form.scope("intent")}
+                      type="hidden"
+                      value="delete"
+                    />
 
-                  <InputGeneric
-                    scope={form.scope(`${crud.singular}.id`)}
-                    type="hidden"
-                    value={info.row.original.id}
-                  />
-                </>
-              )}
-            </ValidatedForm>
+                    <InputGeneric
+                      scope={form.scope(`${crud.singular}.id`)}
+                      type="hidden"
+                      value={info.row.original.id}
+                    />
+                  </>
+                )}
+              </ValidatedForm>
 
-            <ConfirmationLauncher modalId={confirmDeleteId} title="Delete">
               <IconTrash />
-            </ConfirmationLauncher>
-          </IconContainerRound>
+            </IconContainerRound>
+          </ConfirmationLauncher>
 
           {/* Delete Confirmation */}
           <ConfirmationModal
