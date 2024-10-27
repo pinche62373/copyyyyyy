@@ -7,20 +7,21 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
-  useReactTable,
+  useReactTable
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
 import {
   tableCellActions,
   tableCellCreatedAt,
   tableCellLink,
   tableCellUpdatedAt,
-  tableCellVisibleRowIndex,
+  tableCellVisibleRowIndex
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
@@ -33,11 +34,11 @@ import { getAdminCrud } from "#app/utils/admin-crud";
 import { userTableCellActions } from "#app/utils/admin-table";
 import {
   ADMIN_TABLE_PAGE_INDEX,
-  ADMIN_TABLE_PAGE_SIZE,
+  ADMIN_TABLE_PAGE_SIZE
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { useUser } from "#app/utils/user";
+import { useUser , userHasRoutePermission } from "#app/utils/user";
 import { countrySchemaAdminTable } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
@@ -45,7 +46,7 @@ const { countryCrud: crud } = getAdminCrud();
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any",
+    scope: "any"
   });
 
   const countries = await getCountries();
@@ -77,10 +78,10 @@ export default function Component() {
       enableGlobalFilter: false,
       meta: {
         headerProps: {
-          className: "table-column-fit-content",
-        },
+          className: "table-column-fit-content"
+        }
       },
-      cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
+      cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table })
     }),
     columnHelper.accessor("name", {
       header: "Name",
@@ -90,23 +91,23 @@ export default function Component() {
         tableCellLink({
           id: row.original.id,
           name: row.original.name,
-          target: crud.routes.index,
-        }),
+          target: crud.routes.index
+        })
     }),
     columnHelper.accessor("region.name", {
       header: "Region",
       enableGlobalFilter: true,
-      cell: (info) => info.getValue(),
+      cell: (info) => info.getValue()
     }),
     columnHelper.accessor("createdAt", {
       header: "Created",
       enableGlobalFilter: false,
-      cell: (info) => tableCellCreatedAt(info),
+      cell: (info) => tableCellCreatedAt(info)
     }),
     columnHelper.accessor("updatedAt", {
       header: "Updated",
       enableGlobalFilter: false,
-      cell: (info) => tableCellUpdatedAt(info),
+      cell: (info) => tableCellUpdatedAt(info)
     }),
     ...(userActions
       ? [
@@ -116,46 +117,46 @@ export default function Component() {
             enableGlobalFilter: false,
             meta: {
               headerProps: {
-                className: "table-column-fit-content",
+                className: "table-column-fit-content"
               },
               cellProps: {
-                className: "text-center",
-              },
+                className: "text-center"
+              }
             },
             cell: (info) =>
               tableCellActions({
                 info,
                 crud,
-                actions: userActions,
-              }),
-          }),
+                actions: userActions
+              })
+          })
         ]
-      : []),
+      : [])
   ];
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
-    pageSize: ADMIN_TABLE_PAGE_SIZE,
+    pageSize: ADMIN_TABLE_PAGE_SIZE
   });
 
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "name", // MUST be here or global filter will not sort by rankingValue
-      desc: false,
-    },
+      desc: false
+    }
   ]);
 
   const table = useReactTable({
     data: countries,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter //define as a filter function that can be used in column definitions
     },
     state: {
       pagination,
       globalFilter,
-      sorting,
+      sorting
     },
     enableGlobalFilter: true,
     globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter
@@ -166,19 +167,25 @@ export default function Component() {
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
+    onPaginationChange: setPagination
   });
 
   return (
     <>
-      <BackendPageTitle
-        title={humanize(crud.plural)}
-        button={{
-          title: `New ${humanize(crud.singular)}`,
-          to: crud.routes.new,
-          scope: "any",
-        }}
-      />
+      {userHasRoutePermission(user, {
+        resource: crud.routes.new,
+        scope: "any"
+      }) ? (
+        <BackendPageTitle title={humanize(crud.plural)}>
+          <Button
+            type="button"
+            text={`New ${humanize(crud.singular)}`}
+            to={crud.routes.new}
+          />
+        </BackendPageTitle>
+      ) : (
+        <BackendPageTitle title={humanize(crud.plural)} />
+      )}
 
       <BackendContentContainer>
         <TableBar>

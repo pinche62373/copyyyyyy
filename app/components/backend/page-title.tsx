@@ -1,28 +1,20 @@
-import { Button } from "#app/components/shared/button";
-import { RoutePermission } from "#app/permissions/permission.types";
-import { cn } from "#app/utils/lib/cn";
-import { useUser, userHasRoutePermission } from "#app/utils/user";
+import { PropsWithChildren } from "react";
 
-interface PropTypes {
+import { cn } from "#app/utils/lib/cn";
+
+interface Props {
   title: string;
   className?: string;
-  button?: {
-    title: string;
-    to: RoutePermission["resource"];
-    scope: RoutePermission["scope"];
-  };
   search?: boolean;
 }
 
 export const BackendPageTitle = ({
   title,
-  search = false,
-  button,
   className,
+  search = false,
+  children,
   ...rest
-}: PropTypes) => {
-  const user = useUser();
-
+}: PropsWithChildren<Props>) => {
   return (
     <>
       {/* Header */}
@@ -68,13 +60,7 @@ export const BackendPageTitle = ({
           )}
           {/* End Search */}
 
-          {/* Button */}
-          {button &&
-            userHasRoutePermission(user, {
-              resource: button.to,
-              scope: button.scope
-            }) && <Button type="button" text={button.title} to={button.to} />}
-          {/* End Conditional New Button  */}
+          {children}
         </div>
         {/* End Form Group  */}
       </div>

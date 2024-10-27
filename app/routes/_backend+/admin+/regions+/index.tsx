@@ -14,6 +14,7 @@ import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
 import {
   tableCellActions,
@@ -37,7 +38,7 @@ import {
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { useUser } from "#app/utils/user";
+import { useUser , userHasRoutePermission } from "#app/utils/user";
 import { regionSchemaAdminTable } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
@@ -166,14 +167,20 @@ export default function Component() {
 
   return (
     <>
-      <BackendPageTitle
-        title={humanize(crud.plural)}
-        button={{
-          title: `New ${humanize(crud.singular)}`,
-          to: crud.routes.new,
-          scope: "any"
-        }}
-      />
+      {userHasRoutePermission(user, {
+        resource: crud.routes.new,
+        scope: "any"
+      }) ? (
+        <BackendPageTitle title={humanize(crud.plural)}>
+          <Button
+            type="button"
+            text={`New ${humanize(crud.singular)}`}
+            to={crud.routes.new}
+          />
+        </BackendPageTitle>
+      ) : (
+        <BackendPageTitle title={humanize(crud.plural)} />
+      )}
 
       <BackendContentContainer>
         <TableBar>
