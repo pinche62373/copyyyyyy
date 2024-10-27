@@ -48,8 +48,6 @@ export const tableCellActions = ({
       )
   );
 
-  actions.delete = true
-
   return (
     <>
       {/* Edit Button */}
