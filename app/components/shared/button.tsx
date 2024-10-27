@@ -26,9 +26,11 @@ export function Button({
   return (
     <>
       {to ? (
-        <button type={type} className={cn(buttonClass, className)} {...rest}>
-          <NavLink to={to}>{text}</NavLink>
-        </button>
+        <NavLink to={to}>
+          <button type={type} className={cn(buttonClass, className)} {...rest}>
+            {text}
+          </button>
+        </NavLink>
       ) : (
         <button type={type} className={cn(buttonClass, className)} {...rest}>
           {text}

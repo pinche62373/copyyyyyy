@@ -146,7 +146,7 @@ export default function Component() {
           <FormFooter>
             <Button
               type="button"
-              text="Cancel"
+              text="Close"
               to={crud.routes.index}
               secondary
             />
