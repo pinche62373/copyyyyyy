@@ -16,20 +16,20 @@ interface TableActionsFunctionArgs {
  *
  * TODO : change to model permission (because delete does not have a route)?
  */
-export const userTableCellActions = ({
+export const getUserTableCellActions = ({
   user,
   route,
   actions
-}: TableActionsFunctionArgs): TableActionsResult => {
+}: TableActionsFunctionArgs): TableActionsResult | undefined => {
   const result: TableActionsResult = {};
 
   Object.keys(actions).forEach((action) => {
-    // ignore action set to false
+    // ignore actions set to false
     if (actions[action as keyof TableActionsResult] === false) {
       return;
     }
 
-    // check user access to determine action boolean
+    // only set result if user has access to the action route
     if (
       userHasRoutePermission(user, {
         resource: `${route}/${action}`,
@@ -40,9 +40,11 @@ export const userTableCellActions = ({
 
       return;
     }
-
-    result[action as keyof TableActionsResult] = false;
   });
+
+  if (Object.keys(result).length === 0) {
+    return undefined;
+  }
 
   return result;
 };

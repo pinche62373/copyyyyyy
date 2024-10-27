@@ -34,12 +34,12 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { deleteLanguage, getLanguages } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
-import { userTableCellActions } from "#app/utils/admin-table";
 import { requireUserId } from "#app/utils/auth.server";
 import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE
 } from "#app/utils/constants";
+import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
@@ -108,7 +108,7 @@ export default function Component() {
   const columnHelper =
     createColumnHelper<z.infer<typeof languageSchemaAdminTable>>();
 
-  const userActions = userTableCellActions({
+  const userCellActions = getUserTableCellActions({
     user,
     route: crud.routes.index,
     actions: {
@@ -150,7 +150,7 @@ export default function Component() {
       enableGlobalFilter: false,
       cell: (info) => tableCellUpdatedAt(info)
     }),
-    ...(userActions
+    ...(userCellActions
       ? [
           columnHelper.display({
             header: "Actions",
@@ -168,7 +168,7 @@ export default function Component() {
               tableCellActions({
                 info,
                 crud,
-                actions: userActions
+                actions: userCellActions
               })
           })
         ]

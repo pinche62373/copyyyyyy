@@ -31,14 +31,14 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getRegions } from "#app/models/region.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
-import { userTableCellActions } from "#app/utils/admin-table";
 import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE
 } from "#app/utils/constants";
+import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { useUser , userHasRoutePermission } from "#app/utils/user";
+import { useUser, userHasRoutePermission } from "#app/utils/user";
 import { regionSchemaAdminTable } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
@@ -62,7 +62,7 @@ export default function Component() {
   const columnHelper =
     createColumnHelper<z.infer<typeof regionSchemaAdminTable>>();
 
-  const userActions = userTableCellActions({
+  const userCellActions = getUserTableCellActions({
     user,
     route: crud.routes.index,
     actions: {
@@ -104,7 +104,7 @@ export default function Component() {
       enableGlobalFilter: false,
       cell: (info) => tableCellUpdatedAt(info)
     }),
-    ...(userActions
+    ...(userCellActions
       ? [
           columnHelper.display({
             header: "Actions",
@@ -122,7 +122,7 @@ export default function Component() {
               tableCellActions({
                 info,
                 crud,
-                actions: userActions
+                actions: userCellActions
               })
           })
         ]
