@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import type { ActionFunctionArgs } from "@remix-run/node";
 import { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
@@ -80,8 +81,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     await createCountry(validated.data.country, userId);
-  } catch {
-    return jsonWithError(null, "Unexpected error");
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === "P2002") {
+        return jsonWithError(null, `${humanize(crud.singular)} already exists`);
+      }
+
+      return jsonWithError(null, "Unexpected error");
+    }
   }
 
   return redirectWithSuccess(

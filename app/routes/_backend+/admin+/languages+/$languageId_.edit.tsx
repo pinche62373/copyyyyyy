@@ -1,5 +1,6 @@
+import { Prisma } from "@prisma/client";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useNavigation } from "@remix-run/react";
+import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
 import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
@@ -86,8 +87,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   try {
     await updateLanguage(validated.data.language, userId);
-  } catch {
-    return jsonWithError(null, "Unexpected error");
+  } catch (e) {
+    if (e instanceof Prisma.PrismaClientKnownRequestError) {
+      if (e.code === "P2002") {
+        return jsonWithError(null, `${humanize(crud.singular)} already exists`);
+      }
+
+      return jsonWithError(null, "Unexpected error");
+    }
   }
 
   return jsonWithSuccess(
@@ -98,6 +105,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function Component() {
   const loaderData = useLoaderData<typeof loader>();
+
+  const actionData = useActionData<typeof action>();
+  console.log(actionData);
 
   const navigation = useNavigation();
 
