@@ -17,6 +17,7 @@ import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
+import { AUTH_REGISTER_ROUTE } from "#app/utils/constants";
 import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { returnToCookie } from "#app/utils/return-to.server";
@@ -171,7 +172,12 @@ export default function LoginPage() {
           <HoneypotInputs />
 
           <FormFooter>
-            <Button type="button" text="Cancel" to="/" secondary />
+            <Button
+              type="button"
+              text="Register"
+              to={AUTH_REGISTER_ROUTE}
+              secondary
+            />
             <Button
               type="submit"
               text="Log In"

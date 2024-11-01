@@ -4,6 +4,7 @@ export const VERSION = "__VERSION__"; // do not change, auto-updated by Semantic
 // auth
 export const AUTH_LOGIN_ROUTE = "/auth/login";
 export const AUTH_LOGOUT_ROUTE = "/auth/logout";
+export const AUTH_REGISTER_ROUTE = "/auth/register";
 
 // cookies
 export const COOKIE_DOMAIN =
