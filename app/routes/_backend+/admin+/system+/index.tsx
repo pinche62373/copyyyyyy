@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { ActionButton } from "#app/components/shared/form/inputs/action-button";
 import {
@@ -23,6 +24,10 @@ const formValidator = withZod(
     intent: z.literal(intent)
   })
 );
+
+export const handle = {
+  breadcrumb: (): BreadcrumbHandle => [{ name: "System", to: "admin/system" }]
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {

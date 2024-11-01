@@ -25,7 +25,7 @@ export const BackendPageTitle = ({
         )}
         {...rest}
       >
-        <h1 className="mt-2 h-[2.1rem] text-lg font-semibold text-gray-800 dark:text-neutral-200">
+        <h1 className="mt-2 h-[2.1rem] text-lg text-gray-800 dark:text-slate-400">
           {title}
         </h1>
 

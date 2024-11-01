@@ -2,7 +2,7 @@ import { ListBoxItem, ListBoxItemProps } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
 export function ComboBoxItem(props: ListBoxItemProps) {
-  const twListItem = tv({
+  const tvListItem = tv({
     base: "w-full rounded-md px-3 py-2 text-sm font-normal text-black hover:cursor-pointer dark:text-neutral-300",
     variants: {
       state: {
@@ -16,7 +16,7 @@ export function ComboBoxItem(props: ListBoxItemProps) {
     <ListBoxItem
       {...props}
       className={({ isFocused, isSelected }) => `
-              my-item ${isFocused ? twListItem({ state: "focused" }) : twListItem()} ${isSelected ? twListItem({ state: "selected" }) : twListItem()}
+              my-item ${isFocused ? tvListItem({ state: "focused" }) : tvListItem()} ${isSelected ? tvListItem({ state: "selected" }) : tvListItem()}
             `}
     />
   );

@@ -7,13 +7,14 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   SortingState,
-  useReactTable,
+  useReactTable
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
@@ -23,22 +24,31 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getPermissionsByResourceName } from "#app/models/permission.server";
+import { handle as permissionsHandle } from "#app/routes/_backend+/admin+/rbac+/permissions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,
-  ADMIN_TABLE_PAGE_SIZE,
+  ADMIN_TABLE_PAGE_SIZE
 } from "#app/utils/constants";
+import { humanize } from "#app/utils/lib/humanize";
 import {
   flattenPermissions,
-  requireRoutePermission,
+  requireRoutePermission
 } from "#app/utils/permissions.server";
 
 const { resourceCrud: crud } = getAdminCrud();
 
+export const handle = {
+  breadcrumb: (): BreadcrumbHandle => [
+    ...permissionsHandle.breadcrumb(),
+    { name: "Resource" }
+  ]
+};
+
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: crud.routes.view,
-    scope: "any",
+    scope: "any"
   });
 
   const resourceName = z.coerce.string().parse(params.resourceName);
@@ -53,7 +63,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return {
     resourceName,
-    permissions: flattenedPermissions,
+    permissions: flattenedPermissions
   };
 }
 
@@ -74,27 +84,27 @@ const columns = [
     enableGlobalFilter: false,
     meta: {
       headerProps: {
-        className: "table-column-fit-content",
-      },
+        className: "table-column-fit-content"
+      }
     },
-    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
+    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table })
   }),
   columnHelper.accessor("action", {
     header: "Action",
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue()
   }),
   columnHelper.accessor("scope", {
     header: "Scope",
     enableGlobalFilter: true,
-    cell: (info) => info.getValue(),
+    cell: (info) => info.getValue()
   }),
   columnHelper.accessor("role", {
     header: "Role",
     enableGlobalFilter: true,
-    cell: (info) => info.getValue(),
-  }),
+    cell: (info) => info.getValue()
+  })
 ];
 
 export default function Component() {
@@ -104,27 +114,27 @@ export default function Component() {
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
-    pageSize: ADMIN_TABLE_PAGE_SIZE,
+    pageSize: ADMIN_TABLE_PAGE_SIZE
   });
 
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "action", // MUST be here or global filter will not sort by rankingValue
-      desc: false,
-    },
+      desc: false
+    }
   ]);
 
   const table = useReactTable({
     data: permissions,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter //define as a filter function that can be used in column definitions
     },
     state: {
       pagination,
       globalFilter,
-      sorting,
+      sorting
     },
     enableGlobalFilter: true,
     globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter
@@ -135,13 +145,13 @@ export default function Component() {
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination,
+    onPaginationChange: setPagination
   });
 
   return (
     <>
       <BackendPageTitle
-        title={`View ${resourceType} permissions for resource ${resourceName}`}
+        title={`${humanize(resourceType)} permissions for resource ${resourceName}`}
       />
 
       {/* Start Permissions Table*/}

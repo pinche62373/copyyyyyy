@@ -14,6 +14,7 @@ import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
 import TanstackTable from "#app/components/tanstack-table";
@@ -28,6 +29,7 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getRoleWithPermissions } from "#app/models/role.server";
+import { handle as rolesHandle } from "#app/routes/_backend+/admin+/rbac+/roles+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,
@@ -37,6 +39,17 @@ import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 
 const { roleCrud, resourceCrud } = getAdminCrud();
+
+export const handle = {
+  breadcrumb: ({
+    data
+  }: {
+    data: { role: { id: string; name: string } };
+  }): BreadcrumbHandle => [
+    ...rolesHandle.breadcrumb(),
+    { name: humanize(data.role.name) }
+  ]
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
@@ -52,7 +65,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return { role };
+  return {
+    role
+  };
 }
 
 interface Permission {

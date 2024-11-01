@@ -3,20 +3,33 @@ import { useLoaderData } from "@remix-run/react";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
 import { getCountry } from "#app/models/country.server";
+import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { userHasRoutePermission , useUser } from "#app/utils/user";
+import { userHasRoutePermission, useUser } from "#app/utils/user";
 import { validatePageId } from "#app/utils/validate-page-id";
 import { countrySchema } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
+
+export const handle = {
+  breadcrumb: ({
+    data
+  }: {
+    data: { country: { id: string; name: string } };
+  }): BreadcrumbHandle => [
+    ...countriesHandle.breadcrumb(),
+    { name: data.country.name }
+  ]
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const countryId = validatePageId(params.countryId, countrySchema);
@@ -32,7 +45,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return { country };
+  return {
+    country
+  };
 }
 
 export default function Component() {

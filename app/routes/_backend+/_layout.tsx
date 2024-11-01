@@ -4,6 +4,7 @@ import { Outlet } from "@remix-run/react";
 
 import { BackendHeader } from "#app/components/backend/header";
 import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import backendStyleSheet from "#app/styles/backend.css";
 import { authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
@@ -16,6 +17,10 @@ export const links: LinksFunction = () => [
     ? [{ rel: "stylesheet", href: backendStyleSheet, as: "style" }]
     : [])
 ];
+
+export const handle = {
+  breadcrumb: (): BreadcrumbHandle => [{ name: "Dashboard", to: "/admin" }]
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);

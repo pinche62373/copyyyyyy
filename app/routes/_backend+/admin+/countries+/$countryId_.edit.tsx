@@ -6,6 +6,7 @@ import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
@@ -14,6 +15,7 @@ import { ComboBox } from "#app/components/shared/form/inputs/combobox";
 import { ComboBoxItem } from "#app/components/shared/form/inputs/combobox-item";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
+import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
@@ -33,6 +35,21 @@ const intent = "update";
 
 const formValidator = withZod(countrySchemaUpdate);
 
+export const handle = {
+  breadcrumb: ({
+    data
+  }: {
+    data: { form: { country: { id: string; name: string } } };
+  }): BreadcrumbHandle => [
+    ...countriesHandle.breadcrumb(),
+    {
+      name: data.form.country.name,
+      to: `${crud.routes.index}/${data.form.country.id}`
+    },
+    { name: "Edit" }
+  ]
+};
+
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const countryId = validatePageId(params.countryId, countrySchema);
 
@@ -50,9 +67,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   const regions = await getRegions();
 
   return {
-    country, // TODO only required for BreadCrumb generation, remove when fixed
     form: {
-      country,
+      country
     },
     regions
   };

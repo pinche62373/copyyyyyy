@@ -6,11 +6,13 @@ import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { createLanguage } from "#app/models/language.server";
+import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
@@ -25,6 +27,13 @@ const { languageCrud: crud } = getAdminCrud();
 const intent = "create";
 
 const formValidator = withZod(languageSchemaCreate);
+
+export const handle = {
+  breadcrumb: (): BreadcrumbHandle => [
+    ...languagesHandle.breadcrumb(),
+    { name: "New" }
+  ]
+};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {

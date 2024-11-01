@@ -1,4 +1,4 @@
-import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { withZod } from "@rvf/zod";
 import {
@@ -17,6 +17,7 @@ import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
 import {
@@ -45,7 +46,7 @@ import {
   requireModelPermission,
   requireRoutePermission
 } from "#app/utils/permissions.server";
-import { useUser, userHasRoutePermission } from "#app/utils/user";
+import { userHasRoutePermission, useUser } from "#app/utils/user";
 import {
   languageSchemaAdminTable,
   languageSchemaDelete
@@ -57,6 +58,12 @@ const intent = "delete";
 
 const formValidator = withZod(languageSchemaDelete);
 
+export const handle = {
+  breadcrumb: (): BreadcrumbHandle => [
+    { name: humanize(crud.plural), to: crud.routes.index }
+  ]
+};
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
@@ -65,7 +72,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const languages = await getLanguages();
 
-  return { languages };
+  return {
+    languages
+  };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

@@ -6,11 +6,13 @@ import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { getRegion, updateRegion } from "#app/models/region.server";
+import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
@@ -19,13 +21,31 @@ import {
   requireRoutePermission
 } from "#app/utils/permissions.server";
 import { validatePageId } from "#app/utils/validate-page-id";
-import { regionSchema, regionSchemaUpdate } from "#app/validations/region-schema";
+import {
+  regionSchema,
+  regionSchemaUpdate
+} from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
 
 const intent = "update";
 
 const formValidator = withZod(regionSchemaUpdate);
+
+export const handle = {
+  breadcrumb: ({
+    data
+  }: {
+    data: { form: { region: { id: string; name: string } } };
+  }): BreadcrumbHandle => [
+    ...regionsHandle.breadcrumb(),
+    {
+      name: data.form.region.name,
+      to: `${crud.routes.index}/${data.form.region.id}`
+    },
+    { name: "Edit" }
+  ]
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const regionId = validatePageId(params.regionId, regionSchema);
@@ -42,7 +62,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    region, // TODO only required for BreadCrumb generation, remove when fixed
     form: {
       region
     }

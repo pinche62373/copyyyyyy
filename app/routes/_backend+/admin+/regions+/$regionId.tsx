@@ -3,11 +3,13 @@ import { useLoaderData } from "@remix-run/react";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
 import { getRegion } from "#app/models/region.server";
+import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
@@ -17,6 +19,17 @@ import { validatePageId } from "#app/utils/validate-page-id";
 import { regionSchema } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
+
+export const handle = {
+  breadcrumb: ({
+    data
+  }: {
+    data: { region: { id: string; name: string } };
+  }): BreadcrumbHandle => [
+    ...regionsHandle.breadcrumb(),
+    { name: data.region.name }
+  ]
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const regionId = validatePageId(params.regionId, regionSchema);
@@ -32,7 +45,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return { region };
+  return {
+    region
+  };
 }
 
 export default function Component() {

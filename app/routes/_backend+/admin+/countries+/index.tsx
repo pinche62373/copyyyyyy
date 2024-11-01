@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
   createColumnHelper,
@@ -14,6 +14,7 @@ import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
 import {
@@ -43,6 +44,12 @@ import { countrySchemaAdminTable } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
+export const handle = {
+  breadcrumb: (): BreadcrumbHandle => [
+    { name: humanize(crud.plural), to: crud.routes.index }
+  ]
+};
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
@@ -51,7 +58,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const countries = await getCountries();
 
-  return { countries };
+  return {
+    countries
+  };
 };
 
 export default function Component() {

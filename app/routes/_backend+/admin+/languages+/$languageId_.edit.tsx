@@ -6,11 +6,13 @@ import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
+import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
@@ -19,13 +21,31 @@ import {
   requireRoutePermission
 } from "#app/utils/permissions.server";
 import { validatePageId } from "#app/utils/validate-page-id";
-import { languageSchema, languageSchemaUpdate } from "#app/validations/language-schema";
+import {
+  languageSchema,
+  languageSchemaUpdate
+} from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
 const intent = "update";
 
 const formValidator = withZod(languageSchemaUpdate);
+
+export const handle = {
+  breadcrumb: ({
+    data
+  }: {
+    data: { form: { language: { id: string; name: string } } };
+  }): BreadcrumbHandle => [
+    ...languagesHandle.breadcrumb(),
+    {
+      name: data.form.language.name,
+      to: `${crud.routes.index}/${data.form.language.id}`
+    },
+    { name: "Edit" }
+  ]
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const languageId = validatePageId(params.languageId, languageSchema);
@@ -42,7 +62,6 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    language, // TODO only required for BreadCrumb generation, remove when fixed
     form: {
       language
     }

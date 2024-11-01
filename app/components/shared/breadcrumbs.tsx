@@ -1,85 +1,66 @@
-import { Link, useMatches } from "@remix-run/react";
-import { Fragment, ReactElement } from "react";
-import useBreadcrumbs, { BreadcrumbData } from "use-react-router-breadcrumbs";
+import { UIMatch, useMatches } from "@remix-run/react";
+import { HTMLAttributes } from "react";
 
 import {
-  CustomBreadcrumbRoute,
-  enhanceCustomBreadcrumbRoutes
-} from "#app/utils/breadcrumbs";
+  type BreadcrumbHandle,
+  Breadcrumb
+} from "#app/components/shared/breadcrumb";
 
-interface AdminBreadcrumbsFunctionArgs {
-  routes: CustomBreadcrumbRoute[];
-}
+type BreadcrumbMatch = UIMatch<
+  Record<string, unknown>,
+  { breadcrumb: (data?: unknown) => BreadcrumbHandle }
+>;
 
-export const Breadcrumbs = ({
-  routes,
-  ...props
-}: AdminBreadcrumbsFunctionArgs) => {
-  const routeMatches = useMatches();
+export const Breadcrumbs = ({ ...props }: HTMLAttributes<HTMLElement>) => {
+  const matches = useMatches() as unknown as BreadcrumbMatch[];
 
-  const breadcrumbs = useBreadcrumbs(
-    enhanceCustomBreadcrumbRoutes(routes, routeMatches)
-  );
+  const crumbs = matches
+    .filter((match) => match.handle && match.handle.breadcrumb)
+    .flatMap((match) => {
+      const breadcrumb = match.handle.breadcrumb(match);
+
+      if (!breadcrumb) return null;
+
+      if (Array.isArray(breadcrumb)) {
+        return breadcrumb.map((crumb) => crumb);
+      }
+
+      return breadcrumb;
+    });
+
+  if (crumbs.length === 0) {
+    return;
+  }
 
   return (
-    <nav className="ml-5 mt-1">
+    <nav aria-label="Breadcrumbs">
       <ol
         itemScope
         itemType="https://schema.org/BreadcrumbList"
-        className="flex items-center whitespace-nowrap"
+        className="flex flex-wrap items-center"
         {...props}
       >
-        {breadcrumbs.map((crumb: BreadcrumbData<string>, i: number) => {
-          const breadCrumbElement = crumb.breadcrumb as ReactElement;
-
-          return (
-            <Fragment key={i}>
-              <li
-                className="inline-flex items-center"
-                itemProp="itemListElement"
-                itemScope
-                itemType="https://schema.org/ListItem"
-              >
-                {/* Render a chevron except for a single OR the last crumb */}
-                {i > 0 && (
-                  <svg
-                    className="mx-2 size-4 shrink-0 text-gray-400 dark:text-neutral-600"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="m9 18 6-6-6-6"></path>
-                  </svg>
-                )}
-                {/* Render a link except for a single OR the last crumb */}
-                {i + 1 < breadcrumbs.length &&
-                !Object.prototype.hasOwnProperty.call(crumb, "noLink") ? (
-                  <Link
-                    itemProp="item"
-                    to={crumb.key}
-                    {...props}
-                    className="flex items-center text-sm text-gray-500 hover:text-blue-600 focus:text-blue-600 focus:outline-none dark:text-neutral-500 dark:hover:text-blue-500 dark:focus:text-blue-500"
-                  >
-                    <span itemProp="name">
-                      {breadCrumbElement.props.children}
-                    </span>
-                  </Link>
-                ) : (
-                  <span className="flex items-center text-sm text-gray-500 focus:text-blue-600 focus:outline-none dark:text-neutral-500">
-                    {breadCrumbElement.props.children}
-                  </span>
-                )}
-                {/* Meta prop with crumb position */}
-                <meta itemProp="position" content={`${i + 1}`} />
-              </li>
-            </Fragment>
-          );
+        {crumbs.map((crumb, index, arr) => {
+          if (arr.length - 1 === index) {
+            return (
+              <Breadcrumb
+                name={crumb?.name || ""}
+                to={crumb?.to || ""}
+                key={index}
+                position={index + 1}
+                last={true}
+              />
+            );
+          } else {
+            return (
+              <Breadcrumb
+                name={crumb?.name || ""}
+                to={crumb?.to || ""}
+                key={index}
+                position={index + 1}
+              />
+            );
+          }
         })}
       </ol>
     </nav>

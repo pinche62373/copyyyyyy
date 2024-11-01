@@ -3,11 +3,13 @@ import { useLoaderData } from "@remix-run/react";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
+import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
 import { getLanguage } from "#app/models/language.server";
+import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
@@ -17,6 +19,17 @@ import { validatePageId } from "#app/utils/validate-page-id";
 import { languageSchema } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
+
+export const handle = {
+  breadcrumb: ({
+    data
+  }: {
+    data: { language: { id: string; name: string } };
+  }): BreadcrumbHandle => [
+    ...languagesHandle.breadcrumb(),
+    { name: data.language.name }
+  ]
+};
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const languageId = validatePageId(params.languageId, languageSchema);
@@ -32,7 +45,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return { language };
+  return {
+    language
+  };
 }
 
 export default function Component() {

@@ -23,14 +23,14 @@ export const BackendHeader = ({ className }: Props) => {
         {/* Menu Left */}
         <div className="flex items-center md:gap-x-3 xl:col-span-1">
           <div className="hidden items-start lg:block">
-            <Breadcrumbs
-              routes={[
+            <Breadcrumbs />
+              {/* routes={[
                 { path: "/", breadcrumb: null },
                 { path: "/admin", breadcrumb: "Home" },
                 { path: "/admin/rbac", props: { noLink: true } },
                 { path: "/admin/rbac/resources", props: { noLink: true } }
               ]}
-            />
+            /> */}
           </div>
 
           <div className="lg:hidden">
