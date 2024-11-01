@@ -1,5 +1,9 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaFunction
+} from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import { BackendHeader } from "#app/components/backend/header";
@@ -17,6 +21,8 @@ export const links: LinksFunction = () => [
     ? [{ rel: "stylesheet", href: backendStyleSheet, as: "style" }]
     : [])
 ];
+
+export const meta: MetaFunction = () => [{ title: "TMDB Admin" }];
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [{ name: "Dashboard", to: "/admin" }]

@@ -1,9 +1,6 @@
-import type { MetaFunction } from "@remix-run/node";
 import { Link } from "@remix-run/react";
 
 import { useOptionalUser } from "#app/utils/user";
-
-export const meta: MetaFunction = () => [{ title: "Remix Notes" }];
 
 export default function IndexPage() {
   const user = useOptionalUser();
