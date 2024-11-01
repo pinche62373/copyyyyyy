@@ -90,7 +90,7 @@ export default function SettingsIndexPage() {
         </h2>
 
         {/* Profile Form */}
-        <form {...form.getFormProps()}>
+        <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             name="intent"
             scope={form.scope("intent")}

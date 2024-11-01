@@ -113,7 +113,7 @@ export default function Component() {
       <BackendPageTitle title={`New ${crud.singular}`} />
 
       <BackendContentContainer className="p-5">
-        <form {...form.getFormProps()}>
+        <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
             type="hidden"

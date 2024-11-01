@@ -89,7 +89,7 @@ export default function Component() {
       <BackendPageTitle title="System" />
 
       <BackendContentContainer className="px-5 py-3">
-        <form {...form.getFormProps()}>
+        <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
             type="hidden"

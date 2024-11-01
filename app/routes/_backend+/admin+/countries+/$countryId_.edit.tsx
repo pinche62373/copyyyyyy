@@ -129,7 +129,7 @@ export default function Component() {
       <BackendPageTitle title={`Edit ${humanize(crud.singular)}`} />
 
       <BackendContentContainer className="p-6">
-        <form {...form.getFormProps()}>
+        <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
             type="hidden"
