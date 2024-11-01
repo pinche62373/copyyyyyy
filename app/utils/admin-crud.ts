@@ -1,11 +1,10 @@
 export interface Crud {
   singular: string;
   plural: string;
-  routes: Routes;
+  routes: CrudRoutes;
 }
 
-// TODO rename to CrudRoutes
-interface Routes {
+interface CrudRoutes {
   index: string;
   view: string;
   new: string;
@@ -15,7 +14,7 @@ interface Routes {
 
 type CrudList = Record<string, Crud>;
 
-const getRoutes = (indexRoute: string): Routes => {
+const getRoutes = (indexRoute: string): CrudRoutes => {
   return {
     index: indexRoute,
     view: `${indexRoute}/view`,
