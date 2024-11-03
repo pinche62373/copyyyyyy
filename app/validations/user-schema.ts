@@ -2,16 +2,12 @@ import { z } from "zod";
 
 export const userSchema = z.object({
   id: z.string().cuid2(),
-  email: z.string().min(1, { message: "This field is required" }).email(),
+  email: z.string().email(),
   username: z
     .string()
-    .min(1, { message: "This field is required" })
     .min(3, "This field must be at least 3 characters")
     .max(25, "This field cannot be more than 25 characters"),
-  password: z
-    .string()
-    .min(1, { message: "This field is required" })
-    .min(6, "This field must be at least 6 characters")
+  password: z.string().min(6, "This field must be at least 6 characters")
 });
 
 export const userSchemaLogin = z.object({
