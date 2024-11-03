@@ -4,8 +4,8 @@ import type {
   MetaFunction
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useLoaderData, useNavigation } from "@remix-run/react";
-import { useForm } from "@rvf/remix";
+import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
+import { useForm, validationError } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { AuthorizationError } from "remix-auth";
 import { jsonWithError } from "remix-toast";
@@ -16,7 +16,7 @@ import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
 import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
-import { createUser, getUserByEmail } from "#app/models/user.server";
+import { createUser, isEmailAddressAvailable } from "#app/models/user.server";
 import {
   EMAIL_PASSWORD_STRATEGY,
   authenticator,
@@ -27,7 +27,7 @@ import { userSchemaRegister } from "#app/validations/user-schema";
 
 const intent = "register";
 
-const formValidator = withZod(userSchemaRegister);
+const clientFormValidator = withZod(userSchemaRegister);
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userId = await getUserId(request);
@@ -46,14 +46,25 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
+  const formValidatorServer = withZod(
+    userSchemaRegister.refine(
+      async (data) => {
+        return isEmailAddressAvailable({ email: data.user.email });
+      },
+      {
+        message: "Whoops! That email is already taken.",
+        path: ["user.email"]
+      }
+    )
+  );
+
   const formData = await request.formData();
 
-  const validated = await formValidator.validate(formData);
+  const validated = await formValidatorServer.validate(formData);
 
-  if (validated.error)
-    return jsonWithError(validated.error, "Form data rejected by server", {
-      status: 422
-    });
+  if (validated.error) {
+    return validationError(validated.error, validated.submittedData);
+  }
 
   // honeypot
   try {
@@ -66,19 +77,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       });
     }
     throw error; // rethrow
-  }
-
-  const existingUser = await getUserByEmail(validated.data.user.email);
-  if (existingUser) {
-    return json(
-      {
-        errors: {
-          email: "A user already exists with this email",
-          password: null
-        }
-      },
-      { status: 400 }
-    );
   }
 
   await createUser(
@@ -109,16 +107,21 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
-export const meta: MetaFunction = () => [{ title: "Sign Up" }];
+export const meta: MetaFunction = () => [{ title: "TMDB - Register" }];
 
-export default function Component() {
+export default function RegisterPage() {
   const loaderData = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
+  // const submit = useDebounceSubmit();
+
+  const actionData = useActionData<typeof action>();
+  console.log("actionData:", actionData);
+
   const form = useForm({
     method: "post",
-    validator: formValidator,
+    validator: clientFormValidator,
     defaultValues: { intent, ...loaderData.form }
   });
 
@@ -172,7 +175,7 @@ export default function Component() {
             <Button type="button" text="Cancel" to="/" secondary />
             <Button
               type="submit"
-              text="Log In"
+              text="Register"
               disabled={navigation.state === "submitting"}
             />
           </FormFooter>

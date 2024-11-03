@@ -123,7 +123,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
-export const meta: MetaFunction = () => [{ title: "Login" }];
+export const meta: MetaFunction = () => [{ title: "TMDB - Login" }];
 
 export default function LoginPage() {
   const loaderData = useLoaderData<typeof loader>();

@@ -55,9 +55,11 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
         />
 
         {/* Validation Errors */}
-        <div id={errorId} className="pt-1 text-xs text-red-700">
-          {field.error()}
-        </div>
+        {field.error() && (
+          <div id={errorId} className="pt-1 text-xs text-red-700">
+            {field.error()}
+          </div>
+        )}
       </>
     );
   }
