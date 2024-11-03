@@ -105,14 +105,14 @@ export function updateUserAccountSettings({
 /**
  * Checks if the provided email address is available for use.
  */
-export function isEmailAddressAvailable({
+export async function isEmailAddressAvailable({
   email
-}: Pick<User, "email">): boolean {
-  const result = prisma.user.findFirst({
+}: Pick<User, "email">): Promise<boolean> {
+  const result = await prisma.user.findFirst({
     where: { email }
   });
 
-  if (result === undefined) {
+  if (result === null) {
     return true;
   }
 
@@ -122,14 +122,14 @@ export function isEmailAddressAvailable({
 /**
  * Checks if the provided username is available for use.
  */
-export function isUsernameAvailable({
+export async function isUsernameAvailable({
   username
-}: Pick<User, "username">): boolean {
-  const result = prisma.user.findFirst({
+}: Pick<User, "username">): Promise<boolean> {
+  const result = await prisma.user.findFirst({
     where: { username }
   });
 
-  if (result === undefined) {
+  if (result === null) {
     return true;
   }
 
