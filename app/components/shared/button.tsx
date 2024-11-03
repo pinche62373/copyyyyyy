@@ -38,26 +38,20 @@ export function Button({
 
   return (
     <>
-      {to ? (
-        <>
-          {/* Link disguised as button */}
-          <Link to={to} tabIndex={-1}>
-            <button
-              type={type}
-              className={cn(buttonClass, className)}
-              {...rest}
-            >
-              {text}
-            </button>
-          </Link>
-        </>
-      ) : (
-        <>
-          {/* Real button  */}
+      {/* Link disguised as button */}
+      {to && (
+        <Link to={to} tabIndex={-1}>
           <button type={type} className={cn(buttonClass, className)} {...rest}>
             {text}
           </button>
-        </>
+        </Link>
+      )}
+
+      {/* Real button  */}
+      {!to && (
+        <button type={type} className={cn(buttonClass, className)} {...rest}>
+          {text}
+        </button>
       )}
     </>
   );
