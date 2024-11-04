@@ -2,6 +2,7 @@ import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
   createColumnHelper,
+  FilterFnOption,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
@@ -10,74 +11,67 @@ import {
   useReactTable
 } from "@tanstack/react-table";
 import { useState } from "react";
-import { z } from "zod";
 
 import { BackendContentContainer } from "#app/components/backend/content-container";
 import { BackendPageTitle } from "#app/components/backend/page-title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Input } from "#app/components/shared/form/input.tsx";
-import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
 import TanstackTable from "#app/components/tanstack-table";
 import {
   tableCellLink,
   tableCellVisibleRowIndex
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
+import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter";
+import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { TableBar } from "#app/components/tanstack-table/TableBar";
-import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
-import { getRoleWithPermissions } from "#app/models/role.server";
-import { handle as rolesHandle } from "#app/routes/_backend+/admin+/rbac+/roles+/index";
+import { getPermissions } from "#app/models/permission.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
-import { requireRoutePermission } from "#app/utils/permissions.server";
+import {
+  flattenPermissions,
+  requireRoutePermission
+} from "#app/utils/permissions.server";
 
-const { roleCrud, resourceCrud } = getAdminCrud();
+const { resourceCrud, permissionCrud } = getAdminCrud();
 
 export const handle = {
-  breadcrumb: ({
-    data
-  }: {
-    data: { role: { id: string; name: string } };
-  }): BreadcrumbHandle => [
-    ...rolesHandle.breadcrumb(),
-    { name: humanize(data.role.name) }
+  breadcrumb: (): BreadcrumbHandle => [
+    { name: "Security" },
+    { name: humanize(permissionCrud.plural), to: permissionCrud.routes.index }
   ]
 };
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
     scope: "any"
   });
 
-  const roleId = z.coerce.string().parse(params.roleId);
-
-  const role = await getRoleWithPermissions({ id: roleId });
-
-  if (!role) {
-    throw new Response("Not Found", { status: 404, statusText: "Not Found" });
-  }
+  const permissions = await getPermissions();
+  const flattenedPermissions = flattenPermissions(permissions);
 
   return {
-    role
+    flattenedPermissions
   };
 }
 
-interface Permission {
+interface FlatPermission {
   id: string;
   resource: string;
   action: string;
   scope: string;
+  role: string;
+  roleId: string;
 }
 
-const columnHelper = createColumnHelper<Permission>();
+const columnHelper = createColumnHelper<FlatPermission>();
 
 const columns = [
   columnHelper.display({
@@ -93,7 +87,7 @@ const columns = [
     cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table })
   }),
   columnHelper.accessor("resource", {
-    header: () => <span>Resource</span>,
+    header: "Resource",
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: ({ row }) =>
@@ -104,19 +98,31 @@ const columns = [
       })
   }),
   columnHelper.accessor("action", {
-    header: () => <span>Action</span>,
+    header: "Action",
+    enableGlobalFilter: true,
+    enableColumnFilter: true,
+    cell: (info) => info.getValue(),
+    filterFn: permissionTypeFilter as FilterFnOption<FlatPermission>
+  }),
+  columnHelper.accessor("scope", {
+    header: "Scope",
     enableGlobalFilter: true,
     cell: (info) => info.getValue()
   }),
-  columnHelper.accessor("scope", {
-    header: () => <span>Scope</span>,
+  columnHelper.accessor("role", {
+    header: "Role",
     enableGlobalFilter: true,
-    cell: (info) => info.getValue()
+    cell: ({ row }) =>
+      tableCellLink({
+        id: row.original.roleId,
+        name: row.original.role,
+        target: "/admin/security/roles"
+      })
   })
 ];
 
 export default function Component() {
-  const { role } = useLoaderData<typeof loader>();
+  const { flattenedPermissions } = useLoaderData<typeof loader>();
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
@@ -132,10 +138,10 @@ export default function Component() {
   ]);
 
   const table = useReactTable({
-    data: role.permissions,
+    data: flattenedPermissions,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter
     },
     state: {
       pagination,
@@ -154,29 +160,14 @@ export default function Component() {
     onPaginationChange: setPagination
   });
 
+  // passes selected value to the filter function set on the `action` column
+  const handleFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    table.getColumn("action")?.setFilterValue(e.target.value);
+  };
+
   return (
     <>
-      {/* Start Database Fields */}
-      <BackendPageTitle title={`View ${humanize(roleCrud.singular)}`} />
-
-      <BackendContentContainer className="p-6">
-        <Input>
-          <Input.Label>Name</Input.Label>
-          <Input.Field>
-            <ReadOnly>{role.name}</ReadOnly>
-          </Input.Field>
-        </Input>
-
-        <Input>
-          <Input.Label>Description</Input.Label>
-          <Input.Field>
-            <ReadOnly>{role.description}</ReadOnly>
-          </Input.Field>
-        </Input>
-      </BackendContentContainer>
-
-      {/* Start Permissions Table*/}
-      <BackendPageTitle title="Permissions" className="pt-4" />
+      <BackendPageTitle title="Permissions" />
 
       <BackendContentContainer>
         <TableBar>
@@ -185,9 +176,14 @@ export default function Component() {
             onChange={(value: string | number) =>
               setGlobalFilter(String(value))
             }
-            placeholder="Search permissions..."
+            placeholder={`Search ${permissionCrud.plural}...`}
           />
-          <TableFilterDropdown />
+
+          <PermissionTypeFilterComponent
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+              handleFilter(e)
+            }
+          />
         </TableBar>
 
         <TanstackTable.Table table={table}>

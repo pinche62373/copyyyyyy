@@ -27,8 +27,8 @@ export const BackendHeader = ({ className }: Props) => {
               {/* routes={[
                 { path: "/", breadcrumb: null },
                 { path: "/admin", breadcrumb: "Home" },
-                { path: "/admin/rbac", props: { noLink: true } },
-                { path: "/admin/rbac/resources", props: { noLink: true } }
+                { path: "/admin/security", props: { noLink: true } },
+                { path: "/admin/security/resources", props: { noLink: true } }
               ]}
             /> */}
           </div>

@@ -34,7 +34,7 @@ export function getAdminCrud(): CrudList {
   const resourceCrud = {
     singular: "resource",
     plural: "resources",
-    routes: getRoutes("/admin/rbac/resources"),
+    routes: getRoutes("/admin/security/resources"),
   };
 
   const languageCrud = {
@@ -46,7 +46,7 @@ export function getAdminCrud(): CrudList {
   const permissionCrud = {
     singular: "permission",
     plural: "permissions",
-    routes: getRoutes("/admin/rbac/permissions"),
+    routes: getRoutes("/admin/security/permissions"),
   };
 
   const regionCrud = {
@@ -58,7 +58,7 @@ export function getAdminCrud(): CrudList {
   const roleCrud = {
     singular: "role",
     plural: "roles",
-    routes: getRoutes("/admin/rbac/roles"),
+    routes: getRoutes("/admin/security/roles"),
   };
 
   return {

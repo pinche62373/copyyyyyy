@@ -110,12 +110,12 @@ export function BackendSidebar() {
 
           {/* Section: Admin */}
           <SidebarSection caption="Admin" requireRole={Roles.ADMIN}>
-            <SidebarLink to="/admin/rbac/permissions">
+            <SidebarLink to="/admin/security/permissions">
               <IconEye className="mt-0.5 size-4 shrink-0" />
               Permissions
             </SidebarLink>
 
-            <SidebarLink to="/admin/rbac/roles">
+            <SidebarLink to="/admin/security/roles">
               <IconEye className="mt-0.5 size-4 shrink-0" />
               Roles
             </SidebarLink>

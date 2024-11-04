@@ -24,7 +24,7 @@ import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterD
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getPermissionsByResourceName } from "#app/models/permission.server";
-import { handle as permissionsHandle } from "#app/routes/_backend+/admin+/rbac+/permissions+/index";
+import { handle as permissionsHandle } from "#app/routes/_backend+/admin+/security+/permissions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,

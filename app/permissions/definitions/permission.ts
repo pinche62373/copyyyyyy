@@ -14,7 +14,7 @@ export const modelPermissions: ModelPermissionFunctionArgs[] = [];
 // ----------------------------------------------------------------------------
 export const routePermissions: RoutePermissionFunctionArgs[] = [
   {
-    resource: "/admin/rbac/permissions",
+    resource: "/admin/security/permissions",
     roles: Roles.ADMIN,
     scope: "any",
   },
