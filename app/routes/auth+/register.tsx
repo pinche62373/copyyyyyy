@@ -4,7 +4,7 @@ import type {
   MetaFunction
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
-import { useActionData, useLoaderData, useNavigation } from "@remix-run/react";
+import { useLoaderData, useNavigation } from "@remix-run/react";
 import { useForm, validationError } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { AuthorizationError } from "remix-auth";
@@ -115,9 +115,6 @@ export default function RegisterPage() {
   const navigation = useNavigation();
 
   // const submit = useDebounceSubmit();
-
-  const actionData = useActionData<typeof action>();
-  console.log("actionData:", actionData);
 
   const form = useForm({
     method: "post",
