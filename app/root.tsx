@@ -6,18 +6,19 @@ import {
   MetaFunction,
   Outlet,
   useLoaderData,
-  useLocation,
+  useLocation
 } from "@remix-run/react";
 import reactMenuStyleSheet from "@szhsin/react-menu/dist/index.css";
 import reactMenuTransitionStylesheet from "@szhsin/react-menu/dist/transitions/zoom.css";
 import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
+import { Slide, ToastContainer, toast as notify } from "react-toastify";
+import toastStyles from "react-toastify/dist/ReactToastify.css";
 import { type Theme } from "remix-themes";
 import type { ToastMessage } from "remix-toast";
 import { getToast } from "remix-toast";
 import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { HoneypotInputProps } from "remix-utils/honeypot/server";
-import { Toaster, toast as notify } from "sonner";
 
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
@@ -27,7 +28,6 @@ import stylesheet from "#app/tailwind.css";
 import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { themeSessionResolver } from "#app/utils/theme.server";
-import { setToastCookieOptions } from "#app/utils/toaster.server";
 import "@fontsource-variable/inter/wght.css";
 
 export const links: LinksFunction = () => [
@@ -37,10 +37,11 @@ export const links: LinksFunction = () => [
         { rel: "stylesheet", href: cssBundleHref },
         { rel: "stylesheet", href: reactMenuStyleSheet, as: "style" },
         { rel: "stylesheet", href: reactMenuTransitionStylesheet, as: "style" },
+        { rel: "stylesheet", href: toastStyles },
         { rel: "stylesheet", href: sharedStyleSheet, as: "style" },
-        { rel: "stylesheet", href: frontendStyleSheet },
+        { rel: "stylesheet", href: frontendStyleSheet }
       ]
-    : []),
+    : [])
 ];
 
 // root layout of the entire app, all other routes render inside its <Outlet />
@@ -54,8 +55,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     { title: data ? "mdb - movie database" : "Error | mdb" },
     {
       name: "description",
-      content: `MDB`,
-    },
+      content: `MDB`
+    }
   ];
 };
 
@@ -72,15 +73,13 @@ export interface LoaderData {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { getTheme } = await themeSessionResolver(request);
 
-  setToastCookieOptions();
-
   const { toast, headers } = await getToast(request);
 
   const data: LoaderData = {
     user: await getUser(request),
     theme: getTheme(),
     toast,
-    honeypotInputProps: honeypot.getInputProps(),
+    honeypotInputProps: honeypot.getInputProps()
   };
 
   return json({ ...data }, { headers });
@@ -120,12 +119,21 @@ function App() {
   return (
     <>
       <Outlet />
-      <Toaster
+
+      <ToastContainer
         position="bottom-right"
-        richColors
-        expand
-        toastOptions={{ classNames: { title: "font-normal" } }}
+        autoClose={5000}
+        hideProgressBar
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Slide}
       />
+
       {process.env.NODE_ENV === "development" && <LiveReload />}
     </>
   );
