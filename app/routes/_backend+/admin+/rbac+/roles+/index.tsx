@@ -38,6 +38,7 @@ const { roleCrud: crud } = getAdminCrud();
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
+    { name: "Security" },
     { name: humanize(crud.plural), to: crud.routes.index }
   ]
 };

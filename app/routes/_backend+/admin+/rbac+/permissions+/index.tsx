@@ -43,6 +43,7 @@ const { resourceCrud, permissionCrud } = getAdminCrud();
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
+    { name: "Security" },
     { name: humanize(permissionCrud.plural), to: permissionCrud.routes.index }
   ]
 };

@@ -25,7 +25,8 @@ interface BreadcrumbProps {
 
 export const Breadcrumb = ({ name, to, position, last }: BreadcrumbProps) => {
   const tvBreadcrumb = tv({
-    base: "text-sm text-gray-500 hover:text-blue-600 dark:text-neutral-500 dark:hover:text-blue-500",
+    // base: "text-sm text-gray-500 hover:text-blue-600 dark:text-neutral-500 dark:hover:text-blue-500",
+    base: "text-sm text-gray-500 hover:text-blue-600 dark:text-blue-700 dark:hover:text-blue-600",
     variants: {
       state: {
         noLink: "pointer-events-none flex text-gray-700 dark:text-neutral-400",

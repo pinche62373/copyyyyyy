@@ -151,7 +151,7 @@ export default function Component() {
   return (
     <>
       <BackendPageTitle
-        title={`${humanize(resourceType)} permissions for resource ${resourceName}`}
+        title={`${humanize(resourceType)} permissions for ${resourceName}`}
       />
 
       {/* Start Permissions Table*/}
