@@ -36,9 +36,10 @@ export const TableSearchInput = ({
             {...props}
             onChange={onChange}
             className={cn(
-              "block w-full rounded-lg px-3 py-[7px] ps-10 text-sm disabled:pointer-events-none disabled:opacity-50",
-              "border-transparent bg-gray-100 focus:border-blue-500 focus:ring-blue-500  ",
-              "dark:border-transparent dark:bg-neutral-700 dark:text-sidebar-primary dark:placeholder:text-sidebar-primary dark:focus:ring-neutral-600"
+              "block w-full rounded-lg border-transparent px-3 py-[7px] ps-10 disabled:pointer-events-none disabled:opacity-50",
+              "placeholder:opacity-90",
+              "focus:border-ring focus:ring-0",
+              "bg-input text-sm font-medium text-primary "
             )}
           />
         </div>

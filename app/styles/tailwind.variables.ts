@@ -4,15 +4,16 @@ import { type Config } from "tailwindcss";
 
 export const tailwindVariables = {
   colors: {
+    input: "var(--input)",
+    ring: "var(--ring)",
+    
     background: {
       DEFAULT: "var(--background)",
       border: "var(--background-border)",
-      input: "var(--background-input)"
     },
     foreground: {
       DEFAULT: "var(--foreground)",
       border: "var(--foreground-border)",
-      input: "var(--foreground-input)"
     },
     sidebar: {
       primary: "var(--sidebar-primary)",

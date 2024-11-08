@@ -5,6 +5,9 @@
 @layer base {
   :root,
   :root[data-theme="light"] {
+    --input: theme(colors.gray.50);
+    --ring: theme(colors.gray.300);
+
     --background: theme(colors.zinc.50);
     --foreground: theme(colors.white);
     --foreground-input: theme(colors.gray.200);
@@ -23,8 +26,10 @@
   :root[data-theme="dark"] {
     --background: theme(colors.slate.950);
     --foreground: hsl(218, 46.2%, 10.2%);
-    --foreground-input: hsl(218, 47.1%, 13.3%);
     --foreground-border: hsl(231, 39.8%, 16.3%); 
+
+    --input: hsl(218, 47.1%, 13.3%);
+    --ring: theme(colors.blue.600);
 
     --primary: hsl(229, 15.5%, 59.6%);
     --secondary: hsl(219, 28.6%, 43.9%);
