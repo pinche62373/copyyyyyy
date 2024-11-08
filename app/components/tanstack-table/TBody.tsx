@@ -8,21 +8,21 @@ const TBody = () => {
 
   if (!table) return null;
   return (
-    <tbody className="divide-y divide-gray-200 dark:divide-neutral-700">
+    <tbody>
       {table.getRowModel().rows.map((row) => (
         <tr
           key={row.id}
-          className="divide-x divide-gray-200 dark:divide-neutral-700"
+          className="border-b border-sidebar-border hover:bg-sidebar-hover"
         >
           {row.getVisibleCells().map((cell) => (
             <td
               key={cell.id}
               className={cn(
-                "size-px whitespace-nowrap px-5 py-3",
+                "size-px whitespace-nowrap px-5 py-1",
                 cell.column.columnDef.meta?.cellProps?.className,
               )}
             >
-              <span className="text-sm text-gray-800 dark:text-neutral-400">
+              <span className="text-sm text-sidebar-primary">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </span>
             </td>

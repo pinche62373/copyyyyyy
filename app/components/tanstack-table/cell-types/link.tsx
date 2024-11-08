@@ -1,5 +1,7 @@
 import { NavLink } from "@remix-run/react";
 
+import { cn } from "#app/utils/lib/cn";
+
 interface PropTypes {
   id: string;
   name: string;
@@ -12,7 +14,11 @@ export const tableCellLink = ({ id, name, target }: PropTypes) => {
   return (
     <NavLink
       to={`${target}/${id}`}
-      className="block text-sm font-medium text-gray-800 hover:text-indigo-600 focus:text-indigo-600 focus:outline-none dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
+      className={cn(
+        "block text-sm hover:underline focus:outline-none",
+        "text-gray-800 hover:text-indigo-600 focus:text-indigo-600 ",
+        "dark:text-blue-600 dark:hover:text-blue-600 dark:focus:text-blue-600"
+      )}
     >
       {name}
     </NavLink>

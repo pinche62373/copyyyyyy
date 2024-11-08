@@ -1,4 +1,5 @@
 import { DebouncedInput } from "#app/components/debounced-input";
+import { cn } from "#app/utils/lib/cn";
 
 export const TableSearchInput = ({
   onChange,
@@ -34,7 +35,11 @@ export const TableSearchInput = ({
             id="table-search-input"
             {...props}
             onChange={onChange}
-            className="block w-full rounded-lg border-transparent bg-gray-100 px-3 py-[7px] ps-10 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-transparent dark:bg-neutral-700 dark:text-neutral-400 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-600"
+            className={cn(
+              "block w-full rounded-lg px-3 py-[7px] ps-10 text-sm disabled:pointer-events-none disabled:opacity-50",
+              "border-transparent bg-gray-100 focus:border-blue-500 focus:ring-blue-500  ",
+              "dark:border-transparent dark:bg-neutral-700 dark:text-sidebar-primary dark:placeholder:text-sidebar-primary dark:focus:ring-neutral-600"
+            )}
           />
         </div>
         {/*End Search Input */}

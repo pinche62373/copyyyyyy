@@ -1,28 +1,37 @@
 import { flexRender } from "@tanstack/react-table";
 
 import useTable from "#app/components/tanstack-table/useTable";
+import { cn } from "#app/utils/lib/cn";
 
 const THead = () => {
   const table = useTable();
 
   if (!table) return null;
   return (
-    <thead className="border-t">
-      <tr className="divide-x divide-gray-200 dark:divide-neutral-700">
+    <thead>
+      <tr>
         {table.getHeaderGroups().map((x) => {
           return x.headers.map((header) => {
             return (
               <th
                 key={header.id}
                 scope="col"
-                className={header.column.columnDef.meta?.headerProps?.className}
+                className={cn(
+                  "p-0",
+                  header.column.columnDef.meta?.headerProps?.className
+                )}
               >
                 {header.isPlaceholder ? null : (
                   <div className="flex">
                     <div className="relative inline-flex w-full">
                       <button
                         type="button"
-                        className="flex w-full items-center gap-x-1 px-5 py-2.5 text-start text-sm font-normal focus:bg-gray-100 focus:outline-none dark:focus:bg-neutral-700   "
+                        className={cn(
+                          "flex w-full items-center gap-x-1 px-5 py-2.5 text-start text-sm font-normal focus:outline-none",
+                          "text-sm font-bold text-sidebar-primary",
+                          "bg-gray-100 focus:bg-gray-100",
+                          "dark:bg-slate-800  dark:focus:bg-slate-800"
+                        )}
                         onClick={header.column.getToggleSortingHandler()}
                       >
                         {flexRender(

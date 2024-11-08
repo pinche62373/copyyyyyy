@@ -14,7 +14,7 @@ export const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) =
         <div className="px-3">
           {/* Table */}
           <div className="w-full overflow-auto">
-            <table className="min-w-full divide-y divide-gray-200  dark:divide-neutral-700">
+            <table className="min-w-full">
               {children}
             </table>
           </div>
