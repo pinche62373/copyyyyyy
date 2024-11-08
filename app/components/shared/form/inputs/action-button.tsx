@@ -38,7 +38,10 @@ export const ActionButton = ({
             <ConfirmationLauncher modalId={modalId} enabled={enabled}>
               <span
                 className={cn(
-                  "py-2 px-3 inline-flex justify-center items-center gap-x-2 text-start bg-blue-600 border border-blue-600 text-white text-sm font-medium rounded-lg shadow-sm align-middle hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-blue-300 dark:focus:ring-blue-500",
+                  "inline-flex items-center justify-center gap-x-2 rounded-lg px-3 py-2 text-start align-middle", 
+                  "text-sm font-medium shadow-sm focus:outline-none focus:ring-1",
+                  "border border-blue-600 bg-blue-600 text-white hover:bg-blue-700",
+                  "focus:ring-blue-300 dark:focus:ring-blue-500",                  
                   disabledButtonClass
                 )}
               >

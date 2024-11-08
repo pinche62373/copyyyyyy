@@ -20,7 +20,7 @@ export const TableFooter = <T,>({
   return (
     <div
       className={cn(
-        "mt-4 flex flex-wrap justify-between items-center gap-2 pl-2",
+        "mt-4 flex flex-wrap items-center justify-between gap-2 pl-2",
         className
       )}
       {...rest}

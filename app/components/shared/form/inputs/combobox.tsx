@@ -44,7 +44,12 @@ export const ComboBox = forwardRef(
         className={"group flex w-full flex-col gap-1"}
         aria-label={ariaLabel}
       >
-        <Group className="flex rounded-lg border border-gray-200 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500  dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:focus-within:ring-1 dark:focus-within:ring-neutral-600">
+        <Group
+          className={cn(
+            "flex rounded-lg border border-gray-200 focus-within:border-blue-500 focus-within:ring-1 focus-within:ring-blue-500",
+            "dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:focus-within:ring-1 dark:focus-within:ring-neutral-600"
+          )}
+        >
           <Input
             ref={ref}
             className={cn(
@@ -57,8 +62,9 @@ export const ComboBox = forwardRef(
 
           <Button
             className={cn(
-              "flex rounded-r-lg items-center border-0 border-l border-solid border-l-gray-200 bg-transparent px-3 text-gray-700 transition dark:border-l-neutral-700",
-              "text-gray-500  hover:text-black dark:text-neutral-400  dark:hover:text-neutral-300"
+              "flex items-center rounded-r-lg border-0 border-l border-solid bg-transparent px-3 transition",
+              "border-l-gray-200 text-gray-500 hover:text-black",
+              "dark:border-l-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-300"
             )}
           >
             {/* {isOpen ? <>&#8593;</> : <>&#8595;</>} */}
@@ -79,7 +85,9 @@ export const ComboBox = forwardRef(
         {/* Popover holding the items */}
         <Popover
           className={cn(
-            "entering:animate-in entering:fade-in exiting:animate-out exiting:fade-out max-h-60 w-[--trigger-width] overflow-auto rounded-md bg-white text-base shadow-lg ring-1 ring-black/5",
+            "max-h-60 w-[--trigger-width] overflow-auto rounded-md",
+            "shadow-lg ring-1 ring-black/5",
+            "bg-white text-base",
             "dark:bg-neutral-900"
           )}
         >

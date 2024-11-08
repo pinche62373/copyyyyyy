@@ -18,7 +18,7 @@ const TBody = () => {
             <td
               key={cell.id}
               className={cn(
-                "size-px whitespace-nowrap py-3 px-5",
+                "size-px whitespace-nowrap px-5 py-3",
                 cell.column.columnDef.meta?.cellProps?.className,
               )}
             >

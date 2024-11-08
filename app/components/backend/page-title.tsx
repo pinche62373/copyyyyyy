@@ -20,7 +20,7 @@ export const BackendPageTitle = ({
       {/* Header */}
       <div
         className={cn(
-          "ml-5 pb-5 grid sm:flex sm:justify-between sm:items-center gap-2",
+          "ml-5 grid gap-2 pb-5 sm:flex sm:items-center sm:justify-between",
           className
         )}
         {...rest}
@@ -53,7 +53,12 @@ export const BackendPageTitle = ({
               </div>
               <input
                 type="text"
-                className="block w-40 rounded-lg border-transparent bg-gray-100 px-3 py-1.5 ps-8 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 sm:w-full dark:border-transparent dark:bg-neutral-700 dark:text-neutral-400 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-600"
+                className={cn(
+                  "block w-40 rounded-lg px-3 py-1.5 ps-8",
+                  "text-sm disabled:pointer-events-none disabled:opacity-50 sm:w-full",
+                  "border-transparent bg-gray-100 focus:border-blue-500 focus:ring-blue-500",
+                  "dark:border-transparent dark:bg-neutral-700 dark:text-neutral-400 dark:placeholder:text-neutral-400 dark:focus:ring-neutral-600"
+                )}
                 placeholder="Search"
               />
             </div>

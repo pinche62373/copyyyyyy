@@ -18,7 +18,7 @@ export const TableBar = ({
       {isHydrated ? (
         <div
           className={cn(
-            "px-2 grid md:grid-cols-2 gap-y-2 md:gap-y-0 md:gap-x-5",
+            "grid gap-y-2 px-2 md:grid-cols-2 md:gap-x-5 md:gap-y-0",
             className,
           )}
           {...rest}
