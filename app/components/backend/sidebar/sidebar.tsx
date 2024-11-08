@@ -8,20 +8,26 @@ import { IconEye } from "#app/components/icons/icon-eye";
 import { IconHome } from "#app/components/icons/icon-home";
 import { IconMovie } from "#app/components/icons/icon-movie";
 import { IconUsers } from "#app/components/icons/icon-users";
+import { cn } from "#app/utils/lib/cn";
 import { Roles } from "#app/validations/role-schema";
 
 export function BackendSidebar() {
   return (
     <aside
       id="hs-pro-sidebar"
-      className="hs-overlay fixed inset-y-0 start-0 z-[60]  hidden w-[260px] -translate-x-full border-e border-gray-200 bg-white transition-all duration-300 [--auto-close:lg] hs-overlay-open:translate-x-0 lg:bottom-0 lg:end-auto lg:block lg:translate-x-0 dark:border-neutral-800 dark:bg-gray-900"
+      className={cn(
+        "hs-overlay fixed inset-y-0 start-0 z-[60] hidden w-[260px] -translate-x-full",
+        "transition-all duration-300 [--auto-close:lg] hs-overlay-open:translate-x-0",
+        "lg:bottom-0 lg:end-auto lg:block lg:translate-x-0",
+        "border-e border-sidebar-border bg-foreground "
+      )}
     >
       <div className="flex h-full max-h-full flex-col py-3">
         <header className="h-[46px] px-8">
           {/* Logo */}
           <NavLink
             to="/"
-            className="inline-block  flex-none rounded-md text-xl font-semibold focus:opacity-80 focus:outline-none"
+            className="inline-block flex-none rounded-md text-xl font-semibold text-sidebar-primary focus:opacity-80 focus:outline-none"
             aria-label="Preline"
           >
             Logo
@@ -30,7 +36,13 @@ export function BackendSidebar() {
         </header>
 
         {/* Content Container */}
-        <div className="h-[calc(100%-35px)] overflow-y-auto lg:h-[calc(100%-93px)] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-neutral-700 [&::-webkit-scrollbar]:w-2">
+        <div
+          className={cn(
+            "h-[calc(100%-35px)] overflow-y-auto lg:h-[calc(100%-93px)] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar]:w-2",
+            "[&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:bg-gray-100",
+            "dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:[&::-webkit-scrollbar-track]:bg-neutral-700"
+          )}
+        >
           {/* Section: Main */}
           <SidebarSection>
             <SidebarLink to="/admin">
@@ -135,7 +147,12 @@ export function BackendSidebar() {
           {/* Sidebar Close */}
           <button
             type="button"
-            className="inline-flex h-7 w-6 items-center justify-center gap-x-2 rounded-md border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+            className={cn(
+              "inline-flex h-7 w-6 items-center justify-center gap-x-2 rounded-md border ",
+              "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+              "border-gray-200 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:bg-gray-100",
+              "dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+            )}
             data-hs-overlay="#hs-pro-sidebar"
             aria-controls="hs-pro-sidebar"
             aria-label="Toggle navigation"

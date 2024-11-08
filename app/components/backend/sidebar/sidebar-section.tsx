@@ -27,7 +27,7 @@ export function SidebarSection({
   return (
     <nav
       className={cn(
-        "hs-accordion-group w-full flex flex-col flex-wrap",
+        "hs-accordion-group flex w-full flex-col flex-wrap",
         className
       )}
       data-hs-accordion-always-open
@@ -35,8 +35,8 @@ export function SidebarSection({
     >
       <ul>
         {caption && (
-          <li className="mb-1.5 mt-2 border-t border-gray-200 px-8 pb-2 pt-5 dark:border-neutral-700">
-            <span className="block text-xs uppercase text-gray-500 dark:text-neutral-500">
+          <li className="mb-1.5 mt-2 px-8 pb-1">
+            <span className="block text-sm font-bold uppercase text-sidebar-secondary">
               {caption}
             </span>
           </li>

@@ -1,5 +1,39 @@
-body {
-  @apply bg-white text-black dark:bg-slate-950 dark:text-white;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root,
+  :root[data-theme="light"] {
+    --background: theme(colors.zinc.50);
+    --foreground: theme(colors.white);
+    --sidebar-primary: theme(colors.gray.800);
+    --sidebar-secondary: theme(colors.gray.500);
+    --sidebar-border: theme(colors.gray.200);
+    --sidebar-hover: theme(colors.gray.100);
+    --sidebar-focus: theme(colors.gray.100);
+  }
+
+  :root[data-theme="dark"] {
+    --background: theme(colors.slate.950);
+    --foreground: hsl(218, 46.2%, 10.2%); /* theme(colors.gray.900); */
+    --sidebar-primary: hsl(219, 28.6%, 43.9%); /*theme(colors.slate.500);*/
+    --sidebar-secondary: hsl(229, 15.5%, 59.6%); /*theme(colors.gray.500); */
+    --sidebar-border: theme(colors.neutral.800);
+    --sidebar-hover: hsl(224, 35.1%, 14.5%); /* theme(colors.gray.800); */
+    --sidebar-focus: theme(colors.gray.800);
+  }
+}
+
+@layer base {
+  html {
+    font-family: "Nunito Variable", ui-sans-serif, system-ui, sans-serif,
+      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+      "Noto Color Emoji";
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
 
 /* 

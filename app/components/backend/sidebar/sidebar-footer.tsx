@@ -9,12 +9,18 @@ export function SidebarFooter({ className, ...rest }: Args) {
   return (
     <footer
       className={cn(
-        "hidden lg:block absolute bottom-0 inset-x-0 border-t border-gray-200 dark:border-neutral-700",
+        "absolute inset-x-0 bottom-0 hidden border-t border-sidebar-border lg:block",
         className
       )}
       {...rest}
     >
-      <p className="inline-flex w-full items-center px-7 py-3 text-start align-middle text-sm text-gray-800 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-white dark:hover:bg-neutral-700 dark:focus:bg-neutral-700">
+      <p
+        className={cn(
+          "inline-flex w-full items-center px-7 py-3 text-start align-middle",
+          "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+          " text-sm text-sidebar-secondary hover:bg-sidebar-hover"
+        )}
+      >
         Version {Constants.VERSION}
       </p>
     </footer>

@@ -11,7 +11,7 @@ export const BackendHeader = ({ className }: Props) => {
   return (
     <header
       className={cn(
-        "lg:ms-[260px] fixed top-0 inset-x-0 flex flex-wrap md:justify-start md:flex-nowrap z-50 bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-neutral-800",
+        "fixed inset-x-0 top-0 z-50 flex flex-wrap border-b border-gray-200 bg-background bg-white md:flex-nowrap md:justify-start lg:ms-[260px] dark:border-neutral-800 dark:bg-foreground",
         className
       )}
     >
@@ -24,13 +24,6 @@ export const BackendHeader = ({ className }: Props) => {
         <div className="flex items-center md:gap-x-3 xl:col-span-1">
           <div className="hidden items-start lg:block">
             <Breadcrumbs />
-              {/* routes={[
-                { path: "/", breadcrumb: null },
-                { path: "/admin", breadcrumb: "Home" },
-                { path: "/admin/security", props: { noLink: true } },
-                { path: "/admin/security/resources", props: { noLink: true } }
-              ]}
-            /> */}
           </div>
 
           <div className="lg:hidden">

@@ -33,12 +33,18 @@ export function SidebarGroup({
   return (
     <li
       id={`accordion-${id}`}
-      className={cn("hs-accordion px-5 mb-1.5", className)}
+      className={cn("hs-accordion mb-1.5 pl-5 pr-2", className)}
       {...rest}
     >
       <button
         type="button"
-        className="hs-accordion-toggle flex w-full gap-x-3 rounded-lg px-3 py-2 text-start text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50 hs-accordion-active:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:hs-accordion-active:bg-neutral-700"
+        className={cn(
+          "hs-accordion-toggle flex w-full gap-x-3 rounded-lg px-3 py-2",
+          "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+          "text-start text-sm font-semibold text-sidebar-primary",
+          "hover:bg-sidebar-hover hover:text-sidebar-secondary",
+          "hs-accordion-active:bg-sidebar-hover"
+        )}
       >
         {icon && icon}
         {caption}
@@ -63,7 +69,11 @@ export function SidebarGroup({
         className="hs-accordion-content hidden w-full overflow-hidden transition-[height] duration-300"
       >
         <ul
-          className="hs-accordion-group relative mt-1.5 space-y-1.5 ps-7 before:absolute before:start-[18px] before:top-0 before:h-full before:w-0.5 before:bg-gray-100 dark:before:bg-neutral-700"
+          className={cn(
+            "hs-accordion-group relative mt-1.5 space-y-1.5 ps-7",
+            "before:absolute before:start-[18px] before:top-0 before:h-full before:w-0.5",
+            "before:bg-sidebar-primary before:opacity-10 dark:before:opacity-20"
+          )}
           data-hs-accordion-always-open
         >
           {children}

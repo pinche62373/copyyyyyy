@@ -22,13 +22,18 @@ export function SidebarLink({
   if (!userHasRoutePermission(user, { resource: to, scope: "any" })) {
     return;
   }
-  const liClass = nested === false && "px-5 mb-1.5";
+  const liClass = nested === false && "mb-1.5 pl-5 pr-2";
 
   return (
     <li className={cn(liClass, className)} {...rest}>
       <NavLink
         to={to}
-        className="flex gap-x-3 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+        className={cn(
+          "flex gap-x-3 rounded-lg px-3 py-2 focus:outline-none",
+          "text-sm font-semibold text-sidebar-primary",
+          "hover:bg-sidebar-hover hover:text-sidebar-secondary",
+          "focus:bg-sidebar-hover focus:text-sidebar-secondary"
+        )}
       >
         {children}
       </NavLink>
