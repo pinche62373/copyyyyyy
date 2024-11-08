@@ -36,7 +36,7 @@ export function SidebarSection({
       <ul>
         {caption && (
           <li className="mb-1.5 mt-2 px-8 pb-1">
-            <span className="block text-sm font-bold uppercase text-sidebar-secondary">
+            <span className="block text-sm font-bold uppercase text-sidebar-primary">
               {caption}
             </span>
           </li>

@@ -41,8 +41,8 @@ export function SidebarGroup({
         className={cn(
           "hs-accordion-toggle flex w-full gap-x-3 rounded-lg px-3 py-2",
           "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-          "text-start text-sm font-semibold text-sidebar-primary",
-          "hover:bg-sidebar-hover hover:text-sidebar-secondary",
+          "text-start text-sm font-semibold text-sidebar-secondary",
+          "hover:bg-sidebar-hover hover:text-sidebar-primary",
           "hs-accordion-active:bg-sidebar-hover"
         )}
       >
@@ -72,7 +72,7 @@ export function SidebarGroup({
           className={cn(
             "hs-accordion-group relative mt-1.5 space-y-1.5 ps-7",
             "before:absolute before:start-[18px] before:top-0 before:h-full before:w-0.5",
-            "before:bg-sidebar-primary before:opacity-10 dark:before:opacity-20"
+            "before:bg-sidebar-secondary before:opacity-10 dark:before:opacity-20"
           )}
           data-hs-accordion-always-open
         >

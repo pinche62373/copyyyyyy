@@ -14,7 +14,7 @@ export const BackendContentContainer = ({
     <div className="relative overflow-visible">
       <div
         className={cn(
-          "rounded-md border border-stone-200 bg-white shadow-sm dark:border-gray-800 dark:bg-gray-900",
+          "rounded-sm border border-stone-200 bg-foreground dark:border-gray-800",
           className
         )}
         {...rest}

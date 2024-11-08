@@ -18,7 +18,7 @@ export function SidebarFooter({ className, ...rest }: Args) {
         className={cn(
           "inline-flex w-full items-center px-7 py-3 text-start align-middle",
           "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-          " text-sm text-sidebar-secondary hover:bg-sidebar-hover"
+          " text-sm text-sidebar-primary hover:bg-sidebar-hover"
         )}
       >
         Version {Constants.VERSION}
