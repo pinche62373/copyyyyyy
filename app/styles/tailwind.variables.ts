@@ -4,27 +4,32 @@ import { type Config } from "tailwindcss";
 
 export const tailwindVariables = {
   colors: {
+    border: "var(--border)",
     input: "var(--input)",
     ring: "var(--ring)",
-    
-    background: {
-      DEFAULT: "var(--background)",
-      border: "var(--background-border)",
+    background: "var(--background)",
+    foreground: "var(--foreground)",
+
+    primary: {
+      DEFAULT: "var(--primary)",
+      foreground: "var(--primary-foreground)"
     },
-    foreground: {
-      DEFAULT: "var(--foreground)",
-      border: "var(--foreground-border)",
+
+    secondary: {
+      DEFAULT: "var(--secondary)",
+      foreground: "var(--secondary-foreground)"
     },
+
+    accent: {
+      DEFAULT: 'var(--accent)',
+      foreground: 'var(--accent-foreground)',
+    },
+
     sidebar: {
       primary: "var(--sidebar-primary)",
       secondary: "var(--sidebar-secondary)",
-      border: "var(--sidebar-border)",
       hover: "var(--sidebar-hover)",
       focus: "var(--sidebar-focus)"
     }
   },
-  textColor: {
-    primary: "var(--primary)",
-    secondary: "var(--secondary)",
-  }
 } satisfies Config["theme"];

@@ -15,9 +15,9 @@ export const tableCellLink = ({ id, name, target }: PropTypes) => {
     <NavLink
       to={`${target}/${id}`}
       className={cn(
-        "block text-sm hover:underline focus:outline-none",
-        "text-gray-800 hover:text-indigo-600 focus:text-indigo-600 ",
-        "dark:text-blue-600 dark:hover:text-blue-600 dark:focus:text-blue-600"
+        "block focus:outline-none",
+        "text-sm font-medium",
+        "text-accent-foreground hover:underline"
       )}
     >
       {name}

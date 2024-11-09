@@ -25,12 +25,11 @@ interface BreadcrumbProps {
 
 export const Breadcrumb = ({ name, to, position, last }: BreadcrumbProps) => {
   const tvBreadcrumb = tv({
-    // base: "text-sm text-gray-500 hover:text-blue-600 dark:text-neutral-500 dark:hover:text-blue-500",
-    base: "text-sm text-gray-500 hover:text-blue-600 dark:text-blue-600 dark:hover:underline",
+    base: "text-sm font-normal text-primary-foreground",
     variants: {
       state: {
-        noLink: "pointer-events-none flex text-gray-700 dark:text-neutral-400",
-        last: "pointer-events-none text-gray-700 dark:text-neutral-400"
+        link: "text-accent-foreground hover:underline",
+        noLink: "flex",
       }
     }
   });
@@ -50,18 +49,18 @@ export const Breadcrumb = ({ name, to, position, last }: BreadcrumbProps) => {
             width={16}
             height={16}
             viewBox="0 0 16 16"
-            className="size-5 shrink-0 text-gray-400 dark:text-neutral-600"
+            className="size-5 shrink-0 text-primary-foreground"
           />
         </div>
       )}
 
       {/* Last crumb */}
-      {last && <span className={tvBreadcrumb({ state: "last" })}>{name}</span>}
+      {last && <span className={tvBreadcrumb()}>{name}</span>}
 
-      {/* Normal crumb */}
+      {/* Normal crumb with link */}
       {!last && to && (
         <>
-          <Link to={to} className={tvBreadcrumb()}>
+          <Link to={to} className={tvBreadcrumb({state: "link"})}>
             {name}
           </Link>
           <IconForwardSlash

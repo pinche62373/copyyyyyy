@@ -19,7 +19,7 @@ export function BackendSidebar() {
         "hs-overlay fixed inset-y-0 start-0 z-[60] hidden w-[260px] -translate-x-full",
         "transition-all duration-300 [--auto-close:lg] hs-overlay-open:translate-x-0",
         "lg:bottom-0 lg:end-auto lg:block lg:translate-x-0",
-        "border-e border-sidebar-border bg-foreground "
+        "border-e bg-foreground border-border"
       )}
     >
       <div className="flex h-full max-h-full flex-col py-3">

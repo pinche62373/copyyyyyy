@@ -1,4 +1,4 @@
-// TODO count children so we can render correct number
+import { cn } from "#app/utils/lib/cn";
 
 export const TableFilterDropdown = () => {
   return (
@@ -9,7 +9,12 @@ export const TableFilterDropdown = () => {
         <button
           id="hs-pro-dptfd"
           type="button"
-          className="inline-flex items-center gap-x-1.5 rounded-lg border border-gray-200 bg-white px-2.5 py-2 text-xs text-gray-800 shadow-sm hover:bg-gray-50 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+          className={cn(
+            "inline-flex items-center gap-x-1.5 rounded-lg border border-gray-200 px-2.5 py-2 text-xs",
+            "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
+            "hover:bg-input/70 bg-input",
+            "font-medium text-primary"
+          )}
         >
           <svg
             className="size-3.5 shrink-0"

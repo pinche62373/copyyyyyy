@@ -11,7 +11,8 @@ export const BackendHeader = ({ className }: Props) => {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 flex flex-wrap border-b border-gray-200 bg-background bg-white md:flex-nowrap md:justify-start lg:ms-[260px] dark:border-neutral-800 dark:bg-foreground",
+        "fixed inset-x-0 top-0 z-50 flex flex-wrap md:flex-nowrap md:justify-start lg:ms-[260px]", 
+        "border-b border-border bg-foreground",
         className
       )}
     >

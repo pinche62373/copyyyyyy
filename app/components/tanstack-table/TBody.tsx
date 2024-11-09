@@ -12,7 +12,7 @@ const TBody = () => {
       {table.getRowModel().rows.map((row) => (
         <tr
           key={row.id}
-          className="border-b border-sidebar-border hover:bg-sidebar-hover"
+          className="border-b border-border hover:bg-input"
         >
           {row.getVisibleCells().map((cell) => (
             <td
