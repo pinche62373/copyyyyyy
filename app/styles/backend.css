@@ -14,7 +14,7 @@
     --foreground: theme(colors.white);
 
     --primary: theme(colors.gray.800);
-    --primary-foreground: theme(colors.gray.500);
+    --primary-foreground: theme(colors.gray.800);
 
     --secondary: theme(colors.gray.500);
     --secondary-foreground: theme(colors.lime.800);
@@ -43,10 +43,10 @@
     --foreground: hsl(218, 46.2%, 10.2%);
 
     --primary: hsl(229, 15.5%, 59.6%);
-    --primary-foreground: hsl(229, 15.5%, 59.6%);
+    --primary-foreground: rgb(229, 231, 235);
 
     --secondary: hsl(219, 28.6%, 43.9%);
-    --secondary-foreground: hsl(219, 28.6%, 43.9%);
+    --secondary-foreground: hsl(229, 15.5%, 59.6%);
 
     --accent: theme(colors.blue.600);
     --accent-foreground: hsl(229, 83.4%, 59.8%);
@@ -70,7 +70,7 @@
       "Noto Color Emoji";
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-primary;
   }
 }
 

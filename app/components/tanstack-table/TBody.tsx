@@ -22,7 +22,7 @@ const TBody = () => {
                 cell.column.columnDef.meta?.cellProps?.className,
               )}
             >
-              <span className="text-sm text-sidebar-primary">
+              <span className="text-sm text-secondary-foreground">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </span>
             </td>

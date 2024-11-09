@@ -25,7 +25,7 @@ interface BreadcrumbProps {
 
 export const Breadcrumb = ({ name, to, position, last }: BreadcrumbProps) => {
   const tvBreadcrumb = tv({
-    base: "text-sm font-normal text-primary-foreground",
+    base: "text-sm font-normal text-secondary-foreground",
     variants: {
       state: {
         link: "text-accent-foreground hover:underline",

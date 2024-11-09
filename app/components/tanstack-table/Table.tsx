@@ -11,7 +11,7 @@ export const TableFC = <T,>({ children, table }: PropsWithChildren<IProps<T>>) =
   return (
     <TableContext.Provider value={{ table: table }}>
       <div className="relative overflow-x-auto">
-        <div className="px-3">
+        <div className="">
           {/* Table */}
           <div className="w-full overflow-auto">
             <table className="min-w-full">

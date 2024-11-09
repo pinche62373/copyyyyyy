@@ -20,7 +20,7 @@ export const TableFooter = <T,>({
   return (
     <div
       className={cn(
-        "mt-4 flex flex-wrap items-center justify-between gap-2 pl-2",
+        "flex flex-wrap items-center justify-between gap-2 pt-5",
         className
       )}
       {...rest}
@@ -28,7 +28,7 @@ export const TableFooter = <T,>({
       {/* Page Size */}
       <span data-hs-input-number="">
         <div className="inline-flex items-center gap-x-1">
-          <p className="text-sm text-secondary">Results per page:</p>
+          <p className="text-sm text-secondary-foreground">Results per page:</p>
           {/* Counter */}
           <input
             aria-label="Page Size"
@@ -37,7 +37,7 @@ export const TableFooter = <T,>({
             min="1"
             className={cn(
               "no-spin-button w-11 rounded-lg p-2 text-center", // focus:outline-none focus:ring-0",
-              "border border-border bg-foreground",              
+              "border border-border bg-input",              
               "focus:border-ring focus:ring-0",
               "text-sm font-medium text-secondary-foreground",
             )}
@@ -48,8 +48,8 @@ export const TableFooter = <T,>({
           />
           {/* End Counter */}
           <div className="flex items-center gap-x-1.5">
-            <span className="text-sm text-secondary">of</span>
-            <span className="text-sm font-medium text-secondary">
+            <span className="text-sm text-secondary-foreground">of</span>
+            <span className="text-sm font-medium text-secondary-foreground">
               {totalRecordCount}
             </span>
           </div>
@@ -65,7 +65,7 @@ export const TableFooter = <T,>({
           className={cn(
             "inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2",
             "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-            "text-sm text-secondary hover:bg-foreground"
+            "text-sm text-secondary-foreground hover:bg-input"
           )}
           disabled={!table.getCanPreviousPage()}
           onClick={() => table.previousPage()}
@@ -93,15 +93,15 @@ export const TableFooter = <T,>({
             className={cn(
               "flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg px-3 py-2",
               "disabled:pointer-events-none disabled:opacity-50",
-              "bg-foreground text-sm font-medium text-secondary"
+              "bg-foreground text-sm font-medium text-secondary-foreground"
             )}
           >
             {currentPageIndex}
           </span>
-          <span className="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-secondary">
+          <span className="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-secondary-foreground">
             of
           </span>
-          <span className="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-secondary">
+          <span className="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-secondary-foreground">
             {totalPageCount}
           </span>
         </div>
@@ -111,7 +111,7 @@ export const TableFooter = <T,>({
           className={cn(
             "inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2",
             "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-            "text-sm text-secondary hover:bg-foreground"
+            "text-sm text-secondary-foreground hover:bg-input"
           )}
           disabled={!table.getCanNextPage()}
           onClick={() => table.nextPage()}

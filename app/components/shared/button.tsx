@@ -25,7 +25,7 @@ export function Button({
     variants: {
       role: {
         primary:
-          "gap-x-2 border-blue-600 bg-blue-600 text-sm text-white hover:bg-blue-700 focus:ring-blue-300 dark:hover:border-blue-700 dark:focus:ring-blue-700",
+          "gap-x-2 border-blue-800 bg-blue-800 text-sm text-white hover:bg-blue-700 focus:ring-blue-700 dark:hover:border-blue-700 dark:focus:ring-blue-700",
         secondary:
           "border-gray-200 bg-white text-sm text-gray-800 hover:bg-gray-50 focus:bg-gray-50 focus:ring-gray-50 dark:border-neutral-800 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700 dark:focus:ring-neutral-800"
       }

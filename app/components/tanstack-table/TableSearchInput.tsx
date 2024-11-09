@@ -9,7 +9,7 @@ export const TableSearchInput = ({
   onChange: (value: string | number) => void;
 } & Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange">) => {
   return (
-    <div className="grid gap-y-2 px-3 py-5 md:grid-cols-2 md:gap-x-5 md:gap-y-0">
+    <div>
       <div>
         {/*Search Input */}
         <div className="relative">

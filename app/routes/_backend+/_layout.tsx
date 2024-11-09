@@ -51,7 +51,7 @@ export default function BackendLayout() {
       <BackendSidebar />
 
       <main id="content" className="pt-[59px] lg:ps-[260px] lg:pt-0">
-        <div className="relative px-5 py-4 lg:mt-16">
+        <div className="relative px-6 py-5 lg:mt-16">
           <Outlet />
         </div>
       </main>
