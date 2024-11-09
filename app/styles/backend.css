@@ -23,9 +23,9 @@
     --secondary-foreground: theme(colors.lime.800);
 
     --accent: theme(colors.indigo.600);
-    --accent-foreground: theme(colors.blue.600);
+    --accent-foreground: theme(colors.blue.500);
 
-    --input: theme(colors.gray.50);
+    --input: theme(colors.white);
     --ring: theme(colors.gray.300);
 
     /* Sidebar */
