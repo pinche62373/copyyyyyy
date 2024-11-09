@@ -5,8 +5,8 @@ import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
@@ -115,10 +115,12 @@ export default function Component() {
   });
 
   return (
-    <>
-      <BackendPageTitle title={`Edit ${humanize(crud.singular)}`} />
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <BackendTitle text={`Edit ${humanize(crud.singular)}`} />
+      </BackendPanel.HeaderLeft>
 
-      <BackendContentContainer className="p-6">
+      <BackendPanel.Content>
         <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
@@ -149,7 +151,7 @@ export default function Component() {
             />
           </FormFooter>
         </form>
-      </BackendContentContainer>
-    </>
+      </BackendPanel.Content>
+    </BackendPanel>
   );
 }

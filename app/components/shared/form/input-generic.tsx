@@ -1,6 +1,8 @@
 import { useField, FormScope, ValueOfInputType } from "@rvf/react";
 import { ComponentPropsWithRef, forwardRef, useId } from "react";
 
+import { cn } from "#app/utils/lib/cn";
+
 // For our props, we'll take everything from the native input element except for `type`.
 // You can make futher changes here to suite your needs.
 type BaseInputProps = Omit<ComponentPropsWithRef<"input">, "type">;
@@ -43,7 +45,13 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
     return (
       <>
         <input
-          className="block w-full rounded-lg border-gray-200 px-3 py-2 text-sm placeholder:text-gray-400 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-700 dark:bg-transparent dark:text-neutral-300 dark:placeholder:text-white/60 dark:focus:ring-neutral-600"
+          className={cn(
+            "block w-full rounded-lg px-3 py-2 text-sm",
+            "placeholder:opacity-90 disabled:pointer-events-none disabled:opacity-50",
+            "focus:border-ring focus:ring-0",
+            "border-border-foreground",
+            "bg-input font-semibold text-secondary-foreground"
+          )}
           {...field.getInputProps({
             type,
             id: inputId,

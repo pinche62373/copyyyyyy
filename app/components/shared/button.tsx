@@ -27,7 +27,7 @@ export function Button({
         primary:
           "gap-x-2 border-blue-800 bg-blue-800 text-sm text-white hover:bg-blue-700 focus:ring-blue-700 dark:hover:border-blue-700 dark:focus:ring-blue-700",
         secondary:
-          "border-gray-200 bg-white text-sm text-gray-800 hover:bg-gray-50 focus:bg-gray-50 focus:ring-gray-50 dark:border-border-foreground dark:bg-input dark:text-secondary-foreground dark:hover:bg-input dark:hover:text-primary-foreground dark:focus:bg-neutral-700 dark:focus:ring-neutral-800"
+          "border-gray-200 bg-white text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-50 focus:ring-gray-50 dark:border-border-foreground dark:bg-input dark:text-secondary-foreground dark:hover:bg-input dark:hover:text-primary-foreground dark:focus:bg-neutral-700 dark:focus:ring-neutral-800"
       }
     }
   });
