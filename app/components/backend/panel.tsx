@@ -10,7 +10,7 @@ const BackendPanel = ({ className, children, ...rest }: PanelProps) => {
     <div className="relative overflow-visible">
       <div
         className={cn(
-          "rounded-md border border-border bg-foreground px-5 py-5 dark:border-none",
+          "border-border bg-foreground rounded-md border px-5 py-5 dark:border-none",
           className
         )}
         {...rest}
@@ -29,9 +29,7 @@ interface HeaderProps {
 const HeaderLeft = ({ className, children, ...rest }: HeaderProps) => {
   return (
     <div className={cn("float-left pb-5", className)} {...rest}>
-        <div className="flex">
-            {children}
-        </div>
+      <div className="flex">{children}</div>
     </div>
   );
 };
@@ -39,9 +37,7 @@ const HeaderLeft = ({ className, children, ...rest }: HeaderProps) => {
 const HeaderRight = ({ className, children, ...rest }: HeaderProps) => {
   return (
     <div className={cn("float-right pb-5", className)} {...rest}>
-        <div className="flex">
-            {children}
-        </div>
+      <div className="flex">{children}</div>
     </div>
   );
 };
@@ -53,14 +49,13 @@ interface ContentProps {
 
 const Content = ({ className, children, ...rest }: ContentProps) => {
   return (
-    <div
-      className={cn(
-        "inline-block",
-        className
-      )}
-      {...rest}
-    >
-      {children}
+    <div className="clear-both">
+      <div
+        className={cn("overflow-visible", className)}
+        {...rest}
+      >
+        {children}
+      </div>
     </div>
   );
 };

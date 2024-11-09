@@ -27,7 +27,7 @@ const Label = ({ className, children }: LabelProps) => {
       <label
         htmlFor="null"
         className={cn(
-          "inline-block text-sm font-normal text-gray-500 sm:mt-2.5 dark:text-neutral-500",
+          "inline-block text-sm font-semibold text-secondary-foreground sm:mt-2.5",
           className
         )}
       >

@@ -1,8 +1,8 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
@@ -56,10 +56,12 @@ export default function Component() {
   const user = useUser();
 
   return (
-    <>
-      <BackendPageTitle title={`View ${humanize(crud.singular)}`} />
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <BackendTitle text={`View ${humanize(crud.singular)}`} />
+      </BackendPanel.HeaderLeft>
 
-      <BackendContentContainer className="p-6">
+      <BackendPanel.Content>
         <Input>
           <Input.Label>Name</Input.Label>
           <Input.Field>
@@ -105,7 +107,7 @@ export default function Component() {
             />
           )}
         </FormFooter>
-      </BackendContentContainer>
-    </>
+      </BackendPanel.Content>
+    </BackendPanel>
   );
 }

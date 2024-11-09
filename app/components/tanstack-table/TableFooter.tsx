@@ -37,7 +37,7 @@ export const TableFooter = <T,>({
             min="1"
             className={cn(
               "no-spin-button w-11 rounded-lg p-2 text-center", // focus:outline-none focus:ring-0",
-              "border border-border bg-input",              
+              "border border-border-foreground bg-input",              
               "focus:border-ring focus:ring-0",
               "text-sm font-medium text-secondary-foreground",
             )}
