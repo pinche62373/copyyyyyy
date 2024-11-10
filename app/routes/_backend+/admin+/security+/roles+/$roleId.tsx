@@ -164,7 +164,9 @@ export default function Component() {
             <PairList.Pair>
               <PairList.Key>Name</PairList.Key>
               <PairList.Value>{role.name}</PairList.Value>
+            </PairList.Pair>
 
+            <PairList.Pair>
               <PairList.Key>Description</PairList.Key>
               <PairList.Value>{role.description}</PairList.Value>
             </PairList.Pair>

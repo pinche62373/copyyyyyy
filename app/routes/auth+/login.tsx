@@ -148,7 +148,7 @@ export default function LoginPage() {
 
           <PairList>
             <PairList.Pair>
-              <PairList.Key className="pt-2.5">Email</PairList.Key>
+              <PairList.Key>Email</PairList.Key>
               <PairList.Value>
                 <InputGeneric
                   scope={form.scope("user.email")}
@@ -158,7 +158,7 @@ export default function LoginPage() {
             </PairList.Pair>
 
             <PairList.Pair>
-              <PairList.Key className="pt-2.5">Password</PairList.Key>
+              <PairList.Key>Password</PairList.Key>
               <PairList.Value>
                 <InputGeneric
                   scope={form.scope("user.password")}

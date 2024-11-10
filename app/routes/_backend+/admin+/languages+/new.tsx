@@ -112,7 +112,7 @@ export default function Component() {
 
           <PairList>
             <PairList.Pair>
-              <PairList.Key className="pt-2.5">Name</PairList.Key>
+              <PairList.Key>Name</PairList.Key>
               <PairList.Value>
                 <InputGeneric scope={form.scope("language.name")} />
               </PairList.Value>

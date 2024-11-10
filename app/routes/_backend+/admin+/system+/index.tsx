@@ -10,7 +10,7 @@ import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
-import { ActionButton } from "#app/components/shared/form/inputs/action-button";
+import { ActionButton } from "#app/components/shared/form/inputs/action-button.tsx";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import {
   deleteExpiredSessions,
@@ -101,7 +101,7 @@ export default function Component() {
 
           <PairList>
             <PairList.Pair>
-              <PairList.Key>Sessions</PairList.Key>
+              <PairList.Key className="align-middle">Sessions</PairList.Key>
               <PairList.Value>
                 <ActionButton
                   formId={formId}

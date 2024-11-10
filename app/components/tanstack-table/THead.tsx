@@ -30,7 +30,7 @@ const THead = () => {
                           "flex w-full items-center gap-x-1 px-5 py-2.5 text-start text-sm font-normal focus:outline-none",
                           "text-sm font-bold text-secondary-foreground",
                           "bg-gray-100 focus:bg-gray-100",
-                          "dark:bg-slate-800  dark:focus:bg-slate-800"
+                          "dark:bg-[#1a2941]  dark:focus:bg-[#1a2941]"
                         )}
                         onClick={header.column.getToggleSortingHandler()}
                       >

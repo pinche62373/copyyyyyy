@@ -134,7 +134,7 @@ export default function RegisterPage() {
 
           <PairList>
             <PairList.Pair>
-              <PairList.Key className="pt-2.5">Email</PairList.Key>
+              <PairList.Key>Email</PairList.Key>
               <PairList.Value>
                 <InputGeneric
                   scope={form.scope("user.email")}
@@ -144,7 +144,7 @@ export default function RegisterPage() {
             </PairList.Pair>
 
             <PairList.Pair>
-              <PairList.Key className="pt-2.5">Username</PairList.Key>
+              <PairList.Key>Username</PairList.Key>
               <PairList.Value>
                 <InputGeneric
                   scope={form.scope("user.username")}
@@ -154,7 +154,7 @@ export default function RegisterPage() {
             </PairList.Pair>
 
             <PairList.Pair>
-              <PairList.Key className="pt-2.5">Password</PairList.Key>
+              <PairList.Key>Password</PairList.Key>
               <PairList.Value>
                 <InputGeneric
                   scope={form.scope("user.password")}
