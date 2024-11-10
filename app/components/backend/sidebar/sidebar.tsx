@@ -19,7 +19,7 @@ export function BackendSidebar() {
         "hs-overlay fixed inset-y-0 start-0 z-[60] hidden w-[260px] -translate-x-full",
         "transition-all duration-300 [--auto-close:lg] hs-overlay-open:translate-x-0",
         "lg:bottom-0 lg:end-auto lg:block lg:translate-x-0",
-        "border-e bg-foreground border-border"
+        "border-e border-border bg-foreground"
       )}
     >
       <div className="flex h-full max-h-full flex-col py-3">
@@ -27,7 +27,7 @@ export function BackendSidebar() {
           {/* Logo */}
           <NavLink
             to="/"
-            className="inline-block flex-none rounded-md text-xl font-semibold text-sidebar-primary focus:opacity-80 focus:outline-none"
+            className="inline-block flex-none rounded-md text-xl font-semibold text-sidebar-primary focus:opacity-80 focus:outline-none font-sidebar"
             aria-label="Preline"
           >
             Logo

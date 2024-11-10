@@ -24,6 +24,11 @@ export const tailwindVariables = {
       foreground: "var(--secondary-foreground)"
     },
 
+    tertiary: {
+      DEFAULT: "var(--tertiary)",
+      foreground: "var(--tertiary-foreground)"
+    },    
+
     accent: {
       DEFAULT: 'var(--accent)',
       foreground: 'var(--accent-foreground)',
@@ -36,4 +41,9 @@ export const tailwindVariables = {
       focus: "var(--sidebar-focus)"
     }
   },
+  fontFamily: {
+    sidebar: [
+      "Nunito Variable"
+    ]
+  }
 } satisfies Config["theme"];

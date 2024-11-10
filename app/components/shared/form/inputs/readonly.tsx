@@ -12,9 +12,9 @@ export const ReadOnly = ({ className, children }: Props) => {
   return (
     <div
       className={cn(
-        "block min-h-9 w-full rounded-lg px-3 pt-2 text-sm",
-        "text-secondary-foreground",
-        "border border-border-foreground bg-input",
+        "block min-h-[38px] w-full rounded-lg px-3 pt-2 text-sm",
+        "font-semibold text-secondary-foreground",
+        "border border-border-foreground bg-transparent",
         className
       )}
     >
