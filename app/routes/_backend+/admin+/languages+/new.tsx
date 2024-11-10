@@ -10,8 +10,8 @@ import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
-import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
+import { PairList } from "#app/components/shared/pair-list.tsx";
 import { createLanguage } from "#app/models/language.server";
 import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -110,13 +110,16 @@ export default function Component() {
             value={intent}
           />
 
-          {/* language.name */}
-          <Input>
-            <Input.Label>Name</Input.Label>
-            <Input.Field>
-              <InputGeneric scope={form.scope("language.name")}></InputGeneric>
-            </Input.Field>
-          </Input>
+          <PairList>
+            <PairList.Pair>
+              <PairList.Key className="pt-2.5">Name</PairList.Key>
+              <PairList.Value>
+                <InputGeneric
+                  scope={form.scope("language.name")}
+                ></InputGeneric>
+              </PairList.Value>
+            </PairList.Pair>
+          </PairList>
 
           <FormFooter>
             <Button

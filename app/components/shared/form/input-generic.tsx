@@ -47,10 +47,10 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
         <input
           className={cn(
             "block w-full rounded-lg px-3 py-2 text-sm",
-            "placeholder:opacity-90 disabled:pointer-events-none disabled:opacity-50",
+            "placeholder:opacity-80 disabled:pointer-events-none disabled:opacity-50",
             "focus:border-ring focus:ring-0",
             "border-border-foreground",
-            "bg-input font-semibold text-secondary-foreground"
+            "bg-input text-primary-foreground"
           )}
           {...field.getInputProps({
             type,

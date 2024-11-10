@@ -6,8 +6,7 @@ import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
-import { Input } from "#app/components/shared/form/input.tsx";
-import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
+import { PairList } from "#app/components/shared/pair-list.tsx";
 import { getLanguage } from "#app/models/language.server";
 import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -62,36 +61,32 @@ export default function Component() {
       </BackendPanel.HeaderLeft>
 
       <BackendPanel.Content>
-        <Input>
-          <Input.Label>Name</Input.Label>
-          <Input.Field>
-            <ReadOnly>{language.name}</ReadOnly>
-          </Input.Field>
-        </Input>
+        <PairList>
+          <PairList.Pair>
+            <PairList.Key>Name</PairList.Key>
+            <PairList.Value>{language.name}</PairList.Value>
+          </PairList.Pair>
 
-        <Input>
-          <Input.Label>Created By</Input.Label>
-          <Input.Field>
-            <ReadOnly>
-              {language.languageCreatedBy.username} at{" "}
-              {timeStampToHuman(language.createdAt)}
-            </ReadOnly>
-          </Input.Field>
-        </Input>
+          <PairList.Pair>
+          <PairList.Key>Created By</PairList.Key>
+          <PairList.Value>
+            {language.languageCreatedBy.username} at{" "}
+            {timeStampToHuman(language.createdAt)}
+          </PairList.Value>
+          </PairList.Pair>
 
-        <Input>
-          <Input.Label>Updated By</Input.Label>
-          <Input.Field>
-            <ReadOnly>
-              {language.updatedAt !== null && (
-                <>
-                  {language.languageUpdatedBy?.username} at{" "}
-                  {timeStampToHuman(language.updatedAt)}
-                </>
-              )}
-            </ReadOnly>
-          </Input.Field>
-        </Input>
+          <PairList.Pair>
+          <PairList.Key>Updated By</PairList.Key>
+          <PairList.Value>
+            {language.updatedAt !== null && (
+              <>
+                {language.languageUpdatedBy?.username} at{" "}
+                {timeStampToHuman(language.updatedAt)}
+              </>
+            )}
+          </PairList.Value>
+          </PairList.Pair>
+        </PairList>
 
         <FormFooter>
           <Button type="button" text="Close" to={crud.routes.index} secondary />
@@ -107,6 +102,7 @@ export default function Component() {
             />
           )}
         </FormFooter>
+
       </BackendPanel.Content>
     </BackendPanel>
   );
