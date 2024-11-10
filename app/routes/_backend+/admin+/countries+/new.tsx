@@ -6,15 +6,15 @@ import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
-import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { ComboBox } from "#app/components/shared/form/inputs/combobox";
 import { ComboBoxItem } from "#app/components/shared/form/inputs/combobox-item";
+import { PairList } from "#app/components/shared/pair-list.tsx";
 import { createCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
@@ -109,10 +109,12 @@ export default function Component() {
   });
 
   return (
-    <>
-      <BackendPageTitle title={`New ${crud.singular}`} />
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <BackendTitle text={`New ${crud.singular}`} />
+      </BackendPanel.HeaderLeft>
 
-      <BackendContentContainer className="p-5">
+      <BackendPanel.Content>
         <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
@@ -120,18 +122,19 @@ export default function Component() {
             value={intent}
           />
 
-          {/* country.name */}
-          <Input>
-            <Input.Label>Name</Input.Label>
-            <Input.Field>
-              <InputGeneric scope={form.scope("country.name")}></InputGeneric>
-            </Input.Field>
-          </Input>
+          <PairList>
+            <PairList.Pair>
+              <PairList.Key className="pt-2.5">Name</PairList.Key>
+              <PairList.Value>
+                <InputGeneric
+                  scope={form.scope("country.name")}
+                ></InputGeneric>
+              </PairList.Value>
+            </PairList.Pair>
 
-          {/* country.regionId  */}
-          <Input>
-            <Input.Label>Region</Input.Label>
-            <Input.Field>
+            <PairList.Pair>
+              <PairList.Key className="pt-2.5">Region</PairList.Key>
+              <PairList.Value>
               <ComboBox
                 {...form.getControlProps("country.regionId")}
                 ariaLabel="Regions"
@@ -141,8 +144,9 @@ export default function Component() {
                 {/* @ts-expect-error: Property 'name' does not exist on type 'object'.ts(2339) due to Spectrum ListBox Collection */}
                 {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
               </ComboBox>
-            </Input.Field>
-          </Input>
+              </PairList.Value>
+            </PairList.Pair>            
+          </PairList>
 
           <FormFooter>
             <Button
@@ -158,7 +162,10 @@ export default function Component() {
             />
           </FormFooter>
         </form>
-      </BackendContentContainer>
-    </>
+      </BackendPanel.Content>
+    </BackendPanel>
+
+
+
   );
 }

@@ -14,8 +14,8 @@ import { SpamError } from "remix-utils/honeypot/server";
 
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
-import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
+import { PairList } from "#app/components/shared/pair-list.tsx";
 import { createUser, isEmailAddressAvailable } from "#app/models/user.server";
 import {
   EMAIL_PASSWORD_STRATEGY,
@@ -132,39 +132,38 @@ export default function RegisterPage() {
             value={intent}
           />
 
-          {/* user.email */}
-          <Input>
-            <Input.Label>Email</Input.Label>
-            <Input.Field>
-              <InputGeneric
-                scope={form.scope("user.email")}
-                placeholder="Your email..."
-              ></InputGeneric>
-            </Input.Field>
-          </Input>
+          <PairList>
+            <PairList.Pair>
+              <PairList.Key className="pt-2.5">Email</PairList.Key>
+              <PairList.Value>
+                <InputGeneric
+                  scope={form.scope("user.email")}
+                  placeholder="Your email..."
+                />
+              </PairList.Value>
+            </PairList.Pair>
 
-          {/* user.username */}
-          <Input>
-            <Input.Label>Username</Input.Label>
-            <Input.Field>
-              <InputGeneric
-                scope={form.scope("user.username")}
-                placeholder="Your username..."
-              ></InputGeneric>
-            </Input.Field>
-          </Input>
+            <PairList.Pair>
+              <PairList.Key className="pt-2.5">Username</PairList.Key>
+              <PairList.Value>
+                <InputGeneric
+                  scope={form.scope("user.username")}
+                  placeholder="Your username..."
+                />
+              </PairList.Value>
+            </PairList.Pair>
 
-          {/* user.password */}
-          <Input>
-            <Input.Label>Password</Input.Label>
-            <Input.Field>
-              <InputGeneric
-                scope={form.scope("user.password")}
-                placeholder="Your password..."
-                type="password"
-              ></InputGeneric>
-            </Input.Field>
-          </Input>
+            <PairList.Pair>
+              <PairList.Key className="pt-2.5">Password</PairList.Key>
+              <PairList.Value>
+                <InputGeneric
+                  scope={form.scope("user.password")}
+                  type="password"
+                  placeholder="Your password..."
+                />
+              </PairList.Value>
+            </PairList.Pair>
+          </PairList>
 
           <HoneypotInputs />
 

@@ -6,11 +6,12 @@ import { jsonWithError, jsonWithSuccess } from "remix-toast";
 import { namedAction } from "remix-utils/named-action";
 import { z } from "zod";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { ActionButton } from "#app/components/shared/form/inputs/action-button";
+import { PairList } from "#app/components/shared/pair-list.tsx";
 import {
   deleteExpiredSessions,
   getExpiredSessionCount
@@ -85,10 +86,12 @@ export default function Component() {
       : `Purge ${expiredSessionCount} expired database sessions`;
 
   return (
-    <>
-      <BackendPageTitle title="System" />
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <BackendTitle text={`System`} />
+      </BackendPanel.HeaderLeft>
 
-      <BackendContentContainer className="px-5 py-3">
+      <BackendPanel.Content>
         <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
@@ -96,14 +99,21 @@ export default function Component() {
             value={intent}
           />
 
-          <ActionButton
-            formId={formId}
-            label={invalidSessionsLabel}
-            buttonLabel="Purge"
-            enabled={expiredSessionCount > 0}
-          />
+          <PairList>
+            <PairList.Pair>
+              <PairList.Key>Sessions</PairList.Key>
+              <PairList.Value>
+                <ActionButton
+                  formId={formId}
+                  label={invalidSessionsLabel}
+                  buttonLabel="Purge"
+                  enabled={expiredSessionCount > 0}
+                />
+              </PairList.Value>
+            </PairList.Pair>
+          </PairList>
         </form>
-      </BackendContentContainer>
-    </>
+      </BackendPanel.Content>
+    </BackendPanel>
   );
 }
