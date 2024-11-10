@@ -3,11 +3,11 @@ import { tv } from "tailwind-variants";
 
 export function ComboBoxItem(props: ListBoxItemProps) {
   const tvListItem = tv({
-    base: "w-full rounded-md px-3 py-2 text-sm font-normal text-black hover:cursor-pointer dark:text-neutral-300",
+    base: "w-full rounded-md px-3 py-2 text-sm font-normal text-primary-foreground hover:cursor-pointer",
     variants: {
       state: {
-        focused: "bg-gray-100 dark:bg-neutral-800",
-        selected: "bg-gray-100 dark:bg-neutral-800"
+        focused: "bg-gray-100 dark:bg-input",
+        selected: "bg-gray-100 dark:bg-input"
       }
     }
   });
