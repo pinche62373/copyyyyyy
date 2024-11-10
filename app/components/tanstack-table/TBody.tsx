@@ -12,7 +12,7 @@ const TBody = () => {
       {table.getRowModel().rows.map((row) => (
         <tr
           key={row.id}
-          className="border-b border-border hover:bg-input"
+          className="h-[46.5px] border-b border-border hover:bg-input"
         >
           {row.getVisibleCells().map((cell) => (
             <td
@@ -22,7 +22,7 @@ const TBody = () => {
                 cell.column.columnDef.meta?.cellProps?.className,
               )}
             >
-              <span className="text-sm text-secondary-foreground">
+              <span className="text-secondary-foreground">
                 {flexRender(cell.column.columnDef.cell, cell.getContext())}
               </span>
             </td>
