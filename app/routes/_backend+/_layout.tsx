@@ -16,7 +16,7 @@ import { requireRole } from "#app/utils/permissions.server";
 import { Roles } from "#app/validations/role-schema";
 
 // import fonts for the backend route
-import "@fontsource-variable/nunito/wght.css";
+import "@fontsource-variable/inter/wght.css";
 
 // import styles for the backend route
 export const links: LinksFunction = () => [

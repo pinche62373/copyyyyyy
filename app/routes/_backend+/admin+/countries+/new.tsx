@@ -126,26 +126,24 @@ export default function Component() {
             <PairList.Pair>
               <PairList.Key className="pt-2.5">Name</PairList.Key>
               <PairList.Value>
-                <InputGeneric
-                  scope={form.scope("country.name")}
-                ></InputGeneric>
+                <InputGeneric scope={form.scope("country.name")} />
               </PairList.Value>
             </PairList.Pair>
 
             <PairList.Pair>
               <PairList.Key className="pt-2.5">Region</PairList.Key>
               <PairList.Value>
-              <ComboBox
-                {...form.getControlProps("country.regionId")}
-                ariaLabel="Regions"
-                menuTrigger="focus"
-                defaultItems={loaderData.regions}
-              >
-                {/* @ts-expect-error: Property 'name' does not exist on type 'object'.ts(2339) due to Spectrum ListBox Collection */}
-                {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
-              </ComboBox>
+                <ComboBox
+                  {...form.getControlProps("country.regionId")}
+                  ariaLabel="Regions"
+                  menuTrigger="focus"
+                  defaultItems={loaderData.regions}
+                >
+                  {/* @ts-expect-error: Property 'name' does not exist on type 'object'.ts(2339) due to Spectrum ListBox Collection */}
+                  {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
+                </ComboBox>
               </PairList.Value>
-            </PairList.Pair>            
+            </PairList.Pair>
           </PairList>
 
           <FormFooter>
@@ -164,8 +162,5 @@ export default function Component() {
         </form>
       </BackendPanel.Content>
     </BackendPanel>
-
-
-
   );
 }

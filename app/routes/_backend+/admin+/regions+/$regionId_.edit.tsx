@@ -133,7 +133,7 @@ export default function Component() {
             <PairList.Pair>
               <PairList.Key className="pt-2.5">Name</PairList.Key>
               <PairList.Value>
-                <InputGeneric scope={form.scope("region.name")}></InputGeneric>
+                <InputGeneric scope={form.scope("region.name")} />
               </PairList.Value>
             </PairList.Pair>
           </PairList>

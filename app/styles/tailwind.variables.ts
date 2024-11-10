@@ -41,9 +41,4 @@ export const tailwindVariables = {
       focus: "var(--sidebar-focus)"
     }
   },
-  fontFamily: {
-    sidebar: [
-      "Nunito Variable"
-    ]
-  }
 } satisfies Config["theme"];
