@@ -1,13 +1,12 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
-import { Input } from "#app/components/shared/form/input.tsx";
-import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
+import { PairList } from "#app/components/shared/pair-list.tsx";
 import { getRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -56,40 +55,38 @@ export default function Component() {
   const user = useUser();
 
   return (
-    <>
-      <BackendPageTitle title={`View ${humanize(crud.singular)}`} />
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <BackendTitle text={`View ${humanize(crud.singular)}`} />
+      </BackendPanel.HeaderLeft>
 
-      <BackendContentContainer className="p-6">
-        <Input>
-          <Input.Label>Name</Input.Label>
-          <Input.Field>
-            <ReadOnly>{region.name}</ReadOnly>
-          </Input.Field>
-        </Input>
+      <BackendPanel.Content>
+        <PairList>
+          <PairList.Pair>
+            <PairList.Key>Name</PairList.Key>
+            <PairList.Value>{region.name}</PairList.Value>
+          </PairList.Pair>
 
-        <Input>
-          <Input.Label>Created By</Input.Label>
-          <Input.Field>
-            <ReadOnly>
+          <PairList.Pair>
+            <PairList.Key>Created By</PairList.Key>
+            <PairList.Value>
               {region.regionCreatedBy.username} at{" "}
               {timeStampToHuman(region.createdAt)}
-            </ReadOnly>
-          </Input.Field>
-        </Input>
+            </PairList.Value>
+          </PairList.Pair>
 
-        <Input>
-          <Input.Label>Updated By</Input.Label>
-          <Input.Field>
-            <ReadOnly>
+          <PairList.Pair>
+            <PairList.Key>Updated By</PairList.Key>
+            <PairList.Value>
               {region.updatedAt !== null && (
                 <>
                   {region.regionupdatedBy?.username} at{" "}
                   {timeStampToHuman(region.updatedAt)}
                 </>
               )}
-            </ReadOnly>
-          </Input.Field>
-        </Input>
+            </PairList.Value>
+          </PairList.Pair>
+        </PairList>
 
         <FormFooter>
           <Button type="button" text="Close" to={crud.routes.index} secondary />
@@ -105,7 +102,7 @@ export default function Component() {
             />
           )}
         </FormFooter>
-      </BackendContentContainer>
-    </>
+      </BackendPanel.Content>
+    </BackendPanel>
   );
 }

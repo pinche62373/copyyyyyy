@@ -15,8 +15,7 @@ import { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Input } from "#app/components/shared/form/input.tsx";
-import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
+import { PairList } from "#app/components/shared/pair-list.tsx";
 import TanstackTable from "#app/components/tanstack-table";
 import {
   tableCellLink,
@@ -161,19 +160,15 @@ export default function Component() {
         </BackendPanel.HeaderLeft>
 
         <BackendPanel.Content>
-          <Input>
-            <Input.Label>Name</Input.Label>
-            <Input.Field>
-              <ReadOnly>{role.name}</ReadOnly>
-            </Input.Field>
-          </Input>
+          <PairList>
+            <PairList.Pair>
+              <PairList.Key>Name</PairList.Key>
+              <PairList.Value>{role.name}</PairList.Value>
 
-          <Input>
-            <Input.Label>Description</Input.Label>
-            <Input.Field>
-              <ReadOnly>{role.description}</ReadOnly>
-            </Input.Field>
-          </Input>
+              <PairList.Key>Description</PairList.Key>
+              <PairList.Value>{role.description}</PairList.Value>
+            </PairList.Pair>
+          </PairList>
         </BackendPanel.Content>
       </BackendPanel>
 
