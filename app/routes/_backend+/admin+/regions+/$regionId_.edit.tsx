@@ -3,15 +3,15 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
 import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
-import { jsonWithError, redirectWithSuccess } from "remix-toast";
+import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
-import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
+import { PairList } from "#app/components/shared/pair-list.tsx";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -97,8 +97,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
-  return redirectWithSuccess(
-    crud.routes.index,
+  return jsonWithSuccess(
+    null,
     `${humanize(crud.singular)} updated successfully`
   );
 };
@@ -115,10 +115,12 @@ export default function Component() {
   });
 
   return (
-    <>
-      <BackendPageTitle title={`Edit ${humanize(crud.singular)}`} />
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <BackendTitle text={`Edit ${humanize(crud.singular)}`} />
+      </BackendPanel.HeaderLeft>
 
-      <BackendContentContainer className="p-6">
+      <BackendPanel.Content>
         <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
@@ -127,13 +129,14 @@ export default function Component() {
           />
           <InputGeneric scope={form.scope("region.id")} type="hidden" />
 
-          {/* region.name */}
-          <Input>
-            <Input.Label>Name</Input.Label>
-            <Input.Field>
-              <InputGeneric scope={form.scope("region.name")}></InputGeneric>
-            </Input.Field>
-          </Input>
+          <PairList>
+            <PairList.Pair>
+              <PairList.Key className="pt-2.5">Name</PairList.Key>
+              <PairList.Value>
+                <InputGeneric scope={form.scope("region.name")}></InputGeneric>
+              </PairList.Value>
+            </PairList.Pair>
+          </PairList>
 
           <FormFooter>
             <Button
@@ -149,7 +152,7 @@ export default function Component() {
             />
           </FormFooter>
         </form>
-      </BackendContentContainer>
-    </>
+      </BackendPanel.Content>
+    </BackendPanel>
   );
 }

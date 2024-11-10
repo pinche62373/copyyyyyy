@@ -5,15 +5,15 @@ import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import { FormFooter } from "#app/components/shared/form/footer";
-import { Input } from "#app/components/shared/form/input";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { ComboBox } from "#app/components/shared/form/inputs/combobox";
 import { ComboBoxItem } from "#app/components/shared/form/inputs/combobox-item";
+import { PairList } from "#app/components/shared/pair-list.tsx";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
@@ -125,10 +125,12 @@ export default function Component() {
   });
 
   return (
-    <>
-      <BackendPageTitle title={`Edit ${humanize(crud.singular)}`} />
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <BackendTitle text={`Edit ${humanize(crud.singular)}`} />
+      </BackendPanel.HeaderLeft>
 
-      <BackendContentContainer className="p-6">
+      <BackendPanel.Content>
         <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
@@ -137,34 +139,34 @@ export default function Component() {
           />
           <InputGeneric scope={form.scope("country.id")} type="hidden" />
 
-          {/* country.name */}
-          <Input>
-            <Input.Label>Name</Input.Label>
-            <Input.Field>
-              <InputGeneric scope={form.scope("country.name")}></InputGeneric>
-            </Input.Field>
-          </Input>
+          <PairList>
+            <PairList.Pair>
+              <PairList.Key className="pt-2.5">Name</PairList.Key>
+              <PairList.Value>
+                <InputGeneric scope={form.scope("country.name")}></InputGeneric>
+              </PairList.Value>
+            </PairList.Pair>
 
-          {/* country.regionId  */}
-          <Input>
-            <Input.Label>Region</Input.Label>
-            <Input.Field>
-              <ComboBox
-                {...form.getControlProps("country.regionId")}
-                ariaLabel="Regions"
-                menuTrigger="focus"
-                defaultItems={loaderData.regions}
-                defaultSelectedKey={
-                  loaderData.regions.find(
-                    (region) => region.id === loaderData.form.country.regionId
-                  )?.id
-                }
-              >
-                {/* @ts-expect-error: Property 'name' does not exist on type 'object'.ts(2339) due to Spectrum ListBox Collection */}
-                {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
-              </ComboBox>
-            </Input.Field>
-          </Input>
+            <PairList.Pair>
+              <PairList.Key className="pt-2.5">Region</PairList.Key>
+              <PairList.Value>
+                <ComboBox
+                  {...form.getControlProps("country.regionId")}
+                  ariaLabel="Regions"
+                  menuTrigger="focus"
+                  defaultItems={loaderData.regions}
+                  defaultSelectedKey={
+                    loaderData.regions.find(
+                      (region) => region.id === loaderData.form.country.regionId
+                    )?.id
+                  }
+                >
+                  {/* @ts-expect-error: Property 'name' does not exist on type 'object'.ts(2339) due to Spectrum ListBox Collection */}
+                  {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
+                </ComboBox>
+              </PairList.Value>
+            </PairList.Pair>
+          </PairList>
 
           <FormFooter>
             <Button
@@ -180,7 +182,7 @@ export default function Component() {
             />
           </FormFooter>
         </form>
-      </BackendContentContainer>
-    </>
+      </BackendPanel.Content>
+    </BackendPanel>
   );
 }
