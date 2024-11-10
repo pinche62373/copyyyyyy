@@ -235,7 +235,6 @@ export default function Component() {
           <Button
             type="button"
             text={`New ${humanize(crud.singular)}`}
-            // text={`+`}
             to={crud.routes.new}
           />
         )}
@@ -247,7 +246,7 @@ export default function Component() {
           <TanstackTable.TBody />
         </TanstackTable.Table>
 
-        <TableFooter table={table} className="" />
+        <TableFooter table={table} />
       </BackendPanel.Content>
     </BackendPanel>
   );

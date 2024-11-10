@@ -12,15 +12,12 @@ import {
 import { useState } from "react";
 import { z } from "zod";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { TableBar } from "#app/components/tanstack-table/TableBar";
-import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getPermissionsByResourceName } from "#app/models/permission.server";
@@ -30,7 +27,6 @@ import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE
 } from "#app/utils/constants";
-import { humanize } from "#app/utils/lib/humanize";
 import {
   flattenPermissions,
   requireRoutePermission
@@ -108,9 +104,9 @@ const columns = [
 ];
 
 export default function Component() {
-  const { resourceName, permissions } = useLoaderData<typeof loader>();
+  const { permissions } = useLoaderData<typeof loader>();
 
-  const resourceType = permissions[0].action === "access" ? "route" : "model";
+  // const resourceType = permissions[0].action === "access" ? "route" : "model";
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
@@ -149,31 +145,23 @@ export default function Component() {
   });
 
   return (
-    <>
-      <BackendPageTitle
-        title={`${humanize(resourceType)} permissions for ${resourceName}`}
-      />
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <TableSearchInput
+          value={globalFilter ?? ""}
+          onChange={(value: string | number) => setGlobalFilter(String(value))}
+          placeholder={`Search permissions`}
+        />
+      </BackendPanel.HeaderLeft>
 
-      {/* Start Permissions Table*/}
-      <BackendContentContainer>
-        <TableBar>
-          <TableSearchInput
-            value={globalFilter ?? ""}
-            onChange={(value: string | number) =>
-              setGlobalFilter(String(value))
-            }
-            placeholder="Search permissions..."
-          />
-          <TableFilterDropdown />
-        </TableBar>
-
+      <BackendPanel.Content>
         <TanstackTable.Table table={table}>
           <TanstackTable.THead />
           <TanstackTable.TBody />
         </TanstackTable.Table>
-      </BackendContentContainer>
 
-      <TableFooter table={table} />
-    </>
+        <TableFooter table={table} />
+      </BackendPanel.Content>
+    </BackendPanel>
   );
 }

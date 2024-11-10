@@ -12,8 +12,7 @@ import {
 import { useState } from "react";
 import { z } from "zod";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
@@ -26,8 +25,6 @@ import {
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { TableBar } from "#app/components/tanstack-table/TableBar";
-import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getCountries } from "#app/models/country.server";
@@ -39,7 +36,7 @@ import {
 import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { useUser, userHasRoutePermission } from "#app/utils/user";
+import { userHasRoutePermission, useUser } from "#app/utils/user";
 import { countrySchemaAdminTable } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
@@ -180,41 +177,36 @@ export default function Component() {
   });
 
   return (
-    <>
-      {userHasRoutePermission(user, {
-        resource: crud.routes.new,
-        scope: "any"
-      }) ? (
-        <BackendPageTitle title={humanize(crud.plural)}>
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <TableSearchInput
+          value={globalFilter ?? ""}
+          onChange={(value: string | number) => setGlobalFilter(String(value))}
+          placeholder={`Search ${crud.plural}...`}
+        />
+      </BackendPanel.HeaderLeft>
+
+      <BackendPanel.HeaderRight>
+        {userHasRoutePermission(user, {
+          resource: crud.routes.new,
+          scope: "any"
+        }) && (
           <Button
             type="button"
             text={`New ${humanize(crud.singular)}`}
             to={crud.routes.new}
           />
-        </BackendPageTitle>
-      ) : (
-        <BackendPageTitle title={humanize(crud.plural)} />
-      )}
+        )}
+      </BackendPanel.HeaderRight>
 
-      <BackendContentContainer>
-        <TableBar>
-          <TableSearchInput
-            value={globalFilter ?? ""}
-            onChange={(value: string | number) =>
-              setGlobalFilter(String(value))
-            }
-            placeholder={`Search ${crud.plural}...`}
-          />
-          <TableFilterDropdown />
-        </TableBar>
-
+      <BackendPanel.Content>
         <TanstackTable.Table table={table}>
           <TanstackTable.THead />
           <TanstackTable.TBody />
         </TanstackTable.Table>
-      </BackendContentContainer>
 
-      <TableFooter table={table} />
-    </>
+        <TableFooter table={table} />
+      </BackendPanel.Content>
+    </BackendPanel>
   );
 }

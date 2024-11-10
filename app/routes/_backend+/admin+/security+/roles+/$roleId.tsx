@@ -12,8 +12,8 @@ import {
 import { useState } from "react";
 import { z } from "zod";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { ReadOnly } from "#app/components/shared/form/inputs/readonly.tsx";
@@ -24,8 +24,6 @@ import {
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { TableBar } from "#app/components/tanstack-table/TableBar";
-import { TableFilterDropdown } from "#app/components/tanstack-table/TableFilterDropdown";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getRoleWithPermissions } from "#app/models/role.server";
@@ -156,47 +154,50 @@ export default function Component() {
 
   return (
     <>
-      {/* Start Database Fields */}
-      <BackendPageTitle title={`View ${humanize(roleCrud.singular)}`} />
+      {/* List role data */}
+      <BackendPanel>
+        <BackendPanel.HeaderLeft>
+          <BackendTitle text={`View ${humanize(roleCrud.singular)}`} />
+        </BackendPanel.HeaderLeft>
 
-      <BackendContentContainer className="p-6">
-        <Input>
-          <Input.Label>Name</Input.Label>
-          <Input.Field>
-            <ReadOnly>{role.name}</ReadOnly>
-          </Input.Field>
-        </Input>
+        <BackendPanel.Content>
+          <Input>
+            <Input.Label>Name</Input.Label>
+            <Input.Field>
+              <ReadOnly>{role.name}</ReadOnly>
+            </Input.Field>
+          </Input>
 
-        <Input>
-          <Input.Label>Description</Input.Label>
-          <Input.Field>
-            <ReadOnly>{role.description}</ReadOnly>
-          </Input.Field>
-        </Input>
-      </BackendContentContainer>
+          <Input>
+            <Input.Label>Description</Input.Label>
+            <Input.Field>
+              <ReadOnly>{role.description}</ReadOnly>
+            </Input.Field>
+          </Input>
+        </BackendPanel.Content>
+      </BackendPanel>
 
-      {/* Start Permissions Table*/}
-      <BackendPageTitle title="Permissions" className="pt-4" />
-
-      <BackendContentContainer>
-        <TableBar>
+      {/* Permissions table for role */}
+      <BackendPanel>
+        <BackendPanel.HeaderLeft>
           <TableSearchInput
             value={globalFilter ?? ""}
             onChange={(value: string | number) =>
               setGlobalFilter(String(value))
             }
-            placeholder="Search permissions..."
+            placeholder={`Search permissions`}
           />
-          <TableFilterDropdown />
-        </TableBar>
+        </BackendPanel.HeaderLeft>
 
-        <TanstackTable.Table table={table}>
-          <TanstackTable.THead />
-          <TanstackTable.TBody />
-        </TanstackTable.Table>
-      </BackendContentContainer>
+        <BackendPanel.Content>
+          <TanstackTable.Table table={table}>
+            <TanstackTable.THead />
+            <TanstackTable.TBody />
+          </TanstackTable.Table>
 
-      <TableFooter table={table} />
+          <TableFooter table={table} />
+        </BackendPanel.Content>
+      </BackendPanel>
     </>
   );
 }

@@ -12,8 +12,7 @@ import {
 } from "@tanstack/react-table";
 import { useState } from "react";
 
-import { BackendContentContainer } from "#app/components/backend/content-container";
-import { BackendPageTitle } from "#app/components/backend/page-title";
+import { BackendPanel } from "#app/components/backend/panel";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import {
@@ -24,7 +23,6 @@ import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter
 import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter";
 import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { TableBar } from "#app/components/tanstack-table/TableBar";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
 import { getPermissions } from "#app/models/permission.server";
@@ -166,33 +164,31 @@ export default function Component() {
   };
 
   return (
-    <>
-      <BackendPageTitle title="Permissions" />
+    <BackendPanel>
+      <BackendPanel.HeaderLeft>
+        <TableSearchInput
+          value={globalFilter ?? ""}
+          onChange={(value: string | number) => setGlobalFilter(String(value))}
+          placeholder={`Search ${permissionCrud.plural}...`}
+        />
+      </BackendPanel.HeaderLeft>
 
-      <BackendContentContainer>
-        <TableBar>
-          <TableSearchInput
-            value={globalFilter ?? ""}
-            onChange={(value: string | number) =>
-              setGlobalFilter(String(value))
-            }
-            placeholder={`Search ${permissionCrud.plural}...`}
-          />
+      <BackendPanel.HeaderRight>
+        <PermissionTypeFilterComponent
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+            handleFilter(e)
+          }
+        />
+      </BackendPanel.HeaderRight>
 
-          <PermissionTypeFilterComponent
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-              handleFilter(e)
-            }
-          />
-        </TableBar>
-
+      <BackendPanel.Content>
         <TanstackTable.Table table={table}>
           <TanstackTable.THead />
           <TanstackTable.TBody />
         </TanstackTable.Table>
-      </BackendContentContainer>
 
-      <TableFooter table={table} />
-    </>
+        <TableFooter table={table} />
+      </BackendPanel.Content>
+    </BackendPanel>
   );
 }
