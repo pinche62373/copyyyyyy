@@ -22,8 +22,9 @@ export function ConfirmationModal({
       {...rest}
     >
       <div className="m-3 mt-0 opacity-0 transition-all ease-out hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 md:mx-auto md:w-full md:max-w-xl">
-        {/* Close Button */}
-        <div className="relative flex flex-col overflow-hidden rounded-xl border bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
+        {/* Top Panel */}
+        <div className="relative flex flex-col overflow-hidden rounded-xl border bg-white shadow-sm dark:border-neutral-800 dark:bg-foreground">
+          {/* Close Button */}
           <div className="absolute end-2 top-2">
             <button
               type="button"
@@ -81,7 +82,8 @@ export function ConfirmationModal({
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-x-2 border-t bg-gray-50 px-4 py-3 dark:border-neutral-800 dark:bg-neutral-950">
+          {/* Bottom Panel */}
+          <div className="flex items-center justify-end gap-x-2 border-t bg-gray-50 px-4 py-3 dark:border-neutral-800 dark:bg-foreground">
             <button
               type="button"
               className="inline-flex items-center gap-x-2 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50 dark:border-neutral-800 dark:bg-neutral-900 dark:text-white dark:hover:bg-neutral-800"

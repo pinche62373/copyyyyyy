@@ -1,35 +1,32 @@
 interface PropTypes {
   modalId: string;
-  children: React.ReactNode;
   className?: string;
   enabled?: boolean;
-  title?: string;
+  children: React.ReactNode;
 }
 
 export function ConfirmationLauncher({
   modalId,
   className,
   enabled = true,
-  title,
   children,
   ...rest
 }: PropTypes) {
   return (
     <>
       {enabled === true ? (
-        <button
-          title={title}
-          type="button"
+        <div
+          id="modal-launcher"
           data-hs-overlay={"#" + modalId}
           className={className}
           {...rest}
         >
           {children}
-        </button>
+        </div>
       ) : (
-        <button type="button" className={className} {...rest} disabled>
+        <div id="modal-launcher" className={className}>
           {children}
-        </button>
+        </div>
       )}
     </>
   );
