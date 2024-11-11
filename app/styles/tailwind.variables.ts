@@ -10,8 +10,8 @@ export const tailwindVariables = {
     foreground: "var(--foreground)",
 
     border: {
-      DEFAULT: 'var(--border)',
-      foreground: 'var(--border-foreground)',
+      DEFAULT: "var(--border)",
+      foreground: "var(--border-foreground)"
     },
 
     primary: {
@@ -27,11 +27,11 @@ export const tailwindVariables = {
     tertiary: {
       DEFAULT: "var(--tertiary)",
       foreground: "var(--tertiary-foreground)"
-    },    
+    },
 
     accent: {
-      DEFAULT: 'var(--accent)',
-      foreground: 'var(--accent-foreground)',
+      DEFAULT: "var(--accent)",
+      foreground: "var(--accent-foreground)"
     },
 
     sidebar: {
@@ -40,5 +40,5 @@ export const tailwindVariables = {
       hover: "var(--sidebar-hover)",
       focus: "var(--sidebar-focus)"
     }
-  },
+  }
 } satisfies Config["theme"];
