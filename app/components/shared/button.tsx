@@ -32,14 +32,14 @@ export function Button({
       role: {
         primary: cn(
           "text-white",
-          "bg-[#4361ee] hover:bg-[#3c57d6]",
+          "bg-[#0078d4] hover:bg-[#0065b3]",
           "dark:text-neutral-100",
           "dark:bg-[#4361ee]/90 dark:hover:bg-[#4361ee]/80",
         ),
         secondary: cn(
           "border border-border-foreground dark:border-none",
           "text-gray-800",
-          "bg-white hover:bg-gray-100",
+          "bg-[#f6f8fa] hover:bg-[#eff2f5]",
           "dark:text-neutral-100",
           "dark:bg-[#3b3f5c]/60 dark:hover:bg-[#3b3f5c]/75",
         )
