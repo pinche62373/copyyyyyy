@@ -159,8 +159,10 @@ export default function Component() {
   });
 
   // passes selected value to the filter function set on the `action` column
-  const handleFilter = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    table.getColumn("action")?.setFilterValue(e.target.value);
+  type Filter = "all" | "model" | "route";
+
+  const handleFilter = (filter: Filter) => {
+    table.getColumn("action")?.setFilterValue(filter);
   };
 
   return (
@@ -175,9 +177,7 @@ export default function Component() {
 
       <BackendPanel.HeaderRight>
         <PermissionTypeFilterComponent
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            handleFilter(e)
-          }
+          onClick={(value: Filter) => handleFilter(value)}
         />
       </BackendPanel.HeaderRight>
 
