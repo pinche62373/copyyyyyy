@@ -60,7 +60,7 @@
     --tertiary-foreground: hsl(219, 28.6%, 43.9%);
 
     --accent: theme(colors.blue.600);
-    --accent-foreground: hsl(229, 83.4%, 59.8%);
+    --accent-foreground: rgb(63, 132, 228);
 
     --input: hsl(218, 47.1%, 13.3%);
     --ring: theme(colors.blue.600);
