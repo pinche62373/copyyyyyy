@@ -30,7 +30,7 @@ export function SidebarLink({
         to={to}
         className={cn(
           "flex gap-x-3 rounded-lg px-3 py-2 focus:outline-none",
-          "text-sm font-semibold text-sidebar-secondary",
+          "text-sm text-sidebar-secondary",
           "hover:bg-sidebar-hover hover:text-sidebar-primary",
           "focus:bg-sidebar-hover focus:text-sidebar-primary"
         )}

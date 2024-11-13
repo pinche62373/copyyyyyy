@@ -41,7 +41,7 @@ export function SidebarGroup({
         className={cn(
           "hs-accordion-toggle flex w-full gap-x-3 rounded-lg px-3 py-2",
           "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-          "text-start text-sm font-semibold text-sidebar-secondary",
+          "text-start text-sm text-sidebar-secondary",
           "hover:bg-sidebar-hover hover:text-sidebar-primary",
           "hs-accordion-active:bg-sidebar-hover"
         )}
