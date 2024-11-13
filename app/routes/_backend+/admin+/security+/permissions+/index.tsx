@@ -13,6 +13,7 @@ import {
 import { useState } from "react";
 
 import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import {
@@ -167,6 +168,8 @@ export default function Component() {
 
   return (
     <BackendPanel>
+      <BackendTitle text={humanize(permissionCrud.plural)} className="mb-5" foreground/>
+
       <BackendPanel.HeaderLeft>
         <TableSearch
           value={globalFilter ?? ""}

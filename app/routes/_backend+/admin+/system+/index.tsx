@@ -87,9 +87,7 @@ export default function Component() {
 
   return (
     <BackendPanel>
-      <BackendPanel.HeaderLeft>
-        <BackendTitle text={`System`} foreground />
-      </BackendPanel.HeaderLeft>
+      <BackendTitle text={`System`} foreground />
 
       <BackendPanel.Content>
         <form {...form.getFormProps()} autoComplete="off">

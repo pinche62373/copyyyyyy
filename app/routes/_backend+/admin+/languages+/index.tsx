@@ -16,6 +16,7 @@ import { namedAction } from "remix-utils/named-action";
 import { z } from "zod";
 
 import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
@@ -220,6 +221,8 @@ export default function Component() {
   return (
     <>
       <BackendPanel>
+        <BackendTitle text={humanize(crud.plural)} className="mb-5" foreground/>
+
         <BackendPanel.HeaderLeft>
           <TableSearch
             value={globalFilter ?? ""}
@@ -239,6 +242,7 @@ export default function Component() {
               type="button"
               text={`New ${humanize(crud.singular)}`}
               to={crud.routes.new}
+              className="mt-0.5"
             />
           )}
         </BackendPanel.HeaderRight>
