@@ -156,7 +156,7 @@ export default function Component() {
       {/* List role data */}
       <BackendPanel>
         <BackendPanel.HeaderLeft>
-          <BackendTitle text={`View ${humanize(roleCrud.singular)}`} />
+          <BackendTitle text={`View ${humanize(roleCrud.singular)}`} foreground />
         </BackendPanel.HeaderLeft>
 
         <BackendPanel.Content>

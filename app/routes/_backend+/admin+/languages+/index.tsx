@@ -218,36 +218,40 @@ export default function Component() {
   });
 
   return (
-    <BackendPanel>
-      <BackendPanel.HeaderLeft>
-        <TableSearch
-          value={globalFilter ?? ""}
-          onChange={(value: string | number) => setGlobalFilter(String(value))}
-          placeholder={`Search ${crud.plural}...`}
-        />
-      </BackendPanel.HeaderLeft>
-
-      <BackendPanel.HeaderRight>
-        {userHasRoutePermission(user, {
-          resource: crud.routes.new,
-          scope: "any"
-        }) && (
-          <Button
-            type="button"
-            text={`New ${humanize(crud.singular)}`}
-            to={crud.routes.new}
+    <>
+      <BackendPanel>
+        <BackendPanel.HeaderLeft>
+          <TableSearch
+            value={globalFilter ?? ""}
+            onChange={(value: string | number) =>
+              setGlobalFilter(String(value))
+            }
+            placeholder={`Search ${crud.plural}...`}
           />
-        )}
-      </BackendPanel.HeaderRight>
+        </BackendPanel.HeaderLeft>
 
-      <BackendPanel.Content>
-        <TanstackTable.Table table={table}>
-          <TanstackTable.THead />
-          <TanstackTable.TBody />
-        </TanstackTable.Table>
+        <BackendPanel.HeaderRight>
+          {userHasRoutePermission(user, {
+            resource: crud.routes.new,
+            scope: "any"
+          }) && (
+            <Button
+              type="button"
+              text={`New ${humanize(crud.singular)}`}
+              to={crud.routes.new}
+            />
+          )}
+        </BackendPanel.HeaderRight>
 
-        <TableFooter table={table} />
-      </BackendPanel.Content>
-    </BackendPanel>
+        <BackendPanel.Content>
+          <TanstackTable.Table table={table}>
+            <TanstackTable.THead />
+            <TanstackTable.TBody />
+          </TanstackTable.Table>
+
+          <TableFooter table={table} />
+        </BackendPanel.Content>
+      </BackendPanel>
+    </>
   );
 }

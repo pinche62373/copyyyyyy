@@ -17,7 +17,7 @@ export function DashboardCounterCard({
   return (
     <div
       className={cn(
-        "rounded-sm border border-border-foreground bg-foreground p-4 shadow-sm sm:p-5 dark:border-none",
+        "rounded-md border border-border-foreground bg-foreground p-4 shadow-sm sm:p-5 dark:border-none",
         className
       )}
       {...rest}

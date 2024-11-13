@@ -99,7 +99,7 @@ export default function Component() {
   return (
     <BackendPanel>
       <BackendPanel.HeaderLeft>
-        <BackendTitle text={`New ${crud.singular}`} />
+        <BackendTitle text={`New ${crud.singular}`} foreground />
       </BackendPanel.HeaderLeft>
 
       <BackendPanel.Content>

@@ -117,7 +117,7 @@ export default function Component() {
   return (
     <BackendPanel>
       <BackendPanel.HeaderLeft>
-        <BackendTitle text={`Edit ${humanize(crud.singular)}`} />
+        <BackendTitle text={`Edit ${humanize(crud.singular)}`} foreground />
       </BackendPanel.HeaderLeft>
 
       <BackendPanel.Content>
