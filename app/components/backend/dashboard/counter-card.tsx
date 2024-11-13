@@ -17,22 +17,22 @@ export function DashboardCounterCard({
   return (
     <div
       className={cn(
-        "rounded-sm border border-stone-200 bg-white p-4 shadow-sm sm:p-5 dark:border-gray-950 dark:bg-gray-900",
+        "rounded-sm border border-border-foreground bg-foreground p-4 shadow-sm sm:p-5 dark:border-none",
         className
       )}
       {...rest}
     >
       <div className="sm:flex sm:gap-x-3">
         {/* Asterix class applies to svg child element */}
-        <span className="mb-2 size-6 shrink-0 text-stone-400 *:size-6 sm:order-2 sm:mb-0 dark:text-neutral-600">
+        <span className="mb-2 size-6 shrink-0 text-secondary-foreground *:size-6 sm:order-2 sm:mb-0">
           {icon}
         </span>
 
         <div className="grow space-y-1 sm:order-1">
-          <h2 className="text-sm text-stone-500 sm:mb-3 dark:text-neutral-400">
+          <h2 className="text-sm text-secondary-foreground sm:mb-3">
             {title}
           </h2>
-          <p className="text-lg font-semibold text-stone-800 md:text-xl dark:text-neutral-200">
+          <p className="text-lg font-medium text-primary-foreground md:text-xl">
             {count}
           </p>
         </div>
