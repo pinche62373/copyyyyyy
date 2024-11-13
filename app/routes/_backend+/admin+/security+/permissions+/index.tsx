@@ -24,7 +24,7 @@ import { permissionTypeFilter } from "#app/components/tanstack-table/filters/per
 import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
-import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
+import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { getPermissions } from "#app/models/permission.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
@@ -166,7 +166,7 @@ export default function Component() {
   return (
     <BackendPanel>
       <BackendPanel.HeaderLeft>
-        <TableSearchInput
+        <TableSearch
           value={globalFilter ?? ""}
           onChange={(value: string | number) => setGlobalFilter(String(value))}
           placeholder={`Search ${permissionCrud.plural}...`}

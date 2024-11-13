@@ -19,7 +19,7 @@ import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-ty
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
-import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
+import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { getPermissionsByResourceName } from "#app/models/permission.server";
 import { handle as permissionsHandle } from "#app/routes/_backend+/admin+/security+/permissions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -147,7 +147,7 @@ export default function Component() {
   return (
     <BackendPanel>
       <BackendPanel.HeaderLeft>
-        <TableSearchInput
+        <TableSearch
           value={globalFilter ?? ""}
           onChange={(value: string | number) => setGlobalFilter(String(value))}
           placeholder={`Search permissions`}

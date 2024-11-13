@@ -29,7 +29,7 @@ import {
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
-import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
+import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { deleteLanguage, getLanguages } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
@@ -220,7 +220,7 @@ export default function Component() {
   return (
     <BackendPanel>
       <BackendPanel.HeaderLeft>
-        <TableSearchInput
+        <TableSearch
           value={globalFilter ?? ""}
           onChange={(value: string | number) => setGlobalFilter(String(value))}
           placeholder={`Search ${crud.plural}...`}

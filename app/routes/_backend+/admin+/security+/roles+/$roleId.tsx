@@ -24,7 +24,7 @@ import {
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
-import { TableSearchInput } from "#app/components/tanstack-table/TableSearchInput";
+import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { getRoleWithPermissions } from "#app/models/role.server";
 import { handle as rolesHandle } from "#app/routes/_backend+/admin+/security+/roles+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -177,7 +177,7 @@ export default function Component() {
       {/* Permissions table for role */}
       <BackendPanel>
         <BackendPanel.HeaderLeft>
-          <TableSearchInput
+          <TableSearch
             value={globalFilter ?? ""}
             onChange={(value: string | number) =>
               setGlobalFilter(String(value))
