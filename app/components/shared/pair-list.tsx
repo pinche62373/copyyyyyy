@@ -40,7 +40,7 @@ const Key = ({ className, children, ...rest }: Props) => {
 
 const Value = ({ className, children, ...rest }: Props) => {
   return (
-    <td className={cn("w-full sm:pl-0 md:pl-5 align-middle", className)} {...rest}>
+    <td className={cn("w-full align-middle sm:pl-0 md:pl-5", className)} {...rest}>
       {children}
     </td>
   );
