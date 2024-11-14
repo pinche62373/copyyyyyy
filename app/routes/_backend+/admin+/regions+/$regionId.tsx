@@ -56,7 +56,7 @@ export default function Component() {
   return (
     <BackendPanel>
       <BackendPanel.Row>
-        <BackendTitle text={`View ${humanize(crud.singular)}`} foreground />
+        <BackendTitle text={humanize(crud.singular)} foreground />
       </BackendPanel.Row>
 
       <BackendPanel.Row last>

@@ -105,9 +105,9 @@ const columns = [
 ];
 
 export default function Component() {
-  const { permissions } = useLoaderData<typeof loader>();
+  const { resourceName, permissions } = useLoaderData<typeof loader>();
 
-  // const resourceType = permissions[0].action === "access" ? "route" : "model";
+  const resourceType = permissions[0].action === "access" ? "route" : "model";
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
@@ -148,7 +148,7 @@ export default function Component() {
   return (
     <BackendPanel className="pb-4">
       <BackendPanel.Row>
-        <BackendTitle text={"Resource Permissions"} foreground/>
+        <BackendTitle text={`Permissions for ${resourceType} ${resourceName}`} foreground/>
       </BackendPanel.Row>
 
       <BackendPanel.Row>

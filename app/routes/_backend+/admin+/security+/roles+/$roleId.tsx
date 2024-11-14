@@ -157,7 +157,7 @@ export default function Component() {
       <BackendPanel>
         <BackendPanel.Row>
           <BackendTitle
-            text={`View ${humanize(roleCrud.singular)}`}
+            text={humanize(roleCrud.singular)}
             foreground
           />
         </BackendPanel.Row>
@@ -180,7 +180,7 @@ export default function Component() {
       {/* Permissions table for role */}
       <BackendPanel className="pb-4">
         <BackendPanel.Row>
-          <BackendTitle text={"Role Permissions"} foreground />
+          <BackendTitle text={"Permissions"} foreground />
         </BackendPanel.Row>
 
         <BackendPanel.Row>
