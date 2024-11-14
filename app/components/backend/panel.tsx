@@ -1,11 +1,11 @@
 import { cn } from "#app/utils/lib/cn";
 
-interface PanelProps {
+interface Props {
   className?: string;
   children: React.ReactNode;
 }
 
-const BackendPanel = ({ className, children, ...rest }: PanelProps) => {
+const BackendPanel = ({ className, children, ...rest }: Props) => {
   return (
     <div className="relative overflow-visible">
       <div
@@ -21,37 +21,15 @@ const BackendPanel = ({ className, children, ...rest }: PanelProps) => {
   );
 };
 
-interface HeaderProps {
-  className?: string;
-  children: React.ReactNode;
+interface RowProps extends Props {
+  last?: boolean;
 }
 
-const HeaderLeft = ({ className, children, ...rest }: HeaderProps) => {
-  return (
-    <div className={cn("float-left pb-5", className)} {...rest}>
-      <div className="flex">{children}</div>
-    </div>
-  );
-};
-
-const HeaderRight = ({ className, children, ...rest }: HeaderProps) => {
-  return (
-    <div className={cn("float-right pb-5", className)} {...rest}>
-      <div className="flex">{children}</div>
-    </div>
-  );
-};
-
-interface ContentProps {
-  className?: string;
-  children: React.ReactNode;
-}
-
-const Content = ({ className, children, ...rest }: ContentProps) => {
+const Row = ({ className, children, last, ...rest }: RowProps) => {
   return (
     <div className="clear-both">
       <div
-        className={cn("overflow-visible", className)}
+        className={cn("overflow-y-auto", last ? "mb-0" : "mb-5", className)}
         {...rest}
       >
         {children}
@@ -60,8 +38,24 @@ const Content = ({ className, children, ...rest }: ContentProps) => {
   );
 };
 
-BackendPanel.HeaderLeft = HeaderLeft;
-BackendPanel.HeaderRight = HeaderRight;
-BackendPanel.Content = Content;
+const Left = ({ className, children, ...rest }: Props) => {
+  return (
+    <div className={cn("float-left", className)} {...rest}>
+      <div className="flex">{children}</div>
+    </div>
+  );
+};
+
+const Right = ({ className, children, ...rest }: Props) => {
+  return (
+    <div className={cn("float-right", className)} {...rest}>
+      <div className="flex">{children}</div>
+    </div>
+  );
+};
+
+BackendPanel.Row = Row;
+BackendPanel.Left = Left;
+BackendPanel.Right = Right;
 
 export { BackendPanel };

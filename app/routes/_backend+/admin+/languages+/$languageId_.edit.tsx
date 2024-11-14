@@ -9,7 +9,6 @@ import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
-import { FormFooter } from "#app/components/shared/form/footer";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
@@ -116,11 +115,11 @@ export default function Component() {
 
   return (
     <BackendPanel>
-      <BackendPanel.HeaderLeft>
+      <BackendPanel.Row>
         <BackendTitle text={`Edit ${humanize(crud.singular)}`} foreground />
-      </BackendPanel.HeaderLeft>
+      </BackendPanel.Row>
 
-      <BackendPanel.Content>
+      <BackendPanel.Row last>
         <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
@@ -137,22 +136,26 @@ export default function Component() {
               </PairList.Value>
             </PairList.Pair>
           </PairList>
-
-          <FormFooter>
-            <Button
-              type="button"
-              text="Close"
-              to={crud.routes.index}
-              secondary
-            />
-            <Button
-              type="submit"
-              text="Save"
-              disabled={navigation.state === "submitting"}
-            />
-          </FormFooter>
         </form>
-      </BackendPanel.Content>
+      </BackendPanel.Row>
+
+      <BackendPanel.Row last>
+        <BackendPanel.Right>
+          <Button
+            type="button"
+            text="Close"
+            to={crud.routes.index}
+            className="mr-2"
+            secondary
+          />
+          <Button
+            type="submit"
+            form={form.formOptions.formId}
+            text="Save"
+            disabled={navigation.state === "submitting"}
+          />
+        </BackendPanel.Right>
+      </BackendPanel.Row>
     </BackendPanel>
   );
 }

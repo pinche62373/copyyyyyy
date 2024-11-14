@@ -13,7 +13,6 @@ import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { SpamError } from "remix-utils/honeypot/server";
 
 import { Button } from "#app/components/shared/button";
-import { FormFooter } from "#app/components/shared/form/footer";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import { createUser, isEmailAddressAvailable } from "#app/models/user.server";
@@ -167,14 +166,12 @@ export default function RegisterPage() {
 
           <HoneypotInputs />
 
-          <FormFooter>
-            <Button type="button" text="Cancel" to="/" secondary />
-            <Button
-              type="submit"
-              text="Register"
-              disabled={navigation.state === "submitting"}
-            />
-          </FormFooter>
+          <Button type="button" text="Cancel" to="/" secondary />
+          <Button
+            type="submit"
+            text="Register"
+            disabled={navigation.state === "submitting"}
+          />
         </form>
       </div>
     </div>

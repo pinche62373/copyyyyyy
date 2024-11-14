@@ -10,7 +10,6 @@ import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
-import { FormFooter } from "#app/components/shared/form/footer";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { ComboBox } from "#app/components/shared/form/inputs/combobox";
 import { ComboBoxItem } from "#app/components/shared/form/inputs/combobox-item";
@@ -110,11 +109,11 @@ export default function Component() {
 
   return (
     <BackendPanel>
-      <BackendPanel.HeaderLeft>
+      <BackendPanel.Row>
         <BackendTitle text={`New ${crud.singular}`} foreground />
-      </BackendPanel.HeaderLeft>
+      </BackendPanel.Row>
 
-      <BackendPanel.Content>
+      <BackendPanel.Row>
         <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
@@ -131,8 +130,8 @@ export default function Component() {
             </PairList.Pair>
 
             <PairList.Pair>
-              <PairList.Key>Region</PairList.Key>
-              <PairList.Value>
+              <PairList.Key last>Region</PairList.Key>
+              <PairList.Value last>
                 <ComboBox
                   {...form.getControlProps("country.regionId")}
                   ariaLabel="Regions"
@@ -145,22 +144,26 @@ export default function Component() {
               </PairList.Value>
             </PairList.Pair>
           </PairList>
-
-          <FormFooter>
-            <Button
-              type="button"
-              text="Cancel"
-              to={crud.routes.index}
-              secondary
-            />
-            <Button
-              type="submit"
-              text="Save"
-              disabled={navigation.state === "submitting"}
-            />
-          </FormFooter>
         </form>
-      </BackendPanel.Content>
+      </BackendPanel.Row>
+
+      <BackendPanel.Row last>
+        <BackendPanel.Right>
+          <Button
+            type="button"
+            text="Cancel"
+            className="mr-2"
+            to={crud.routes.index}
+            secondary
+          />
+          <Button
+            type="submit"
+            text="Save"
+            form={form.formOptions.formId}
+            disabled={navigation.state === "submitting"}
+          />
+        </BackendPanel.Right>
+      </BackendPanel.Row>
     </BackendPanel>
   );
 }

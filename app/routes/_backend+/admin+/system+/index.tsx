@@ -87,9 +87,11 @@ export default function Component() {
 
   return (
     <BackendPanel>
-      <BackendTitle text={`System`} foreground />
+      <BackendPanel.Row>
+        <BackendTitle text={`System`} foreground />
+      </BackendPanel.Row>
 
-      <BackendPanel.Content>
+      <BackendPanel.Row last>
         <form {...form.getFormProps()} autoComplete="off">
           <InputGeneric
             scope={form.scope("intent")}
@@ -99,8 +101,8 @@ export default function Component() {
 
           <PairList>
             <PairList.Pair>
-              <PairList.Key className="align-middle">Sessions</PairList.Key>
-              <PairList.Value>
+              <PairList.Key className="align-middle" last>Sessions</PairList.Key>
+              <PairList.Value last>
                 <ActionButton
                   formId={formId}
                   label={invalidSessionsLabel}
@@ -111,7 +113,7 @@ export default function Component() {
             </PairList.Pair>
           </PairList>
         </form>
-      </BackendPanel.Content>
+      </BackendPanel.Row>
     </BackendPanel>
   );
 }

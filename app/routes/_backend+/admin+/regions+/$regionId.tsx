@@ -5,7 +5,6 @@ import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
-import { FormFooter } from "#app/components/shared/form/footer";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import { getRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
@@ -56,11 +55,11 @@ export default function Component() {
 
   return (
     <BackendPanel>
-      <BackendPanel.HeaderLeft>
+      <BackendPanel.Row>
         <BackendTitle text={`View ${humanize(crud.singular)}`} foreground />
-      </BackendPanel.HeaderLeft>
+      </BackendPanel.Row>
 
-      <BackendPanel.Content>
+      <BackendPanel.Row last>
         <PairList>
           <PairList.Pair>
             <PairList.Key>Name</PairList.Key>
@@ -87,9 +86,17 @@ export default function Component() {
             </PairList.Value>
           </PairList.Pair>
         </PairList>
+      </BackendPanel.Row>
 
-        <FormFooter>
-          <Button type="button" text="Close" to={crud.routes.index} secondary />
+      <BackendPanel.Row last>
+        <BackendPanel.Right>
+          <Button
+            type="button"
+            text="Close"
+            className="mr-2"
+            to={crud.routes.index}
+            secondary
+          />
 
           {userHasRoutePermission(user, {
             resource: crud.routes.edit,
@@ -101,8 +108,8 @@ export default function Component() {
               to={`${crud.routes.index}/${region.id}/edit`}
             />
           )}
-        </FormFooter>
-      </BackendPanel.Content>
+        </BackendPanel.Right>
+      </BackendPanel.Row>
     </BackendPanel>
   );
 }

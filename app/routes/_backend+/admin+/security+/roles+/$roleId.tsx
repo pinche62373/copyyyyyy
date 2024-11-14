@@ -155,11 +155,14 @@ export default function Component() {
     <>
       {/* List role data */}
       <BackendPanel>
-        <BackendPanel.HeaderLeft>
-          <BackendTitle text={`View ${humanize(roleCrud.singular)}`} foreground />
-        </BackendPanel.HeaderLeft>
+        <BackendPanel.Row>
+          <BackendTitle
+            text={`View ${humanize(roleCrud.singular)}`}
+            foreground
+          />
+        </BackendPanel.Row>
 
-        <BackendPanel.Content>
+        <BackendPanel.Row last>
           <PairList>
             <PairList.Pair>
               <PairList.Key>Name</PairList.Key>
@@ -167,33 +170,39 @@ export default function Component() {
             </PairList.Pair>
 
             <PairList.Pair>
-              <PairList.Key>Description</PairList.Key>
-              <PairList.Value>{role.description}</PairList.Value>
+              <PairList.Key last>Description</PairList.Key>
+              <PairList.Value last>{role.description}</PairList.Value>
             </PairList.Pair>
           </PairList>
-        </BackendPanel.Content>
+        </BackendPanel.Row>
       </BackendPanel>
 
       {/* Permissions table for role */}
-      <BackendPanel>
-        <BackendPanel.HeaderLeft>
-          <TableSearch
-            value={globalFilter ?? ""}
-            onChange={(value: string | number) =>
-              setGlobalFilter(String(value))
-            }
-            placeholder={`Search permissions`}
-          />
-        </BackendPanel.HeaderLeft>
+      <BackendPanel className="pb-4">
+        <BackendPanel.Row>
+          <BackendTitle text={"Role Permissions"} foreground />
+        </BackendPanel.Row>
 
-        <BackendPanel.Content>
+        <BackendPanel.Row>
+          <BackendPanel.Left>
+            <TableSearch
+              value={globalFilter ?? ""}
+              onChange={(value: string | number) =>
+                setGlobalFilter(String(value))
+              }
+              placeholder={`Search permissions`}
+            />
+          </BackendPanel.Left>
+        </BackendPanel.Row>
+
+        <BackendPanel.Row last>
           <TanstackTable.Table table={table}>
             <TanstackTable.THead />
             <TanstackTable.TBody />
           </TanstackTable.Table>
 
           <TableFooter table={table} />
-        </BackendPanel.Content>
+        </BackendPanel.Row>
       </BackendPanel>
     </>
   );

@@ -136,25 +136,31 @@ export default function Component() {
   });
 
   return (
-    <BackendPanel>
-      <BackendTitle text={humanize(crud.plural)} className="mb-5" foreground/>
+    <BackendPanel className="pb-4">
+      <BackendPanel.Row>
+        <BackendTitle text={humanize(crud.plural)} foreground />
+      </BackendPanel.Row>
 
-      <BackendPanel.HeaderLeft>
-        <TableSearch
-          value={globalFilter ?? ""}
-          onChange={(value: string | number) => setGlobalFilter(String(value))}
-          placeholder={`Search ${crud.plural}...`}
-        />
-      </BackendPanel.HeaderLeft>
+      <BackendPanel.Row>
+        <BackendPanel.Left>
+          <TableSearch
+            value={globalFilter ?? ""}
+            onChange={(value: string | number) =>
+              setGlobalFilter(String(value))
+            }
+            placeholder={`Search ${crud.plural}...`}
+          />
+        </BackendPanel.Left>
+      </BackendPanel.Row>
 
-      <BackendPanel.Content>
+      <BackendPanel.Row last>
         <TanstackTable.Table table={table}>
           <TanstackTable.THead />
           <TanstackTable.TBody />
         </TanstackTable.Table>
 
         <TableFooter table={table} />
-      </BackendPanel.Content>
+      </BackendPanel.Row>
     </BackendPanel>
   );
 }

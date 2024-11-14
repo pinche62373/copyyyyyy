@@ -13,6 +13,7 @@ import { useState } from "react";
 import { z } from "zod";
 
 import { BackendPanel } from "#app/components/backend/panel";
+import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
@@ -145,23 +146,29 @@ export default function Component() {
   });
 
   return (
-    <BackendPanel>
-      <BackendPanel.HeaderLeft>
+    <BackendPanel className="pb-4">
+      <BackendPanel.Row>
+        <BackendTitle text={"Resource Permissions"} foreground/>
+      </BackendPanel.Row>
+
+      <BackendPanel.Row>
+        <BackendPanel.Left>
         <TableSearch
           value={globalFilter ?? ""}
           onChange={(value: string | number) => setGlobalFilter(String(value))}
           placeholder={`Search permissions`}
         />
-      </BackendPanel.HeaderLeft>
+        </BackendPanel.Left>
+      </BackendPanel.Row>
 
-      <BackendPanel.Content>
+      <BackendPanel.Row last>
         <TanstackTable.Table table={table}>
           <TanstackTable.THead />
           <TanstackTable.TBody />
         </TanstackTable.Table>
 
         <TableFooter table={table} />
-      </BackendPanel.Content>
+      </BackendPanel.Row>
     </BackendPanel>
   );
 }

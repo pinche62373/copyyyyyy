@@ -6,7 +6,6 @@ import { jsonWithError, jsonWithSuccess } from "remix-toast";
 
 import { FrontendSection } from "#app/components/frontend/section";
 import { Button } from "#app/components/shared/button";
-import { FormFooter } from "#app/components/shared/form/footer";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { updateUserAccountSettings } from "#app/models/user.server";
 import { authenticator, getUserOrDie } from "#app/utils/auth.server";
@@ -107,15 +106,13 @@ export default function SettingsIndexPage() {
 
           <InputGeneric name="username" scope={form.scope("user.username")} />
 
-          <FormFooter>
-            <Button type="reset" text="Reset Form" secondary />
+          <Button type="reset" text="Reset Form" secondary />
 
-            <Button
-              type="submit"
-              text="Save Changes"
-              disabled={form.formState.isSubmitting}
-            />
-          </FormFooter>
+          <Button
+            type="submit"
+            text="Save Changes"
+            disabled={form.formState.isSubmitting}
+          />
         </form>
       </div>
       {/* End Profile Container */}

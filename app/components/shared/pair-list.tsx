@@ -7,10 +7,7 @@ interface Props {
 
 const PairList = ({ className, children, ...rest }: Props) => {
   return (
-    <table
-      className={cn("table-auto border-separate border-spacing-y-4", className)}
-      {...rest}
-    >
+    <table className={cn("table-auto", className)} {...rest}>
       <tbody>{children}</tbody>
     </table>
   );
@@ -18,17 +15,29 @@ const PairList = ({ className, children, ...rest }: Props) => {
 
 const Pair = ({ className, children, ...rest }: Props) => {
   return (
-    <tr className={cn("flex flex-col sm:table-row", className)} {...rest}>
+    <tr
+      className={cn(
+        "flex flex-col sm:table-row",
+
+        className
+      )}
+      {...rest}
+    >
       {children}
     </tr>
   );
 };
 
-const Key = ({ className, children, ...rest }: Props) => {
+interface KeyProps extends Props {
+  last?: boolean;
+}
+
+const Key = ({ className, children, last, ...rest }: KeyProps) => {
   return (
     <td
       className={cn(
         "whitespace-nowrap align-middle font-semibold text-tertiary-foreground",
+        last ? "pb-1" : "pb-5",
         className
       )}
       {...rest}
@@ -38,9 +47,21 @@ const Key = ({ className, children, ...rest }: Props) => {
   );
 };
 
-const Value = ({ className, children, ...rest }: Props) => {
+interface ValueProps extends Props {
+  last?: boolean;
+}
+
+const Value = ({ className, children, last, ...rest }: ValueProps) => {
   return (
-    <td className={cn("w-full align-middle sm:pl-0 md:pl-5", className)} {...rest}>
+    <td
+      className={cn(
+        "w-full align-middle sm:pl-0 md:pl-5",
+        last ? "pb-1" : "pb-5",
+
+        className
+      )}
+      {...rest}
+    >
       {children}
     </td>
   );
