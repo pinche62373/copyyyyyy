@@ -10,7 +10,7 @@ const BackendPanel = ({ className, children, ...rest }: Props) => {
     <div className="relative overflow-visible">
       <div
         className={cn(
-          "mb-6 rounded-md border border-border bg-foreground px-5 py-5 dark:border-none",
+          "mb-6 rounded-md border border-border-foreground bg-foreground px-5 py-5 shadow-sm dark:border-none",
           className
         )}
         {...rest}
