@@ -76,7 +76,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
+  const formData = await request.clone().formData();
 
   const validated = await formValidator.validate(formData);
 
