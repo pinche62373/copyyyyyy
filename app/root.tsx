@@ -1,19 +1,14 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
-  LiveReload,
   MetaFunction,
   Outlet,
   useLoaderData,
   useLocation
 } from "@remix-run/react";
-import reactMenuStyleSheet from "@szhsin/react-menu/dist/index.css";
-import reactMenuTransitionStylesheet from "@szhsin/react-menu/dist/transitions/zoom.css";
 import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
 import { Slide, ToastContainer, toast as notify } from "react-toastify";
-import toastStyles from "react-toastify/dist/ReactToastify.css";
 import { type Theme } from "remix-themes";
 import type { ToastMessage } from "remix-toast";
 import { getToast } from "remix-toast";
@@ -22,22 +17,15 @@ import { HoneypotInputProps } from "remix-utils/honeypot/server";
 
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
-import sharedStyleSheet from "#app/styles/shared.css";
 import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { themeSessionResolver } from "#app/utils/theme.server";
 
-export const links: LinksFunction = () => [
-  ...(cssBundleHref
-    ? [
-        { rel: "stylesheet", href: cssBundleHref },
-        { rel: "stylesheet", href: reactMenuStyleSheet, as: "style" },
-        { rel: "stylesheet", href: reactMenuTransitionStylesheet, as: "style" },
-        { rel: "stylesheet", href: toastStyles },
-        { rel: "stylesheet", href: sharedStyleSheet, as: "style" }
-      ]
-    : [])
-];
+// stylesheets and fonts
+import "@szhsin/react-menu/dist/index.css";
+import "@szhsin/react-menu/dist/transitions/zoom.css";
+import "react-toastify/dist/ReactToastify.css";
+import "#app/styles/shared.css";
 
 // root layout of the entire app, all other routes render inside its <Outlet />
 export { Document as Layout };
@@ -88,9 +76,9 @@ declare global {
     HSStaticMethods: IStaticMethods;
   }
 }
+
 if (typeof window !== "undefined") {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  require("preline/preline");
+  import("preline/preline");
 }
 
 // ----------------------------------------------------------------------------
@@ -128,8 +116,6 @@ function App() {
         theme="colored"
         transition={Slide}
       />
-
-      {process.env.NODE_ENV === "development" && <LiveReload />}
     </>
   );
 }

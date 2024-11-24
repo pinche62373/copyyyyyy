@@ -1,29 +1,17 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type {
-  LinksFunction,
-  LoaderFunctionArgs,
-  MetaFunction
-} from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import { BackendHeader } from "#app/components/backend/header";
 import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import backendStyleSheet from "#app/styles/backend.css";
 import { authenticator } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { requireRole } from "#app/utils/permissions.server";
 import { Roles } from "#app/validations/role-schema";
 
-// import fonts for the backend route
-import "@fontsource-variable/inter/wght.css";
-
-// import styles for the backend route
-export const links: LinksFunction = () => [
-  ...(cssBundleHref
-    ? [{ rel: "stylesheet", href: backendStyleSheet, as: "style" }]
-    : [])
-];
+// stylesheets and fonts
+import "#app/styles/backend.css";
+import "@fontsource-variable/inter/wght.css?url";
 
 export const meta: MetaFunction = () => [{ title: "TMDB Admin" }];
 

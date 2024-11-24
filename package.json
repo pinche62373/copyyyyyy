@@ -6,17 +6,15 @@
     "#*": "./*"
   },
   "scripts": {
-    "build": "remix build",
-    "dev": "remix dev -c \"npm run dev:serve\"",
-    "dev:serve": "binode --require ./mocks -- @remix-run/serve:remix-serve ./build/index.js",
+    "build": "remix vite:build",
+    "dev": "remix vite:dev",
     "format": "prettier --write .",
     "knip": "knip",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint . --max-warnings 0",
     "migrate": "prisma migrate dev",
     "postmigrate": "npx @snaplet/seed sync",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
-    "start": "remix-serve ./build/index.js",
-    "start:mocks": "binode --require ./mocks -- @remix-run/serve:remix-serve ./build/index.js",
+    "start": "remix-serve ./build/server/index.js",
     "test": "vitest",
     "pretest:e2e:run": "npm run build",
     "seed": "npx prisma db seed",
@@ -38,7 +36,6 @@
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.0",
     "@prisma/client": "^5.21.1",
-    "@remix-run/css-bundle": "2.13.1",
     "@remix-run/node": "2.13.1",
     "@remix-run/react": "2.13.1",
     "@remix-run/serve": "2.13.1",
@@ -118,7 +115,7 @@
     "tsconfig-paths": "^4.2.0",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3",
-    "vite": "^5.4.10",
+    "vite": "^5.4.11",
     "vite-tsconfig-paths": "^5.0.1",
     "vitest": "^2.1.4"
   },

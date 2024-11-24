@@ -1,6 +1,5 @@
-import { json, type SerializeFrom } from "@remix-run/node";
+import { type SerializeFrom } from "@remix-run/node";
 import { useRouteLoaderData } from "@remix-run/react";
-import invariant from "tiny-invariant";
 
 import { normalizeRoutePermission } from "#app/permissions/normalize-route-permission";
 import {
@@ -9,7 +8,6 @@ import {
   RoutePermission
 } from "#app/permissions/permission.types";
 import { type loader as rootLoader } from "#app/root.tsx";
-import { prisma } from "#app/utils/db.server";
 
 type UserType = SerializeFrom<typeof rootLoader>["user"];
 
@@ -98,35 +96,8 @@ export async function userHasModelPermission(
     "resource" | "action" | "scope" | "resourceId"
   >
 ) {
-  if (permission.scope === "own") {
-    if (!(await userHasOwnPermission(user, permission as Permission))) {
-      throw json(null, { status: 403, statusText: `Forbidden` });
-    }
-  }
-
   return userHasPermission(user, {
     ...permission,
     resourceId: permission.resourceId
-  });
-}
-
-/**
- * Checks if user is owner of requested permission.resource.
- */
-export async function userHasOwnPermission(
-  user: Pick<ReturnType<typeof useUser>, "id"> | null,
-  permission: Pick<Permission, "resource" | "action" | "scope" | "resourceId">
-) {
-  invariant(user, "userHasOwnPermission() requires a user");
-
-  // do not query for User table because it does not have `createdBy` field
-  if (permission.resource === "user") {
-    return permission.resourceId === user.id;
-  }
-
-  // @ts-expect-error: No typing for variable as table name (https://github.com/prisma/prisma/issues/11940)
-  return prisma[permission.resource].findUnique({
-    select: { id: true },
-    where: { id: permission.resourceId, createdBy: user.id }
   });
 }

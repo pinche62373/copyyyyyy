@@ -1,16 +1,10 @@
-import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
 
 import { FrontendHeader } from "#app/components/frontend/header";
-import frontendStyleSheet from "#app/styles/frontend.css";
 
-// import styles for the frontend route
-export const links: LinksFunction = () => [
-  ...(cssBundleHref
-    ? [{ rel: "stylesheet", href: frontendStyleSheet, as: "style" }]
-    : [])
-];
+// stylesheet and fonts
+import "#app/styles/frontend.css";
 
 export const meta: MetaFunction = () => [{ title: "TMDB" }];
 
