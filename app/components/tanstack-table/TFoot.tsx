@@ -1,4 +1,3 @@
-
 const TFoot = () => {
   return <div>TFoot</div>;
 };

@@ -1,4 +1,4 @@
 {
-    "entry": ["index.{js,ts}", "prisma/seed/seed.ts"],
-    "ignoreDependencies": ["tsx"]
+  "entry": ["index.{js,ts}", "prisma/seed/seed.ts"],
+  "ignoreDependencies": ["tsx"]
 }

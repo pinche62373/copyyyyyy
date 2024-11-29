@@ -14,7 +14,7 @@ import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import {
   deleteExpiredSessions,
-  getExpiredSessionCount
+  getExpiredSessionCount,
 } from "#app/models/session";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 
@@ -22,24 +22,24 @@ const intent = "purge";
 
 const formValidator = withZod(
   z.object({
-    intent: z.literal(intent)
-  })
+    intent: z.literal(intent),
+  }),
 );
 
 export const handle = {
-  breadcrumb: (): BreadcrumbHandle => [{ name: "System", to: "admin/system" }]
+  breadcrumb: (): BreadcrumbHandle => [{ name: "System", to: "admin/system" }],
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const expiredSessionCount = await getExpiredSessionCount();
 
   return {
-    expiredSessionCount
+    expiredSessionCount,
   };
 }
 
@@ -50,12 +50,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
       if (validated.error)
         return jsonWithError(validated.error, "Form data rejected by server", {
-          status: 422
+          status: 422,
         });
 
       await requireRoutePermission(request, {
         resource: "/admin/system",
-        scope: "any"
+        scope: "any",
       });
 
       try {
@@ -65,7 +65,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       }
 
       return jsonWithSuccess(null, `Expired sessions deleted successfully`);
-    }
+    },
   });
 };
 
@@ -77,7 +77,7 @@ export default function Component() {
     method: "post",
     validator: formValidator,
     action: "/admin/system",
-    id: formId
+    id: formId,
   });
 
   const invalidSessionsLabel =
@@ -101,7 +101,9 @@ export default function Component() {
 
           <PairList>
             <PairList.Pair>
-              <PairList.Key className="align-middle" last>Sessions</PairList.Key>
+              <PairList.Key className="align-middle" last>
+                Sessions
+              </PairList.Key>
               <PairList.Value last>
                 <ActionButton
                   formId={formId}

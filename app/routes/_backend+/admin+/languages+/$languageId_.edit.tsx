@@ -18,12 +18,12 @@ import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
-  requireRoutePermission
+  requireRoutePermission,
 } from "#app/utils/permissions.server";
 import { validatePageId } from "#app/utils/validate-page-id";
 import {
   languageSchema,
-  languageSchemaUpdate
+  languageSchemaUpdate,
 } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
@@ -34,17 +34,17 @@ const formValidator = withZod(languageSchemaUpdate);
 
 export const handle = {
   breadcrumb: ({
-    data
+    data,
   }: {
     data: { form: { language: { id: string; name: string } } };
   }): BreadcrumbHandle => [
     ...languagesHandle.breadcrumb(),
     {
       name: data.form.language.name,
-      to: `${crud.routes.index}/${data.form.language.id}`
+      to: `${crud.routes.index}/${data.form.language.id}`,
     },
-    { name: "Edit" }
-  ]
+    { name: "Edit" },
+  ],
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -52,7 +52,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const language = await getLanguage({ id: languageId });
@@ -63,8 +63,8 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return {
     form: {
-      language
-    }
+      language,
+    },
   };
 }
 
@@ -75,13 +75,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
-      status: 422
+      status: 422,
     });
 
   await requireModelPermission(request, {
     resource: crud.singular,
     action: intent,
-    scope: "any"
+    scope: "any",
   });
 
   try {
@@ -98,7 +98,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return jsonWithSuccess(
     null,
-    `${humanize(crud.singular)} updated successfully`
+    `${humanize(crud.singular)} updated successfully`,
   );
 };
 
@@ -110,7 +110,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData.form }
+    defaultValues: { intent, ...loaderData.form },
   });
 
   return (

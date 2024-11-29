@@ -2,7 +2,7 @@ import {
   Link,
   isRouteErrorResponse,
   useNavigate,
-  useRouteError
+  useRouteError,
 } from "@remix-run/react";
 
 import { Button } from "#app/components/shared/button";

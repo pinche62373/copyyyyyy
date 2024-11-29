@@ -21,12 +21,12 @@ import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
-  requireRoutePermission
+  requireRoutePermission,
 } from "#app/utils/permissions.server";
 import { validatePageId } from "#app/utils/validate-page-id";
 import {
   countrySchema,
-  countrySchemaUpdate
+  countrySchemaUpdate,
 } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
@@ -37,17 +37,17 @@ const formValidator = withZod(countrySchemaUpdate);
 
 export const handle = {
   breadcrumb: ({
-    data
+    data,
   }: {
     data: { form: { country: { id: string; name: string } } };
   }): BreadcrumbHandle => [
     ...countriesHandle.breadcrumb(),
     {
       name: data.form.country.name,
-      to: `${crud.routes.index}/${data.form.country.id}`
+      to: `${crud.routes.index}/${data.form.country.id}`,
     },
-    { name: "Edit" }
-  ]
+    { name: "Edit" },
+  ],
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -55,7 +55,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const country = await getCountry({ id: countryId });
@@ -68,9 +68,9 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   return {
     form: {
-      country
+      country,
     },
-    regions
+    regions,
   };
 }
 
@@ -81,13 +81,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
-      status: 422
+      status: 422,
     });
 
   await requireModelPermission(request, {
     resource: crud.singular,
     action: intent,
-    scope: "any"
+    scope: "any",
   });
 
   if ((await getRegionById(validated.data.country.regionId)) === null) {
@@ -108,7 +108,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return jsonWithSuccess(
     null,
-    `${humanize(crud.singular)} updated successfully`
+    `${humanize(crud.singular)} updated successfully`,
   );
 };
 
@@ -120,7 +120,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData.form }
+    defaultValues: { intent, ...loaderData.form },
   });
 
   return (
@@ -156,7 +156,8 @@ export default function Component() {
                   defaultItems={loaderData.regions}
                   defaultSelectedKey={
                     loaderData.regions.find(
-                      (region) => region.id === loaderData.form.country.regionId
+                      (region) =>
+                        region.id === loaderData.form.country.regionId,
                     )?.id
                   }
                 >

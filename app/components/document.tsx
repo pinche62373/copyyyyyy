@@ -5,13 +5,13 @@ import {
   ScrollRestoration,
   useRouteLoaderData,
 } from "@remix-run/react";
+import React from "react";
 import {
   PreventFlashOnWrongTheme,
   type Theme,
   ThemeProvider,
   useTheme,
 } from "remix-themes";
-
 import { LoaderData } from "#app/root";
 
 export function Document({ children }: { children: React.ReactNode }) {

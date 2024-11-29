@@ -21,7 +21,7 @@ export const TableFooter = <T,>({
     <div
       className={cn(
         "flex flex-wrap items-center justify-between gap-2 pt-5",
-        className
+        className,
       )}
       {...rest}
     >
@@ -37,7 +37,7 @@ export const TableFooter = <T,>({
             min="1"
             className={cn(
               "no-spin-button w-11 rounded-lg p-2 text-center", // focus:outline-none focus:ring-0",
-              "border border-border-foreground bg-input",              
+              "border border-border-foreground bg-input",
               "focus:border-ring focus:ring-0",
               "text-sm font-medium text-secondary-foreground",
             )}
@@ -65,7 +65,7 @@ export const TableFooter = <T,>({
           className={cn(
             "inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2",
             "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-            "text-sm text-secondary-foreground hover:bg-input"
+            "text-sm text-secondary-foreground hover:bg-input",
           )}
           disabled={!table.getCanPreviousPage()}
           onClick={() => table.previousPage()}
@@ -93,7 +93,7 @@ export const TableFooter = <T,>({
             className={cn(
               "flex min-h-[38px] min-w-[38px] items-center justify-center rounded-lg px-3 py-2",
               "disabled:pointer-events-none disabled:opacity-50",
-              "bg-foreground text-sm font-medium text-secondary-foreground"
+              "bg-foreground text-sm font-medium text-secondary-foreground",
             )}
           >
             {currentPageIndex}
@@ -111,7 +111,7 @@ export const TableFooter = <T,>({
           className={cn(
             "inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2",
             "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-            "text-sm text-secondary-foreground hover:bg-input"
+            "text-sm text-secondary-foreground hover:bg-input",
           )}
           disabled={!table.getCanNextPage()}
           onClick={() => table.nextPage()}

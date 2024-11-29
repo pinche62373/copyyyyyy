@@ -19,7 +19,7 @@ export function BackendSidebar() {
         "hs-overlay fixed inset-y-0 start-0 z-[60] hidden w-[260px] -translate-x-full",
         "transition-all duration-300 [--auto-close:lg] hs-overlay-open:translate-x-0",
         "lg:bottom-0 lg:end-auto lg:block lg:translate-x-0",
-        "border-e border-border bg-foreground"
+        "border-e border-border bg-foreground",
       )}
     >
       <div className="flex h-full max-h-full flex-col py-3">
@@ -40,7 +40,7 @@ export function BackendSidebar() {
           className={cn(
             "h-[calc(100%-35px)] overflow-y-auto lg:h-[calc(100%-93px)] [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar]:w-2",
             "[&::-webkit-scrollbar-thumb]:bg-gray-300 [&::-webkit-scrollbar-track]:bg-gray-100",
-            "dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:[&::-webkit-scrollbar-track]:bg-neutral-700"
+            "dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500 dark:[&::-webkit-scrollbar-track]:bg-neutral-700",
           )}
         >
           {/* Section: Main */}
@@ -151,7 +151,7 @@ export function BackendSidebar() {
               "inline-flex h-7 w-6 items-center justify-center gap-x-2 rounded-md border ",
               "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
               "border-gray-200 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:bg-gray-100",
-              "dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
+              "dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700",
             )}
             data-hs-overlay="#hs-pro-sidebar"
             aria-controls="hs-pro-sidebar"

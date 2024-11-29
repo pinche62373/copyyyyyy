@@ -20,13 +20,13 @@ const { languageCrud: crud } = getAdminCrud();
 
 export const handle = {
   breadcrumb: ({
-    data
+    data,
   }: {
     data: { language: { id: string; name: string } };
   }): BreadcrumbHandle => [
     ...languagesHandle.breadcrumb(),
-    { name: data.language.name }
-  ]
+    { name: data.language.name },
+  ],
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -34,7 +34,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const language = await getLanguage({ id: languageId });
@@ -44,7 +44,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    language
+    language,
   };
 }
 
@@ -100,7 +100,7 @@ export default function Component() {
 
           {userHasRoutePermission(user, {
             resource: crud.routes.edit,
-            scope: "any"
+            scope: "any",
           }) && (
             <Button
               type="button"

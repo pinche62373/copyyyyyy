@@ -13,17 +13,17 @@ import { Roles } from "#app/validations/role-schema";
 import "#app/styles/backend.css";
 import "@fontsource-variable/inter/wght.css?url";
 
-export const meta: MetaFunction = () => [{ title: "TMDB Admin" }];
+export const meta: MetaFunction = () => [{ title: "TZDB Admin" }];
 
 export const handle = {
-  breadcrumb: (): BreadcrumbHandle => [{ name: "Dashboard", to: "/admin" }]
+  breadcrumb: (): BreadcrumbHandle => [{ name: "Dashboard", to: "/admin" }],
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
   await authenticator.isAuthenticated(request, {
-    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`
+    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
   });
 
   await requireRole(request, [Roles.ADMIN, Roles.MODERATOR]);

@@ -1,14 +1,14 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
-  createColumnHelper,
   FilterFnOption,
+  SortingState,
+  createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
-  useReactTable
+  useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
 
@@ -16,26 +16,26 @@ import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
+import { TableFooter } from "#app/components/tanstack-table/TableFooter";
+import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import {
   tableCellLink,
-  tableCellVisibleRowIndex
+  tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter";
 import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { TableFooter } from "#app/components/tanstack-table/TableFooter";
-import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { getPermissions } from "#app/models/permission.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,
-  ADMIN_TABLE_PAGE_SIZE
+  ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   flattenPermissions,
-  requireRoutePermission
+  requireRoutePermission,
 } from "#app/utils/permissions.server";
 
 const { resourceCrud, permissionCrud } = getAdminCrud();
@@ -43,21 +43,21 @@ const { resourceCrud, permissionCrud } = getAdminCrud();
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
     { name: "Security" },
-    { name: humanize(permissionCrud.plural), to: permissionCrud.routes.index }
-  ]
+    { name: humanize(permissionCrud.plural), to: permissionCrud.routes.index },
+  ],
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const permissions = await getPermissions();
   const flattenedPermissions = flattenPermissions(permissions);
 
   return {
-    flattenedPermissions
+    flattenedPermissions,
   };
 }
 
@@ -80,10 +80,10 @@ const columns = [
     enableGlobalFilter: false,
     meta: {
       headerProps: {
-        className: "table-column-fit-content"
-      }
+        className: "table-column-fit-content",
+      },
     },
-    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table })
+    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("resource", {
     header: "Resource",
@@ -93,20 +93,20 @@ const columns = [
       tableCellLink({
         id: row.original.resource,
         name: row.original.resource,
-        target: resourceCrud.routes.index
-      })
+        target: resourceCrud.routes.index,
+      }),
   }),
   columnHelper.accessor("action", {
     header: "Action",
     enableGlobalFilter: true,
     enableColumnFilter: true,
     cell: (info) => info.getValue(),
-    filterFn: permissionTypeFilter as FilterFnOption<FlatPermission>
+    filterFn: permissionTypeFilter as FilterFnOption<FlatPermission>,
   }),
   columnHelper.accessor("scope", {
     header: "Scope",
     enableGlobalFilter: true,
-    cell: (info) => info.getValue()
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("role", {
     header: "Role",
@@ -115,9 +115,9 @@ const columns = [
       tableCellLink({
         id: row.original.roleId,
         name: row.original.role,
-        target: "/admin/security/roles"
-      })
-  })
+        target: "/admin/security/roles",
+      }),
+  }),
 ];
 
 export default function Component() {
@@ -125,27 +125,27 @@ export default function Component() {
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
-    pageSize: ADMIN_TABLE_PAGE_SIZE
+    pageSize: ADMIN_TABLE_PAGE_SIZE,
   });
 
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "resource", // MUST be here or global filter will not sort by rankingValue
-      desc: false
-    }
+      desc: false,
+    },
   ]);
 
   const table = useReactTable({
     data: flattenedPermissions,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter
+      fuzzy: fuzzyFilter,
     },
     state: {
       pagination,
       globalFilter,
-      sorting
+      sorting,
     },
     enableGlobalFilter: true,
     globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter
@@ -156,7 +156,7 @@ export default function Component() {
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination
+    onPaginationChange: setPagination,
   });
 
   // passes selected value to the filter function set on the `action` column

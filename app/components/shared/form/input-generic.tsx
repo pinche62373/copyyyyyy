@@ -1,6 +1,6 @@
-import { useField, FormScope, ValueOfInputType } from "@rvf/react";
+import { FormScope, ValueOfInputType, useField } from "@rvf/react";
+import React from "react";
 import { ComponentPropsWithRef, forwardRef, useId } from "react";
-
 import { cn } from "#app/utils/lib/cn";
 
 // For our props, we'll take everything from the native input element except for `type`.
@@ -20,7 +20,7 @@ interface HiddenInputPropsTwo<Type extends string> extends BaseInputProps {
 // We need to do this in order to get a generic type out of `forwardRef`.
 // In React 19, you won't need this anymore.
 type InputType = <Type extends string>(
-  props: DefaultInputProps<Type> | HiddenInputPropsTwo<Type>
+  props: DefaultInputProps<Type> | HiddenInputPropsTwo<Type>,
 ) => React.ReactNode;
 
 const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
@@ -36,7 +36,7 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
             type,
             id: inputId,
             ref,
-            ...rest
+            ...rest,
           })}
         />
       );
@@ -50,7 +50,7 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
             "placeholder:opacity-80 disabled:pointer-events-none disabled:opacity-50",
             "focus:border-ring focus:ring-0",
             "border-border-foreground",
-            "bg-input text-primary-foreground"
+            "bg-input text-primary-foreground",
           )}
           {...field.getInputProps({
             type,
@@ -58,7 +58,7 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
             ref,
             "aria-describedby": errorId,
             "aria-invalid": !!field.error(),
-            ...rest
+            ...rest,
           })}
         />
 
@@ -70,7 +70,7 @@ const MyInputImpl = forwardRef<HTMLInputElement, DefaultInputProps<string>>(
         )}
       </>
     );
-  }
+  },
 );
 
 MyInputImpl.displayName = "MyInput";

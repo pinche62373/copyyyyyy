@@ -2,8 +2,8 @@ import { UIMatch, useMatches } from "@remix-run/react";
 import { HTMLAttributes } from "react";
 
 import {
+  Breadcrumb,
   type BreadcrumbHandle,
-  Breadcrumb
 } from "#app/components/shared/breadcrumb";
 
 type BreadcrumbMatch = UIMatch<

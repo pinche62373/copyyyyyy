@@ -6,7 +6,7 @@ import { FrontendHeader } from "#app/components/frontend/header";
 // stylesheet and fonts
 import "#app/styles/frontend.css";
 
-export const meta: MetaFunction = () => [{ title: "TMDB" }];
+export const meta: MetaFunction = () => [{ title: "TZDB" }];
 
 export default function FrontendLayout() {
   return (

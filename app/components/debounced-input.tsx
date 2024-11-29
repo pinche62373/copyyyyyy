@@ -1,5 +1,6 @@
 // A typical debounced input react component
-import { useState, useEffect } from "react";
+import React from "react";
+import { useEffect, useState } from "react";
 
 export function DebouncedInput({
   value: initialValue,

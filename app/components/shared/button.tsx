@@ -26,7 +26,7 @@ export function Button({
     base: cn(
       "inline-flex items-center justify-center whitespace-nowrap rounded-md",
       "px-3 py-1.5 text-start align-middle text-sm font-medium",
-      "focus:outline-none focus:ring-0 disabled:pointer-events-none disabled:opacity-50"
+      "focus:outline-none focus:ring-0 disabled:pointer-events-none disabled:opacity-50",
     ),
     variants: {
       role: {
@@ -42,9 +42,9 @@ export function Button({
           "bg-[#f6f8fa] hover:bg-[#eff2f5]",
           "dark:text-neutral-100",
           "dark:bg-[#3b3f5c]/60 dark:hover:bg-[#3b3f5c]/75",
-        )
-      }
-    }
+        ),
+      },
+    },
   });
 
   const buttonClass = secondary
@@ -72,7 +72,12 @@ export function Button({
       {/* Real button  */}
       {!to && (
         <div className={disabled ? "cursor-not-allowed" : undefined}>
-          <button type={type} className={cn(buttonClass, className)} disabled={disabled} {...rest}>
+          <button
+            type={type}
+            className={cn(buttonClass, className)}
+            disabled={disabled}
+            {...rest}
+          >
             {text}
           </button>
         </div>

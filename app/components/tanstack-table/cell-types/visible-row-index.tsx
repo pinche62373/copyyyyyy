@@ -1,9 +1,9 @@
 import { type Row, type Table } from "@tanstack/react-table";
 
 interface PropTypes {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Known Tanstack issue
   row: Row<any>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Known Tanstack issue
   table: Table<any>;
 }
 

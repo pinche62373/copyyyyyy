@@ -1,10 +1,10 @@
 /**
  * Pick nested zod properties using deeply.dotted.notation.
- * 
+ *
  * @see {@link https://github.com/colinhacks/zod/discussions/2083#discussioncomment-6377426}
  */
 
-import { z, ZodAny } from "zod";
+import { ZodAny, z } from "zod";
 
 function isZodObject(schema: z.ZodTypeAny): schema is z.AnyZodObject {
   if (schema._def.typeName === "ZodObject") return true;
@@ -24,7 +24,7 @@ function pickObject(schema: z.ZodTypeAny, path: string): z.ZodTypeAny {
   const newSchema = schema.shape?.[path];
   if (!newSchema)
     throw Error(
-      `${path} does not exist on schema with keys: ${Object.keys(schema.shape)}`
+      `${path} does not exist on schema with keys: ${Object.keys(schema.shape)}`,
     );
 
   return newSchema;
@@ -41,7 +41,7 @@ function pickArray(schema: z.ZodTypeAny): z.ZodTypeAny {
 
 export function zodDeepPick(
   schema: z.ZodTypeAny,
-  propertyPath: string
+  propertyPath: string,
 ): z.ZodTypeAny {
   if (propertyPath === "") return schema;
 
@@ -68,7 +68,7 @@ export function zodDeepPick(
       pickArray(schema),
       restArray.charAt(0) === "."
         ? restArray.slice(1, restArray.length)
-        : restArray
+        : restArray,
     );
   }
 

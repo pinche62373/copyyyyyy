@@ -1,10 +1,11 @@
 import { compareItems } from "@tanstack/match-sorter-utils";
 import { Row, SortingFn, sortingFns } from "@tanstack/react-table";
 
-// Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-// -----------------------------------------------------
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-// -----------------------------------------------------
+/**
+ * Define a custom fuzzy sort function that will sort by rank if the row has ranking information
+ */
+
+// biome-ignore lint/suspicious/noExplicitAny: Known Tanstack issue
 export const fuzzySort: SortingFn<any> | undefined = (
   rowA: Row<unknown>,
   rowB: Row<unknown>,

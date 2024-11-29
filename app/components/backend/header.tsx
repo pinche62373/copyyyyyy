@@ -11,9 +11,9 @@ export const BackendHeader = ({ className }: Props) => {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 flex flex-wrap md:flex-nowrap md:justify-start lg:ms-[260px]", 
+        "fixed inset-x-0 top-0 z-50 flex flex-wrap md:flex-nowrap md:justify-start lg:ms-[260px]",
         "border-b border-border bg-foreground",
-        className
+        className,
       )}
     >
       {/* Global Div */}

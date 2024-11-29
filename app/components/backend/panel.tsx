@@ -1,3 +1,4 @@
+import React from "react";
 import { cn } from "#app/utils/lib/cn";
 
 interface Props {
@@ -11,7 +12,7 @@ const BackendPanel = ({ className, children, ...rest }: Props) => {
       <div
         className={cn(
           "mb-6 rounded-md border border-border-foreground bg-foreground px-5 py-5 shadow-sm dark:border-none",
-          className
+          className,
         )}
         {...rest}
       >

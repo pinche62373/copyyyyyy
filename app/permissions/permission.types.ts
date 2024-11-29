@@ -7,7 +7,6 @@ export const U = "update" as const;
 export const D = "delete" as const;
 
 // consts as used by the exported interfaces below
-/* eslint-disable @typescript-eslint/no-unused-vars */
 const routeActions = ["access"] as const;
 const routeScopes = ["own", "any"] as const;
 

@@ -16,7 +16,7 @@ export const tableCellLink = ({ id, name, target }: PropTypes) => {
       to={`${target}/${id}`}
       className={cn(
         "block focus:outline-none",
-        "text-accent-foreground hover:underline"
+        "text-accent-foreground hover:underline",
       )}
     >
       {name}

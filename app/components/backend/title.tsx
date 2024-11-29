@@ -17,7 +17,7 @@ export const BackendTitle = ({
       className={cn(
         "text-lg font-semibold",
         foreground ? "text-primary-foreground" : "text-primary",
-        className
+        className,
       )}
       {...rest}
     >

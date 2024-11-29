@@ -12,7 +12,7 @@ import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { userHasRoutePermission, useUser } from "#app/utils/user";
+import { useUser, userHasRoutePermission } from "#app/utils/user";
 import { validatePageId } from "#app/utils/validate-page-id";
 import { countrySchema } from "#app/validations/country-schema";
 
@@ -20,13 +20,13 @@ const { countryCrud: crud } = getAdminCrud();
 
 export const handle = {
   breadcrumb: ({
-    data
+    data,
   }: {
     data: { country: { id: string; name: string } };
   }): BreadcrumbHandle => [
     ...countriesHandle.breadcrumb(),
-    { name: data.country.name }
-  ]
+    { name: data.country.name },
+  ],
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -34,7 +34,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const country = await getCountry({ id: countryId });
@@ -44,7 +44,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    country
+    country,
   };
 }
 
@@ -105,7 +105,7 @@ export default function Component() {
 
           {userHasRoutePermission(user, {
             resource: crud.routes.edit,
-            scope: "any"
+            scope: "any",
           }) && (
             <Button
               type="button"

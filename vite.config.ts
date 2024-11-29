@@ -12,10 +12,10 @@ export default defineConfig({
       serverModuleFormat: "cjs",
       routes: async (defineRoutes) => {
         return flatRoutes("routes", defineRoutes);
-      }
-    })
+      },
+    }),
   ],
   ssr: {
-    noExternal: ["remix-utils"]
-  }
+    noExternal: ["remix-utils"],
+  },
 });

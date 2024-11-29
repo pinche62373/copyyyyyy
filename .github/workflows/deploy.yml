@@ -1,4 +1,4 @@
-name: 🚀 Deploy
+name: 🚀 CI
 
 on:
   push:
@@ -16,25 +16,34 @@ permissions:
   contents: read
 
 jobs:
-  lint:
-    name: ⬣ ESLint
+  lint-code:
+    name: ⬣ Biome
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout repo
+        uses: actions/checkout@v4      
+
+      - name: ⎔ Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+    
+      - name: 🔬 Run Biome
+        run: biome ci .
+
+  # can be removed once Biome supports Markdown
+  lint-markdown:
+    name: ⬣ Markdown
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
 
-      - name: ⎔ Setup node
-        uses: actions/setup-node@v4
+      - name: 🔬 Run Markdownlint2
+        uses: DavidAnson/markdownlint-cli2-action@v17
         with:
-          cache: npm
-          cache-dependency-path: ./package.json
-          node-version: 20
-
-      - name: 📥 Install deps
-        run: npm install
-
-      - name: 🔬 Lint
-        run: npm run lint
+          config: '.markdownlint-cli2.jsonc'
+          globs: '**/*.md'
 
   typecheck:
     name: ʦ TypeScript

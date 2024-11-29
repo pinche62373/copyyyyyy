@@ -30,8 +30,8 @@ export const Breadcrumb = ({ name, to, position, last }: BreadcrumbProps) => {
       state: {
         link: "text-accent-foreground hover:underline",
         noLink: "flex",
-      }
-    }
+      },
+    },
   });
 
   return (
@@ -60,7 +60,7 @@ export const Breadcrumb = ({ name, to, position, last }: BreadcrumbProps) => {
       {/* Normal crumb with link */}
       {!last && to && (
         <>
-          <Link to={to} className={tvBreadcrumb({state: "link"})}>
+          <Link to={to} className={tvBreadcrumb({ state: "link" })}>
             {name}
           </Link>
           <IconForwardSlash

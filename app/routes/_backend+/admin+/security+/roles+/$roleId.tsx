@@ -1,13 +1,13 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import {
+  SortingState,
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
-  useReactTable
+  useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { z } from "zod";
@@ -17,20 +17,20 @@ import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import TanstackTable from "#app/components/tanstack-table";
+import { TableFooter } from "#app/components/tanstack-table/TableFooter";
+import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import {
   tableCellLink,
-  tableCellVisibleRowIndex
+  tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { TableFooter } from "#app/components/tanstack-table/TableFooter";
-import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { getRoleWithPermissions } from "#app/models/role.server";
 import { handle as rolesHandle } from "#app/routes/_backend+/admin+/security+/roles+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,
-  ADMIN_TABLE_PAGE_SIZE
+  ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
@@ -39,19 +39,19 @@ const { roleCrud, resourceCrud } = getAdminCrud();
 
 export const handle = {
   breadcrumb: ({
-    data
+    data,
   }: {
     data: { role: { id: string; name: string } };
   }): BreadcrumbHandle => [
     ...rolesHandle.breadcrumb(),
-    { name: humanize(data.role.name) }
-  ]
+    { name: humanize(data.role.name) },
+  ],
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const roleId = z.coerce.string().parse(params.roleId);
@@ -63,7 +63,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    role
+    role,
   };
 }
 
@@ -84,10 +84,10 @@ const columns = [
     enableGlobalFilter: false,
     meta: {
       headerProps: {
-        className: "table-column-fit-content"
-      }
+        className: "table-column-fit-content",
+      },
     },
-    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table })
+    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
   }),
   columnHelper.accessor("resource", {
     header: () => <span>Resource</span>,
@@ -97,19 +97,19 @@ const columns = [
       tableCellLink({
         id: row.original.resource,
         name: row.original.resource,
-        target: resourceCrud.routes.index
-      })
+        target: resourceCrud.routes.index,
+      }),
   }),
   columnHelper.accessor("action", {
     header: () => <span>Action</span>,
     enableGlobalFilter: true,
-    cell: (info) => info.getValue()
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("scope", {
     header: () => <span>Scope</span>,
     enableGlobalFilter: true,
-    cell: (info) => info.getValue()
-  })
+    cell: (info) => info.getValue(),
+  }),
 ];
 
 export default function Component() {
@@ -117,27 +117,27 @@ export default function Component() {
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
-    pageSize: ADMIN_TABLE_PAGE_SIZE
+    pageSize: ADMIN_TABLE_PAGE_SIZE,
   });
 
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "resource", // MUST be here or global filter will not sort by rankingValue
-      desc: false
-    }
+      desc: false,
+    },
   ]);
 
   const table = useReactTable({
     data: role.permissions,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
     },
     state: {
       pagination,
       globalFilter,
-      sorting
+      sorting,
     },
     enableGlobalFilter: true,
     globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter
@@ -148,7 +148,7 @@ export default function Component() {
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination
+    onPaginationChange: setPagination,
   });
 
   return (
@@ -156,10 +156,7 @@ export default function Component() {
       {/* List role data */}
       <BackendPanel>
         <BackendPanel.Row>
-          <BackendTitle
-            text={humanize(roleCrud.singular)}
-            foreground
-          />
+          <BackendTitle text={humanize(roleCrud.singular)} foreground />
         </BackendPanel.Row>
 
         <BackendPanel.Row last>

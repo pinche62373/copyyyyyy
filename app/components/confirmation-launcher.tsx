@@ -1,3 +1,5 @@
+import React from "react";
+
 interface PropTypes {
   modalId: string;
   className?: string;

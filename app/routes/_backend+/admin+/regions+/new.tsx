@@ -18,7 +18,7 @@ import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
-  requireRoutePermission
+  requireRoutePermission,
 } from "#app/utils/permissions.server";
 import { regionSchemaCreate } from "#app/validations/region-schema";
 
@@ -31,22 +31,22 @@ const formValidator = withZod(regionSchemaCreate);
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
     ...regionsHandle.breadcrumb(),
-    { name: "New" }
-  ]
+    { name: "New" },
+  ],
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   return {
     form: {
       region: {
-        name: null as unknown as string
-      }
-    }
+        name: null as unknown as string,
+      },
+    },
   };
 }
 
@@ -57,13 +57,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
-      status: 422
+      status: 422,
     });
 
   await requireModelPermission(request, {
     resource: crud.singular,
     action: intent,
-    scope: "any"
+    scope: "any",
   });
 
   try {
@@ -80,7 +80,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return redirectWithSuccess(
     crud.routes.index,
-    `${humanize(crud.singular)} created successfully`
+    `${humanize(crud.singular)} created successfully`,
   );
 };
 
@@ -92,7 +92,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData.form }
+    defaultValues: { intent, ...loaderData.form },
   });
 
   return (

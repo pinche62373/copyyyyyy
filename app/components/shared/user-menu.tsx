@@ -106,7 +106,7 @@ export const UserMenu = () => {
             onClick={() =>
               submit(null, {
                 method: "post",
-                action: AUTH_LOGOUT_ROUTE
+                action: AUTH_LOGOUT_ROUTE,
               })
             }
           >

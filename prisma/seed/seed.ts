@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
 import { parseArgs } from "node:util";
@@ -58,14 +57,14 @@ const main = async () => {
   // Execute dry run unless --force argument was passed
   const dryRun = force === true ? false : true;
 
-  console.log(dryRun ? "Dry running" : "Not dry running")
+  console.log(dryRun ? "Dry running" : "Not dry running");
 
   // --------------------------------------------------------------------------
   // Handle production mode
   // --------------------------------------------------------------------------
   const prod = process.env.NODE_ENV === "production" ? true : false;
 
-  console.log(prod ? "Running production mode" : "Not running production mode")
+  console.log(prod ? "Running production mode" : "Not running production mode");
 
   // --------------------------------------------------------------------------
   // Create seed client
@@ -269,7 +268,7 @@ const main = async () => {
         name: movie,
         slug: permaLink(movie),
         updatedAt,
-        updatedBy, 
+        updatedBy,
         createdBy: cuid(
           accounts
             .filter((account) => account.name === Roles.ADMIN)

@@ -13,10 +13,12 @@ type IgnorePrismaBuiltins<S extends string> = string extends S
 export type PrismaModelName = IgnorePrismaBuiltins<keyof PrismaClient & string>;
 
 // Hard-code a unique key, so we can look up the client when this module gets re-imported
-const prisma = singleton("prisma", () =>
-  new PrismaClient({
-    log: ["query", "info", "warn", "error"],
-  })
+const prisma = singleton(
+  "prisma",
+  () =>
+    new PrismaClient({
+      log: ["query", "info", "warn", "error"],
+    }),
 );
 
 prisma.$connect();

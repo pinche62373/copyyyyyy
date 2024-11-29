@@ -27,7 +27,7 @@ export const enhanceCustomBreadcrumbRoutes = (
 
   const modelName = regexDynamicPage[1];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Known Breadcrumbs issue
   const activeRouteData = activeRouteMatch.data as any;
 
   // https://regex101.com/r/UhtWVi/1

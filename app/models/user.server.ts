@@ -19,15 +19,15 @@ export async function getUserById(id: User["id"]) {
             select: {
               resource: true,
               action: true,
-              scope: true
+              scope: true,
             },
             orderBy: {
-              resource: "asc"
-            }
-          }
-        }
-      }
-    }
+              resource: "asc",
+            },
+          },
+        },
+      },
+    },
   });
 }
 
@@ -38,7 +38,7 @@ export async function getUserByEmail(email: User["email"]) {
 export async function createUser(
   email: User["email"],
   username: User["username"],
-  password: string
+  password: string,
 ) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -48,10 +48,10 @@ export async function createUser(
       username,
       password: {
         create: {
-          hash: hashedPassword
-        }
-      }
-    }
+          hash: hashedPassword,
+        },
+      },
+    },
   });
 }
 
@@ -61,13 +61,13 @@ export async function deleteUserByEmail(email: User["email"]) {
 
 export async function verifyLogin(
   email: User["email"],
-  password: Password["hash"]
+  password: Password["hash"],
 ) {
   const userWithPassword = await prisma.user.findUnique({
     where: { email },
     include: {
-      password: true
-    }
+      password: true,
+    },
   });
 
   if (!userWithPassword || !userWithPassword.password) {
@@ -76,14 +76,13 @@ export async function verifyLogin(
 
   const isValid = await bcrypt.compare(
     password,
-    userWithPassword.password.hash
+    userWithPassword.password.hash,
   );
 
   if (!isValid) {
     return null;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password: _password, ...userWithoutPassword } = userWithPassword;
 
   return userWithoutPassword;
@@ -91,14 +90,14 @@ export async function verifyLogin(
 
 export function updateUserAccountSettings({
   id,
-  username
+  username,
 }: Pick<User, "id" | "username">) {
   return prisma.user.update({
     where: { id },
     data: {
       id,
-      username
-    }
+      username,
+    },
   });
 }
 
@@ -106,10 +105,10 @@ export function updateUserAccountSettings({
  * Checks if the provided email address is available for use.
  */
 export async function isEmailAddressAvailable({
-  email
+  email,
 }: Pick<User, "email">): Promise<boolean> {
   const result = await prisma.user.findFirst({
-    where: { email }
+    where: { email },
   });
 
   if (result === null) {
@@ -123,10 +122,10 @@ export async function isEmailAddressAvailable({
  * Checks if the provided username is available for use.
  */
 export async function isUsernameAvailable({
-  username
+  username,
 }: Pick<User, "username">): Promise<boolean> {
   const result = await prisma.user.findFirst({
-    where: { username }
+    where: { username },
   });
 
   if (result === null) {

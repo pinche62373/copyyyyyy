@@ -22,7 +22,7 @@ import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
-  requireRoutePermission
+  requireRoutePermission,
 } from "#app/utils/permissions.server";
 import { countrySchemaCreate } from "#app/validations/country-schema";
 
@@ -35,14 +35,14 @@ const formValidator = withZod(countrySchemaCreate);
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
     ...countriesHandle.breadcrumb(),
-    { name: "New" }
-  ]
+    { name: "New" },
+  ],
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const regions = await getRegions();
@@ -51,10 +51,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     form: {
       country: {
         name: null as unknown as string,
-        regionId: null as unknown as string
-      }
+        regionId: null as unknown as string,
+      },
     },
-    regions
+    regions,
   };
 }
 
@@ -65,13 +65,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
-      status: 422
+      status: 422,
     });
 
   await requireModelPermission(request, {
     resource: crud.singular,
     action: intent,
-    scope: "any"
+    scope: "any",
   });
 
   if ((await getRegionById(validated.data.country.regionId)) === null) {
@@ -92,7 +92,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   return redirectWithSuccess(
     crud.routes.index,
-    `${humanize(crud.singular)} created successfully`
+    `${humanize(crud.singular)} created successfully`,
   );
 };
 
@@ -104,7 +104,7 @@ export default function Component() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData.form }
+    defaultValues: { intent, ...loaderData.form },
   });
 
   return (

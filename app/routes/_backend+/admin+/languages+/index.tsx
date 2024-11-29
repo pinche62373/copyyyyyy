@@ -2,13 +2,13 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { withZod } from "@rvf/zod";
 import {
+  SortingState,
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  SortingState,
-  useReactTable
+  useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
@@ -20,34 +20,34 @@ import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
+import { TableFooter } from "#app/components/tanstack-table/TableFooter";
+import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import {
   tableCellActions,
   tableCellCreatedAt,
   tableCellLink,
   tableCellUpdatedAt,
-  tableCellVisibleRowIndex
+  tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { TableFooter } from "#app/components/tanstack-table/TableFooter";
-import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { deleteLanguage, getLanguages } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import {
   ADMIN_TABLE_PAGE_INDEX,
-  ADMIN_TABLE_PAGE_SIZE
+  ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
 import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
-  requireRoutePermission
+  requireRoutePermission,
 } from "#app/utils/permissions.server";
-import { userHasRoutePermission, useUser } from "#app/utils/user";
+import { useUser, userHasRoutePermission } from "#app/utils/user";
 import {
   languageSchemaAdminTable,
-  languageSchemaDelete
+  languageSchemaDelete,
 } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
@@ -58,20 +58,20 @@ const formValidator = withZod(languageSchemaDelete);
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
-    { name: humanize(crud.plural), to: crud.routes.index }
-  ]
+    { name: humanize(crud.plural), to: crud.routes.index },
+  ],
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const languages = await getLanguages();
 
   return {
-    languages
+    languages,
   };
 };
 
@@ -84,13 +84,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
       if (validated.error)
         return jsonWithError(validated.error, "Form data rejected by server", {
-          status: 422
+          status: 422,
         });
 
       await requireModelPermission(request, {
         resource: crud.singular,
         action: intent,
-        scope: "any"
+        scope: "any",
       });
 
       try {
@@ -101,9 +101,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
       return jsonWithSuccess(
         null,
-        `${humanize(crud.singular)} deleted successfully`
+        `${humanize(crud.singular)} deleted successfully`,
       );
-    }
+    },
   });
 };
 
@@ -119,8 +119,8 @@ export default function Component() {
     user,
     route: crud.routes.index,
     actions: {
-      edit: true
-    }
+      edit: true,
+    },
   });
 
   const columns = [
@@ -131,10 +131,10 @@ export default function Component() {
       enableGlobalFilter: false,
       meta: {
         headerProps: {
-          className: "table-column-fit-content"
-        }
+          className: "table-column-fit-content",
+        },
       },
-      cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table })
+      cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
     }),
     columnHelper.accessor("name", {
       header: "Name",
@@ -144,18 +144,18 @@ export default function Component() {
         tableCellLink({
           id: row.original.id,
           name: row.original.name,
-          target: crud.routes.index
-        })
+          target: crud.routes.index,
+        }),
     }),
     columnHelper.accessor("createdAt", {
       header: "Created",
       enableGlobalFilter: false,
-      cell: (info) => tableCellCreatedAt(info)
+      cell: (info) => tableCellCreatedAt(info),
     }),
     columnHelper.accessor("updatedAt", {
       header: "Updated",
       enableGlobalFilter: false,
-      cell: (info) => tableCellUpdatedAt(info)
+      cell: (info) => tableCellUpdatedAt(info),
     }),
     ...(userCellActions
       ? [
@@ -165,46 +165,46 @@ export default function Component() {
             enableGlobalFilter: false,
             meta: {
               headerProps: {
-                className: "table-column-fit-content"
+                className: "table-column-fit-content",
               },
               cellProps: {
-                className: "text-center"
-              }
+                className: "text-center",
+              },
             },
             cell: (info) =>
               tableCellActions({
                 info,
                 crud,
-                actions: userCellActions
-              })
-          })
+                actions: userCellActions,
+              }),
+          }),
         ]
-      : [])
+      : []),
   ];
 
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
-    pageSize: ADMIN_TABLE_PAGE_SIZE
+    pageSize: ADMIN_TABLE_PAGE_SIZE,
   });
 
   const [globalFilter, setGlobalFilter] = useState("");
   const [sorting, setSorting] = useState<SortingState>([
     {
       id: "name", // MUST be here or global filter will not sort by rankingValue
-      desc: false
-    }
+      desc: false,
+    },
   ]);
 
   const table = useReactTable({
     data: languages,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
     },
     state: {
       pagination,
       globalFilter,
-      sorting
+      sorting,
     },
     enableGlobalFilter: true,
     globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter
@@ -215,7 +215,7 @@ export default function Component() {
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onPaginationChange: setPagination
+    onPaginationChange: setPagination,
   });
 
   return (
@@ -239,7 +239,7 @@ export default function Component() {
           <BackendPanel.Right>
             {userHasRoutePermission(user, {
               resource: crud.routes.new,
-              scope: "any"
+              scope: "any",
             }) && (
               <Button
                 type="button"

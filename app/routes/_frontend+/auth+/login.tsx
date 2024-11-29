@@ -1,7 +1,7 @@
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
-  MetaFunction
+  MetaFunction,
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
@@ -33,16 +33,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // prevent orphaned client-side session cookies not existing in database breaking remix-auth
   if (sessionId) {
     const databaseSessionExists = await prisma.session.findUnique({
-      where: { id: sessionId }
+      where: { id: sessionId },
     });
 
     if (!databaseSessionExists) {
       return json(null, {
         headers: {
           "Set-Cookie": await sessionCookie.serialize("", {
-            maxAge: 0
-          })
-        }
+            maxAge: 0,
+          }),
+        },
       });
     }
   }
@@ -58,7 +58,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   // send already authenticated users back to the homepage
   await authenticator.isAuthenticated(request, {
-    successRedirect: "/"
+    successRedirect: "/",
   });
 
   // otherwise, create redirectCookie and continue
@@ -67,11 +67,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       form: {
         user: {
           email: null as unknown as string,
-          password: null as unknown as string
-        }
-      }
+          password: null as unknown as string,
+        },
+      },
     },
-    { headers }
+    { headers },
   );
 };
 
@@ -82,7 +82,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   if (validated.error)
     return jsonWithError(validated.error, "Form data rejected by server", {
-      status: 422
+      status: 422,
     });
 
   // honeypot
@@ -92,7 +92,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (error instanceof SpamError) {
       throw new Response("Invalid form data", {
         status: 400,
-        statusText: "Invalid Form Data"
+        statusText: "Invalid Form Data",
       });
     }
     throw error; // rethrow
@@ -105,7 +105,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
       throwOnError: true,
       context: { formData },
-      successRedirect: returnTo || "/"
+      successRedirect: returnTo || "/",
     });
   } catch (error) {
     // Because redirects work by throwing a Response, you need to check if the
@@ -122,7 +122,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
-export const meta: MetaFunction = () => [{ title: "TMDB - Login" }];
+export const meta: MetaFunction = () => [{ title: "TZDB - Login" }];
 
 export default function LoginPage() {
   const loaderData = useLoaderData<typeof loader>();
@@ -132,7 +132,7 @@ export default function LoginPage() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData?.form }
+    defaultValues: { intent, ...loaderData?.form },
   });
 
   return (
@@ -170,17 +170,17 @@ export default function LoginPage() {
 
           <HoneypotInputs />
 
-            <Button
-              type="button"
-              text="Register"
-              to={AUTH_REGISTER_ROUTE}
-              secondary
-            />
-            <Button
-              type="submit"
-              text="Log In"
-              disabled={navigation.state === "submitting"}
-            />
+          <Button
+            type="button"
+            text="Register"
+            to={AUTH_REGISTER_ROUTE}
+            secondary
+          />
+          <Button
+            type="submit"
+            text="Log In"
+            disabled={navigation.state === "submitting"}
+          />
         </form>
       </div>
     </div>

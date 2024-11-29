@@ -11,34 +11,34 @@ export const tailwindVariables = {
 
     border: {
       DEFAULT: "var(--border)",
-      foreground: "var(--border-foreground)"
+      foreground: "var(--border-foreground)",
     },
 
     primary: {
       DEFAULT: "var(--primary)",
-      foreground: "var(--primary-foreground)"
+      foreground: "var(--primary-foreground)",
     },
 
     secondary: {
       DEFAULT: "var(--secondary)",
-      foreground: "var(--secondary-foreground)"
+      foreground: "var(--secondary-foreground)",
     },
 
     tertiary: {
       DEFAULT: "var(--tertiary)",
-      foreground: "var(--tertiary-foreground)"
+      foreground: "var(--tertiary-foreground)",
     },
 
     accent: {
       DEFAULT: "var(--accent)",
-      foreground: "var(--accent-foreground)"
+      foreground: "var(--accent-foreground)",
     },
 
     sidebar: {
       primary: "var(--sidebar-primary)",
       secondary: "var(--sidebar-secondary)",
       hover: "var(--sidebar-hover)",
-      focus: "var(--sidebar-focus)"
-    }
-  }
+      focus: "var(--sidebar-focus)",
+    },
+  },
 } satisfies Config["theme"];

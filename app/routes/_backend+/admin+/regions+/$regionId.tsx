@@ -20,13 +20,13 @@ const { regionCrud: crud } = getAdminCrud();
 
 export const handle = {
   breadcrumb: ({
-    data
+    data,
   }: {
     data: { region: { id: string; name: string } };
   }): BreadcrumbHandle => [
     ...regionsHandle.breadcrumb(),
-    { name: data.region.name }
-  ]
+    { name: data.region.name },
+  ],
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -34,7 +34,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
-    scope: "any"
+    scope: "any",
   });
 
   const region = await getRegion({ id: regionId });
@@ -44,7 +44,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    region
+    region,
   };
 }
 
@@ -100,7 +100,7 @@ export default function Component() {
 
           {userHasRoutePermission(user, {
             resource: crud.routes.edit,
-            scope: "any"
+            scope: "any",
           }) && (
             <Button
               type="button"

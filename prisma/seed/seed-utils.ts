@@ -16,7 +16,7 @@ export const cuid = (
   return copycat.someOf(input, [length, length], alphaNumAlphabet).join("");
 };
 
-const alphaNumAlphabet = Array.from({ length: 36 }, (x, i) =>
+const alphaNumAlphabet = Array.from({ length: 36 }, (_x, i) =>
   i < 10 ? String(i) : String.fromCharCode(i + 87),
 );
 

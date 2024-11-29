@@ -2,11 +2,11 @@
  * https://szhsin.github.io/react-menu/
  */
 .szh-menu {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-    @apply bg-white dark:bg-neutral-900;
-  }
-  
-  .szh-menu__item {
-    padding-left: 0.5rem;
-  }
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
+  @apply bg-white dark:bg-neutral-900;
+}
+
+.szh-menu__item {
+  padding-left: 0.5rem;
+}

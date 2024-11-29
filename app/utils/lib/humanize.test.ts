@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import { humanize } from "./humanize";
 
 describe("Ensure humanize():", function () {

@@ -13,7 +13,7 @@ export const PermissionTypeFilterComponent = ({ onClick }: Args) => {
   const menuItemClass = cn(
     "whitespace-nowrap rounded-lg text-xs",
     "text-gray-800  hover:bg-gray-100",
-    "dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800"
+    "dark:bg-neutral-900 dark:text-neutral-300 dark:hover:bg-neutral-800",
   );
 
   return (
@@ -29,7 +29,7 @@ export const PermissionTypeFilterComponent = ({ onClick }: Args) => {
                 "clear-both inline-flex size-[38px] items-center justify-center gap-x-2",
                 "border border-transparent",
                 "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-                "text-secondary-foreground hover:bg-transparent hover:text-primary-foreground"
+                "text-secondary-foreground hover:bg-transparent hover:text-primary-foreground",
               )}
             >
               <IconFilter />

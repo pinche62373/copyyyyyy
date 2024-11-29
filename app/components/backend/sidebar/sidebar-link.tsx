@@ -1,7 +1,7 @@
 import { NavLink } from "@remix-run/react";
-
+import React from "react";
 import { cn } from "#app/utils/lib/cn";
-import { userHasRoutePermission, useUser } from "#app/utils/user";
+import { useUser, userHasRoutePermission } from "#app/utils/user";
 
 interface Args {
   to: string;
@@ -32,7 +32,7 @@ export function SidebarLink({
           "flex gap-x-3 rounded-lg px-3 py-2 focus:outline-none",
           "text-sm text-sidebar-secondary",
           "hover:bg-sidebar-hover hover:text-sidebar-primary",
-          "focus:bg-sidebar-hover focus:text-sidebar-primary"
+          "focus:bg-sidebar-hover focus:text-sidebar-primary",
         )}
       >
         {children}

@@ -19,7 +19,7 @@ interface TableActionsFunctionArgs {
 export const getUserTableCellActions = ({
   user,
   route,
-  actions
+  actions,
 }: TableActionsFunctionArgs): TableActionsResult | undefined => {
   const result: TableActionsResult = {};
 
@@ -33,7 +33,7 @@ export const getUserTableCellActions = ({
     if (
       userHasRoutePermission(user, {
         resource: `${route}/${action}`,
-        scope: "any"
+        scope: "any",
       })
     ) {
       result[action as keyof TableActionsResult] = true;

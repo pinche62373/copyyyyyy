@@ -1,0 +1,11 @@
+/*
+ * Using this linter until Biome supports Markdown.
+ *
+ * https://raw.githubusercontent.com/DavidAnson/markdownlint-cli2/main/test/markdownlint-cli2-jsonc-example/.markdownlint-cli2.jsonc
+ */
+{
+  // Disable some built-in rules
+  "config": {
+    "line-length": false
+  }
+}

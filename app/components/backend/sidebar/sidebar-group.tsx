@@ -7,7 +7,7 @@ import { Role } from "#app/validations/role-schema";
 interface Args {
   caption: string;
   id: string;
-  icon?: JSX.Element;
+  icon?: React.JSX.Element;
   children: React.ReactNode;
   className?: string;
   require?: Role | Role[];
@@ -43,7 +43,7 @@ export function SidebarGroup({
           "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
           "text-start text-sm text-sidebar-secondary",
           "hover:bg-sidebar-hover hover:text-sidebar-primary",
-          "hs-accordion-active:bg-sidebar-hover"
+          "hs-accordion-active:bg-sidebar-hover",
         )}
       >
         {icon && icon}
@@ -72,7 +72,7 @@ export function SidebarGroup({
           className={cn(
             "hs-accordion-group relative mt-1.5 space-y-1.5 ps-7",
             "before:absolute before:start-[18px] before:top-0 before:h-full before:w-0.5",
-            "before:bg-sidebar-secondary before:opacity-10 dark:before:opacity-20"
+            "before:bg-sidebar-secondary before:opacity-10 dark:before:opacity-20",
           )}
           data-hs-accordion-always-open
         >

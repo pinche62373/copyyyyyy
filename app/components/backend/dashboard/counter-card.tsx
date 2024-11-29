@@ -1,9 +1,10 @@
+import React from "react";
 import { cn } from "#app/utils/lib/cn";
 
 interface Args {
   title: string;
   count: number;
-  icon: JSX.Element;
+  icon: React.JSX.Element;
   className?: string;
 }
 
@@ -18,7 +19,7 @@ export function DashboardCounterCard({
     <div
       className={cn(
         "rounded-md border border-border-foreground bg-foreground p-4 shadow-sm sm:p-5 dark:border-none",
-        className
+        className,
       )}
       {...rest}
     >
@@ -29,9 +30,7 @@ export function DashboardCounterCard({
         </span>
 
         <div className="grow space-y-1 sm:order-1">
-          <h2 className="text-sm text-secondary-foreground sm:mb-3">
-            {title}
-          </h2>
+          <h2 className="text-sm text-secondary-foreground sm:mb-3">{title}</h2>
           <p className="text-lg font-medium text-primary-foreground md:text-xl">
             {count}
           </p>

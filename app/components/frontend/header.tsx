@@ -13,9 +13,9 @@ export const FrontendHeader = ({ className }: Props) => {
     <header className="w-full dark:bg-neutral-900">
       <div
         className={cn(
-          "mx-auto mb-6 w-full max-w-[80rem] basis-full items-center px-4 sm:px-6 lg:px-8" ,
+          "mx-auto mb-6 w-full max-w-[80rem] basis-full items-center px-4 sm:px-6 lg:px-8",
           "z-50 flex flex-wrap bg-red-200 md:flex-nowrap md:justify-start dark:bg-neutral-900",
-          className
+          className,
         )}
       >
         {/* Global Div */}

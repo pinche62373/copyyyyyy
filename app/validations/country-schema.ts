@@ -13,7 +13,7 @@ export const countrySchema = z.object({
     .string({ required_error: "Country is required" })
     .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, {
       message:
-        "This field only allows capitalized Latin words, separated by single spaces."
+        "This field only allows capitalized Latin words, separated by single spaces.",
     }),
   regionId: z.string({ required_error: "You must select a region" }).cuid2(),
   createdAt: z.string().datetime(),
@@ -22,8 +22,8 @@ export const countrySchema = z.object({
   updatedBy: userSchema.pick({ id: true }).nullable(),
   region: regionSchema.pick({
     id: true,
-    name: true
-  })
+    name: true,
+  }),
 });
 
 export const countrySchemaAdminTable = countrySchema.pick({
@@ -31,15 +31,15 @@ export const countrySchemaAdminTable = countrySchema.pick({
   name: true,
   createdAt: true,
   updatedAt: true,
-  region: true
+  region: true,
 });
 
 export const countrySchemaCreate = z.object({
   intent: z.literal("create"),
   country: countrySchema.pick({
     name: true,
-    regionId: true
-  })
+    regionId: true,
+  }),
 });
 
 export const countrySchemaUpdate = z.object({
@@ -47,6 +47,6 @@ export const countrySchemaUpdate = z.object({
   country: countrySchema.pick({
     id: true,
     name: true,
-    regionId: true
-  })
+    regionId: true,
+  }),
 });

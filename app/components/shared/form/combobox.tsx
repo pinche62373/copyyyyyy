@@ -3,6 +3,7 @@
 //
 
 import { forwardRef } from "react";
+import React from "react";
 import {
   ComboBox as AriaComboBox,
   Button,
@@ -13,9 +14,8 @@ import {
   ListBox,
   Popover,
   Text,
-  ValidationResult
+  ValidationResult,
 } from "react-aria-components";
-
 import { IconChevronDown } from "#app/components/icons/icon-chevron-down";
 import { cn } from "#app/utils/lib/cn";
 
@@ -36,7 +36,7 @@ export const ComboBox = forwardRef(
       children,
       ...props
     }: MyComboBoxProps<T>,
-    ref: React.ForwardedRef<HTMLInputElement>
+    ref: React.ForwardedRef<HTMLInputElement>,
   ) => {
     return (
       <AriaComboBox
@@ -55,8 +55,8 @@ export const ComboBox = forwardRef(
             ref={ref}
             className={cn(
               "w-full flex-1 rounded-lg border-none px-3 py-2 leading-5 outline-none focus:ring-0",
-              "placeholder:opacity-80 hover:cursor-pointer disabled:pointer-events-none disabled:opacity-50",              
-              "bg-input text-sm font-normal text-primary-foreground"
+              "placeholder:opacity-80 hover:cursor-pointer disabled:pointer-events-none disabled:opacity-50",
+              "bg-input text-sm font-normal text-primary-foreground",
             )}
           />
 
@@ -64,7 +64,7 @@ export const ComboBox = forwardRef(
             className={cn(
               "flex items-center rounded-r-lg border-0 border-l border-solid px-3 transition",
               "border-border-foreground",
-              "bg-transparent text-secondary-foreground hover:text-primary-foreground"
+              "bg-transparent text-secondary-foreground hover:text-primary-foreground",
             )}
           >
             {/* {isOpen ? <>&#8593;</> : <>&#8595;</>} */}
@@ -95,7 +95,7 @@ export const ComboBox = forwardRef(
       </AriaComboBox>
       // </div>
     );
-  }
+  },
 );
 
 ComboBox.displayName = "ComboBox";

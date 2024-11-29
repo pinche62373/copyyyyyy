@@ -1,6 +1,6 @@
 import type {
-  RoutePermissionFunctionArgs,
   ModelPermissionFunctionArgs,
+  RoutePermissionFunctionArgs,
 } from "#app/permissions/permission.types";
 import { Roles } from "#app/validations/role-schema";
 

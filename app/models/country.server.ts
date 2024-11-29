@@ -23,7 +23,7 @@ export function getCountry({ id }: Pick<Country, "id">) {
           id: true,
           username: true,
         },
-      },          
+      },
     },
   });
 }

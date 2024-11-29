@@ -1,3 +1,4 @@
+import React from "react";
 import { cn } from "#app/utils/lib/cn";
 
 interface Props {
@@ -19,7 +20,7 @@ const Pair = ({ className, children, ...rest }: Props) => {
       className={cn(
         "flex flex-col sm:table-row",
 
-        className
+        className,
       )}
       {...rest}
     >
@@ -38,7 +39,7 @@ const Key = ({ className, children, last, ...rest }: KeyProps) => {
       className={cn(
         "whitespace-nowrap align-middle font-semibold text-tertiary-foreground",
         last ? "pb-1" : "pb-5",
-        className
+        className,
       )}
       {...rest}
     >
@@ -58,7 +59,7 @@ const Value = ({ className, children, last, ...rest }: ValueProps) => {
         "w-full align-middle sm:pl-0 md:pl-5",
         last ? "pb-1" : "pb-5",
 
-        className
+        className,
       )}
       {...rest}
     >

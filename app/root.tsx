@@ -4,7 +4,7 @@ import {
   MetaFunction,
   Outlet,
   useLoaderData,
-  useLocation
+  useLocation,
 } from "@remix-run/react";
 import { type IStaticMethods } from "preline/preline";
 import { useEffect } from "react";
@@ -38,8 +38,8 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
     { title: data ? "mdb - movie database" : "Error | mdb" },
     {
       name: "description",
-      content: `MDB`
-    }
+      content: `MDB`,
+    },
   ];
 };
 
@@ -62,7 +62,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     user: await getUser(request),
     theme: getTheme(),
     toast,
-    honeypotInputProps: honeypot.getInputProps()
+    honeypotInputProps: honeypot.getInputProps(),
   };
 
   return json({ ...data }, { headers });

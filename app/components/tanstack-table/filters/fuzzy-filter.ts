@@ -16,14 +16,14 @@ export const fuzzyFilter: FilterFn<unknown> = (
   row,
   columnId,
   value,
-  addMeta
+  addMeta,
 ) => {
   // Rank the item
   const itemRank = rankItem(row.getValue(columnId), value);
 
   // Store the itemRank info
   addMeta({
-    itemRank
+    itemRank,
   });
 
   // Return if the item should be filtered in/out

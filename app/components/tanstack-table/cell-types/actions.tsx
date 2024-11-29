@@ -12,10 +12,8 @@ import { IconTrash } from "#app/components/icons/icon-trash";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { Crud } from "#app/utils/admin-crud";
 
-// -----------------------------------------------------
-/* eslint-disable  @typescript-eslint/no-explicit-any */
-// -----------------------------------------------------
 interface TableCellActionsFunctionArgs {
+  // biome-ignore lint/suspicious/noExplicitAny: Known Tanstack issue
   info: CellContext<any, string>;
   crud: Crud;
   actions: {
@@ -27,7 +25,7 @@ interface TableCellActionsFunctionArgs {
 export const tableCellActions = ({
   info,
   crud,
-  actions
+  actions,
 }: TableCellActionsFunctionArgs) => {
   // edit button
   const editUrl = `${info.row.original.id}/edit`;
@@ -39,13 +37,13 @@ export const tableCellActions = ({
     z
       .object({
         intent: z.literal("delete"),
-        rvfFormId: z.string()
+        rvfFormId: z.string(),
       })
       .catchall(
         z.object({
-          id: z.string().cuid2()
-        })
-      )
+          id: z.string().cuid2(),
+        }),
+      ),
   );
 
   return (
@@ -62,7 +60,7 @@ export const tableCellActions = ({
       {/* Optional Delete Button  */}
       {actions.delete === true && (
         <>
-          <ConfirmationLauncher modalId={confirmDeleteId} title="Delete">
+          <ConfirmationLauncher modalId={confirmDeleteId}>
             <IconContainerRound>
               <ValidatedForm
                 method="POST"

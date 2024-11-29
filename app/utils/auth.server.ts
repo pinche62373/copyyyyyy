@@ -9,18 +9,18 @@ import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import {
   createDatabaseSessionStorage,
   getSession,
-  sessionCookie
+  sessionCookie,
 } from "#app/utils/session.server";
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 
 export const authenticator = new Authenticator<User>(
   createDatabaseSessionStorage({
-    cookie: sessionCookie
+    cookie: sessionCookie,
   }),
   {
-    sessionKey: "user"
-  }
+    sessionKey: "user",
+  },
 );
 
 authenticator.use(
@@ -39,11 +39,11 @@ authenticator.use(
 
     return user;
   }),
-  EMAIL_PASSWORD_STRATEGY
+  EMAIL_PASSWORD_STRATEGY,
 );
 
 export async function getUserId(
-  request: Request
+  request: Request,
 ): Promise<User["id"] | undefined> {
   const session = await getSession(request.headers.get("cookie"));
 
@@ -78,7 +78,7 @@ export async function getUserOrDie(request: Request) {
 
 export async function requireUserId(
   request: Request,
-  { redirectTo }: { redirectTo?: string | null } = {}
+  { redirectTo }: { redirectTo?: string | null } = {},
 ) {
   const userId = await getUserId(request);
   if (!userId) {

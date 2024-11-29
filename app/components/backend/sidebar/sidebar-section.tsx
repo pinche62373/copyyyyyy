@@ -1,3 +1,4 @@
+import React from "react";
 import { cn } from "#app/utils/lib/cn";
 import { useUser, userHasRole } from "#app/utils/user";
 import { Role } from "#app/validations/role-schema";
@@ -28,7 +29,7 @@ export function SidebarSection({
     <nav
       className={cn(
         "hs-accordion-group flex w-full flex-col flex-wrap",
-        className
+        className,
       )}
       data-hs-accordion-always-open
       {...rest}

@@ -7,9 +7,9 @@ export function ComboBoxItem(props: ListBoxItemProps) {
     variants: {
       state: {
         focused: "bg-gray-100 dark:bg-input",
-        selected: "bg-gray-100 dark:bg-input"
-      }
-    }
+        selected: "bg-gray-100 dark:bg-input",
+      },
+    },
   });
 
   return (

@@ -6,7 +6,7 @@ export const Roles = {
   USER: "user" as Role,
 };
 
-export type Role = "admin" | "moderator" | "user"
+export type Role = "admin" | "moderator" | "user";
 
 export const roleSchema = z.object({
   id: z.string().cuid2(),

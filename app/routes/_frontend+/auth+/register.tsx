@@ -1,7 +1,7 @@
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
-  MetaFunction
+  MetaFunction,
 } from "@remix-run/node";
 import { json, redirect } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
@@ -19,7 +19,7 @@ import { createUser, isEmailAddressAvailable } from "#app/models/user.server";
 import {
   EMAIL_PASSWORD_STRATEGY,
   authenticator,
-  getUserId
+  getUserId,
 } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { userSchemaRegister } from "#app/validations/user-schema";
@@ -38,9 +38,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       user: {
         email: null as unknown as string,
         username: null as unknown as string,
-        password: null as unknown as string
-      }
-    }
+        password: null as unknown as string,
+      },
+    },
   });
 };
 
@@ -52,9 +52,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       },
       {
         message: "Whoops! That email is already taken.",
-        path: ["user.email"]
-      }
-    )
+        path: ["user.email"],
+      },
+    ),
   );
 
   const formData = await request.clone().formData();
@@ -72,7 +72,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     if (error instanceof SpamError) {
       throw new Response("Invalid form data", {
         status: 400,
-        statusText: "Invalid Form Data"
+        statusText: "Invalid Form Data",
       });
     }
     throw error; // rethrow
@@ -81,7 +81,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   await createUser(
     validated.data.user.email,
     validated.data.user.username,
-    validated.data.user.password
+    validated.data.user.password,
   );
 
   // IMPORTANT: do not use `failureRedirect` or remix-auth will crash trying to save the error to database session using empty `createData()`
@@ -89,7 +89,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
       throwOnError: true,
       context: { formData },
-      successRedirect: "/"
+      successRedirect: "/",
     });
   } catch (error) {
     // Because redirects work by throwing a Response, you need to check if the
@@ -106,7 +106,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 };
 
-export const meta: MetaFunction = () => [{ title: "TMDB - Register" }];
+export const meta: MetaFunction = () => [{ title: "TZDB - Register" }];
 
 export default function RegisterPage() {
   const loaderData = useLoaderData<typeof loader>();
@@ -118,7 +118,7 @@ export default function RegisterPage() {
   const form = useForm({
     method: "post",
     validator: clientFormValidator,
-    defaultValues: { intent, ...loaderData.form }
+    defaultValues: { intent, ...loaderData.form },
   });
 
   return (

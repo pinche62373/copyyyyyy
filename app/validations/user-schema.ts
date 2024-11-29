@@ -7,15 +7,15 @@ export const userSchema = z.object({
     .string()
     .min(3, "This field must be at least 3 characters")
     .max(25, "This field cannot be more than 25 characters"),
-  password: z.string().min(6, "This field must be at least 6 characters")
+  password: z.string().min(6, "This field must be at least 6 characters"),
 });
 
 export const userSchemaLogin = z.object({
   intent: z.literal("login"),
   user: userSchema.pick({
     email: true,
-    password: true
-  })
+    password: true,
+  }),
 });
 
 export const userSchemaRegister = z.object({
@@ -23,14 +23,14 @@ export const userSchemaRegister = z.object({
   user: userSchema.pick({
     email: true,
     username: true,
-    password: true
-  })
+    password: true,
+  }),
 });
 
 export const userSchemaUpdateAccount = z.object({
   intent: z.literal("update"),
   user: userSchema.pick({
     id: true,
-    username: true
-  })
+    username: true,
+  }),
 });
