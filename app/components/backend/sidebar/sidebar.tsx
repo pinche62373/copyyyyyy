@@ -24,7 +24,7 @@ export function BackendSidebar({ className, onClick }: Props) {
         "transition-all duration-300 [--auto-close:lg]",
         "lg:bottom-0 lg:end-auto lg:block lg:translate-x-0",
         "border-e border-border bg-foreground",
-        "invisible md:visible",
+        "invisible lg:visible",
         className,
       )}
     >
@@ -150,7 +150,7 @@ export function BackendSidebar({ className, onClick }: Props) {
         <SidebarFooter />
 
         {/* Mobile - Close Drawer Button */}
-        <div className="absolute -end-3 top-3 z-10 lg:hidden">
+        <div className="lg:hidden absolute -end-3 top-3 z-10">
           <button
             type="button"
             onClick={(e) => {
