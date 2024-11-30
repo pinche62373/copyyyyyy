@@ -1,6 +1,7 @@
 import { vitePlugin as remix } from "@remix-run/dev";
 import { installGlobals } from "@remix-run/node";
 import { flatRoutes } from "remix-flat-routes";
+import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 
 installGlobals();
@@ -21,6 +22,7 @@ export default defineConfig({
         v3_singleFetch: true,
       },
     }),
+    visualizer({ emitFile: true }),
   ],
   ssr: {
     noExternal: ["remix-utils"],
