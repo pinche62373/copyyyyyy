@@ -28,7 +28,7 @@ export function BackendSidebar() {
           <NavLink
             to="/"
             className="inline-block flex-none rounded-md text-xl font-semibold text-sidebar-primary focus:opacity-80 focus:outline-none"
-            aria-label="Preline"
+            aria-label="Home"
           >
             Logo
           </NavLink>

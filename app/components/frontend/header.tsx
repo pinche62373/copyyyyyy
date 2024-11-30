@@ -29,7 +29,7 @@ export const FrontendHeader = ({ className }: Props) => {
             <NavLink
               to="/"
               className="inline-block flex-none rounded-md text-xl font-semibold focus:opacity-80 focus:outline-none"
-              aria-label="Preline"
+              aria-label="Home"
             >
               Logo
             </NavLink>

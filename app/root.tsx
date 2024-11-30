@@ -1,12 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import {
-  MetaFunction,
-  Outlet,
-  useLoaderData,
-  useLocation,
-} from "@remix-run/react";
-import { type IStaticMethods } from "preline/preline";
+import { MetaFunction, Outlet, useLoaderData } from "@remix-run/react";
 import { useEffect } from "react";
 import { Slide, ToastContainer, toast as notify } from "react-toastify";
 import { type Theme } from "remix-themes";
@@ -14,7 +8,6 @@ import type { ToastMessage } from "remix-toast";
 import { getToast } from "remix-toast";
 import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { HoneypotInputProps } from "remix-utils/honeypot/server";
-
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
 import { getUser } from "#app/utils/auth.server";
@@ -22,10 +15,10 @@ import { honeypot } from "#app/utils/honeypot.server";
 import { themeSessionResolver } from "#app/utils/theme.server";
 
 // stylesheets and fonts
+import "#app/styles/shared.css";
 import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/zoom.css";
 import "react-toastify/dist/ReactToastify.css";
-import "#app/styles/shared.css";
 
 // root layout of the entire app, all other routes render inside its <Outlet />
 export { Document as Layout };
@@ -69,29 +62,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 // ----------------------------------------------------------------------------
-// preline
-// ----------------------------------------------------------------------------
-declare global {
-  interface Window {
-    HSStaticMethods: IStaticMethods;
-  }
-}
-
-if (typeof window !== "undefined") {
-  import("preline/preline");
-}
-
-// ----------------------------------------------------------------------------
 // App
 // ----------------------------------------------------------------------------
 function App() {
-  const location = useLocation();
-
   const { toast } = useLoaderData<LoaderData>();
-
-  useEffect(() => {
-    window.HSStaticMethods.autoInit(); // preline
-  }, [location.pathname]);
 
   useEffect(() => {
     if (toast?.type) {

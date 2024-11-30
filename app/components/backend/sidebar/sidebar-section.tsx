@@ -27,11 +27,7 @@ export function SidebarSection({
 
   return (
     <nav
-      className={cn(
-        "hs-accordion-group flex w-full flex-col flex-wrap",
-        className,
-      )}
-      data-hs-accordion-always-open
+      className={cn("flex w-full flex-col flex-wrap pr-2", className)}
       {...rest}
     >
       <ul>

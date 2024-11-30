@@ -22,21 +22,22 @@ export function SidebarLink({
   if (!userHasRoutePermission(user, { resource: to, scope: "any" })) {
     return;
   }
-  const liClass = nested === false && "mb-1.5 pl-5 pr-2";
+
+  let marginLeft = nested ? "ml-1.5" : "ml-5";
 
   return (
-    <li className={cn(liClass, className)} {...rest}>
-      <NavLink
-        to={to}
-        className={cn(
-          "flex gap-x-3 rounded-lg px-3 py-2 focus:outline-none",
-          "text-sm text-sidebar-secondary",
-          "hover:bg-sidebar-hover hover:text-sidebar-primary",
-          "focus:bg-sidebar-hover focus:text-sidebar-primary",
-        )}
-      >
-        {children}
-      </NavLink>
-    </li>
+    <NavLink
+      to={to}
+      className={cn(
+        `mb-1.5 ${marginLeft}`,
+        "flex gap-x-3 rounded-lg px-3 py-2 focus:outline-none",
+        "text-sm text-sidebar-secondary",
+        "hover:bg-sidebar-hover hover:text-sidebar-primary",
+        "focus:bg-sidebar-hover focus:text-sidebar-primary",
+      )}
+      {...rest}
+    >
+      {children}
+    </NavLink>
   );
 }
