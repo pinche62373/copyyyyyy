@@ -32,9 +32,9 @@
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.0",
     "@prisma/client": "^5.21.1",
-    "@remix-run/node": "2.13.1",
-    "@remix-run/react": "2.13.1",
-    "@remix-run/serve": "2.13.1",
+    "@remix-run/node": "2.15.0",
+    "@remix-run/react": "2.15.0",
+    "@remix-run/serve": "2.15.0",
     "@rvf/core": "^6.1.4",
     "@rvf/react": "^6.2.1",
     "@rvf/remix": "^6.2.0",
@@ -68,7 +68,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@faker-js/faker": "^9.1.0",
-    "@remix-run/dev": "2.13.1",
+    "@remix-run/dev": "2.15.0",
     "@snaplet/copycat": "^5.1.0",
     "@snaplet/seed": "^0.98.0",
     "@tailwindcss/forms": "^0.5.9",
