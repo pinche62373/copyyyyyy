@@ -1,5 +1,6 @@
 {
   "name": "mdb",
+  "type": "module",
   "private": true,
   "sideEffects": false,
   "imports": {
