@@ -1,5 +1,5 @@
 import { NavLink } from "@remix-run/react";
-
+import React from "react";
 import { SidebarFooter } from "#app/components/backend/sidebar/sidebar-footer";
 import { SidebarGroup } from "#app/components/backend/sidebar/sidebar-group";
 import { SidebarLink } from "#app/components/backend/sidebar/sidebar-link";
@@ -11,15 +11,21 @@ import { IconUsers } from "#app/components/icons/icon-users";
 import { cn } from "#app/utils/lib/cn";
 import { Roles } from "#app/validations/role-schema";
 
-export function BackendSidebar() {
+interface Props {
+  className?: string;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+}
+
+export function BackendSidebar({ className, onClick }: Props) {
   return (
     <aside
-      id="hs-pro-sidebar"
       className={cn(
-        "hs-overlay fixed inset-y-0 start-0 z-[60] hidden w-[260px] -translate-x-full",
-        "transition-all duration-300 [--auto-close:lg] hs-overlay-open:translate-x-0",
+        "fixed inset-y-0 start-0 z-[60] w-[260px]",
+        "transition-all duration-300 [--auto-close:lg]",
         "lg:bottom-0 lg:end-auto lg:block lg:translate-x-0",
         "border-e border-border bg-foreground",
+        "invisible md:visible",
+        className,
       )}
     >
       <div className="flex h-full max-h-full flex-col py-3">
@@ -143,18 +149,19 @@ export function BackendSidebar() {
 
         <SidebarFooter />
 
+        {/* Mobile - Close Drawer Button */}
         <div className="absolute -end-3 top-3 z-10 lg:hidden">
-          {/* Sidebar Close */}
           <button
             type="button"
+            onClick={(e) => {
+              if (onClick) onClick(e);
+            }}
             className={cn(
-              "inline-flex h-7 w-6 items-center justify-center gap-x-2 rounded-md border ",
+              "inline-flex h-8 w-8 p-3 items-center justify-center gap-x-2 rounded-md border",
+              "text-sm font-medium",
               "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
-              "border-gray-200 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 focus:bg-gray-100",
-              "dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700",
+              "bg-input border-border-foreground text-secondary-foreground hover:bg-input/80 focus:bg-input",
             )}
-            data-hs-overlay="#hs-pro-sidebar"
-            aria-controls="hs-pro-sidebar"
             aria-label="Toggle navigation"
           >
             <svg
@@ -172,8 +179,8 @@ export function BackendSidebar() {
               <path d="m15 18-6-6 6-6" />
             </svg>
           </button>
-          {/* End Sidebar Close */}
         </div>
+        {/* End Mobile - Close Drawer Button */}
       </div>
     </aside>
   );
