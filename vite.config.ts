@@ -9,8 +9,10 @@ installGlobals();
 export default defineConfig({
   plugins: [
     remix({
-      ignoredRouteFiles: ["**/.*", "**/*.test.{ts,tsx}"],
-      serverModuleFormat: "cjs",
+      basename: "/",
+      serverModuleFormat: "esm",
+      serverBuildFile: "index.js",
+      ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{ts,tsx}"],
       routes: async (defineRoutes) => {
         return flatRoutes("routes", defineRoutes);
       },
