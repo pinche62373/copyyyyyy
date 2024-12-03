@@ -26,7 +26,7 @@ export const TableFooter = <T,>({
       {...rest}
     >
       {/* Page Size */}
-      <span data-hs-input-number="">
+      <span>
         <div className="inline-flex items-center gap-x-1">
           <p className="text-sm text-secondary-foreground">Results per page:</p>
           {/* Counter */}
