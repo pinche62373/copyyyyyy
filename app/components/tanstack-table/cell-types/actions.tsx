@@ -2,13 +2,12 @@ import { NavLink } from "@remix-run/react";
 import { ValidatedForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { CellContext } from "@tanstack/react-table";
+import React from "react";
 import { z } from "zod";
-
-import { ConfirmationLauncher } from "#app/components/confirmation-launcher";
-import { ConfirmationModal } from "#app/components/confirmation-modal";
 import { IconContainerRound } from "#app/components/icon-container-round";
 import { IconEdit } from "#app/components/icons/icon-edit";
 import { IconTrash } from "#app/components/icons/icon-trash";
+import { Confirm } from "#app/components/shared/confirm.tsx";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { Crud } from "#app/utils/admin-crud";
 
@@ -30,9 +29,11 @@ export const tableCellActions = ({
   // edit button
   const editUrl = `${info.row.original.id}/edit`;
 
+  actions.delete = true;
+
   // delete button
-  const deleteFormId = "delete-form-" + info.row.original.id;
-  const confirmDeleteId = "confirm-" + deleteFormId;
+  const deleteFormRef = React.useRef<HTMLFormElement>(null);
+
   const deleteFormValidator = withZod(
     z
       .object({
@@ -60,44 +61,44 @@ export const tableCellActions = ({
       {/* Optional Delete Button  */}
       {actions.delete === true && (
         <>
-          <ConfirmationLauncher modalId={confirmDeleteId}>
-            <IconContainerRound>
-              <ValidatedForm
-                method="POST"
-                id={deleteFormId}
-                action={crud.routes.index}
-                validator={deleteFormValidator}
-                className="hidden"
-              >
-                {(form) => (
-                  <>
-                    <InputGeneric
-                      scope={form.scope("intent")}
-                      type="hidden"
-                      value="delete"
-                    />
+          <ValidatedForm
+            method="POST"
+            action={crud.routes.index}
+            validator={deleteFormValidator}
+            formRef={deleteFormRef}
+            className="hidden"
+          >
+            {(form) => (
+              <>
+                <InputGeneric
+                  scope={form.scope("intent")}
+                  type="hidden"
+                  value="delete"
+                />
 
-                    <InputGeneric
-                      scope={form.scope(`${crud.singular}.id`)}
-                      type="hidden"
-                      value={info.row.original.id}
-                    />
-                  </>
-                )}
-              </ValidatedForm>
+                <InputGeneric
+                  scope={form.scope(`${crud.singular}.id`)}
+                  type="hidden"
+                  value={info.row.original.id}
+                />
+              </>
+            )}
+          </ValidatedForm>
 
-              <IconTrash />
-            </IconContainerRound>
-          </ConfirmationLauncher>
+          <Confirm>
+            <Confirm.Trigger>
+              <IconContainerRound>
+                <IconTrash />
+              </IconContainerRound>
+            </Confirm.Trigger>
 
-          {/* Delete Confirmation */}
-          <ConfirmationModal
-            id={confirmDeleteId}
-            formId={deleteFormId}
-            confirmButtonText="Delete"
-            caption={`Delete ${crud.singular}`}
-            body={`Are you sure you want to permanently delete "${info.row.original.name}"?`}
-          />
+            <Confirm.Modal
+              heading={`Delete ${crud.singular}`}
+              formRef={deleteFormRef}
+            >
+              {`Are you sure you want to permanently delete "${info.row.original.name}"?`}
+            </Confirm.Modal>
+          </Confirm>
         </>
       )}
     </>

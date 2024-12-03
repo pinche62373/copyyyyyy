@@ -1,50 +1,49 @@
-import { ConfirmationLauncher } from "#app/components/confirmation-launcher";
-import { ConfirmationModal } from "#app/components/confirmation-modal";
+import type { RefObject } from "react";
 import { Button } from "#app/components/shared/button";
+import { Confirm } from "#app/components/shared/confirm";
 
 interface PropTypes {
-  formId: string;
+  formRef: RefObject<HTMLFormElement>;
   label: string;
-  className?: string;
   buttonLabel: string;
-  enabled?: boolean;
+  disabled?: boolean;
+  modalHeading: string;
+  modalBody: string;
+  className?: string;
 }
 
 export const ActionButton = ({
-  formId,
+  formRef,
   label,
   buttonLabel,
+  disabled,
+  modalHeading,
+  modalBody,
   className,
-  enabled = true,
   ...rest
 }: PropTypes) => {
-  const modalId = `confirm-${formId}`;
-
   return (
     <>
-      {/* CONTAINER */}
+      {/* Container */}
       <div className="flex items-center justify-center">
-        {/* LABEL */}
+        {/* Label */}
         <div className="flex flex-1">{label}</div>
-        {/* BUTTON */}
-        <div className="flex justify-end">
-          <ConfirmationLauncher modalId={modalId} enabled={enabled}>
-            <Button
-              type="button"
-              className={className}
-              text={buttonLabel}
-              disabled={!enabled}
-              {...rest}
-            />
-          </ConfirmationLauncher>
-        </div>
-      </div>
 
-      <ConfirmationModal
-        id={modalId}
-        formId={formId}
-        caption="Delete expired sessions?"
-      />
+        {/* Button */}
+        <div className="flex justify-end">
+          <Confirm disabled={disabled}>
+            <Confirm.Trigger>
+              <Button as="div" text={buttonLabel} {...rest}></Button>
+            </Confirm.Trigger>
+
+            <Confirm.Modal formRef={formRef} heading={modalHeading}>
+              {modalBody}
+            </Confirm.Modal>
+          </Confirm>
+        </div>
+        {/* End Button */}
+      </div>
+      {/* End Container */}
     </>
   );
 };

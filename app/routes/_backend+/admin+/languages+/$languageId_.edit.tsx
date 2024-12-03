@@ -150,7 +150,7 @@ export default function Component() {
           />
           <Button
             type="submit"
-            form={form.formOptions.formId}
+            formId={form.formOptions.formId}
             text="Save"
             disabled={navigation.state === "submitting"}
           />

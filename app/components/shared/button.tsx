@@ -1,27 +1,41 @@
 import { Link } from "@remix-run/react";
-import type { ButtonHTMLAttributes } from "react";
 import { tv } from "tailwind-variants";
-
 import { cn } from "#app/utils/lib/cn";
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  type: "submit" | "reset" | "button";
+type BaseProps = {
   text: string;
-  to?: string;
   disabled?: boolean;
   secondary?: boolean;
   className?: string;
-}
+};
+
+type ButtonProps = {
+  type: "submit" | "reset" | "button";
+  formId?: string;
+  as?: never;
+  to?: string;
+};
+
+type DivProps = {
+  type?: never;
+  formId?: never;
+  as: "div";
+  to?: never;
+};
+
+type Props = (BaseProps & ButtonProps) | (BaseProps & DivProps);
 
 export function Button({
   text,
+  as,
   type,
   to,
+  formId,
   secondary,
   disabled,
   className,
   ...rest
-}: ButtonProps) {
+}: Props) {
   const tvButton = tv({
     base: cn(
       "inline-flex items-center justify-center whitespace-nowrap rounded-md",
@@ -53,12 +67,26 @@ export function Button({
 
   return (
     <>
-      {/* Link disguised as button */}
-      {to && (
+      {/* Div looking like a Button */}
+      {as === "div" && (
+        <div
+          className={cn(
+            buttonClass,
+            disabled && "opacity-50 pointer-events-none cursor-not-allowed",
+            className,
+          )}
+        >
+          {text}
+        </div>
+      )}
+
+      {/* Link with a button */}
+      {to && !as && (
         <Link to={to} tabIndex={-1}>
           <div className={disabled ? "cursor-not-allowed" : undefined}>
             <button
               type={type}
+              form={formId}
               className={cn(buttonClass, className)}
               disabled={disabled}
               {...rest}
@@ -70,10 +98,11 @@ export function Button({
       )}
 
       {/* Real button  */}
-      {!to && (
+      {!to && !as && (
         <div className={disabled ? "cursor-not-allowed" : undefined}>
           <button
             type={type}
+            form={formId}
             className={cn(buttonClass, className)}
             disabled={disabled}
             {...rest}

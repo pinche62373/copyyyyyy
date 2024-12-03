@@ -132,7 +132,7 @@ export default function Component() {
           <Button
             type="submit"
             text="Save"
-            form={form.formOptions.formId}
+            formId={form.formOptions.formId}
             disabled={navigation.state === "submitting"}
           />
         </BackendPanel.Right>

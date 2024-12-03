@@ -1,11 +1,11 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { useForm } from "@rvf/remix";
+import { ValidatedForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
+import React from "react";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
 import { namedAction } from "remix-utils/named-action";
 import { z } from "zod";
-
 import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
@@ -64,21 +64,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
         return jsonWithError(null, "Unexpected error");
       }
 
-      return jsonWithSuccess(null, `Expired sessions deleted successfully`);
+      return jsonWithSuccess(null, "Sessions deleted succesfully");
     },
   });
 };
 
 export default function Component() {
-  const { expiredSessionCount } = useLoaderData<typeof loader>();
-  const formId = "form-purge-sessions";
+  const formRef = React.useRef<HTMLFormElement>(null);
 
-  const form = useForm({
-    method: "post",
-    validator: formValidator,
-    action: "/admin/system",
-    id: formId,
-  });
+  const { expiredSessionCount } = useLoaderData<typeof loader>();
 
   const invalidSessionsLabel =
     expiredSessionCount === 0
@@ -92,29 +86,40 @@ export default function Component() {
       </BackendPanel.Row>
 
       <BackendPanel.Row last>
-        <form {...form.getFormProps()} autoComplete="off">
-          <InputGeneric
-            scope={form.scope("intent")}
-            type="hidden"
-            value={intent}
-          />
+        <ValidatedForm
+          method="POST"
+          action="/admin/system"
+          validator={formValidator}
+          formRef={formRef}
+        >
+          {/* <form {...form.getFormProps()} autoComplete="off" > */}
+          {(form) => (
+            <InputGeneric
+              scope={form.scope("intent")}
+              type="hidden"
+              value={intent}
+            />
+          )}
+        </ValidatedForm>
 
-          <PairList>
-            <PairList.Pair>
-              <PairList.Key className="align-middle" last>
-                Sessions
-              </PairList.Key>
-              <PairList.Value last>
-                <ActionButton
-                  formId={formId}
-                  label={invalidSessionsLabel}
-                  buttonLabel="Purge"
-                  enabled={expiredSessionCount > 0}
-                />
-              </PairList.Value>
-            </PairList.Pair>
-          </PairList>
-        </form>
+        <PairList>
+          <PairList.Pair>
+            <PairList.Key className="align-middle" last>
+              Sessions
+            </PairList.Key>
+            <PairList.Value last>
+              <ActionButton
+                formRef={formRef}
+                label={invalidSessionsLabel}
+                buttonLabel="Purge"
+                disabled={expiredSessionCount === 0}
+                modalHeading="Delete expired sessions"
+                modalBody="Are you sure you want to permanently delete these expired sessions?"
+              />
+            </PairList.Value>
+          </PairList.Pair>
+        </PairList>
+        {/* </form> */}
       </BackendPanel.Row>
     </BackendPanel>
   );

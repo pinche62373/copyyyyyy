@@ -4,7 +4,6 @@ import { useLoaderData, useNavigation } from "@remix-run/react";
 import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
-
 import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
@@ -132,7 +131,7 @@ export default function Component() {
           <Button
             type="submit"
             text="Save"
-            form={form.formOptions.formId}
+            formId={form.formOptions.formId}
             disabled={navigation.state === "submitting"}
           />
         </BackendPanel.Right>
