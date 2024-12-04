@@ -1,9 +1,9 @@
-import type { LoaderFunctionArgs } from "@remix-run/node";
+import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { MetaFunction, Outlet, useLoaderData } from "@remix-run/react";
 import { useEffect } from "react";
 import { Slide, ToastContainer, toast as notify } from "react-toastify";
-import { type Theme } from "remix-themes";
+import { Theme } from "remix-themes";
 import type { ToastMessage } from "remix-toast";
 import { getToast } from "remix-toast";
 import { HoneypotProvider } from "remix-utils/honeypot/react";
@@ -14,11 +14,17 @@ import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { themeSessionResolver } from "#app/utils/theme.server";
 
-// stylesheets and fonts
-import "#app/styles/shared.css";
-import "@szhsin/react-menu/dist/index.css";
-import "@szhsin/react-menu/dist/transitions/zoom.css";
-import "react-toastify/dist/ReactToastify.css";
+import reactMenuStyles from "@szhsin/react-menu/dist/index.css?url";
+import reactMenuTransitions from "@szhsin/react-menu/dist/transitions/zoom.css?url";
+import reactToastify from "react-toastify/dist/ReactToastify.css?url";
+import sharedStyles from "#app/styles/shared.css?url";
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: reactMenuStyles },
+  { rel: "stylesheet", href: reactMenuTransitions },
+  { rel: "stylesheet", href: reactToastify },
+  { rel: "stylesheet", href: sharedStyles },
+];
 
 // root layout of the entire app, all other routes render inside its <Outlet />
 export { Document as Layout };
@@ -49,11 +55,18 @@ export interface LoaderData {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { getTheme } = await themeSessionResolver(request);
 
+  // prevent hydration errors when user has not yet created the theme cookie
+  let theme = getTheme();
+
+  if (theme === null) {
+    theme = Theme.LIGHT;
+  }
+
   const { toast, headers } = await getToast(request);
 
   const data: LoaderData = {
     user: await getUser(request),
-    theme: getTheme(),
+    theme,
     toast,
     honeypotInputProps: honeypot.getInputProps(),
   };

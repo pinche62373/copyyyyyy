@@ -7,9 +7,7 @@ export const AUTH_LOGOUT_ROUTE = "/auth/logout";
 export const AUTH_REGISTER_ROUTE = "/auth/register";
 
 // cookies
-export const COOKIE_DOMAIN =
-  process.env.NODE_ENV === "production" ? "domain.com" : undefined;
-export const COOKIE_SECURE = process.env.NODE_ENV === "production";
+export const COOKIE_SECURE = process.env.NODE_ENV === "production"; // requires HTTPS
 
 // cuid
 export const CUID_LENGTH = 25;

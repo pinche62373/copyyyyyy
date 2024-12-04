@@ -1,6 +1,9 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type {
+  LinksFunction,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-
 import { BackendHeader } from "#app/components/backend/header";
 import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
@@ -9,9 +12,15 @@ import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { requireRole } from "#app/utils/permissions.server";
 import { Roles } from "#app/validations/role-schema";
 
-// stylesheets and fonts
-import "#app/styles/backend.css";
-import "@fontsource-variable/inter/wght.css?url";
+import fontInter from "@fontsource-variable/inter/wght.css?url";
+import modernDrawerStyles from "react-modern-drawer/dist/index.css?url";
+import backendStyles from "#app/styles/backend.css?url";
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: fontInter },
+  { rel: "stylesheet", href: modernDrawerStyles },
+  { rel: "stylesheet", href: backendStyles },
+];
 
 export const meta: MetaFunction = () => [{ title: "TZDB Admin" }];
 

@@ -11,7 +11,6 @@ import { AuthorizationError } from "remix-auth";
 import { jsonWithError } from "remix-toast";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { SpamError } from "remix-utils/honeypot/server";
-
 import { Button } from "#app/components/shared/button";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { PairList } from "#app/components/shared/pair-list.tsx";

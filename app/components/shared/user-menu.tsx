@@ -1,6 +1,5 @@
 import { Link, useSubmit } from "@remix-run/react";
 import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
-
 import { IconCog } from "#app/components/icons/icon-cog";
 import { IconFolder } from "#app/components/icons/icon-folder";
 import { IconHeart } from "#app/components/icons/icon-heart";

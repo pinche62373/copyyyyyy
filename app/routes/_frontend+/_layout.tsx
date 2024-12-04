@@ -1,10 +1,12 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-
 import { FrontendHeader } from "#app/components/frontend/header";
 
-// stylesheet and fonts
-import "#app/styles/frontend.css";
+import frontendStyles from "#app/styles/frontend.css?url";
+
+export const links: LinksFunction = () => [
+  { rel: "stylesheet", href: frontendStyles },
+];
 
 export const meta: MetaFunction = () => [{ title: "TZDB" }];
 
