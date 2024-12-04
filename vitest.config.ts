@@ -6,7 +6,7 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { ViteUserConfig, defineConfig } from "vitest/config";
 
 export default defineConfig({
-  plugins: [react() , tsconfigPaths()] as ViteUserConfig["plugins"],
+  plugins: [react(), tsconfigPaths()] as ViteUserConfig["plugins"],
   test: {
     globals: true,
     environment: "happy-dom",
