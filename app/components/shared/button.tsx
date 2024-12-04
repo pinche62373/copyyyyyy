@@ -1,4 +1,5 @@
 import { Link } from "@remix-run/react";
+import React from "react";
 import { tv } from "tailwind-variants";
 import { cn } from "#app/utils/lib/cn";
 
@@ -7,6 +8,7 @@ type BaseProps = {
   disabled?: boolean;
   secondary?: boolean;
   className?: string;
+  onClick?: React.MouseEventHandler;
 };
 
 type ButtonProps = {
