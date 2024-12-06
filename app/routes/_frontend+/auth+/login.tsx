@@ -3,7 +3,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { data } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
 import { useForm } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
@@ -36,7 +36,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
 
     if (!databaseSessionExists) {
-      return json(null, {
+      return data(null, {
         headers: {
           "Set-Cookie": await sessionCookie.serialize("", {
             maxAge: 0,
@@ -61,7 +61,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 
   // otherwise, create redirectCookie and continue
-  return json(
+  return data(
     {
       form: {
         user: {
@@ -131,7 +131,7 @@ export default function LoginPage() {
   const form = useForm({
     method: "post",
     validator: formValidator,
-    defaultValues: { intent, ...loaderData?.form },
+    defaultValues: { intent, ...loaderData.data?.form },
   });
 
   return (

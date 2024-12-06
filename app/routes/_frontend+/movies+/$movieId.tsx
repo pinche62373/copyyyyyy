@@ -1,8 +1,6 @@
 import type { LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { z } from "zod";
-
 import { FrontendSection } from "#app/components/frontend/section";
 import { getMovie } from "#app/models/movie.server";
 
@@ -14,7 +12,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
-  return json({ movie });
+  return { movie };
 }
 
 export default function Component() {

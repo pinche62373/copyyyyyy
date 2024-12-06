@@ -1,6 +1,5 @@
 import type { ActionFunctionArgs } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
-
+import { data, redirect } from "@remix-run/node";
 import { authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { mergeHeaders } from "#app/utils/lib/merge-headers";
@@ -32,7 +31,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
 
     if (!databaseSessionExists) {
-      return json(null, {
+      return data(null, {
         headers: deleteCookieHeaders,
       });
     }

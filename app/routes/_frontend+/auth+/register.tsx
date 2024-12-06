@@ -3,7 +3,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
-import { json, redirect } from "@remix-run/node";
+import { redirect } from "@remix-run/node";
 import { useLoaderData, useNavigation } from "@remix-run/react";
 import { useForm, validationError } from "@rvf/remix";
 import { withZod } from "@rvf/zod";
@@ -11,7 +11,6 @@ import { AuthorizationError } from "remix-auth";
 import { jsonWithError } from "remix-toast";
 import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { SpamError } from "remix-utils/honeypot/server";
-
 import { Button } from "#app/components/shared/button";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { PairList } from "#app/components/shared/pair-list.tsx";
@@ -33,7 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   if (userId) return redirect("/");
 
-  return json({
+  return {
     form: {
       user: {
         email: null as unknown as string,
@@ -41,7 +40,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         password: null as unknown as string,
       },
     },
-  });
+  };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {

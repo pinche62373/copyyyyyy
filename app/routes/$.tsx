@@ -4,7 +4,7 @@
  * @see {@link https://github.com/remix-run/remix/discussions/5186#discussioncomment-4748778}
  */
 
-import { json } from "@remix-run/node";
+import { data } from "@remix-run/node";
 
 /**
  * Create a response receiving a JSON object with the status code 404.
@@ -15,10 +15,10 @@ import { json } from "@remix-run/node";
  * }
  */
 function notFound<Data = unknown>(
-  data: Data,
+  responseData: Data,
   init?: Omit<ResponseInit, "status">,
 ) {
-  return json<Data>(data, { ...init, status: 404 });
+  return data<Data>(responseData, { ...init, status: 404 });
 }
 
 export function loader() {

@@ -1,5 +1,5 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { json } from "@remix-run/node";
+import { data } from "@remix-run/node";
 import { MetaFunction, Outlet, useLoaderData } from "@remix-run/react";
 import { useEffect } from "react";
 import { Slide, ToastContainer, toast as notify } from "react-toastify";
@@ -64,14 +64,15 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const { toast, headers } = await getToast(request);
 
-  const data: LoaderData = {
-    user: await getUser(request),
-    theme,
-    toast,
-    honeypotInputProps: honeypot.getInputProps(),
-  };
-
-  return json({ ...data }, { headers });
+  return data(
+    {
+      user: await getUser(request),
+      theme,
+      toast,
+      honeypotInputProps: honeypot.getInputProps(),
+    },
+    { headers },
+  );
 };
 
 // ----------------------------------------------------------------------------
