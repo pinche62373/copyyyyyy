@@ -1,10 +1,12 @@
 import { vitePlugin as remix } from "@remix-run/dev";
+import { remixDevTools } from "remix-development-tools";
 import { flatRoutes } from "remix-flat-routes";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 
 export default defineConfig({
   plugins: [
+    remixDevTools(),    
     remix({
       basename: "/",
       serverModuleFormat: "esm",
