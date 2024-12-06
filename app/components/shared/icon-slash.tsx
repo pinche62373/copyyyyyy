@@ -1,8 +1,6 @@
-// icon: preline
-
 import * as React from "react";
 
-export const IconChevronDown = (props: React.SVGProps<SVGSVGElement>) => {
+export const IconSlash = (props: React.SVGProps<SVGSVGElement>) => {
   return (
     <svg
       className="size-4 shrink-0"
@@ -12,12 +10,10 @@ export const IconChevronDown = (props: React.SVGProps<SVGSVGElement>) => {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1"
       strokeLinecap="round"
-      strokeLinejoin="round"
       {...props}
     >
-      <path d="m6 9 6 6 6-6"></path>
+      <path d="M6 13L10 3"></path>
     </svg>
   );
 };

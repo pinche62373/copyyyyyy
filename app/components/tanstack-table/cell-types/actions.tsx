@@ -5,10 +5,9 @@ import { CellContext } from "@tanstack/react-table";
 import React from "react";
 import { z } from "zod";
 import { IconContainerRound } from "#app/components/icon-container-round";
-import { IconEdit } from "#app/components/icons/icon-edit";
-import { IconTrash } from "#app/components/icons/icon-trash";
 import { Confirm } from "#app/components/shared/confirm.tsx";
 import { InputGeneric } from "#app/components/shared/form/input-generic";
+import { Icon } from "#app/ui/icon.tsx";
 import { Crud } from "#app/utils/admin-crud";
 
 interface TableCellActionsFunctionArgs {
@@ -53,7 +52,7 @@ export const tableCellActions = ({
       {actions.edit && (
         <NavLink to={editUrl} title="Edit">
           <IconContainerRound>
-            <IconEdit />
+            <Icon name="pencil" />
           </IconContainerRound>
         </NavLink>
       )}
@@ -87,8 +86,8 @@ export const tableCellActions = ({
 
           <Confirm>
             <Confirm.Trigger>
-              <IconContainerRound>
-                <IconTrash />
+              <IconContainerRound className="hover:text-red-500">
+                <Icon name="trash-2" />
               </IconContainerRound>
             </Confirm.Trigger>
 

@@ -17,9 +17,9 @@ import modernDrawerStyles from "react-modern-drawer/dist/index.css?url";
 import backendStyles from "#app/styles/backend.css?url";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: fontInter },
-  { rel: "stylesheet", href: modernDrawerStyles },
-  { rel: "stylesheet", href: backendStyles },
+  { rel: "stylesheet", href: fontInter, as: "font" },
+  { rel: "stylesheet", href: modernDrawerStyles, as: "style" },
+  { rel: "stylesheet", href: backendStyles, as: "style" },
 ];
 
 export const meta: MetaFunction = () => [{ title: "TZDB Admin" }];

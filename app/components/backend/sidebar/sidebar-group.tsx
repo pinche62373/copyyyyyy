@@ -1,6 +1,6 @@
 import { Accordion, AccordionItem } from "@szhsin/react-accordion";
 import React from "react";
-import { IconChevronDown } from "#app/components/icons/icon-chevron-down.tsx";
+import { Icon } from "#app/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 import { useUser, userHasRole } from "#app/utils/user";
 import { Role } from "#app/validations/role-schema";
@@ -37,7 +37,8 @@ export function SidebarGroup({
         header={({ state: { isEnter } }) => (
           <>
             {icon} {caption}
-            <IconChevronDown
+            <Icon
+              name="chevron-down"
               className={`mt-0.5 size-4 ms-auto transition duration-200 dark:stroke-2 ${isEnter && "rotate-180"}`}
             />
           </>

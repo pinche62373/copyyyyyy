@@ -1,7 +1,9 @@
+//
+// If @snaplet/seed import gives errors, run `npm run postmigrate`.
+//
 import { copycat } from "@snaplet/copycat";
 import { Store, permissionScalars, roleScalars } from "@snaplet/seed";
 import invariant from "tiny-invariant";
-
 import * as Constants from "#app/utils/constants";
 
 /**

@@ -4,10 +4,7 @@ import { SidebarFooter } from "#app/components/backend/sidebar/sidebar-footer";
 import { SidebarGroup } from "#app/components/backend/sidebar/sidebar-group";
 import { SidebarLink } from "#app/components/backend/sidebar/sidebar-link";
 import { SidebarSection } from "#app/components/backend/sidebar/sidebar-section";
-import { IconEye } from "#app/components/icons/icon-eye";
-import { IconHome } from "#app/components/icons/icon-home";
-import { IconMovie } from "#app/components/icons/icon-movie";
-import { IconUsers } from "#app/components/icons/icon-users";
+import { Icon } from "#app/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 import { Roles } from "#app/validations/role-schema";
 
@@ -52,43 +49,31 @@ export function BackendSidebar({ className, onClick }: Props) {
           {/* Section: Main */}
           <SidebarSection>
             <SidebarLink to="/admin">
-              <IconHome />
+              <Icon name="home" />
               Dashboard
             </SidebarLink>
 
             {/* Group: Actors */}
-            <SidebarGroup id="actors" caption="Actors" icon={<IconUsers />}>
+            <SidebarGroup
+              id="actors"
+              caption="Actors"
+              icon={<Icon name="users" />}
+            >
               <SidebarLink to="#" nested>
                 Overview
               </SidebarLink>
-
-              <SidebarLink to="#" nested>
-                Add User
-              </SidebarLink>
             </SidebarGroup>
-
-            {/* Link: Directors */}
-            <SidebarLink to="#">
-              <IconEye />
-              Directors
-            </SidebarLink>
 
             {/* Group: Movies */}
-            <SidebarGroup id="movies" caption="Movies" icon={<IconMovie />}>
+            <SidebarGroup
+              id="movies"
+              caption="Movies"
+              icon={<Icon name="video" />}
+            >
               <SidebarLink to="#" nested>
                 Overview
               </SidebarLink>
-
-              <SidebarLink to="#" nested>
-                Add Movie
-              </SidebarLink>
             </SidebarGroup>
-
-            {/* Link: Publishers */}
-            <SidebarLink to="#">
-              <IconEye />
-              Publishers
-            </SidebarLink>
           </SidebarSection>
           {/* End Section Main */}
 
@@ -98,7 +83,7 @@ export function BackendSidebar({ className, onClick }: Props) {
             <SidebarGroup
               id="base-actors"
               caption="Actors"
-              icon={<IconUsers />}
+              icon={<Icon name="users" />}
             >
               <SidebarLink to="#" nested>
                 Skin Colors
@@ -109,7 +94,7 @@ export function BackendSidebar({ className, onClick }: Props) {
             <SidebarGroup
               id="base-general"
               caption="General"
-              icon={<IconEye />}
+              icon={<Icon name="eye" />}
             >
               <SidebarLink to="/admin/countries" nested>
                 Countries
@@ -129,17 +114,17 @@ export function BackendSidebar({ className, onClick }: Props) {
           {/* Section: Admin */}
           <SidebarSection caption="Admin" requireRole={Roles.ADMIN}>
             <SidebarLink to="/admin/security/permissions">
-              <IconEye className="mt-0.5 size-4 shrink-0" />
+              <Icon name="eye" className="mt-0.5 size-4 shrink-0" />
               Permissions
             </SidebarLink>
 
             <SidebarLink to="/admin/security/roles">
-              <IconEye className="mt-0.5 size-4 shrink-0" />
+              <Icon name="eye" className="mt-0.5 size-4 shrink-0" />
               Roles
             </SidebarLink>
 
             <SidebarLink to="/admin/system">
-              <IconEye className="mt-0.5 size-4 shrink-0" />
+              <Icon name="eye" className="mt-0.5 size-4 shrink-0" />
               System
             </SidebarLink>
           </SidebarSection>

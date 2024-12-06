@@ -10,6 +10,7 @@ import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { HoneypotInputProps } from "remix-utils/honeypot/server";
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
+import { href as iconsHref } from "#app/ui/icon.tsx";
 import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { themeSessionResolver } from "#app/utils/theme.server";
@@ -20,10 +21,11 @@ import reactToastify from "react-toastify/dist/ReactToastify.css?url";
 import sharedStyles from "#app/styles/shared.css?url";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: reactMenuStyles },
-  { rel: "stylesheet", href: reactMenuTransitions },
-  { rel: "stylesheet", href: reactToastify },
-  { rel: "stylesheet", href: sharedStyles },
+  { rel: "stylesheet", href: iconsHref, as: "image" }, // svg sprite sheet
+  { rel: "stylesheet", href: reactMenuStyles, as: "style" },
+  { rel: "stylesheet", href: reactMenuTransitions, as: "style" },
+  { rel: "stylesheet", href: reactToastify, as: "style" },
+  { rel: "stylesheet", href: sharedStyles, as: "style" },
 ];
 
 // root layout of the entire app, all other routes render inside its <Outlet />

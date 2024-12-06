@@ -6,8 +6,6 @@ import { DarkModeToggler } from "#app/components/shared/darkmode-toggler";
 import { UserMenu } from "#app/components/shared/user-menu";
 import { cn } from "#app/utils/lib/cn";
 
-import "react-modern-drawer/dist/index.css";
-
 interface Props {
   className?: string;
 }

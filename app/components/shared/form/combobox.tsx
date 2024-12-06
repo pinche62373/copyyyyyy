@@ -16,7 +16,7 @@ import {
   Text,
   ValidationResult,
 } from "react-aria-components";
-import { IconChevronDown } from "#app/components/icons/icon-chevron-down";
+import { Icon } from "#app/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 
 interface MyComboBoxProps<T extends object>
@@ -68,7 +68,8 @@ export const ComboBox = forwardRef(
             )}
           >
             {/* {isOpen ? <>&#8593;</> : <>&#8595;</>} */}
-            <IconChevronDown
+            <Icon
+              name="chevron-down"
               className=""
               height="20"
               width="20"

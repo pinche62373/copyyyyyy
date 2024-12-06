@@ -1,7 +1,6 @@
 import { Link } from "@remix-run/react";
 import { tv } from "tailwind-variants";
-
-import { IconForwardSlash } from "#app/components/icons/icon-forward-slash";
+import { IconSlash } from "#app/components/shared/icon-slash.tsx";
 
 /**
  * Type for use inside route handle()
@@ -45,11 +44,11 @@ export const Breadcrumb = ({ name, to, position, last }: BreadcrumbProps) => {
       {!to && !last && (
         <div className={tvBreadcrumb({ state: "noLink" })}>
           {name}{" "}
-          <IconForwardSlash
+          <IconSlash
             width={16}
             height={16}
             viewBox="0 0 16 16"
-            className="size-5 shrink-0 text-primary-foreground"
+            className="size-5 shrink-0 text-gray-400 dark:text-neutral-600"
           />
         </div>
       )}
@@ -63,7 +62,7 @@ export const Breadcrumb = ({ name, to, position, last }: BreadcrumbProps) => {
           <Link to={to} className={tvBreadcrumb({ state: "link" })}>
             {name}
           </Link>
-          <IconForwardSlash
+          <IconSlash
             width={16}
             height={16}
             viewBox="0 0 16 16"

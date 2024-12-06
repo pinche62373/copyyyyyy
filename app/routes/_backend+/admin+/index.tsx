@@ -1,7 +1,6 @@
 import { useLoaderData } from "@remix-run/react";
-
 import { DashboardCounterCard } from "#app/components/backend/dashboard/counter-card";
-import { IconCog } from "#app/components/icons/icon-cog";
+import { Icon } from "#app/ui/icon.tsx";
 import { prisma } from "#app/utils/db.server";
 
 export const loader = async () => {
@@ -17,17 +16,25 @@ export default function AdminIndexPage() {
     <>
       {/* CounterCard Grid */}
       <div className="grid grid-cols-2 gap-2 md:gap-3 lg:grid-cols-4 lg:gap-5">
-        <DashboardCounterCard title="Movies" count={1214} icon={<IconCog />} />
-        <DashboardCounterCard title="Actors" count={29} icon={<IconCog />} />
+        <DashboardCounterCard
+          title="Movies"
+          count={1214}
+          icon={<Icon name="settings" />}
+        />
+        <DashboardCounterCard
+          title="Actors"
+          count={29}
+          icon={<Icon name="settings" />}
+        />
         <DashboardCounterCard
           title="Directors"
           count={123}
-          icon={<IconCog />}
+          icon={<Icon name="settings" />}
         />
         <DashboardCounterCard
           title="Users"
           count={userCount}
-          icon={<IconCog />}
+          icon={<Icon name="settings" />}
         />
       </div>
       {/* End CounterCard Grid */}

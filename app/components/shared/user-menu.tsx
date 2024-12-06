@@ -1,11 +1,7 @@
 import { Link, useSubmit } from "@remix-run/react";
 import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
-import { IconCog } from "#app/components/icons/icon-cog";
-import { IconFolder } from "#app/components/icons/icon-folder";
-import { IconHeart } from "#app/components/icons/icon-heart";
-import { IconLogout } from "#app/components/icons/icon-logout";
-import { IconUser } from "#app/components/icons/icon-user";
 import { Button } from "#app/components/shared/button";
+import { Icon } from "#app/ui/icon.tsx";
 import { AUTH_LOGIN_ROUTE, AUTH_LOGOUT_ROUTE } from "#app/utils/constants";
 import { useOptionalUser, userHasRole } from "#app/utils/user";
 import { Roles } from "#app/validations/role-schema";
@@ -45,7 +41,7 @@ export const UserMenu = () => {
               className="inline-flex size-[38px] items-center justify-center gap-x-2 rounded-full border border-transparent text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700"
               title={user.email}
             >
-              <IconUser />
+              <Icon name="user" />
             </button>
           }
           position="anchor"
@@ -56,7 +52,7 @@ export const UserMenu = () => {
             className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
           >
             <MenuItem className={menuItemClass}>
-              <IconHeart className={iconClass} />
+              <Icon name="heart" className={iconClass} />
               My Likes
             </MenuItem>
           </Link>
@@ -66,7 +62,7 @@ export const UserMenu = () => {
             className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
           >
             <MenuItem className={menuItemClass}>
-              <IconFolder className={iconClass} />
+              <Icon name="folder" className={iconClass} />
               My Collection
             </MenuItem>
           </Link>
@@ -76,7 +72,7 @@ export const UserMenu = () => {
             className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
           >
             <MenuItem className={menuItemClass}>
-              <IconCog className={iconClass} />
+              <Icon name="settings" className={iconClass} />
               Settings
             </MenuItem>
           </Link>
@@ -91,7 +87,7 @@ export const UserMenu = () => {
                 className="text-sm text-gray-800 focus:outline-none disabled:pointer-events-none disabled:opacity-50 dark:text-neutral-300"
               >
                 <MenuItem className={menuItemClass}>
-                  <IconCog className={iconClass} />
+                  <Icon name="settings" className={iconClass} />
                   Admin
                 </MenuItem>
               </Link>
@@ -109,7 +105,7 @@ export const UserMenu = () => {
               })
             }
           >
-            <IconLogout className={iconClass} />
+            <Icon name="log-out" className={iconClass} />
             Sign Out
           </MenuItem>
         </Menu>

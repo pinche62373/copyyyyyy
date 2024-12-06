@@ -1,7 +1,7 @@
 import { NavLink, useLoaderData } from "@remix-run/react";
-
 import { FrontendSection } from "#app/components/frontend/section";
 import { getMovies } from "#app/models/movie.server";
+import { Icon } from "#app/ui/icon.tsx";
 
 export const loader = async () => {
   const movies = await getMovies();
@@ -25,6 +25,24 @@ export default function MovieIndexPage() {
               <NavLink to={`/${movie.slug}`}>{movie.slug}</NavLink>
             </li>
           ))}
+        </ul>
+
+        {/* Test icon alignment */}
+        <ul>
+          <li>
+            <Icon name="home" />
+          </li>
+          <li className="text-lg">
+            <Icon name="home">Home</Icon>
+          </li>
+
+          <li className="text-lg">
+            <Icon name="home">Home</Icon>
+          </li>
+
+          <li className="text-lg">
+            <Icon name="home">Home</Icon>
+          </li>
         </ul>
       </FrontendSection>
     </>

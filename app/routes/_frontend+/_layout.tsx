@@ -5,7 +5,7 @@ import { FrontendHeader } from "#app/components/frontend/header";
 import frontendStyles from "#app/styles/frontend.css?url";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: frontendStyles },
+  { rel: "stylesheet", href: frontendStyles, as: "style" },
 ];
 
 export const meta: MetaFunction = () => [{ title: "TZDB" }];

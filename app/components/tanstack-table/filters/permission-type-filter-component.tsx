@@ -1,6 +1,5 @@
 import { Menu, MenuItem } from "@szhsin/react-menu";
-
-import { IconFilter } from "#app/components/icons/icon-filter.tsx";
+import { Icon } from "#app/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn.ts";
 
 type Filter = "all" | "model" | "route";
@@ -32,8 +31,7 @@ export const PermissionTypeFilterComponent = ({ onClick }: Args) => {
                 "text-secondary-foreground hover:bg-transparent hover:text-primary-foreground",
               )}
             >
-              <IconFilter />
-              Filter
+              <Icon name="sliders-horizontal">Filter</Icon>
             </button>
           }
           position="anchor"
