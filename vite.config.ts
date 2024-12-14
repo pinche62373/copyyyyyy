@@ -29,7 +29,7 @@ export default defineConfig({
       inputDir: "./other/svg-icons", // Path to folder with svg icons
       outputDir: "./app/ui/icons", // Path to folder with generated spritesheet and types
       typesOutputFile: "./app/ui/icons/name.d.ts", // Path to generated type file (defaults to types.ts in outputDir)
-      fileName: "sprite.svg", // Name of generated spritesheet (defaults to sprite.svg)
+      fileName: "spritesheet.svg", // Name of generated spritesheet (defaults to sprite.svg)
       cwd: process.cwd(), // The cwd, defaults to process.cwd()
       // formatter: "biome", // Formatter to use
       // pathToFormatterConfig: "./biome.json", // Path to formatter config file
