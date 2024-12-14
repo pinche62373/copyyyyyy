@@ -1,8 +1,7 @@
 import { redirect } from "@remix-run/node";
 import { Authenticator, AuthorizationError } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
-import invariant from "tiny-invariant";
-
+import { parseFormData } from "remix-hook-form";
 import type { User } from "#app/models/user.server";
 import { getUserById, verifyLogin } from "#app/models/user.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
@@ -23,13 +22,20 @@ export const authenticator = new Authenticator<User>(
   },
 );
 
+// TODO solve this better
+interface LoginProps {
+  user: {
+    email: string;
+    password: string;
+  };
+}
+
 authenticator.use(
   new FormStrategy(async ({ form }) => {
-    const email = form.get("user.email");
-    const password = form.get("user.password");
+    const formData: LoginProps = await parseFormData(form); // remix-hook-form: strings to object
 
-    invariant(typeof email === "string", "email must be a string");
-    invariant(typeof password === "string", "email must be a string");
+    const email = formData.user.email;
+    const password = formData.user.password;
 
     const user = await verifyLogin(email, password);
 

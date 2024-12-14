@@ -1,21 +1,19 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
 } from "@remix-run/node";
 import { data } from "@remix-run/node";
-import { useLoaderData, useNavigation } from "@remix-run/react";
-import { useForm } from "@rvf/remix";
-import { withZod } from "@rvf/zod";
+import { Form } from "@remix-run/react";
+import { Controller } from "react-hook-form";
 import { AuthorizationError } from "remix-auth";
+import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError } from "remix-toast";
-import { HoneypotInputs } from "remix-utils/honeypot/react";
 import { SpamError } from "remix-utils/honeypot/server";
-import { Button } from "#app/components/shared/button";
-import { InputGeneric } from "#app/components/shared/form/input-generic";
-import { PairList } from "#app/components/shared/pair-list.tsx";
+import zod from "zod";
+import { TextField } from "#app/components/shared/form/text-field.tsx";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
-import { AUTH_REGISTER_ROUTE } from "#app/utils/constants";
 import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { returnToCookie } from "#app/utils/return-to.server";
@@ -24,7 +22,9 @@ import { userSchemaLogin } from "#app/validations/user-schema";
 
 const intent = "login";
 
-const formValidator = withZod(userSchemaLogin);
+const resolver = zodResolver(userSchemaLogin);
+
+type FormData = zod.infer<typeof userSchemaLogin>;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
@@ -75,16 +75,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.clone().formData();
+  const { errors } = await getValidatedFormData<FormData>(
+    request.clone(),
+    resolver,
+  );
 
-  const validated = await formValidator.validate(formData);
-
-  if (validated.error)
-    return jsonWithError(validated.error, "Form data rejected by server", {
+  if (errors) {
+    return jsonWithError({ errors }, "Form data rejected by server", {
       status: 422,
     });
+  }
 
   // honeypot
+  const formData = await request.clone().formData();
+
   try {
     honeypot.check(formData);
   } catch (error) {
@@ -97,13 +101,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw error; // rethrow
   }
 
+  // returnTo
   const returnTo = await returnToCookie.parse(request.headers.get("Cookie"));
 
   // IMPORTANT: do not use `failureRedirect` or remix-auth will crash trying to save the error to database session using empty `createData()`
   try {
     return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
       throwOnError: true,
-      context: { formData },
       successRedirect: returnTo || "/",
     });
   } catch (error) {
@@ -124,63 +128,54 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const meta: MetaFunction = () => [{ title: "TZDB - Login" }];
 
 export default function LoginPage() {
-  const loaderData = useLoaderData<typeof loader>();
+  // const actionData = useActionData<typeof action>();
 
-  const navigation = useNavigation();
-
-  const form = useForm({
-    method: "post",
-    validator: formValidator,
-    defaultValues: { intent, ...loaderData.data?.form },
+  const { handleSubmit, control, register } = useRemixForm<FormData>({
+    mode: "onBlur",
+    resolver,
   });
 
   return (
     <div className="flex min-h-full flex-col justify-center">
       <div className="mx-auto w-full max-w-md px-8">
-        <form {...form.getFormProps()}>
-          <InputGeneric
-            scope={form.scope("intent")}
-            type="hidden"
-            value={intent}
+        <Form
+          method="POST"
+          onSubmit={handleSubmit}
+          className="max-w-prose mx-auto my-40 shadow-md space-y-4 bg-white rounded-lg p-4"
+        >
+          <input type="hidden" {...register("intent")} value={intent} />
+
+          <Controller
+            name="user.email"
+            control={control}
+            render={({ field, fieldState: { invalid, error } }) => (
+              <TextField {...field} isInvalid={invalid}>
+                <TextField.Label>Email address</TextField.Label>
+                <TextField.Input {...register(field.name)} />
+                <TextField.FieldError>{error?.message} </TextField.FieldError>
+              </TextField>
+            )}
           />
 
-          <PairList>
-            <PairList.Pair>
-              <PairList.Key>Email</PairList.Key>
-              <PairList.Value>
-                <InputGeneric
-                  scope={form.scope("user.email")}
-                  placeholder="Your email..."
-                />
-              </PairList.Value>
-            </PairList.Pair>
-
-            <PairList.Pair>
-              <PairList.Key>Password</PairList.Key>
-              <PairList.Value>
-                <InputGeneric
-                  scope={form.scope("user.password")}
-                  type="password"
-                  placeholder="Your password..."
-                />
-              </PairList.Value>
-            </PairList.Pair>
-          </PairList>
-
-          <HoneypotInputs />
-
-          <Button
-            type="button"
-            text="Register"
-            to={AUTH_REGISTER_ROUTE}
-            secondary
+          <Controller
+            name="user.password"
+            control={control}
+            render={({ field, fieldState: { invalid, error } }) => (
+              <TextField {...field} isInvalid={invalid}>
+                <TextField.Label>Password</TextField.Label>
+                <TextField.Input type="password" {...register(field.name)} />
+                <TextField.FieldError>{error?.message} </TextField.FieldError>
+              </TextField>
+            )}
           />
-          <Button
+
+          <button
             type="submit"
-            text="Log In"
-            disabled={navigation.state === "submitting"}
-          />
-        </form>
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Submit
+          </button>
+        </Form>
       </div>
     </div>
   );

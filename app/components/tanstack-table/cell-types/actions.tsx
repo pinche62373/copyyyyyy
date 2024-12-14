@@ -84,7 +84,7 @@ export const tableCellActions = ({
             )}
           </ValidatedForm>
 
-          <Confirm>
+          <Confirm ariaLabel={`Delete ${crud.singular}`}>
             <Confirm.Trigger>
               <IconContainerRound className="hover:text-red-500">
                 <Icon name="trash-2" />

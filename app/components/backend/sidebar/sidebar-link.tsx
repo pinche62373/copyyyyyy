@@ -25,19 +25,27 @@ export function SidebarLink({
 
   let marginLeft = nested ? "ml-1.5" : "ml-5";
 
+  className = cn(
+    `mb-1.5 ${marginLeft}`,
+    "flex gap-x-3 rounded-lg px-3 py-2 focus:outline-none",
+    "text-sm text-sidebar-secondary",
+    "hover:bg-sidebar-hover hover:text-sidebar-primary",
+    "focus:bg-sidebar-hover focus:text-sidebar-primary",
+  );
+
+  if (nested === true) {
+    return (
+      <NavLink to={to} className={className} {...rest}>
+        {children}
+      </NavLink>
+    );
+  }
+
   return (
-    <NavLink
-      to={to}
-      className={cn(
-        `mb-1.5 ${marginLeft}`,
-        "flex gap-x-3 rounded-lg px-3 py-2 focus:outline-none",
-        "text-sm text-sidebar-secondary",
-        "hover:bg-sidebar-hover hover:text-sidebar-primary",
-        "focus:bg-sidebar-hover focus:text-sidebar-primary",
-      )}
-      {...rest}
-    >
-      {children}
-    </NavLink>
+    <li>
+      <NavLink to={to} className={className} {...rest}>
+        {children}
+      </NavLink>
+    </li>
   );
 }

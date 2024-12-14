@@ -8,7 +8,10 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: frontendStyles, as: "style" },
 ];
 
-export const meta: MetaFunction = () => [{ title: "TZDB" }];
+export const meta: MetaFunction = () => [
+  { title: "TZDB" },
+  { name: "description", content: "TZDB Frontend" },
+];
 
 export default function FrontendLayout() {
   return (

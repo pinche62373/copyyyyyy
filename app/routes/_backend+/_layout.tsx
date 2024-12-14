@@ -22,7 +22,10 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: backendStyles, as: "style" },
 ];
 
-export const meta: MetaFunction = () => [{ title: "TZDB Admin" }];
+export const meta: MetaFunction = () => [
+  { title: "TZDB Admin" },
+  { name: "description", content: "TZDB Admin Interface" },
+];
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [{ name: "Dashboard", to: "/admin" }],

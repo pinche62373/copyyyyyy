@@ -11,14 +11,16 @@ import {
 import { cn } from "#app/utils/lib/cn";
 
 interface ConfirmProps {
-  children: React.ReactNode;
+  ariaLabel: string;
   disabled?: boolean;
+  children: React.ReactNode;
 }
 
-const Confirm = ({ children, disabled, ...rest }: ConfirmProps) => {
+const Confirm = ({ ariaLabel, disabled, children, ...rest }: ConfirmProps) => {
   return (
     <DialogTrigger {...rest}>
       <Button
+        aria-label={ariaLabel}
         className={
           disabled === true ? "opacity-50 cursor-not-allowed" : undefined
         }
@@ -30,7 +32,8 @@ const Confirm = ({ children, disabled, ...rest }: ConfirmProps) => {
   );
 };
 
-interface TriggerProps extends ConfirmProps {
+interface TriggerProps {
+  children: React.ReactNode;
   className?: string;
 }
 
