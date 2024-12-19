@@ -16,9 +16,9 @@ const Label = ({ className, children, ...rest }: LabelProps) => {
   return (
     <AriaLabel
       className={cn(
-        "pr-10 pl-4 -mb-[1.6rem]",
+        "block pr-10 pl-4 -mb-[1.6rem]",
         "text-[80%] font-medium z-10 relative pointer-events-none",
-        "text-gray-500 group-focus-within:text-blue-500",
+        "text-gray-500 group-focus-within:text-blue-600",
         className,
       )}
       {...rest}
