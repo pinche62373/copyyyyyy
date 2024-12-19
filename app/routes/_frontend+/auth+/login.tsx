@@ -131,7 +131,7 @@ export default function LoginPage() {
   // const actionData = useActionData<typeof action>();
 
   const { handleSubmit, control, register } = useRemixForm<FormData>({
-    mode: "onBlur",
+    mode: "onSubmit",
     resolver,
   });
 
@@ -149,7 +149,7 @@ export default function LoginPage() {
             name="user.email"
             control={control}
             render={({ field, fieldState: { invalid, error } }) => (
-              <TextField {...field} isInvalid={invalid}>
+              <TextField {...field} isInvalid={invalid} variant="stacked">
                 <TextField.Label>Email address</TextField.Label>
                 <TextField.Input {...register(field.name)} />
                 <TextField.FieldError>{error?.message} </TextField.FieldError>
@@ -161,7 +161,7 @@ export default function LoginPage() {
             name="user.password"
             control={control}
             render={({ field, fieldState: { invalid, error } }) => (
-              <TextField {...field} isInvalid={invalid}>
+              <TextField {...field} isInvalid={invalid} variant="stacked">
                 <TextField.Label>Password</TextField.Label>
                 <TextField.Input type="password" {...register(field.name)} />
                 <TextField.FieldError>{error?.message} </TextField.FieldError>

@@ -1,3 +1,76 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /*
+   * ------------------------------------------------------
+   * Light theme
+   * ------------------------------------------------------   
+   */
+  :root,
+  :root[data-theme="light"] {
+    --background: theme(colors.zinc.50);
+    --foreground: theme(colors.white);
+
+    --border: theme(colors.gray.100);
+    --border-foreground: theme(colors.gray.200);
+
+    --primary: rgb(31, 35, 40);
+    --primary-foreground: rgb(22, 22, 22);
+
+    --secondary: theme(colors.gray.500);
+    --secondary-foreground: rgb(80, 80, 80);
+
+    --tertiary: theme(colors.gray.500);
+    --tertiary-foreground: rgb(80, 80, 80);
+
+    --accent: theme(colors.indigo.600);
+    --accent-foreground: rgb(9, 105, 218);
+
+    --input: theme(colors.white);
+    --ring: theme(colors.gray.300);    
+  }
+
+    /*
+   * ------------------------------------------------------
+   * Dark theme
+   * ------------------------------------------------------   
+   */
+   :root[data-theme="dark"] {
+    --background: theme(colors.slate.950);
+    --foreground: hsl(218, 46.2%, 10.2%);
+
+    --border: rgb(25, 30, 58);
+    --border-foreground: rgb(23, 38, 60);
+
+    --primary: hsl(229, 15.5%, 59.6%);
+    --primary-foreground: theme(colors.neutral.300);
+
+    --secondary: hsl(219, 28.6%, 43.9%);
+    --secondary-foreground: rgb(136, 142, 168);
+
+    --tertiary: hsl(219, 28.6%, 43.9%);
+    --tertiary-foreground: hsl(219, 28.6%, 43.9%);
+
+    --accent: theme(colors.blue.600);
+    --accent-foreground: rgb(63, 132, 228);
+
+    --input: hsl(218, 47.1%, 13.3%);
+    --ring: theme(colors.blue.600);
+  }
+}
+
+@layer base {
+    html {
+      font-family: "Inter Variable", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
+    }
+    body {
+      @apply bg-background text-primary text-sm;
+    }
+  }
