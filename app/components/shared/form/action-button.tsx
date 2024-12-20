@@ -31,7 +31,7 @@ export const ActionButton = ({
 
         {/* Button */}
         <div className="flex justify-end">
-          <Confirm disabled={disabled}>
+          <Confirm ariaLabel="Are you sure?" disabled={disabled}>
             <Confirm.Trigger>
               <Button as="div" text={buttonLabel} {...rest}></Button>
             </Confirm.Trigger>

@@ -1,4 +1,4 @@
-import React, { forwardRef } from "react";
+import React from "react";
 import {
   FieldError as AriaFieldError,
   Input as AriaInput,
@@ -19,9 +19,7 @@ const tvo = tv({
       ifta: "group",
     },
     label: {
-      stacked: cn(
-        "block pl-1 mb-1.5 font-medium text-md",
-      ),
+      stacked: cn("block pl-1 mb-1.5 font-medium text-md"),
       ifta: cn(
         "block pr-10 pl-4 -mb-[1.6rem]",
         "text-[80%] font-medium z-10 relative pointer-events-none",
@@ -53,6 +51,34 @@ const tvo = tv({
   },
 });
 
+interface TextFieldProps {
+  isInvalid: boolean; // required so invalid: classes are always set
+  className?: string;
+  variant?: Variant;
+  children: React.ReactNode;
+}
+
+const TextField = ({
+  isInvalid,
+  className,
+  variant = "stacked",
+  children,
+  ...rest
+}: TextFieldProps) => {
+  activeVariant = variant; // set global variable
+
+  return (
+    <AriaTextField
+      isInvalid={isInvalid}
+      validationBehavior="aria" // Let React Hook Form handle validation instead of the browser.
+      className={cn(tvo({ textField: activeVariant }), className)}
+      {...rest}
+    >
+      {children}
+    </AriaTextField>
+  );
+};
+
 interface LabelProps {
   className?: string;
   children: React.ReactNode;
@@ -74,17 +100,14 @@ interface InputProps {
   className?: string;
 }
 
-const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ type, className }, ref) => {
-    return (
-      <AriaInput
-        type={type}
-        ref={ref}
-        className={cn(tvo({ input: activeVariant }), className)}
-      />
-    );
-  },
-);
+const Input = ({ type, className }: InputProps) => {
+  return (
+    <AriaInput
+      type={type}
+      className={cn(tvo({ input: activeVariant }), className)}
+    />
+  );
+};
 
 interface FieldErrorProps {
   children: React.ReactNode;
@@ -102,48 +125,9 @@ const FieldError = ({ className, children, ...rest }: FieldErrorProps) => {
   );
 };
 
-// ----------------------------------------------------------------------------
-// As a temporary workaround we us Object.assign() to allow compound component
-// with forwarded ref. Once switched to React 19 which supports ref as a prop:
-// - Remove Object.assign()
-// - Move this component to top of page again
-// - Export as currently commented out at bottom of page
-// ----------------------------------------------------------------------------
-interface TextFieldProps {
-  isInvalid: boolean; // required so invalid: classes are always set
-  className?: string;
-  variant?: Variant;
-  children: React.ReactNode;
-}
-
-const TextField = Object.assign(
-  forwardRef<HTMLInputElement, TextFieldProps>(
-    ({ isInvalid, className, variant = "stacked", children, ...rest }, ref) => {
-      activeVariant = variant; // set global variable
-
-      return (
-        <AriaTextField
-          ref={ref}
-          isInvalid={isInvalid}
-          validationBehavior="aria" // Let React Hook Form handle validation instead of the browser.
-          className={cn(tvo({ textField: activeVariant }), className)}
-          {...rest}
-        >
-          {children}
-        </AriaTextField>
-      );
-    },
-  ),
-  {
-    Label: Label,
-    Input: Input,
-    FieldError: FieldError,
-  },
-);
-
 // Start using this again when switching to React 19
-// MyTextField.Label = Label;
-// MyTextField.Input = Input;
-// MyTextField.FieldError = FieldError;
+TextField.Label = Label;
+TextField.Input = Input;
+TextField.FieldError = FieldError;
 
 export { TextField };

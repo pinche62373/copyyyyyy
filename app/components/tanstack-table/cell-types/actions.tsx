@@ -31,7 +31,7 @@ export const tableCellActions = ({
   actions.delete = true;
 
   // delete button
-  const deleteFormRef = React.useRef<HTMLFormElement>(null);
+  const deleteFormRef = React.useRef<HTMLFormElement>(null)
 
   const deleteFormValidator = withZod(
     z
@@ -64,7 +64,7 @@ export const tableCellActions = ({
             method="POST"
             action={crud.routes.index}
             validator={deleteFormValidator}
-            formRef={deleteFormRef}
+            formRef={deleteFormRef!.current}
             className="hidden"
           >
             {(form) => (
