@@ -5,13 +5,14 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { data } from "@remix-run/node";
-import { Form } from "@remix-run/react";
+import { Form, Link } from "@remix-run/react";
 import { Controller } from "react-hook-form";
 import { AuthorizationError } from "remix-auth";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
 import zod from "zod";
+import { Button } from "#app/components/shared/button.tsx";
 import { TextField } from "#app/components/shared/form/text-field.tsx";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
@@ -168,13 +169,17 @@ export default function LoginPage() {
               </TextField>
             )}
           />
-
-          <button
-            type="submit"
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Submit
-          </button>
+          <div className="flow-root w-full pt-2">
+            <Button type="submit" text="Login" className="float-right" />
+            <Link to="/">
+              <Button
+                as="div"
+                text="Cancel"
+                secondary
+                className="float-right mr-2"
+              />
+            </Link>
+          </div>
         </Form>
       </div>
     </div>
