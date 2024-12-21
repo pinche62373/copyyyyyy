@@ -6,12 +6,14 @@ import type {
 } from "@remix-run/node";
 import { data } from "@remix-run/node";
 import { Form, Link } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { Controller } from "react-hook-form";
 import { AuthorizationError } from "remix-auth";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
 import zod from "zod";
+import { getDefaultsForSchema } from "zod-defaults";
 import { Button } from "#app/components/shared/button.tsx";
 import { TextField } from "#app/components/shared/form/text-field.tsx";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
@@ -26,6 +28,11 @@ const intent = "login";
 const resolver = zodResolver(userSchemaLogin);
 
 type FormData = zod.infer<typeof userSchemaLogin>;
+
+// TODO replace whenRemix fixes https://github.com/remix-run/remix/issues/9826#issuecomment-2491878937
+type LoaderData = Omit<Awaited<ReturnType<typeof loader>>, "defaultValues"> & {
+  defaultValues: {};
+};
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
@@ -61,15 +68,12 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     successRedirect: "/",
   });
 
-  // otherwise, create redirectCookie and continue
+  // continue to login (using headers to create redirectCookie)
+  // const defaultValues = getDefaultsForSchema(userSchemaLogin)
+  // defaultValues.intent = intent
   return data(
     {
-      form: {
-        user: {
-          email: null as unknown as string,
-          password: null as unknown as string,
-        },
-      },
+      defaultValues: getDefaultsForSchema(userSchemaLogin),
     },
     { headers },
   );
@@ -129,11 +133,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const meta: MetaFunction = () => [{ title: "TZDB - Login" }];
 
 export default function LoginPage() {
-  // const actionData = useActionData<typeof action>();
+  const { defaultValues } = useLoaderData<LoaderData>();
 
   const { handleSubmit, control, register } = useRemixForm<FormData>({
     mode: "onSubmit",
     resolver,
+    defaultValues,
   });
 
   return (
@@ -152,7 +157,7 @@ export default function LoginPage() {
             render={({ field, fieldState: { invalid, error } }) => (
               <TextField {...field} isInvalid={invalid} variant="stacked">
                 <TextField.Label>Email address</TextField.Label>
-                <TextField.Input {...register(field.name)} />
+                <TextField.Input type="text" {...register(field.name)} />
                 <TextField.FieldError>{error?.message} </TextField.FieldError>
               </TextField>
             )}

@@ -15,8 +15,8 @@ let activeVariant: Variant = "stacked";
 const tvo = tv({
   variants: {
     textField: {
-      stacked: "group",
-      ifta: "group",
+      stacked: "group mb-5",
+      ifta: "group mb-5",
     },
     label: {
       stacked: cn("block pl-1 mb-1.5 font-medium text-md"),
@@ -45,8 +45,8 @@ const tvo = tv({
       ),
     },
     fieldError: {
-      stacked: "block pt-1 text-sm text-red-500",
-      ifta: "pt-1 text-sm text-red-500",
+      stacked: "block pt-1 text-sm text-red-500 ml-2",
+      ifta: "pt-1 text-sm text-red-500 ml-2",
     },
   },
 });
@@ -69,6 +69,7 @@ const TextField = ({
 
   return (
     <AriaTextField
+      defaultValue=""
       isInvalid={isInvalid}
       validationBehavior="aria" // Let React Hook Form handle validation instead of the browser.
       className={cn(tvo({ textField: activeVariant }), className)}

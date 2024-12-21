@@ -15,7 +15,7 @@ export const BackendTitle = ({
   return (
     <h1
       className={cn(
-        "text-lg font-semibold",
+        "text-lg font-semibold mb-5",
         foreground ? "text-primary-foreground" : "text-primary",
         className,
       )}

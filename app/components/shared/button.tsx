@@ -40,6 +40,7 @@ export function Button({
 }: Props) {
   const tvButton = tv({
     base: cn(
+      "w-full",
       "inline-flex items-center justify-center whitespace-nowrap rounded-md",
       "px-3 py-1.5 text-start align-middle text-sm font-medium",
       "focus:outline-none focus:ring-0 disabled:pointer-events-none disabled:opacity-50",
@@ -48,16 +49,16 @@ export function Button({
       role: {
         primary: cn(
           "text-white",
-          "bg-[#0078d4] hover:bg-[#0065b3]",
+          "bg-[#0078d4] hover:bg-[#0065b3] focus:bg-[#0065b3]",
           "dark:text-neutral-100",
-          "dark:bg-[#4361ee]/90 dark:hover:bg-[#4361ee]/80",
+          "dark:bg-[#4361ee]/90 dark:hover:bg-[#4361ee]/80 dark:focus:bg-[#4361ee]/80",
         ),
         secondary: cn(
           "border border-border-foreground dark:border-none",
           "text-gray-800",
-          "bg-[#f6f8fa] hover:bg-[#eff2f5]",
+          "bg-[#f6f8fa] hover:bg-[#eff2f5] focus:bg-[#eff2f5]",
           "dark:text-neutral-100",
-          "dark:bg-[#3b3f5c]/60 dark:hover:bg-[#3b3f5c]/75",
+          "dark:bg-[#3b3f5c]/60 dark:hover:bg-[#3b3f5c]/75 dark:focus:bg-[#3b3f5c]/75",
         ),
       },
     },

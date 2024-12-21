@@ -31,7 +31,7 @@ export const tableCellActions = ({
   actions.delete = true;
 
   // delete button
-  const deleteFormRef = React.useRef<HTMLFormElement>(null)
+  const deleteFormRef = React.useRef<HTMLFormElement>(null);
 
   const deleteFormValidator = withZod(
     z

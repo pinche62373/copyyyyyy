@@ -2,7 +2,6 @@
 // Tailwind Layout via https://react-spectrum.adobe.com/react-aria/examples/user-combobox.html
 //
 
-import { ForwardedRef } from "react";
 import React from "react";
 import {
   ComboBox as AriaComboBox,
@@ -16,8 +15,18 @@ import {
   Text,
   ValidationResult,
 } from "react-aria-components";
+import { tv } from "tailwind-variants";
 import { Icon } from "#app/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
+
+const tvo = tv({
+  variants: {
+    fieldError: {
+      stacked: "block pt-1 text-sm text-red-500 ml-2",
+      ifta: "pt-1 text-sm text-red-500 ml-2",
+    },
+  },
+});
 
 interface MyComboBoxProps<T extends object>
   extends Omit<ComboBoxProps<T>, "children"> {
@@ -25,7 +34,6 @@ interface MyComboBoxProps<T extends object>
   description?: string;
   errorMessage?: string | ((validation: ValidationResult) => string);
   children: React.ReactNode | ((item: T) => React.ReactNode);
-  ref: ForwardedRef<HTMLInputElement>;
 }
 
 export const ComboBox = <T extends object>({
@@ -33,13 +41,13 @@ export const ComboBox = <T extends object>({
   description,
   errorMessage,
   children,
-  ref,
   ...rest
 }: MyComboBoxProps<T>) => {
   return (
     <AriaComboBox
+      validationBehavior="aria"
       {...rest}
-      className={"group flex w-full flex-col gap-1"}
+      className={"group flex w-full flex-col gap-1 mb-5"}
       aria-label={ariaLabel}
     >
       <Group
@@ -50,7 +58,6 @@ export const ComboBox = <T extends object>({
         )}
       >
         <Input
-          ref={ref}
           className={cn(
             "w-full flex-1 rounded-lg border-none px-3 py-2 leading-5 outline-none focus:ring-0",
             "placeholder:opacity-80 hover:cursor-pointer disabled:pointer-events-none disabled:opacity-50",
@@ -79,7 +86,9 @@ export const ComboBox = <T extends object>({
       </Group>
 
       {description && <Text slot="description">{description}</Text>}
-      <FieldError>{errorMessage}</FieldError>
+      <FieldError className={tvo({ fieldError: "stacked" })}>
+        {errorMessage}
+      </FieldError>
 
       {/* Popover holding the items */}
       <Popover
@@ -92,7 +101,6 @@ export const ComboBox = <T extends object>({
         <ListBox>{children}</ListBox>
       </Popover>
     </AriaComboBox>
-    // </div>
   );
 };
 

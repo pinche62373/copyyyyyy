@@ -8,14 +8,14 @@ import { regionSchema } from "#app/validations/region-schema";
 import { userSchema } from "#app/validations/user-schema";
 
 export const countrySchema = z.object({
-  id: z.string().cuid2(),
+  id: z.string().min(1, "This field is required").cuid2(),
   name: z
     .string({ required_error: "Country is required" })
     .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, {
       message:
         "This field only allows capitalized Latin words, separated by single spaces.",
     }),
-  regionId: z.string({ required_error: "You must select a region" }).cuid2(),
+  regionId: regionSchema.shape.id,
   createdAt: z.string().datetime(),
   createdBy: userSchema.pick({ id: true }),
   updatedAt: z.string().datetime().nullable(),
