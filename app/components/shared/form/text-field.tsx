@@ -24,6 +24,7 @@ const tvo = tv({
         "block pr-10 pl-4 -mb-[1.6rem]",
         "text-[80%] font-medium z-10 relative pointer-events-none",
         "text-gray-500 group-focus-within:text-blue-600",
+        "group-data-[invalid=true]:text-red-500",
       ),
     },
     input: {
@@ -41,6 +42,7 @@ const tvo = tv({
         "pt-[1.85rem] pr-2 pl-4 pb-[0.71rem]",
         "border-none focus:ring-0 outline-none w-full rounded-md",
         "shadow-[inset_0_0_0_1px_#d4d4d8] hover:shadow-[inset_0_0_0_1px_#a1a1aa] group-focus-within:shadow-[inset_0_0_0_2px_#3b82f6_!important]",
+        "group-data-[invalid=true]:shadow-[inset_0_0_0_2px_red_!important]",
         "placeholder:text-[#dfdfdf] group-focus-within:placeholder:text-opacity-0",
       ),
     },
