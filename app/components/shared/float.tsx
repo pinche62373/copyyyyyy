@@ -19,7 +19,7 @@ export const Float = ({
     return (
       <div
         className={cn(
-          "flex flex-col sm:flex-row sm:items-end sm:justify-end sm:mr-2",
+          "flex flex-col sm:flex-row sm:items-end sm:justify-end gap-2",
           className,
         )}
       >

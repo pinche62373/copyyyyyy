@@ -48,7 +48,7 @@ export function Button({
     variants: {
       role: {
         primary: cn(
-          "text-white sm:ml-2.5", 
+          "text-white",
           "border border-border-foreground dark:border-none",
           "bg-[#0078d4] hover:bg-[#0065b3] focus:bg-[#0065b3]",
           "dark:text-neutral-100",

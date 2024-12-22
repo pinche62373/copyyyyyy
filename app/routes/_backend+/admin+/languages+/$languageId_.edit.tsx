@@ -1,16 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "@prisma/client";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData, useNavigation } from "@remix-run/react";
-import { useForm } from "@rvf/remix";
-import { withZod } from "@rvf/zod";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
-
-import { BackendPanel } from "#app/components/backend/panel";
+import zod from "zod";
+import { BackendPanel2 } from "#app/components/backend/panel2";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
-import { InputGeneric } from "#app/components/shared/form/input-generic";
-import { PairList } from "#app/components/shared/pair-list.tsx";
+import { Float } from "#app/components/shared/float.tsx";
+import { Input } from "#app/components/shared/form/input.tsx";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -30,18 +30,20 @@ const { languageCrud: crud } = getAdminCrud();
 
 const intent = "update";
 
-const formValidator = withZod(languageSchemaUpdate);
+const resolver = zodResolver(languageSchemaUpdate);
+
+type FormData = zod.infer<typeof languageSchemaUpdate>;
 
 export const handle = {
   breadcrumb: ({
     data,
   }: {
-    data: { form: { language: { id: string; name: string } } };
+    data: { defaultValues: { language: { id: string; name: string } } };
   }): BreadcrumbHandle => [
     ...languagesHandle.breadcrumb(),
     {
-      name: data.form.language.name,
-      to: `${crud.routes.index}/${data.form.language.id}`,
+      name: data.defaultValues.language.name,
+      to: `${crud.routes.index}/${data.defaultValues.language.id}`,
     },
     { name: "Edit" },
   ],
@@ -62,21 +64,23 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    form: {
-      language,
-    },
+    defaultValues: { language },
   };
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = await requireUserId(request);
 
-  const validated = await formValidator.validate(await request.formData());
+  const { data, errors } = await getValidatedFormData<FormData>(
+    request,
+    resolver,
+  );
 
-  if (validated.error)
-    return jsonWithError(validated.error, "Form data rejected by server", {
+  if (errors) {
+    throw jsonWithError({ errors }, "Form data rejected by server", {
       status: 422,
     });
+  }
 
   await requireModelPermission(request, {
     resource: crud.singular,
@@ -85,7 +89,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   try {
-    await updateLanguage(validated.data.language, userId);
+    await updateLanguage(data.language, userId);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
@@ -103,59 +107,51 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 };
 
 export default function Component() {
-  const loaderData = useLoaderData<typeof loader>();
+  const { defaultValues } = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
-  const form = useForm({
-    method: "post",
-    validator: formValidator,
-    defaultValues: { intent, ...loaderData.form },
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useRemixForm<FormData>({
+    mode: "onBlur",
+    resolver,
+    defaultValues,
   });
 
   return (
-    <BackendPanel>
-      <BackendPanel.Row>
-        <BackendTitle text={`Edit ${humanize(crud.singular)}`} foreground />
-      </BackendPanel.Row>
+    <>
+      <BackendPanel2>
+        <BackendTitle text={`New ${crud.singular}`} foreground />
 
-      <BackendPanel.Row last>
-        <form {...form.getFormProps()} autoComplete="off">
-          <InputGeneric
-            scope={form.scope("intent")}
-            type="hidden"
-            value={intent}
-          />
-          <InputGeneric scope={form.scope("language.id")} type="hidden" />
+        <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
+          <input type="hidden" {...register("intent")} value={intent} />
+          <input type="hidden" {...register("language.id")} />
 
-          <PairList>
-            <PairList.Pair>
-              <PairList.Key>Name</PairList.Key>
-              <PairList.Value>
-                <InputGeneric scope={form.scope("language.name")} />
-              </PairList.Value>
-            </PairList.Pair>
-          </PairList>
-        </form>
-      </BackendPanel.Row>
+          <Input
+            label="Name"
+            variant="ifta"
+            {...register("language.name")}
+            error={errors.language?.name?.message}
+          />
 
-      <BackendPanel.Row last>
-        <BackendPanel.Right>
-          <Button
-            type="button"
-            text="Close"
-            to={crud.routes.index}
-            className="mr-2"
-            secondary
-          />
-          <Button
-            type="submit"
-            formId={form.formOptions.formId}
-            text="Save"
-            disabled={navigation.state === "submitting"}
-          />
-        </BackendPanel.Right>
-      </BackendPanel.Row>
-    </BackendPanel>
+          <Float direction="end">
+            <Button
+              type="button"
+              text="Cancel"
+              to={crud.routes.index}
+              secondary
+            />
+            <Button
+              type="submit"
+              text="Save"
+              disabled={navigation.state === "submitting"}
+            />
+          </Float>
+        </Form>
+      </BackendPanel2>
+    </>
   );
 }
