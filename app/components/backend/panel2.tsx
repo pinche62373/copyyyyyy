@@ -9,7 +9,6 @@ interface Props {
 const BackendPanel2 = ({ className, children, ...rest }: Props) => {
   return (
     <>
-      {/* Real panel */}
       <div className="relative overflow-visible">
         <div
           className={cn(
@@ -37,39 +36,6 @@ const Row = ({ className, children, last, ...rest }: RowProps) => {
         <div className="order-1 md:order-2 bg-green-300">Primary</div> */}
         {children}
       </div>
-
-      {/* <div className="grid sm:grid-cols-2">
-        <div className="">
-
-        </div>
-
-        </div> */}
-
-      {/* <div
-        className={cn(
-          "clear-both flex flex-col sm:flex-row align-middle",
-          last  ? "mb-0" : "mb-5",
-          className,
-        )}
-        {...rest}
-      >
-        {children}
-      </div> */}
-
-      {/* <div className="flow-root clear-both">
-      {children}      
-    </div> */}
-
-      {/* <div className="grow float-left">Left</div>
-          <div className="float-right justify-items-end">Right </div>            
-    <div className="flow-root clear-both">
-      <div
-        className={cn("overflow-y-auto", last ? "mb-0" : "mb-5", className)} // used to have overflow-y-auto
-        {...rest}
-      >
-        {children}
-      </div>
-    </div> */}
     </>
   );
 };

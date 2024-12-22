@@ -12,9 +12,10 @@ import { BackendPanel2 } from "#app/components/backend/panel2";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
+import { Float } from "#app/components/shared/float.tsx";
 import { ComboBoxItem } from "#app/components/shared/form/combobox-item.tsx";
 import { ComboBox } from "#app/components/shared/form/combobox.tsx";
-import { TextField } from "#app/components/shared/form/text-field.tsx";
+import { Input } from "#app/components/shared/form/input.tsx";
 import { createCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
@@ -49,8 +50,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     resource: new URL(request.url).pathname,
     scope: "any",
   });
-
-  // const regions = await getRegions();
 
   return {
     defaultValues: {
@@ -107,8 +106,14 @@ export default function Component() {
 
   const navigation = useNavigation();
 
-  const { handleSubmit, control, register, setValue } = useRemixForm<FormData>({
-    mode: "onSubmit",
+  const {
+    handleSubmit,
+    control,
+    register,
+    setValue,
+    formState: { errors },
+  } = useRemixForm<FormData>({
+    mode: "onBlur",
     resolver,
     defaultValues,
   });
@@ -122,16 +127,11 @@ export default function Component() {
           <input type="hidden" {...register("intent")} value={intent} />
           <input type="hidden" {...register("country.regionId")} />
 
-          <Controller
-            name="country.name"
-            control={control}
-            render={({ field, fieldState: { invalid, error } }) => (
-              <TextField {...field} isInvalid={invalid} variant="ifta">
-                <TextField.Label>Name</TextField.Label>
-                <TextField.Input type="text" {...register(field.name)} />
-                <TextField.FieldError>{error?.message} </TextField.FieldError>
-              </TextField>
-            )}
+          <Input
+            label="Name"
+            variant="ifta"
+            {...register("country.name")}
+            error={errors.country?.name?.message}
           />
 
           <Controller
@@ -153,24 +153,19 @@ export default function Component() {
             }}
           />
 
-          {/* Put buttons inside flex so we can use order */}
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-end">
-            <div className="order-2 sm:order-1 sm:mr-2">
-              <Button
-                type="button"
-                text="Cancel"
-                to={crud.routes.index}
-                secondary
-              />
-            </div>
-            <div className="order-1 sm:order-2 mb-3 sm:mb-0">
-              <Button
-                type="submit"
-                text="Save"
-                disabled={navigation.state === "submitting"}
-              />
-            </div>
-          </div>
+          <Float direction="end">
+            <Button
+              type="button"
+              text="Cancel"
+              to={crud.routes.index}
+              secondary
+            />
+            <Button
+              type="submit"
+              text="Save"
+              disabled={navigation.state === "submitting"}
+            />
+          </Float>
         </Form>
       </BackendPanel2>
     </>
