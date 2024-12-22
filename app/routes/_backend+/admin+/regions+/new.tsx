@@ -5,7 +5,6 @@ import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import zod from "zod";
-import { getDefaultsForSchema } from "zod-defaults";
 import { BackendPanel2 } from "#app/components/backend/panel2";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
@@ -16,6 +15,7 @@ import { createRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
+import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
@@ -25,7 +25,7 @@ import { regionSchemaCreate } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
 
-const intent = "create";
+const intent = "create" as const;
 
 const resolver = zodResolver(regionSchemaCreate);
 
@@ -45,7 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   return {
-    defaultValues: getDefaultsForSchema(regionSchemaCreate),
+    defaultValues: getDefaultValues(regionSchemaCreate, { intent }),
   };
 }
 
@@ -108,7 +108,7 @@ export default function Component() {
         <BackendTitle text={`New ${crud.singular}`} foreground />
 
         <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
-          <input type="hidden" {...register("intent")} value={intent} />
+          <input type="hidden" {...register("intent")} />
 
           <Input
             label="Name"

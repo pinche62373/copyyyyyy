@@ -23,7 +23,7 @@ import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 import { userSchemaLogin } from "#app/validations/user-schema";
 
-const intent = "login";
+const intent = "login" as const;
 
 const resolver = zodResolver(userSchemaLogin);
 

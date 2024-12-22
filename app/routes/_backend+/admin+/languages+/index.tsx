@@ -52,7 +52,7 @@ import {
 
 const { languageCrud: crud } = getAdminCrud();
 
-const intent = "delete";
+const intent = "delete" as const;
 
 const formValidator = withZod(languageSchemaDelete);
 

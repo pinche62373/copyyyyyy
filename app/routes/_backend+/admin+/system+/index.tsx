@@ -18,7 +18,7 @@ import {
 } from "#app/models/session";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 
-const intent = "purge";
+const intent = "purge" as const;
 
 const formValidator = withZod(
   z.object({

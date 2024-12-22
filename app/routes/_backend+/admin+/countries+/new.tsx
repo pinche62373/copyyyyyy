@@ -7,7 +7,6 @@ import { Controller } from "react-hook-form";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError, redirectWithSuccess } from "remix-toast";
 import zod from "zod";
-import { getDefaultsForSchema } from "zod-defaults";
 import { BackendPanel2 } from "#app/components/backend/panel2";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
@@ -21,6 +20,7 @@ import { getRegionById, getRegions } from "#app/models/region.server";
 import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
+import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
@@ -32,7 +32,7 @@ import { countrySchemaCreate } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
-const intent = "create";
+const intent = "create" as const;
 
 const resolver = zodResolver(countrySchemaCreate);
 
@@ -53,7 +53,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return {
     defaultValues: {
-      ...getDefaultsForSchema(countrySchemaCreate),
+      ...getDefaultValues(countrySchemaCreate),
+      intent,
       regions: await getRegions(),
     },
   };
@@ -103,6 +104,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export default function Component() {
   const { defaultValues } = useLoaderData<typeof loader>();
+  console.log("DEFAULT VALUES:", defaultValues);
 
   const navigation = useNavigation();
 
@@ -124,7 +126,7 @@ export default function Component() {
         <BackendTitle text={`New ${crud.singular}`} foreground />
 
         <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
-          <input type="hidden" {...register("intent")} value={intent} />
+          <input type="hidden" {...register("intent")} />
           <input type="hidden" {...register("country.regionId")} />
 
           <Input

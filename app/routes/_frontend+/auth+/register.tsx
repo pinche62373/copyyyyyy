@@ -23,7 +23,7 @@ import {
 import { honeypot } from "#app/utils/honeypot.server";
 import { userSchemaRegister } from "#app/validations/user-schema";
 
-const intent = "register";
+const intent = "register" as const;
 
 const clientFormValidator = withZod(userSchemaRegister);
 

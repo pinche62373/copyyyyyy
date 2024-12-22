@@ -17,7 +17,7 @@ import {
 } from "#app/utils/permissions.server";
 import { userSchemaUpdateAccount } from "#app/validations/user-schema";
 
-const intent = "update";
+const intent = "update" as const;
 
 const formValidator = withZod(userSchemaUpdateAccount);
 

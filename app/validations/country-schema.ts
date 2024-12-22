@@ -10,7 +10,8 @@ import { userSchema } from "#app/validations/user-schema";
 export const countrySchema = z.object({
   id: z.string().min(1, "This field is required").cuid2(),
   name: z
-    .string({ required_error: "Country is required" })
+    .string()
+    .min(1, "This field is required")
     .regex(/^[A-Z][a-z]+( [A-Z][a-z]+)*$/, {
       message:
         "This field only allows capitalized Latin words, separated by single spaces.",

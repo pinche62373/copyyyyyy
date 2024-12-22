@@ -28,7 +28,7 @@ import {
 
 const { languageCrud: crud } = getAdminCrud();
 
-const intent = "update";
+const intent = "update" as const;
 
 const resolver = zodResolver(languageSchemaUpdate);
 
@@ -64,7 +64,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    defaultValues: { language },
+    defaultValues: { language, intent },
   };
 }
 
@@ -109,6 +109,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Component() {
   const { defaultValues } = useLoaderData<typeof loader>();
 
+  console.log(defaultValues);
+
   const navigation = useNavigation();
 
   const {
@@ -124,10 +126,10 @@ export default function Component() {
   return (
     <>
       <BackendPanel2>
-        <BackendTitle text={`New ${crud.singular}`} foreground />
+        <BackendTitle text={`Edit ${crud.singular}`} foreground />
 
         <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
-          <input type="hidden" {...register("intent")} value={intent} />
+          <input type="hidden" {...register("intent")} />
           <input type="hidden" {...register("language.id")} />
 
           <Input

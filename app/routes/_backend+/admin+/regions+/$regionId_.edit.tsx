@@ -28,7 +28,7 @@ import {
 
 const { regionCrud: crud } = getAdminCrud();
 
-const intent = "update";
+const intent = "update" as const;
 
 const resolver = zodResolver(regionSchemaUpdate);
 
@@ -64,7 +64,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   }
 
   return {
-    defaultValues: { region },
+    defaultValues: { region, intent },
   };
 }
 
@@ -123,10 +123,10 @@ export default function Component() {
 
   return (
     <BackendPanel2>
-      <BackendTitle text={`New ${crud.singular}`} foreground />
+      <BackendTitle text={`Edit ${crud.singular}`} foreground />
 
       <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
-        <input type="hidden" {...register("intent")} value={intent} />
+        <input type="hidden" {...register("intent")} />
         <input type="hidden" {...register("region.id")} />
 
         <Input
