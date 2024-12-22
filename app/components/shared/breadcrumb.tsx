@@ -5,7 +5,7 @@ import { IconSlash } from "#app/components/shared/icon-slash.tsx";
 /**
  * Type for use inside route handle()
  */
-export interface BreadcrumbHandleProps {
+interface BreadcrumbHandleProps {
   name: string;
   to?: string;
 }

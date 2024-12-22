@@ -25,7 +25,7 @@ const childrenSizeClassName = {
   xl: "gap-3",
 } satisfies Record<Size, string>;
 
-export interface IconProps extends SVGProps<SVGSVGElement> {
+interface IconProps extends SVGProps<SVGSVGElement> {
   name: IconName;
   className?: string;
   size?: keyof typeof sizeClassName;

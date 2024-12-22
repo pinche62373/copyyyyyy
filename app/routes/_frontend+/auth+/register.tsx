@@ -11,7 +11,6 @@ import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
 import zod from "zod";
-import { getDefaultsForSchema } from "zod-defaults";
 import { Button } from "#app/components/shared/button";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
@@ -22,6 +21,7 @@ import {
   getUserId,
 } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
+import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { userSchemaRegister } from "#app/validations/user-schema";
 
 const intent = "register" as const;
@@ -36,7 +36,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   if (userId) return redirect("/");
 
   return {
-    defaultValues: getDefaultsForSchema(userSchemaRegister),
+    defaultValues: getDefaultValues(userSchemaRegister, { intent }),
+    intent,
   };
 };
 
@@ -126,7 +127,7 @@ export default function RegisterPage() {
           onSubmit={handleSubmit}
           className="max-w-prose mx-auto my-40 shadow-md space-y-4 bg-white rounded-lg p-4"
         >
-          <input type="hidden" {...register("intent")} value={intent} />
+          <input type="hidden" {...register("intent")} />
 
           <Input
             label="Email address"

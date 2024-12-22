@@ -5,20 +5,19 @@ import type {
   MetaFunction,
 } from "@remix-run/node";
 import { data } from "@remix-run/node";
-import { Form, Link } from "@remix-run/react";
-import { useLoaderData } from "@remix-run/react";
-import { Controller } from "react-hook-form";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
 import { AuthorizationError } from "remix-auth";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
 import zod from "zod";
-import { getDefaultsForSchema } from "zod-defaults";
 import { Button } from "#app/components/shared/button.tsx";
-import { TextField } from "#app/components/shared/form/text-field.tsx";
+import { Float } from "#app/components/shared/float.tsx";
+import { Input } from "#app/components/shared/form/input.tsx";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
+import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { returnToCookie } from "#app/utils/return-to.server";
 import { sessionCookie } from "#app/utils/session.server";
 import { userSchemaLogin } from "#app/validations/user-schema";
@@ -73,7 +72,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // defaultValues.intent = intent
   return data(
     {
-      defaultValues: getDefaultsForSchema(userSchemaLogin),
+      defaultValues: getDefaultValues(userSchemaLogin, { intent }),
     },
     { headers },
   );
@@ -135,7 +134,13 @@ export const meta: MetaFunction = () => [{ title: "TZDB - Login" }];
 export default function LoginPage() {
   const { defaultValues } = useLoaderData<LoaderData>();
 
-  const { handleSubmit, control, register } = useRemixForm<FormData>({
+  const navigation = useNavigation();
+
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useRemixForm<FormData>({
     mode: "onSubmit",
     resolver,
     defaultValues,
@@ -149,42 +154,31 @@ export default function LoginPage() {
           onSubmit={handleSubmit}
           className="max-w-prose mx-auto my-40 shadow-md space-y-4 bg-white rounded-lg p-4"
         >
-          <input type="hidden" {...register("intent")} value={intent} />
+          <input type="hidden" {...register("intent")} />
 
-          <Controller
-            name="user.email"
-            control={control}
-            render={({ field, fieldState: { invalid, error } }) => (
-              <TextField {...field} isInvalid={invalid} variant="stacked">
-                <TextField.Label>Email address</TextField.Label>
-                <TextField.Input type="text" {...register(field.name)} />
-                <TextField.FieldError>{error?.message} </TextField.FieldError>
-              </TextField>
-            )}
+          <Input
+            label="Email address"
+            variant="ifta"
+            {...register("user.email")}
+            error={errors.user?.email?.message}
           />
 
-          <Controller
-            name="user.password"
-            control={control}
-            render={({ field, fieldState: { invalid, error } }) => (
-              <TextField {...field} isInvalid={invalid} variant="stacked">
-                <TextField.Label>Password</TextField.Label>
-                <TextField.Input type="password" {...register(field.name)} />
-                <TextField.FieldError>{error?.message} </TextField.FieldError>
-              </TextField>
-            )}
+          <Input
+            label="Password"
+            type="password"
+            variant="ifta"
+            {...register("user.password")}
+            error={errors.user?.password?.message}
           />
-          <div className="flow-root w-full pt-2">
-            <Button type="submit" text="Login" className="float-right" />
-            <Link to="/">
-              <Button
-                as="div"
-                text="Cancel"
-                secondary
-                className="float-right mr-2"
-              />
-            </Link>
-          </div>
+
+          <Float direction="end">
+            <Button type="button" text="Cancel" to="/" secondary />
+            <Button
+              type="submit"
+              text="Save"
+              disabled={navigation.state === "submitting"}
+            />
+          </Float>
         </Form>
       </div>
     </div>
