@@ -109,8 +109,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Component() {
   const { defaultValues } = useLoaderData<typeof loader>();
 
-  console.log(defaultValues);
-
   const navigation = useNavigation();
 
   const {

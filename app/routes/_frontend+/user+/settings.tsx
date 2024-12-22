@@ -1,16 +1,16 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useActionData, useLoaderData } from "@remix-run/react";
-import { useForm } from "@rvf/remix";
-import { withZod } from "@rvf/zod";
+import { Form, useLoaderData, useNavigation } from "@remix-run/react";
+import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
-
+import zod from "zod";
 import { FrontendSection } from "#app/components/frontend/section";
 import { Button } from "#app/components/shared/button";
-import { InputGeneric } from "#app/components/shared/form/input-generic";
+import { Float } from "#app/components/shared/float.tsx";
+import { Input } from "#app/components/shared/form/input.tsx";
 import { updateUserAccountSettings } from "#app/models/user.server";
 import { authenticator, getUserOrDie } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
-import { isValidationErrorResponse } from "#app/utils/lib/is-validation-error-response";
 import {
   requireModelPermission,
   requireRoutePermission,
@@ -19,7 +19,9 @@ import { userSchemaUpdateAccount } from "#app/validations/user-schema";
 
 const intent = "update" as const;
 
-const formValidator = withZod(userSchemaUpdateAccount);
+const resolver = zodResolver(userSchemaUpdateAccount);
+
+type FormData = zod.infer<typeof userSchemaUpdateAccount>;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
@@ -34,49 +36,56 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 
   return {
-    intent,
-    user: await getUserOrDie(request),
+    defaultValues: { user: await getUserOrDie(request), intent },
   };
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const validated = await formValidator.validate(await request.formData());
+  const { data, errors } = await getValidatedFormData<FormData>(
+    request,
+    resolver,
+  );
 
-  if (validated.error)
-    return jsonWithError(validated.error, "Form data rejected by server", {
+  if (errors) {
+    throw jsonWithError({ errors }, "Form data rejected by server", {
       status: 422,
     });
+  }
 
   await requireModelPermission(request, {
     resource: "user",
     action: intent,
     scope: "own",
-    resourceId: validated.data.user.id,
+    resourceId: data.user.id,
   });
 
   try {
-    await updateUserAccountSettings(validated.data.user);
+    await updateUserAccountSettings(data.user);
   } catch {
-    return jsonWithError(validated.data, "Server error while saving your data");
+    return jsonWithError(data, "Server error while saving your data");
   }
 
-  return jsonWithSuccess(validated.data, `Settings updated successfully`);
+  return jsonWithSuccess(
+    {
+      defaultValues: data,
+    },
+    `Your settings have been updated.`,
+  );
 };
 
 export default function SettingsIndexPage() {
-  const loaderData = useLoaderData<typeof loader>();
+  const { defaultValues } = useLoaderData<typeof loader>();
 
-  const actionData = useActionData<typeof action>();
+  const navigation = useNavigation();
 
-  const form = useForm({
-    method: "POST",
-    validator: formValidator,
-    defaultValues: loaderData,
-    onSubmitSuccess: async () => {
-      if (!isValidationErrorResponse(actionData)) {
-        form.resetForm(actionData);
-      }
-    },
+  const {
+    handleSubmit,
+    register,
+    formState: { errors },
+  } = useRemixForm<FormData>({
+    mode: "onBlur",
+    resolver,
+    defaultValues,
   });
 
   return (
@@ -88,32 +97,26 @@ export default function SettingsIndexPage() {
           Profile
         </h2>
 
-        {/* Profile Form */}
-        <form {...form.getFormProps()} autoComplete="off">
-          <InputGeneric
-            name="intent"
-            scope={form.scope("intent")}
-            type="hidden"
-            value={intent}
+        <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
+          <input type="hidden" {...register("intent")} />
+          <input type="hidden" {...register("user.id")} />
+
+          <Input
+            label="Username"
+            variant="ifta"
+            {...register("user.username")}
+            error={errors.user?.username?.message}
           />
 
-          <InputGeneric
-            name="id"
-            scope={form.scope("user.id")}
-            type="hidden"
-            value={loaderData.user.id}
-          />
-
-          <InputGeneric name="username" scope={form.scope("user.username")} />
-
-          <Button type="reset" text="Reset Form" secondary />
-
-          <Button
-            type="submit"
-            text="Save Changes"
-            disabled={form.formState.isSubmitting}
-          />
-        </form>
+          <Float direction="end">
+            <Button type="button" text="Reset form" secondary />
+            <Button
+              type="submit"
+              text="Save"
+              disabled={navigation.state === "submitting"}
+            />
+          </Float>
+        </Form>
       </div>
       {/* End Profile Container */}
     </FrontendSection>
