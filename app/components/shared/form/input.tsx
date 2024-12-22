@@ -1,5 +1,5 @@
 import { InputHTMLAttributes } from "react";
-import React, { useId } from "react";
+import { useId } from "react";
 import { tv } from "tailwind-variants";
 import { cn } from "#app/utils/lib/cn";
 
@@ -52,7 +52,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   variant?: Variant;
   className?: string;
-  error?: string;
+  error: string | undefined;
 }
 
 export function Input({

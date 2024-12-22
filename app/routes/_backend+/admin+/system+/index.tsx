@@ -1,16 +1,14 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
-import { ValidatedForm } from "@rvf/remix";
-import { withZod } from "@rvf/zod";
-import React from "react";
+import { Form, useLoaderData } from "@remix-run/react";
+import { useId, useRef } from "react";
+import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
-import { namedAction } from "remix-utils/named-action";
-import { z } from "zod";
+import zod, { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { ActionButton } from "#app/components/shared/form/action-button.tsx";
-import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import {
   deleteExpiredSessions,
@@ -20,11 +18,13 @@ import { requireRoutePermission } from "#app/utils/permissions.server";
 
 const intent = "purge" as const;
 
-const formValidator = withZod(
-  z.object({
-    intent: z.literal(intent),
-  }),
-);
+const purgeSchema = z.object({
+  intent: z.literal(intent),
+});
+
+const resolver = zodResolver(purgeSchema);
+
+type FormData = zod.infer<typeof purgeSchema>;
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [{ name: "System", to: "admin/system" }],
@@ -44,33 +44,30 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return namedAction(request, {
-    async purge() {
-      const validated = await formValidator.validate(await request.formData());
+  const { errors } = await getValidatedFormData<FormData>(request, resolver);
 
-      if (validated.error)
-        return jsonWithError(validated.error, "Form data rejected by server", {
-          status: 422,
-        });
+  if (errors) {
+    return jsonWithError({ errors }, "Form data rejected by server", {
+      status: 422,
+    });
+  }
 
-      await requireRoutePermission(request, {
-        resource: "/admin/system",
-        scope: "any",
-      });
-
-      try {
-        await deleteExpiredSessions();
-      } catch {
-        return jsonWithError(null, "Unexpected error");
-      }
-
-      return jsonWithSuccess(null, "Sessions deleted succesfully");
-    },
+  await requireRoutePermission(request, {
+    resource: "/admin/system",
+    scope: "any",
   });
+
+  try {
+    await deleteExpiredSessions();
+  } catch {
+    return jsonWithError(null, "Unexpected error");
+  }
+
+  return jsonWithSuccess(null, "Sessions deleted succesfully");
 };
 
 export default function Component() {
-  const formRef = React.useRef<HTMLFormElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const { expiredSessionCount } = useLoaderData<typeof loader>();
 
@@ -79,6 +76,12 @@ export default function Component() {
       ? "No expired database sessions to purge"
       : `Purge ${expiredSessionCount} expired database sessions`;
 
+  const { handleSubmit, register } = useRemixForm<FormData>({
+    mode: "onBlur",
+    resolver,
+    defaultValues: { intent },
+  });
+
   return (
     <BackendPanel>
       <BackendPanel.Row>
@@ -86,21 +89,14 @@ export default function Component() {
       </BackendPanel.Row>
 
       <BackendPanel.Row last>
-        <ValidatedForm
+        <Form
+          ref={formRef}
           method="POST"
           action="/admin/system"
-          validator={formValidator}
-          formRef={formRef}
+          onSubmit={handleSubmit}
         >
-          {/* <form {...form.getFormProps()} autoComplete="off" > */}
-          {(form) => (
-            <InputGeneric
-              scope={form.scope("intent")}
-              type="hidden"
-              value={intent}
-            />
-          )}
-        </ValidatedForm>
+          <input type="hidden" {...register("intent")} />
+        </Form>
 
         <PairList>
           <PairList.Pair>

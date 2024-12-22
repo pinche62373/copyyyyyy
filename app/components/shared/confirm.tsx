@@ -1,4 +1,4 @@
-import type { RefObject } from "react";
+import type { ForwardedRef } from "react";
 import React from "react";
 import {
   Modal as AriaModal,
@@ -46,8 +46,8 @@ const Trigger = ({ className, children, ...rest }: TriggerProps) => {
 };
 
 interface ModalProps extends TriggerProps {
+  formRef: ForwardedRef<HTMLFormElement>;
   heading: string;
-  formRef: RefObject<HTMLFormElement>;
 }
 
 const Modal = ({ heading, formRef, children, ...rest }: ModalProps) => {
@@ -98,16 +98,20 @@ const Modal = ({ heading, formRef, children, ...rest }: ModalProps) => {
                   </button>
                   <button
                     type="submit"
+                    // form={formId}
+
                     slot="submit"
                     onClick={() => {
                       close(); // close modal
-                      formRef.current && // submit form
-                        formRef.current.dispatchEvent(
+                      if (typeof formRef !== "function") {
+                        // submit form
+                        formRef?.current?.dispatchEvent(
                           new Event("submit", {
                             cancelable: true,
                             bubbles: true,
                           }),
                         );
+                      }
                     }}
                     className="inline-flex items-center gap-x-2 rounded-lg border-none bg-red-500 px-3 py-2 text-sm font-semibold text-white hover:bg-red-600 disabled:pointer-events-none disabled:opacity-50"
                   >

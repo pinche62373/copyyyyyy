@@ -1,6 +1,6 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { withZod } from "@rvf/zod";
 import {
   SortingState,
   createColumnHelper,
@@ -11,12 +11,11 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import { getValidatedFormData } from "remix-hook-form";
 import { jsonWithError, jsonWithSuccess } from "remix-toast";
-import { namedAction } from "remix-utils/named-action";
-import { z } from "zod";
-
+import zod, { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel";
-import { BackendTitle } from "#app/components/backend/title.tsx";
+import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
@@ -54,7 +53,9 @@ const { languageCrud: crud } = getAdminCrud();
 
 const intent = "delete" as const;
 
-const formValidator = withZod(languageSchemaDelete);
+const resolver = zodResolver(languageSchemaDelete);
+
+type FormData = zod.infer<typeof languageSchemaDelete>;
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
@@ -76,35 +77,35 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  return namedAction(request, {
-    async delete() {
-      await requireUserId(request);
+  await requireUserId(request);
 
-      const validated = await formValidator.validate(await request.formData());
+  const { data, errors } = await getValidatedFormData<FormData>(
+    request,
+    resolver,
+  );
 
-      if (validated.error)
-        return jsonWithError(validated.error, "Form data rejected by server", {
-          status: 422,
-        });
+  if (errors) {
+    return jsonWithError({ errors }, "Form data rejected by server", {
+      status: 422,
+    });
+  }
 
-      await requireModelPermission(request, {
-        resource: crud.singular,
-        action: intent,
-        scope: "any",
-      });
-
-      try {
-        await deleteLanguage(validated.data.language);
-      } catch {
-        return jsonWithError(null, "Unexpected error");
-      }
-
-      return jsonWithSuccess(
-        null,
-        `${humanize(crud.singular)} deleted successfully`,
-      );
-    },
+  await requireModelPermission(request, {
+    resource: crud.singular,
+    action: intent,
+    scope: "any",
   });
+
+  try {
+    await deleteLanguage(data.language);
+  } catch {
+    return jsonWithError(null, "Unexpected error");
+  }
+
+  return jsonWithSuccess(
+    null,
+    `${humanize(crud.singular)} deleted successfully`,
+  );
 };
 
 export default function Component() {

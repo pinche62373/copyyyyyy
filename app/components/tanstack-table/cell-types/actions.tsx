@@ -1,12 +1,11 @@
-import { NavLink } from "@remix-run/react";
-import { ValidatedForm } from "@rvf/remix";
-import { withZod } from "@rvf/zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, NavLink } from "@remix-run/react";
 import { CellContext } from "@tanstack/react-table";
-import React from "react";
-import { z } from "zod";
+import { useRef } from "react";
+import { useRemixForm } from "remix-hook-form";
+import zod, { z } from "zod";
 import { IconContainerRound } from "#app/components/icon-container-round";
 import { Confirm } from "#app/components/shared/confirm.tsx";
-import { InputGeneric } from "#app/components/shared/form/input-generic";
 import { Icon } from "#app/ui/icon.tsx";
 import { Crud } from "#app/utils/admin-crud";
 
@@ -25,26 +24,39 @@ export const tableCellActions = ({
   crud,
   actions,
 }: TableCellActionsFunctionArgs) => {
-  // edit button
+  // edit
   const editUrl = `${info.row.original.id}/edit`;
 
-  actions.delete = true;
+  // delete
+  actions.delete = true; // temporarily enable for all
+  const intent = "delete" as const;
+  const formRef = useRef<HTMLFormElement>(null);
 
-  // delete button
-  const deleteFormRef = React.useRef<HTMLFormElement>(null);
+  const deleteSchema = z
+    .object({
+      intent: z.literal(intent),
+    })
+    .catchall(
+      z.object({
+        id: z.string().min(1).cuid2(),
+      }),
+    );
 
-  const deleteFormValidator = withZod(
-    z
-      .object({
-        intent: z.literal("delete"),
-        rvfFormId: z.string(),
-      })
-      .catchall(
-        z.object({
-          id: z.string().cuid2(),
-        }),
-      ),
-  );
+  const resolver = zodResolver(deleteSchema);
+
+  type FormData = zod.infer<typeof deleteSchema>;
+
+  const { register, handleSubmit } = useRemixForm<FormData>({
+    mode: "onBlur",
+    resolver,
+    //@ts-expect-error: TODO fix if still exists with remix-hook-form RR7
+    defaultValues: {
+      intent,
+      [crud.singular]: {
+        id: info.row.original.id,
+      },
+    },
+  });
 
   return (
     <>
@@ -60,29 +72,16 @@ export const tableCellActions = ({
       {/* Optional Delete Button  */}
       {actions.delete === true && (
         <>
-          <ValidatedForm
+          <Form
+            onSubmit={handleSubmit}
             method="POST"
-            action={crud.routes.index}
-            validator={deleteFormValidator}
-            formRef={deleteFormRef!.current}
+            ref={formRef}
+            autoComplete="off"
             className="hidden"
           >
-            {(form) => (
-              <>
-                <InputGeneric
-                  scope={form.scope("intent")}
-                  type="hidden"
-                  value="delete"
-                />
-
-                <InputGeneric
-                  scope={form.scope(`${crud.singular}.id`)}
-                  type="hidden"
-                  value={info.row.original.id}
-                />
-              </>
-            )}
-          </ValidatedForm>
+            <input type="hidden" {...register("intent")} />
+            <input type="hidden" {...register(`${crud.singular}.id`)} />
+          </Form>
 
           <Confirm ariaLabel={`Delete ${crud.singular}`}>
             <Confirm.Trigger>
@@ -93,7 +92,7 @@ export const tableCellActions = ({
 
             <Confirm.Modal
               heading={`Delete ${crud.singular}`}
-              formRef={deleteFormRef}
+              formRef={formRef}
             >
               {`Are you sure you want to permanently delete "${info.row.original.name}"?`}
             </Confirm.Modal>
