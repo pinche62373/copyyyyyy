@@ -1,5 +1,5 @@
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
-import { Outlet } from "@remix-run/react";
+import type { LinksFunction, MetaFunction } from "react-router";
+import { Outlet } from "react-router";
 import { FrontendHeader } from "#app/components/frontend/header";
 
 import frontendStyles from "#app/styles/frontend.css?url";

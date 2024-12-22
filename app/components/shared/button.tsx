@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import React from "react";
 import { tv } from "tailwind-variants";
 import { cn } from "#app/utils/lib/cn";

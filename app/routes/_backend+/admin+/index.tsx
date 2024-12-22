@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "react-router";
 import { DashboardCounterCard } from "#app/components/backend/dashboard/counter-card";
 import { Icon } from "#app/ui/icon.tsx";
 import { prisma } from "#app/utils/db.server";

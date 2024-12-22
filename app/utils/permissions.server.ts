@@ -1,4 +1,4 @@
-import { json } from "@remix-run/node";
+import { json } from "react-router";
 
 import { getPermissions } from "#app/models/permission.server";
 import { getAllPermissions } from "#app/permissions/get-all-permissions";

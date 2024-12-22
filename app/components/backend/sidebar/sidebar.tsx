@@ -1,4 +1,4 @@
-import { NavLink } from "@remix-run/react";
+import { NavLink } from "react-router";
 import React from "react";
 import { SidebarFooter } from "#app/components/backend/sidebar/sidebar-footer";
 import { SidebarGroup } from "#app/components/backend/sidebar/sidebar-group";

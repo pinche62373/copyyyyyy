@@ -1,5 +1,5 @@
-import type { ActionFunctionArgs } from "@remix-run/node";
-import { data, redirect } from "@remix-run/node";
+import type { ActionFunctionArgs } from "react-router";
+import { data, redirect } from "react-router";
 import { authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { mergeHeaders } from "#app/utils/lib/merge-headers";

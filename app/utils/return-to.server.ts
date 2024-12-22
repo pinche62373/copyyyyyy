@@ -1,6 +1,6 @@
 // Add returnTo behavior to Remix Auth : https://sergiodxa.com/tutorials/add-returnto-behavior-to-remix-auth
 
-import { createCookie } from "@remix-run/node";
+import { createCookie } from "react-router";
 import invariant from "tiny-invariant";
 import { COOKIE_SECURE } from "#app/utils/constants";
 

@@ -1,4 +1,4 @@
-import { vitePlugin as remix } from "@remix-run/dev";
+import { reactRouter } from "@react-router/dev/vite";
 import { remixDevTools } from "remix-development-tools";
 import { flatRoutes } from "remix-flat-routes";
 import { visualizer } from "rollup-plugin-visualizer";
@@ -8,7 +8,7 @@ import { iconsSpritesheet } from "vite-plugin-icons-spritesheet";
 export default defineConfig({
   plugins: [
     remixDevTools(),
-    remix({
+    reactRouter({
       basename: "/",
       serverModuleFormat: "esm",
       serverBuildFile: "index.js",

@@ -1,4 +1,4 @@
-import { useRouteLoaderData } from "@remix-run/react";
+import { useRouteLoaderData } from "react-router";
 import { normalizeRoutePermission } from "#app/permissions/normalize-route-permission";
 import {
   ModelPermission,

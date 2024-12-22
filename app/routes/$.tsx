@@ -4,7 +4,7 @@
  * @see {@link https://github.com/remix-run/remix/discussions/5186#discussioncomment-4748778}
  */
 
-import { data } from "@remix-run/node";
+import { data } from "react-router";
 
 /**
  * Create a response receiving a JSON object with the status code 404.

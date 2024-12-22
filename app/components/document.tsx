@@ -1,4 +1,4 @@
-import { Links, Meta, Scripts, ScrollRestoration } from "@remix-run/react";
+import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import React from "react";
 
 export function Document({ children }: { children: React.ReactNode }) {

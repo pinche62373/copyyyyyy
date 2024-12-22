@@ -1,6 +1,6 @@
-import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
-import { data } from "@remix-run/node";
-import { MetaFunction, Outlet, useLoaderData } from "@remix-run/react";
+import type { LinksFunction, LoaderFunctionArgs } from "react-router";
+import { data } from "react-router";
+import { MetaFunction, Outlet, useLoaderData } from "react-router";
 import reactMenuStyles from "@szhsin/react-menu/dist/index.css?url";
 import reactMenuTransitions from "@szhsin/react-menu/dist/transitions/zoom.css?url";
 import { useEffect } from "react";

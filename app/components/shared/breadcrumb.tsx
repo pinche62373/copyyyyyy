@@ -1,4 +1,4 @@
-import { Link } from "@remix-run/react";
+import { Link } from "react-router";
 import { tv } from "tailwind-variants";
 import { IconSlash } from "#app/components/shared/icon-slash.tsx";
 

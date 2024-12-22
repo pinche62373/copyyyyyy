@@ -1,4 +1,4 @@
-import { NavLink, useLoaderData } from "@remix-run/react";
+import { NavLink, useLoaderData } from "react-router";
 import { FrontendSection } from "#app/components/frontend/section";
 import { getMovies } from "#app/models/movie.server";
 import { Icon } from "#app/ui/icon.tsx";
