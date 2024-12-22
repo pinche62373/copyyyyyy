@@ -2,7 +2,6 @@ import React from "react";
 import Drawer from "react-modern-drawer";
 import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
 import { Breadcrumbs } from "#app/components/shared/breadcrumbs";
-import { DarkModeToggler } from "#app/components/shared/darkmode-toggler";
 import { UserMenu } from "#app/components/shared/user-menu";
 import { cn } from "#app/utils/lib/cn";
 
@@ -74,8 +73,6 @@ export const BackendHeader = ({ className }: Props) => {
             <div className="flex items-center">
               {/* Icon List */}
               <div className="flex h-[38px]">
-                <DarkModeToggler />
-
                 <UserMenu />
               </div>
               {/* End Icon List */}

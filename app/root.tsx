@@ -1,24 +1,21 @@
 import type { LinksFunction, LoaderFunctionArgs } from "@remix-run/node";
 import { data } from "@remix-run/node";
 import { MetaFunction, Outlet, useLoaderData } from "@remix-run/react";
+import reactMenuStyles from "@szhsin/react-menu/dist/index.css?url";
+import reactMenuTransitions from "@szhsin/react-menu/dist/transitions/zoom.css?url";
 import { useEffect } from "react";
 import { Slide, ToastContainer, toast as notify } from "react-toastify";
-import { Theme } from "remix-themes";
+import reactToastify from "react-toastify/dist/ReactToastify.css?url";
 import type { ToastMessage } from "remix-toast";
 import { getToast } from "remix-toast";
 import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { HoneypotInputProps } from "remix-utils/honeypot/server";
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
+import sharedStyles from "#app/styles/shared.css?url";
 import { href as iconsHref } from "#app/ui/icon.tsx";
 import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
-import { themeSessionResolver } from "#app/utils/theme.server";
-
-import reactMenuStyles from "@szhsin/react-menu/dist/index.css?url";
-import reactMenuTransitions from "@szhsin/react-menu/dist/transitions/zoom.css?url";
-import reactToastify from "react-toastify/dist/ReactToastify.css?url";
-import sharedStyles from "#app/styles/shared.css?url";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: iconsHref, as: "image" }, // svg sprite sheet
@@ -45,31 +42,20 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 };
 
 // ----------------------------------------------------------------------------
-// fetch user data and cookies for preferred-theme and toast messages
+// fetch user data and cookies for toast messages
 // ----------------------------------------------------------------------------
 export interface LoaderData {
   user: ReturnType<typeof getUser> extends Promise<infer T> ? T : never;
   toast: ToastMessage | undefined;
-  theme: Theme | null;
   honeypotInputProps: HoneypotInputProps;
 }
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const { getTheme } = await themeSessionResolver(request);
-
-  // prevent hydration errors when user has not yet created the theme cookie
-  let theme = getTheme();
-
-  if (theme === null) {
-    theme = Theme.LIGHT;
-  }
-
   const { toast, headers } = await getToast(request);
 
   return data(
     {
       user: await getUser(request),
-      theme,
       toast,
       honeypotInputProps: honeypot.getInputProps(),
     },

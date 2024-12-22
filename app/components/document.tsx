@@ -1,57 +1,21 @@
-import {
-  Links,
-  Meta,
-  Scripts,
-  ScrollRestoration,
-  useRouteLoaderData,
-} from "@remix-run/react";
+import { Links, Meta, Scripts, ScrollRestoration } from "@remix-run/react";
 import React from "react";
-import {
-  PreventFlashOnWrongTheme,
-  type Theme,
-  ThemeProvider,
-  useTheme,
-} from "remix-themes";
-import { LoaderData } from "#app/root";
 
 export function Document({ children }: { children: React.ReactNode }) {
-  let data = useRouteLoaderData<LoaderData | { theme: Theme }>("root");
-
-  // required for hard 404 errors
-  if (typeof window !== "undefined") {
-    if (data) {
-      localStorage.setItem("theme", data.theme as Theme);
-    } else {
-      data = { theme: localStorage.getItem("theme") as Theme };
-    }
-  }
-
-  return (
-    <ThemeProvider
-      specifiedTheme={data?.theme as Theme}
-      themeAction="/action/set-theme"
-    >
-      <InnerLayout ssrTheme={Boolean(data?.theme)}>{children}</InnerLayout>
-    </ThemeProvider>
-  );
+  return <InnerLayout>{children}</InnerLayout>;
 }
 
 function InnerLayout({
-  ssrTheme,
   children,
 }: {
-  ssrTheme: boolean;
   children: React.ReactNode;
 }) {
-  const [theme] = useTheme();
-
   return (
-    <html lang="en" data-theme={theme ?? ""}>
+    <html lang="en">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
-        <PreventFlashOnWrongTheme ssrTheme={Boolean(ssrTheme)} />
         <Links />
       </head>
       <body suppressHydrationWarning>
