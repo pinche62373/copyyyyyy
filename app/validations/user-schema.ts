@@ -31,7 +31,7 @@ export const userSchemaRegister = z.object({
     username: true,
     password: true,
   }),
-});
+})
 
 export const userSchemaUpdateAccount = z.object({
   intent: z.literal("update"),

@@ -104,9 +104,10 @@ export function updateUserAccountSettings({
 /**
  * Checks if the provided email address is available for use.
  */
-export async function isEmailAddressAvailable({
-  email,
-}: Pick<User, "email">): Promise<boolean> {
+// type Email = typeof User<Pick<User, "email">>
+
+export async function isEmailAddressAvailable(
+  email : string): Promise<boolean> {
   const result = await prisma.user.findFirst({
     where: { email },
   });
