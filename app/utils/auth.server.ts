@@ -4,7 +4,7 @@ import { FormStrategy } from "remix-auth-form";
 import { parseFormData } from "remix-hook-form";
 import type { User } from "#app/models/user.server";
 import { getUserById, verifyLogin } from "#app/models/user.server";
-import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
+import { ROUTE_LOGIN, ROUTE_LOGOUT } from "#app/utils/constants";
 import { getSession } from "#app/utils/session.server";
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
@@ -19,7 +19,7 @@ export async function isAuthenticated(request: Request, returnTo?: string) {
     return true;
   }
 
-  throw redirect(returnTo || AUTH_LOGIN_ROUTE);
+  throw redirect(returnTo || ROUTE_LOGIN);
 }
 
 // TODO solve this better
@@ -71,9 +71,7 @@ export async function getUser(request: Request) {
 
   if (user) return user;
 
-  redirect("/auth/logout");
-
-  // throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
+  redirect(ROUTE_LOGOUT);
 }
 
 export async function getUserOrDie(request: Request) {
@@ -96,7 +94,7 @@ export async function requireUserId(
         ? null
         : (redirectTo ?? `${requestUrl.pathname}${requestUrl.search}`);
     const loginParams = redirectTo ? new URLSearchParams({ redirectTo }) : null;
-    const loginRedirect = [AUTH_LOGIN_ROUTE, loginParams?.toString()]
+    const loginRedirect = [ROUTE_LOGIN, loginParams?.toString()]
       .filter(Boolean)
       .join("?");
     throw redirect(loginRedirect);

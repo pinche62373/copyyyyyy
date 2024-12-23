@@ -15,7 +15,7 @@ import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { updateUserAccountSettings } from "#app/models/user.server";
 import { getUserOrDie, isAuthenticated } from "#app/utils/auth.server";
-import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
+import { ROUTE_LOGIN } from "#app/utils/constants";
 import {
   requireModelPermission,
   requireRoutePermission,
@@ -32,10 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
   // RR7: replaced with function clone
-  await isAuthenticated(
-    request,
-    AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
-  );
+  await isAuthenticated(request, ROUTE_LOGIN + `?returnTo=${url.pathname}`);
 
   await requireRoutePermission(request, {
     resource: url.pathname,

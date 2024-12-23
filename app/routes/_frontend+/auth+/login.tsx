@@ -19,7 +19,7 @@ import { Button } from "#app/components/shared/button.tsx";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
-import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
+import { ROUTE_LOGIN } from "#app/utils/constants";
 import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
@@ -61,7 +61,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
         }),
       );
 
-      redirect(AUTH_LOGIN_ROUTE, { headers });
+      redirect(ROUTE_LOGIN, { headers });
     }
   }
 

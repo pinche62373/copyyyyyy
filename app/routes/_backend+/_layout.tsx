@@ -11,7 +11,7 @@ import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import backendStyles from "#app/styles/backend.css?url";
 import { isAuthenticated } from "#app/utils/auth.server";
-import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
+import { ROUTE_LOGIN } from "#app/utils/constants";
 import { requireRole } from "#app/utils/permissions.server";
 import { Roles } from "#app/validations/role-schema";
 
@@ -34,10 +34,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
   // RR7: replaced with function clone
-  await isAuthenticated(
-    request,
-    AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
-  );
+  await isAuthenticated(request, ROUTE_LOGIN + `?returnTo=${url.pathname}`);
 
   await requireRole(request, [Roles.ADMIN, Roles.MODERATOR]);
 

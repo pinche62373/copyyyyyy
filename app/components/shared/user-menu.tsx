@@ -2,7 +2,7 @@ import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
 import { Link, useSubmit } from "react-router";
 import { Button } from "#app/components/shared/button";
 import { Icon } from "#app/ui/icon.tsx";
-import { AUTH_LOGIN_ROUTE, AUTH_LOGOUT_ROUTE } from "#app/utils/constants";
+import { ROUTE_LOGIN, ROUTE_LOGOUT } from "#app/utils/constants";
 import { useOptionalUser, userHasRole } from "#app/utils/user";
 import { Roles } from "#app/validations/role-schema";
 
@@ -25,7 +25,7 @@ export const UserMenu = () => {
           <Button
             text="Sign In"
             type="button"
-            to={AUTH_LOGIN_ROUTE}
+            to={ROUTE_LOGIN}
             secondary
             className="ml-2"
           />
@@ -101,7 +101,7 @@ export const UserMenu = () => {
             onClick={() =>
               submit(null, {
                 method: "post",
-                action: AUTH_LOGOUT_ROUTE,
+                action: ROUTE_LOGOUT,
               })
             }
           >

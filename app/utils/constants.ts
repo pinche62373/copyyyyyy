@@ -2,9 +2,9 @@
 export const VERSION = "__VERSION__"; // do not change, auto-updated by Semantic Release
 
 // auth
-export const AUTH_LOGIN_ROUTE = "/auth/login";
-export const AUTH_LOGOUT_ROUTE = "/auth/logout";
-export const AUTH_REGISTER_ROUTE = "/auth/register";
+export const ROUTE_LOGIN = "/auth/login";
+export const ROUTE_LOGOUT = "/auth/logout";
+export const ROUTE_REGISTER = "/auth/register";
 
 // cookies
 export const COOKIE_SECURE = process.env.NODE_ENV === "production"; // requires HTTPS
