@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
-
+import z from "zod";
 import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
@@ -31,6 +31,7 @@ import {
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
+import { roleSchemaAdminTable } from "#app/validations/role-schema.ts";
 
 const { roleCrud: crud } = getAdminCrud();
 
@@ -54,15 +55,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   };
 }
 
-interface Role {
-  id: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string | null;
-}
-
-const columnHelper = createColumnHelper<Role>();
+const columnHelper = createColumnHelper<z.infer<typeof roleSchemaAdminTable>>();
 
 const columns = [
   columnHelper.display({

@@ -81,16 +81,17 @@ export async function getUserId(
   return userId;
 }
 
+// MUST return null to align with prisma result
 export async function getUser(request: Request) {
   const userId = await getUserId(request);
 
-  if (userId === undefined) return null;
+  if (!userId) return null;
 
   const user = await getUserById(userId);
 
-  if (user) return user;
+  if (!user) return null;
 
-  redirect(ROUTE_LOGOUT);
+  return user;
 }
 
 export async function getUserOrDie(request: Request) {

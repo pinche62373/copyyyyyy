@@ -17,9 +17,9 @@ export const countrySchema = z.object({
         "This field only allows capitalized Latin words, separated by single spaces.",
     }),
   regionId: regionSchema.shape.id,
-  createdAt: z.string().datetime(),
+  createdAt: z.date(),
   createdBy: userSchema.pick({ id: true }),
-  updatedAt: z.string().datetime().nullable(),
+  updatedAt: z.date().nullable(),
   updatedBy: userSchema.pick({ id: true }).nullable(),
   region: regionSchema.pick({
     id: true,

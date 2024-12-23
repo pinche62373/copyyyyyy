@@ -22,13 +22,19 @@
     "seed": "npx prisma db seed",
     "typecheck": "react-router typegen && tsc",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run",
-    "prepare": "husky"
+    "prepare": "husky",
+    "lint-staged": "lint-staged --verbose"
   },
   "prisma": {
     "seed": "tsx prisma/seed/seed.ts"
   },
   "@snaplet/seed": {
     "config": "prisma\\seed\\seed.config.ts"
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx,jsx}": [
+      "biome check --fix"
+    ]
   },
   "dependencies": {
     "@fontsource-variable/inter": "^5.1.0",
@@ -87,6 +93,7 @@
     "happy-dom": "^15.11.7",
     "husky": "^9.1.7",
     "knip": "^5.39.1",
+    "lint-staged": "^15.2.11",
     "markdownlint-cli2": "^0.15.0",
     "msw": "^2.6.6",
     "npm-run-all": "^4.1.5",

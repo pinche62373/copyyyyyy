@@ -12,7 +12,8 @@ import { renderToPipeableStream } from "react-dom/server";
 import type { EntryContext } from "react-router";
 import { ServerRouter } from "react-router";
 
-const ABORT_DELAY = 5_000;
+// Reject all pending promises from handler functions after 10 seconds
+export const streamTimeout = 10000;
 
 export default function handleRequest(
   request: Request,
@@ -43,11 +44,7 @@ function handleBotRequest(
 ) {
   return new Promise((resolve, reject) => {
     const { abort, pipe } = renderToPipeableStream(
-      <ServerRouter
-        context={reactRouterContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      <ServerRouter context={reactRouterContext} url={request.url} />,
       {
         onAllReady() {
           const body = new PassThrough();
@@ -73,7 +70,9 @@ function handleBotRequest(
       },
     );
 
-    setTimeout(abort, ABORT_DELAY);
+    // Abort the streaming render pass after 11 seconds so to allow the rejected
+    // boundaries to be flushed
+    setTimeout(abort, streamTimeout + 1000);
   });
 }
 
@@ -85,11 +84,7 @@ function handleBrowserRequest(
 ) {
   return new Promise((resolve, reject) => {
     const { abort, pipe } = renderToPipeableStream(
-      <ServerRouter
-        context={reactRouterContext}
-        url={request.url}
-        abortDelay={ABORT_DELAY}
-      />,
+      <ServerRouter context={reactRouterContext} url={request.url} />,
       {
         onShellReady() {
           const body = new PassThrough();
@@ -115,6 +110,6 @@ function handleBrowserRequest(
       },
     );
 
-    setTimeout(abort, ABORT_DELAY);
+    setTimeout(abort, streamTimeout + 1000);
   });
 }
