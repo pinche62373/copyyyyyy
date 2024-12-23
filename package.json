@@ -34,9 +34,9 @@
     "@fontsource-variable/inter": "^5.1.0",
     "@hookform/resolvers": "^3.9.1",
     "@prisma/client": "^6.1.0",
-    "@react-router/node": "^7.0.0",
+    "@react-router/node": "^7.1.0",
     "@react-router/remix-config-routes-adapter": "^0.0.0-nightly-bf7ecb711-20240911",
-    "@react-router/serve": "^7.0.0",
+    "@react-router/serve": "^7.1.0",
     "@szhsin/react-accordion": "^1.2.6",
     "@szhsin/react-menu": "^4.2.3",
     "@tanstack/match-sorter-utils": "^8.19.4",
@@ -52,7 +52,7 @@
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.1",
     "react-modern-drawer": "^1.4.0",
-    "react-router": "^7.0.0",
+    "react-router": "^7.1.0",
     "react-toastify": "^10.0.6",
     "remix-auth": "^4.1.0",
     "remix-auth-form": "^3.0.0",
@@ -68,7 +68,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@faker-js/faker": "^9.3.0",
-    "@react-router/dev": "^7.0.0",
+    "@react-router/dev": "^7.1.0",
     "@sly-cli/sly": "https://pkg.pr.new/jacobparis-insiders/sly/@sly-cli/sly@71",
     "@snaplet/copycat": "^5.1.0",
     "@snaplet/seed": "^0.98.0",
@@ -110,6 +110,6 @@
     "@rollup/rollup-linux-x64-gnu": "^4.24.0"
   },
   "engines": {
-    "node": ">=20.16.0"
+    "node": ">=22.12.0"
   }
 }

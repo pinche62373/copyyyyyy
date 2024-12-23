@@ -1,10 +1,9 @@
 import type { ActionFunctionArgs } from "react-router";
 import { data, redirect } from "react-router";
-import { authenticator } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import { mergeHeaders } from "#app/utils/lib/merge-headers";
 import { returnToCookie } from "#app/utils/return-to.server";
-import { sessionCookie } from "#app/utils/session.server";
+import { destroySession, getSession, sessionCookie } from "#app/utils/session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
@@ -37,14 +36,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
-  // V4
+  // RR7: destroy database session before redirecting
+  await destroySession(await getSession(request.headers.get("Cookie")));
+
   return redirect("/", {
     headers: deleteCookieHeaders,
   });
-  // await authenticator.logout(request, {
-  //   redirectTo: "/",
-  //   headers: deleteCookieHeaders,
-  // });
 };
 
 export const loader = async () => redirect("/");

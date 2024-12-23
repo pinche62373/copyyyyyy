@@ -187,7 +187,7 @@ export default function LoginPage() {
             <Button type="button" text="Cancel" to="/" secondary />
             <Button
               type="submit"
-              text="Save"
+              text="Login"
               disabled={navigation.state === "submitting"}
             />
           </Float>
