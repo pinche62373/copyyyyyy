@@ -51,6 +51,11 @@ export async function createUser(
           hash: hashedPassword,
         },
       },
+      roles: {
+        connect: {
+          name: "user",
+        },
+      },
     },
   });
 }

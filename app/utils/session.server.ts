@@ -49,14 +49,14 @@ export const createDatabaseSessionStorage = ({ cookie }: StoreGeneratorArg) => {
       });
     },
     updateData: async (id, data, expires) => {
-      const userId = data.userId;
+      invariant(data.user.id, "Session update regquires data.userId");
 
       await prisma.session.update({
         where: {
           id,
         },
         data: {
-          userId,
+          userId: data.user.id,
           expirationDate: expires || new Date(Date.now() + 99960000),
         },
       });
