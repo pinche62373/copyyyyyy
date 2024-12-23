@@ -19,7 +19,7 @@ export default defineConfig({
       // pathToFormatterConfig: "./biome.json", // Path to formatter config file
       // Callback function that is called when the script is generating the icon name
       // This is useful if you want to modify the icon name before it is written to the file
-      iconNameTransformer: (iconName) => iconName,
+      iconNameTransformer: (iconName) => iconName.toLowerCase(),
     }),
     visualizer({ emitFile: true }),
   ],
