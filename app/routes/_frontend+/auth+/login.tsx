@@ -1,12 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { redirect } from "react-router";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
   MetaFunction,
 } from "react-router";
-import { data } from "react-router";
-import { Form, useLoaderData, useNavigation } from "react-router";
+import {
+  Form,
+  data,
+  redirect,
+  useLoaderData,
+  useNavigation,
+} from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
@@ -15,11 +19,16 @@ import { Button } from "#app/components/shared/button.tsx";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
+import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { returnToCookie } from "#app/utils/return-to.server";
-import { sessionCookie } from "#app/utils/session.server";
+import {
+  commitSession,
+  getSession,
+  sessionCookie,
+} from "#app/utils/session.server";
 import { userSchemaLogin } from "#app/validations/user-schema";
 
 const intent = "login" as const;
@@ -36,20 +45,23 @@ type LoaderData = Omit<Awaited<ReturnType<typeof loader>>, "defaultValues"> & {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
 
-  // prevent orphaned client-side session cookies not existing in database breaking remix-auth
+  const headers = new Headers();
+
+  // delete orphaned session cookies without matching database record (or prisma will break)
   if (sessionId) {
     const databaseSessionExists = await prisma.session.findUnique({
       where: { id: sessionId },
     });
 
     if (!databaseSessionExists) {
-      return data(null, {
-        headers: {
-          "Set-Cookie": await sessionCookie.serialize("", {
-            maxAge: 0,
-          }),
-        },
-      });
+      headers.append(
+        "Set-Cookie",
+        await sessionCookie.serialize("", {
+          maxAge: 0,
+        }),
+      );
+
+      redirect(AUTH_LOGIN_ROUTE, { headers });
     }
   }
 
@@ -57,19 +69,17 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
   const returnTo = url.searchParams.get("returnTo");
 
-  const headers = new Headers();
   if (returnTo) {
     headers.append("Set-Cookie", await returnToCookie.serialize(returnTo));
   }
 
-  // TODO RR7 send already authenticated users back to the homepage
-  // await authenticator.isAuthenticated(request, {
-  //   successRedirect: "/",
-  // });
+  // RR7: send already authenticated users back to the homepage
+  let session = await getSession(request.headers.get("cookie"));
+  let user = session.get("user");
+
+  if (user) throw redirect("/");
 
   // continue to login (using headers to create redirectCookie)
-  // const defaultValues = getDefaultsForSchema(userSchemaLogin)
-  // defaultValues.intent = intent
   return data(
     {
       defaultValues: getDefaultValues(userSchemaLogin, { intent }),
@@ -105,39 +115,38 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw error; // rethrow
   }
 
-  // returnTo
-  const returnTo = await returnToCookie.parse(request.headers.get("Cookie"));
-
-  // IMPORTANT: do not use `failureRedirect` or remix-auth will crash trying to save the error to database session using empty `createData()`
+  // do not redirect on fail or app will crash trying to save the error to database session using empty `createData()`
   try {
-    // TODO RR7
-    let user = await authenticator.authenticate(
+    const user = await authenticator.authenticate(
       EMAIL_PASSWORD_STRATEGY,
       request,
     );
 
-    console.log("Succesfull login", user);
+    // RR7: create database session
+    const session = await getSession(request.headers.get("cookie"));
 
-    redirect(returnTo || "/");
+    session.set("user", user);
 
-    // , {
-    //   throwOnError: true,
-    //   successRedirect: returnTo || "/",
-    // });
+    // RR7: redirect if login succeeded
+    const returnTo = await returnToCookie.parse(request.headers.get("Cookie"));
+
+    throw redirect(returnTo || "/", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   } catch (error) {
-    console.log("AUTH error", error);
-
     // Because redirects work by throwing a Response, you need to check if the
     // caught error is a response and return it or throw it again
     if (error instanceof Response) return error;
 
     // here the error is related to the authentication process
     if (error instanceof Error) {
-      throw dataWithError(null, error.message);
+      return dataWithError(null, error.message);
     }
 
     // here the error is a generic error that another reason may throw
-    throw dataWithError(null, "Unexpected Failure");
+    return dataWithError(null, "Unexpected Failure");
   }
 };
 

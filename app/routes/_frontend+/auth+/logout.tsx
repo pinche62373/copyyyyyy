@@ -40,7 +40,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
-  // RR7: destroy database session before redirecting
+  // RR7: delete database session
   await destroySession(await getSession(request.headers.get("Cookie")));
 
   return redirect("/", {

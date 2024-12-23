@@ -4,8 +4,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "react-router";
-import { redirect } from "react-router";
-import { Form, useLoaderData, useNavigation } from "react-router";
+import { Form, redirect, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
@@ -21,6 +20,7 @@ import {
 } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
+import { commitSession, getSession } from "#app/utils/session.server.ts";
 import { userSchemaRegister } from "#app/validations/user-schema";
 
 const intent = "register" as const;
@@ -77,22 +77,25 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw error; // rethrow
   }
 
+  // create the user
   await createUser(data.user.email, data.user.username, data.user.password);
 
-  // IMPORTANT: do not use `failureRedirect` or remix-auth will crash trying to save the error to database session using empty `createData()`
+  // RR7: login user before redirecting
   try {
-    // TODO RR7
-    let user = await authenticator.authenticate(
+    const user = await authenticator.authenticate(
       EMAIL_PASSWORD_STRATEGY,
       request,
     );
 
-    console.log("Succesfull register", user);
+    // RR7: create database session
+    let session = await getSession(request.headers.get("cookie"));
+    session.set("user", user);
 
-    //   throwOnError: true,
-    //   context: { data },
-    //   successRedirect: "/",
-    // });
+    throw redirect("/", {
+      headers: {
+        "Set-Cookie": await commitSession(session),
+      },
+    });
   } catch (error) {
     // Because redirects work by throwing a Response, you need to check if the
     // caught error is a response and return it or throw it again

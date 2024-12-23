@@ -5,24 +5,22 @@ import { parseFormData } from "remix-hook-form";
 import type { User } from "#app/models/user.server";
 import { getUserById, verifyLogin } from "#app/models/user.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
-import {
-  createDatabaseSessionStorage,
-  getSession,
-  sessionCookie,
-} from "#app/utils/session.server";
+import { getSession } from "#app/utils/session.server";
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 
 export const authenticator = new Authenticator<User>();
 
-// export const authenticator = new Authenticator<User>(
-//   createDatabaseSessionStorage({
-//     cookie: sessionCookie,
-//   }),
-//   {
-//     sessionKey: "user",
-//   },
-// );
+// RR7: isAuthenticated clone
+export async function isAuthenticated(request: Request, returnTo?: string) {
+  let session = await getSession(request.headers.get("cookie"));
+
+  if (session.get("user")) {
+    return true;
+  }
+
+  throw redirect(returnTo || AUTH_LOGIN_ROUTE);
+}
 
 // TODO solve this better
 interface LoginProps {

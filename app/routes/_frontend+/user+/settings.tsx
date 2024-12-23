@@ -1,6 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { Form, useLoaderData, useNavigation } from "react-router";
+import {
+  ActionFunctionArgs,
+  Form,
+  LoaderFunctionArgs,
+  useLoaderData,
+  useNavigation,
+} from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod from "zod";
@@ -9,7 +14,7 @@ import { Button } from "#app/components/shared/button";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { updateUserAccountSettings } from "#app/models/user.server";
-import { authenticator, getUserOrDie } from "#app/utils/auth.server";
+import { getUserOrDie, isAuthenticated } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import {
   requireModelPermission,
@@ -26,9 +31,11 @@ type FormData = zod.infer<typeof userSchemaUpdateAccount>;
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
-  await authenticator.isAuthenticated(request, {
-    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
-  });
+  // RR7: replaced with function clone
+  await isAuthenticated(
+    request,
+    AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
+  );
 
   await requireRoutePermission(request, {
     resource: url.pathname,

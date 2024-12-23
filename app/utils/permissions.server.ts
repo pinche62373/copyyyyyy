@@ -46,6 +46,7 @@ export async function requireRoutePermission(
 ) {
   const user = await getUser(request);
 
+  // TODO RR7
   if (!userHasRoutePermission(user, permission)) {
     throw data(null, { status: 403, statusText: "Forbidden" });
   }

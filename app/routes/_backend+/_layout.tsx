@@ -1,3 +1,5 @@
+import fontInter from "@fontsource-variable/inter/wght.css?url";
+import modernDrawerStyles from "react-modern-drawer/dist/index.css?url";
 import type {
   LinksFunction,
   LoaderFunctionArgs,
@@ -7,14 +9,11 @@ import { Outlet } from "react-router";
 import { BackendHeader } from "#app/components/backend/header";
 import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { authenticator } from "#app/utils/auth.server";
+import backendStyles from "#app/styles/backend.css?url";
+import { isAuthenticated } from "#app/utils/auth.server";
 import { AUTH_LOGIN_ROUTE } from "#app/utils/constants";
 import { requireRole } from "#app/utils/permissions.server";
 import { Roles } from "#app/validations/role-schema";
-
-import fontInter from "@fontsource-variable/inter/wght.css?url";
-import modernDrawerStyles from "react-modern-drawer/dist/index.css?url";
-import backendStyles from "#app/styles/backend.css?url";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: fontInter, as: "font" },
@@ -34,9 +33,11 @@ export const handle = {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
-  await authenticator.isAuthenticated(request, {
-    failureRedirect: AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
-  });
+  // RR7: replaced with function clone
+  await isAuthenticated(
+    request,
+    AUTH_LOGIN_ROUTE + `?returnTo=${url.pathname}`,
+  );
 
   await requireRole(request, [Roles.ADMIN, Roles.MODERATOR]);
 
