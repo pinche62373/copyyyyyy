@@ -13,14 +13,9 @@ import { Button } from "#app/components/shared/button";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { createUser, isEmailAddressAvailable } from "#app/models/user.server";
-import {
-  EMAIL_PASSWORD_STRATEGY,
-  authenticator,
-  getUserId,
-} from "#app/utils/auth.server";
+import { authenticate, getUserId } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
-import { commitSession, getSession } from "#app/utils/session.server.ts";
 import { userSchemaRegister } from "#app/validations/user-schema";
 
 const intent = "register" as const;
@@ -80,33 +75,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   // create the user
   await createUser(data.user.email, data.user.username, data.user.password);
 
-  // RR7: login user before redirecting
   try {
-    const user = await authenticator.authenticate(
-      EMAIL_PASSWORD_STRATEGY,
-      request,
-    );
-
-    // RR7: create database session
-    let session = await getSession(request.headers.get("cookie"));
-    session.set("user", user);
-
-    throw redirect("/", {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    });
+    await authenticate(request);
   } catch (error) {
-    // Because redirects work by throwing a Response, you need to check if the
-    // caught error is a response and return it or throw it again
-    if (error instanceof Response) return error;
+    if (error instanceof Response) throw error;
 
-    // here the error is related to the authentication process
     if (error instanceof Error) {
       return dataWithError(null, error.message);
     }
 
-    // here the error is a generic error that another reason may throw
     return dataWithError(null, "Unexpected Failure");
   }
 };

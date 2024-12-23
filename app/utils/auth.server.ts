@@ -5,11 +5,30 @@ import { parseFormData } from "remix-hook-form";
 import type { User } from "#app/models/user.server";
 import { getUserById, verifyLogin } from "#app/models/user.server";
 import { ROUTE_LOGIN, ROUTE_LOGOUT } from "#app/utils/constants";
-import { getSession } from "#app/utils/session.server";
+import { commitSession, getSession } from "#app/utils/session.server";
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 
 export const authenticator = new Authenticator<User>();
+
+// RR7: isAuthenticated clone
+export async function authenticate(request: Request, returnTo?: string) {
+  const user = await authenticator.authenticate(
+    EMAIL_PASSWORD_STRATEGY,
+    request,
+  );
+
+  // authentication succeeded, set cookie data
+  const session = await getSession(request.headers.get("cookie"));
+  session.set("user", user);
+
+  // create database session in the redirect
+  throw redirect(returnTo || "/", {
+    headers: {
+      "Set-Cookie": await commitSession(session),
+    },
+  });
+}
 
 // RR7: isAuthenticated clone
 export async function isAuthenticated(request: Request, returnTo?: string) {

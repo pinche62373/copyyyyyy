@@ -18,17 +18,13 @@ import zod from "zod";
 import { Button } from "#app/components/shared/button.tsx";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
-import { EMAIL_PASSWORD_STRATEGY, authenticator } from "#app/utils/auth.server";
+import { authenticate } from "#app/utils/auth.server";
 import { ROUTE_LOGIN } from "#app/utils/constants";
 import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { returnToCookie } from "#app/utils/return-to.server";
-import {
-  commitSession,
-  getSession,
-  sessionCookie,
-} from "#app/utils/session.server";
+import { getSession, sessionCookie } from "#app/utils/session.server";
 import { userSchemaLogin } from "#app/validations/user-schema";
 
 const intent = "login" as const;
@@ -115,37 +111,19 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     throw error; // rethrow
   }
 
-  // do not redirect on fail or app will crash trying to save the error to database session using empty `createData()`
+  // authenticate
   try {
-    const user = await authenticator.authenticate(
-      EMAIL_PASSWORD_STRATEGY,
+    await authenticate(
       request,
+      await returnToCookie.parse(request.headers.get("Cookie")),
     );
-
-    // RR7: create database session
-    const session = await getSession(request.headers.get("cookie"));
-
-    session.set("user", user);
-
-    // RR7: redirect if login succeeded
-    const returnTo = await returnToCookie.parse(request.headers.get("Cookie"));
-
-    throw redirect(returnTo || "/", {
-      headers: {
-        "Set-Cookie": await commitSession(session),
-      },
-    });
   } catch (error) {
-    // Because redirects work by throwing a Response, you need to check if the
-    // caught error is a response and return it or throw it again
-    if (error instanceof Response) return error;
+    if (error instanceof Response) throw error;
 
-    // here the error is related to the authentication process
     if (error instanceof Error) {
       return dataWithError(null, error.message);
     }
 
-    // here the error is a generic error that another reason may throw
     return dataWithError(null, "Unexpected Failure");
   }
 };
