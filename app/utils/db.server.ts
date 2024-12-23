@@ -1,4 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+// Vite6 workaround where custom node_modules location is defined by `output` in `schema.prisma`.
+// https://github.com/remix-run/react-router/issues/12610#issuecomment-2558394080
+import { PrismaClient } from "prisma-client";
 
 import { singleton } from "../singleton.server";
 

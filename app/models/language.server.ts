@@ -1,4 +1,4 @@
-import type { Language } from "@prisma/client";
+import type { Language } from "prisma-client";
 
 import { prisma } from "#app/utils/db.server";
 

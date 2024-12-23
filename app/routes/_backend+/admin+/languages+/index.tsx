@@ -1,6 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
-import { useLoaderData } from "react-router";
 import {
   SortingState,
   createColumnHelper,
@@ -11,8 +9,10 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { useState } from "react";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { useLoaderData } from "react-router";
 import { getValidatedFormData } from "remix-hook-form";
-import { jsonWithError, jsonWithSuccess } from "remix-toast";
+import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod, { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
@@ -85,7 +85,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
 
   if (errors) {
-    return jsonWithError({ errors }, "Form data rejected by server", {
+    return dataWithError({ errors }, "Form data rejected by server", {
       status: 422,
     });
   }
@@ -99,10 +99,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await deleteLanguage(data.language);
   } catch {
-    return jsonWithError(null, "Unexpected error");
+    return dataWithError(null, "Unexpected error");
   }
 
-  return jsonWithSuccess(
+  return dataWithSuccess(
     null,
     `${humanize(crud.singular)} deleted successfully`,
   );

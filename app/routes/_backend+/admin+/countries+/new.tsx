@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "prisma-client";
+import { Controller } from "react-hook-form";
 import type { ActionFunctionArgs } from "react-router";
 import { LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData, useNavigation } from "react-router";
-import { Controller } from "react-hook-form";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
-import { jsonWithError, redirectWithSuccess } from "remix-toast";
+import { dataWithError, redirectWithSuccess } from "remix-toast";
 import zod from "zod";
 import { BackendPanel2 } from "#app/components/backend/panel2";
 import { BackendTitle } from "#app/components/backend/title";
@@ -69,7 +69,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
 
   if (errors) {
-    return jsonWithError({ errors }, "Form data rejected by server", {
+    return dataWithError({ errors }, "Form data rejected by server", {
       status: 422,
     });
   }
@@ -81,7 +81,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   if ((await getRegionById(data.country.regionId)) === null) {
-    return jsonWithError(null, "Invalid relationship");
+    return dataWithError(null, "Invalid relationship");
   }
 
   try {
@@ -89,10 +89,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
-        return jsonWithError(null, `${humanize(crud.singular)} already exists`);
+        return dataWithError(null, `${humanize(crud.singular)} already exists`);
       }
 
-      return jsonWithError(null, "Unexpected error");
+      return dataWithError(null, "Unexpected error");
     }
   }
 

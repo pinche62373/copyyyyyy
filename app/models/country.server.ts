@@ -1,4 +1,4 @@
-import type { Country } from "@prisma/client";
+import type { Country } from "prisma-client";
 
 import { prisma } from "#app/utils/db.server";
 

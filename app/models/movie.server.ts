@@ -1,4 +1,4 @@
-import type { Movie } from "@prisma/client";
+import type { Movie } from "prisma-client";
 
 import { prisma } from "#app/utils/db.server";
 

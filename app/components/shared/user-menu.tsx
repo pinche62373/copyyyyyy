@@ -1,5 +1,5 @@
-import { Link, useSubmit } from "react-router";
 import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
+import { Link, useSubmit } from "react-router";
 import { Button } from "#app/components/shared/button";
 import { Icon } from "#app/ui/icon.tsx";
 import { AUTH_LOGIN_ROUTE, AUTH_LOGOUT_ROUTE } from "#app/utils/constants";

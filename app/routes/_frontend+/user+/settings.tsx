@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
-import { jsonWithError, jsonWithSuccess } from "remix-toast";
+import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod from "zod";
 import { FrontendSection } from "#app/components/frontend/section";
 import { Button } from "#app/components/shared/button";
@@ -47,7 +47,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
 
   if (errors) {
-    throw jsonWithError({ errors }, "Form data rejected by server", {
+    throw dataWithError({ errors }, "Form data rejected by server", {
       status: 422,
     });
   }
@@ -62,10 +62,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await updateUserAccountSettings(data.user);
   } catch {
-    return jsonWithError(data, "Server error while saving your data");
+    return dataWithError(data, "Server error while saving your data");
   }
 
-  return jsonWithSuccess(
+  return dataWithSuccess(
     {
       defaultValues: data,
     },

@@ -1,9 +1,10 @@
 {
   "exclude": [],
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": [".react-router/types/**/*", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2023"],
-    "types": ["@remix-run/node", "vite/client", "vitest/globals"],
+    "types": ["@react-router/node", "vite/client", "vitest/globals"],
+    "rootDirs": [".", "./.react-router/types"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",

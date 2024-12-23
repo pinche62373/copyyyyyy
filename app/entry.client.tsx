@@ -4,9 +4,9 @@
  * For more information, see https://remix.run/docs/en/main/file-conventions/entry.client
  */
 
-import { HydratedRouter } from "react-router/dom";
 import { StrictMode, startTransition } from "react";
 import { hydrateRoot } from "react-dom/client";
+import { HydratedRouter } from "react-router/dom";
 
 startTransition(() => {
   hydrateRoot(

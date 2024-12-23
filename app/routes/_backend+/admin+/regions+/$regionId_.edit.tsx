@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "prisma-client";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
-import { jsonWithError, jsonWithSuccess } from "remix-toast";
+import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod from "zod";
 import { BackendPanel2 } from "#app/components/backend/panel2";
 import { BackendTitle } from "#app/components/backend/title";
@@ -77,7 +77,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
 
   if (errors) {
-    throw jsonWithError({ errors }, "Form data rejected by server", {
+    throw dataWithError({ errors }, "Form data rejected by server", {
       status: 422,
     });
   }
@@ -93,14 +93,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
-        return jsonWithError(null, `${humanize(crud.singular)} already exists`);
+        return dataWithError(null, `${humanize(crud.singular)} already exists`);
       }
 
-      return jsonWithError(null, "Unexpected error");
+      return dataWithError(null, "Unexpected error");
     }
   }
 
-  return jsonWithSuccess(
+  return dataWithSuccess(
     null,
     `${humanize(crud.singular)} updated successfully`,
   );

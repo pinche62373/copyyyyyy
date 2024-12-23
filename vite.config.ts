@@ -1,29 +1,13 @@
 import { reactRouter } from "@react-router/dev/vite";
-import { remixDevTools } from "remix-development-tools";
-import { flatRoutes } from "remix-flat-routes";
+import { reactRouterDevTools } from "react-router-devtools";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import { iconsSpritesheet } from "vite-plugin-icons-spritesheet";
 
 export default defineConfig({
   plugins: [
-    remixDevTools(),
-    reactRouter({
-      basename: "/",
-      serverModuleFormat: "esm",
-      serverBuildFile: "index.js",
-      ignoredRouteFiles: ["**/.*", "**/*.css", "**/*.test.{ts,tsx}"],
-      routes: async (defineRoutes) => {
-        return flatRoutes("routes", defineRoutes);
-      },
-      future: {
-        v3_throwAbortReason: true,
-        v3_fetcherPersist: true,
-        v3_lazyRouteDiscovery: true,
-        v3_relativeSplatPath: true,
-        v3_singleFetch: true,
-      },
-    }),
+    reactRouterDevTools(),
+    reactRouter(),
     iconsSpritesheet({
       withTypes: true, // True to generate TS types
       inputDir: "./other/svg-icons", // Path to folder with svg icons
@@ -44,5 +28,8 @@ export default defineConfig({
   },
   ssr: {
     noExternal: ["remix-utils"],
+    optimizeDeps: {
+      include: ["randomdbname"],
+    },
   },
 });

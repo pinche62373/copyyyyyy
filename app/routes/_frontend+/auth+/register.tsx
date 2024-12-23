@@ -1,10 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from "react-router";
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "react-router";
 import { redirect } from "react-router";
 import { Form, useLoaderData, useNavigation } from "react-router";
-import { AuthorizationError } from "remix-auth";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
-import { jsonWithError } from "remix-toast";
+import { dataWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
 import zod from "zod";
 import { Button } from "#app/components/shared/button";
@@ -54,7 +57,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
 
   if (errors) {
-    return jsonWithError({ errors }, "Form data rejected by server", {
+    return dataWithError({ errors }, "Form data rejected by server", {
       status: 422,
     });
   }
@@ -78,23 +81,30 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   // IMPORTANT: do not use `failureRedirect` or remix-auth will crash trying to save the error to database session using empty `createData()`
   try {
-    return await authenticator.authenticate(EMAIL_PASSWORD_STRATEGY, request, {
-      throwOnError: true,
-      context: { data },
-      successRedirect: "/",
-    });
+    // TODO RR7
+    let user = await authenticator.authenticate(
+      EMAIL_PASSWORD_STRATEGY,
+      request,
+    );
+
+    console.log("Succesfull register", user);
+
+    //   throwOnError: true,
+    //   context: { data },
+    //   successRedirect: "/",
+    // });
   } catch (error) {
     // Because redirects work by throwing a Response, you need to check if the
     // caught error is a response and return it or throw it again
     if (error instanceof Response) return error;
 
     // here the error is related to the authentication process
-    if (error instanceof AuthorizationError) {
-      return jsonWithError(null, error.message);
+    if (error instanceof Error) {
+      return dataWithError(null, error.message);
     }
 
     // here the error is a generic error that another reason may throw
-    return jsonWithError(null, "Unexpected Failure");
+    return dataWithError(null, "Unexpected Failure");
   }
 };
 

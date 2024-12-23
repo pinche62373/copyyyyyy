@@ -1,9 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useId, useRef } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData } from "react-router";
-import { useId, useRef } from "react";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
-import { jsonWithError, jsonWithSuccess } from "remix-toast";
+import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod, { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
@@ -47,7 +47,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { errors } = await getValidatedFormData<FormData>(request, resolver);
 
   if (errors) {
-    return jsonWithError({ errors }, "Form data rejected by server", {
+    return dataWithError({ errors }, "Form data rejected by server", {
       status: 422,
     });
   }
@@ -60,10 +60,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   try {
     await deleteExpiredSessions();
   } catch {
-    return jsonWithError(null, "Unexpected error");
+    return dataWithError(null, "Unexpected error");
   }
 
-  return jsonWithSuccess(null, "Sessions deleted succesfully");
+  return dataWithSuccess(null, "Sessions deleted succesfully");
 };
 
 export default function Component() {

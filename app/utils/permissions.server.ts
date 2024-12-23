@@ -1,4 +1,4 @@
-import { json } from "react-router";
+import { data } from "react-router";
 
 import { getPermissions } from "#app/models/permission.server";
 import { getAllPermissions } from "#app/permissions/get-all-permissions";
@@ -32,7 +32,7 @@ export async function requireRole(request: Request, role: string | string[]) {
     where: { id: userId, roles: { some: { name: { in: role } } } },
   });
   if (!user) {
-    throw json(null, { status: 403, statusText: "Forbidden" });
+    throw data(null, { status: 403, statusText: "Forbidden" });
   }
   return user.id;
 }
@@ -47,7 +47,7 @@ export async function requireRoutePermission(
   const user = await getUser(request);
 
   if (!userHasRoutePermission(user, permission)) {
-    throw json(null, { status: 403, statusText: "Forbidden" });
+    throw data(null, { status: 403, statusText: "Forbidden" });
   }
 
   return true;
@@ -66,7 +66,7 @@ export async function requireModelPermission(
   const user = await getUser(request);
 
   if ((await userHasModelPermission(user, permission)) === null) {
-    throw json(null, { status: 403, statusText: "Forbidden" });
+    throw data(null, { status: 403, statusText: "Forbidden" });
   }
 
   return true;

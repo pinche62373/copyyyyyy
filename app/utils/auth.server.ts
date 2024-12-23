@@ -1,5 +1,5 @@
 import { redirect } from "react-router";
-import { Authenticator, AuthorizationError } from "remix-auth";
+import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import { parseFormData } from "remix-hook-form";
 import type { User } from "#app/models/user.server";
@@ -13,14 +13,16 @@ import {
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 
-export const authenticator = new Authenticator<User>(
-  createDatabaseSessionStorage({
-    cookie: sessionCookie,
-  }),
-  {
-    sessionKey: "user",
-  },
-);
+export const authenticator = new Authenticator<User>();
+
+// export const authenticator = new Authenticator<User>(
+//   createDatabaseSessionStorage({
+//     cookie: sessionCookie,
+//   }),
+//   {
+//     sessionKey: "user",
+//   },
+// );
 
 // TODO solve this better
 interface LoginProps {
@@ -40,7 +42,7 @@ authenticator.use(
     const user = await verifyLogin(email, password);
 
     if (!user) {
-      throw new AuthorizationError("Authentication Failed");
+      throw new Error("Authentication Failed");
     }
 
     return user;
@@ -71,7 +73,9 @@ export async function getUser(request: Request) {
 
   if (user) return user;
 
-  throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
+  redirect("/auth/logout");
+
+  // throw await authenticator.logout(request, { redirectTo: AUTH_LOGIN_ROUTE });
 }
 
 export async function getUserOrDie(request: Request) {

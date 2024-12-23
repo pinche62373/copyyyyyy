@@ -37,10 +37,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
-  await authenticator.logout(request, {
-    redirectTo: "/",
+  // V4
+  return redirect("/", {
     headers: deleteCookieHeaders,
   });
+  // await authenticator.logout(request, {
+  //   redirectTo: "/",
+  //   headers: deleteCookieHeaders,
+  // });
 };
 
 export const loader = async () => redirect("/");

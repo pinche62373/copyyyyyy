@@ -1,5 +1,5 @@
-import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import React from "react";
+import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 
 export function Document({ children }: { children: React.ReactNode }) {
   return <InnerLayout>{children}</InnerLayout>;
