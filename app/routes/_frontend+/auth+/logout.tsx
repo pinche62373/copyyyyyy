@@ -3,7 +3,11 @@ import { data, redirect } from "react-router";
 import { prisma } from "#app/utils/db.server";
 import { mergeHeaders } from "#app/utils/lib/merge-headers";
 import { returnToCookie } from "#app/utils/return-to.server";
-import { destroySession, getSession, sessionCookie } from "#app/utils/session.server";
+import {
+  destroySession,
+  getSession,
+  sessionCookie,
+} from "#app/utils/session.server";
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
