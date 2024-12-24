@@ -1,5 +1,5 @@
 import { Menu, MenuItem } from "@szhsin/react-menu";
-import { Icon } from "#app/ui/icon.tsx";
+import { Icon } from "#app/components/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn.ts";
 
 type Filter = "all" | "model" | "route";

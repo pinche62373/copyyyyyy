@@ -1,6 +1,6 @@
 import { useLoaderData } from "react-router";
 import { DashboardCounterCard } from "#app/components/backend/dashboard/counter-card";
-import { Icon } from "#app/ui/icon.tsx";
+import { Icon } from "#app/components/ui/icon.tsx";
 import { prisma } from "#app/utils/db.server";
 
 export const loader = async () => {

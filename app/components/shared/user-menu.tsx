@@ -1,7 +1,7 @@
 import { Menu, MenuDivider, MenuItem } from "@szhsin/react-menu";
 import { Link, useSubmit } from "react-router";
 import { Button } from "#app/components/shared/button";
-import { Icon } from "#app/ui/icon.tsx";
+import { Icon } from "#app/components/ui/icon.tsx";
 import { ROUTE_LOGIN, ROUTE_LOGOUT } from "#app/utils/constants";
 import { useOptionalUser, userHasRole } from "#app/utils/user";
 import { Roles } from "#app/validations/role-schema";

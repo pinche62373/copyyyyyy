@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Icon } from "#app/ui/icon.tsx";
+import { Icon } from "#app/components/ui/icon.tsx";
 import { useOptionalUser } from "#app/utils/user";
 
 export default function IndexPage() {

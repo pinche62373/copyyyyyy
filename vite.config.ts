@@ -11,8 +11,8 @@ export default defineConfig({
     iconsSpritesheet({
       withTypes: true, // True to generate TS types
       inputDir: "./other/svg-icons", // Path to folder with svg icons
-      outputDir: "./app/ui/icons", // Path to folder with generated spritesheet and types
-      typesOutputFile: "./app/ui/icons/name.d.ts", // Path to generated type file (defaults to types.ts in outputDir)
+      outputDir: "./app/components/ui/icons", // Path to folder with generated spritesheet and types
+      typesOutputFile: "./app/components/ui/icons/name.d.ts", // Path to generated type file (defaults to types.ts in outputDir)
       fileName: "spritesheet.svg", // Name of generated spritesheet (defaults to sprite.svg)
       cwd: process.cwd(), // The cwd, defaults to process.cwd()
       // formatter: "biome", // Formatter to use

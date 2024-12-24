@@ -6,7 +6,7 @@ import { useRemixForm } from "remix-hook-form";
 import zod, { z } from "zod";
 import { IconContainerRound } from "#app/components/icon-container-round";
 import { Confirm } from "#app/components/shared/confirm.tsx";
-import { Icon } from "#app/ui/icon.tsx";
+import { Icon } from "#app/components/ui/icon.tsx";
 import { Crud } from "#app/utils/admin-crud";
 
 interface TableCellActionsFunctionArgs {

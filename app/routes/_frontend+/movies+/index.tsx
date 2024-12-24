@@ -1,7 +1,7 @@
 import { NavLink, useLoaderData } from "react-router";
 import { FrontendSection } from "#app/components/frontend/section";
+import { Icon } from "#app/components/ui/icon.tsx";
 import { getMovies } from "#app/models/movie.server";
-import { Icon } from "#app/ui/icon.tsx";
 
 export const loader = async () => {
   const movies = await getMovies();

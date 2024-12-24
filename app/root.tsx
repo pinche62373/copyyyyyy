@@ -12,8 +12,8 @@ import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { HoneypotInputProps } from "remix-utils/honeypot/server";
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
+import { href as iconsHref } from "#app/components/ui/icon.tsx";
 import sharedStyles from "#app/styles/shared.css?url";
-import { href as iconsHref } from "#app/ui/icon.tsx";
 import { getUser } from "#app/utils/auth.server";
 import { honeypot } from "#app/utils/honeypot.server";
 

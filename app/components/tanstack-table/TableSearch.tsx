@@ -1,6 +1,6 @@
 import React from "react";
 import { DebouncedInput } from "#app/components/debounced-input";
-import { Icon } from "#app/ui/icon.tsx";
+import { Icon } from "#app/components/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 
 export const TableSearch = ({
