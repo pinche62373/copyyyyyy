@@ -1,5 +1,4 @@
 import type { Role } from "prisma-client";
-
 import { prisma } from "#app/utils/db.server";
 
 export function getRole({ id }: Pick<Role, "id">) {

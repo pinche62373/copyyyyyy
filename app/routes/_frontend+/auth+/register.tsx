@@ -12,7 +12,11 @@ import zod from "zod";
 import { Button } from "#app/components/shared/button";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
-import { createUser, isEmailAddressAvailable } from "#app/models/user.server";
+import {
+  assignRoleToUser,
+  createUser,
+  isEmailAddressAvailable,
+} from "#app/models/user.server";
 import { authenticate, blockAuthenticated } from "#app/utils/auth.server";
 import { ROUTE_REGISTER } from "#app/utils/constants.ts";
 import { honeypot } from "#app/utils/honeypot.server";
@@ -43,7 +47,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
           return isEmailAddressAvailable(data.user.email);
         },
         {
-          message: "Whoops! That email is already taken.",
+          message: "That email address is already taken.",
           path: ["user.email"],
         },
       ),
@@ -51,8 +55,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
 
   if (errors) {
-    return dataWithError(errors, "Form data rejected by server", {
-      // status: 422, // TODO re-enable when remix-toast fixes this
+    return dataWithError({ errors }, "Form data rejected by server", {
+      // status: 422
     });
   }
 
@@ -72,8 +76,16 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   // create the user
-  await createUser(data.user.email, data.user.username, data.user.password);
+  const user = await createUser(
+    data.user.email,
+    data.user.username,
+    data.user.password,
+  );
 
+  // assign role
+  await assignRoleToUser(user.id, "user");
+
+  // auto login
   try {
     await authenticate(request);
   } catch (error) {

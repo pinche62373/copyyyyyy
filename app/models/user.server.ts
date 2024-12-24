@@ -1,6 +1,5 @@
 import bcrypt from "bcryptjs";
-import type { Password, User } from "prisma-client";
-
+import type { Password, Role, User } from "prisma-client";
 import { prisma } from "#app/utils/db.server";
 
 export type { User } from "prisma-client";
@@ -51,9 +50,19 @@ export async function createUser(
           hash: hashedPassword,
         },
       },
+    },
+  });
+}
+
+export async function assignRoleToUser(userId: User["id"], role: Role["name"]) {
+  return prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
       roles: {
         connect: {
-          name: "user",
+          name: role,
         },
       },
     },
