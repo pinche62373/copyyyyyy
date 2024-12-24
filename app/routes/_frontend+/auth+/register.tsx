@@ -4,7 +4,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "react-router";
-import { Form, redirect, useLoaderData, useNavigation } from "react-router";
+import { Form, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
@@ -13,7 +13,8 @@ import { Button } from "#app/components/shared/button";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { createUser, isEmailAddressAvailable } from "#app/models/user.server";
-import { authenticate, getUserId } from "#app/utils/auth.server";
+import { authenticate, blockAuthenticated } from "#app/utils/auth.server";
+import { ROUTE_REGISTER } from "#app/utils/constants.ts";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { userSchemaRegister } from "#app/validations/user-schema";
@@ -25,9 +26,7 @@ const resolver = zodResolver(userSchemaRegister);
 type FormData = zod.infer<typeof userSchemaRegister>;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userId = await getUserId(request);
-
-  if (userId) return redirect("/");
+  await blockAuthenticated(request, ROUTE_REGISTER);
 
   return {
     defaultValues: getDefaultValues(userSchemaRegister, { intent }),

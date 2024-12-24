@@ -4,14 +4,21 @@ import { FormStrategy } from "remix-auth-form";
 import { parseFormData } from "remix-hook-form";
 import type { User } from "#app/models/user.server";
 import { getUserById, verifyLogin } from "#app/models/user.server";
-import { ROUTE_LOGIN, ROUTE_LOGOUT } from "#app/utils/constants";
-import { commitSession, getSession } from "#app/utils/session.server";
+import { ROUTE_HOME, ROUTE_LOGIN } from "#app/utils/constants";
+import { prisma } from "#app/utils/db.server";
+import {
+  commitSession,
+  getSession,
+  sessionCookie,
+} from "#app/utils/session.server";
 
 export const EMAIL_PASSWORD_STRATEGY = "email-password-strategy";
 
 export const authenticator = new Authenticator<User>();
 
-// RR7: isAuthenticated clone
+// ----------------------------------------------------------------------------
+// RR7: custom authenticate
+// ----------------------------------------------------------------------------
 export async function authenticate(request: Request, returnTo?: string) {
   const user = await authenticator.authenticate(
     EMAIL_PASSWORD_STRATEGY,
@@ -30,7 +37,9 @@ export async function authenticate(request: Request, returnTo?: string) {
   });
 }
 
+// ----------------------------------------------------------------------------
 // RR7: isAuthenticated clone
+// ----------------------------------------------------------------------------
 export async function isAuthenticated(request: Request, returnTo?: string) {
   let session = await getSession(request.headers.get("cookie"));
 
@@ -39,6 +48,40 @@ export async function isAuthenticated(request: Request, returnTo?: string) {
   }
 
   throw redirect(returnTo || ROUTE_LOGIN);
+}
+
+// ----------------------------------------------------------------------------
+// RR7: blockAuthenticated
+// ----------------------------------------------------------------------------
+export async function blockAuthenticated(request: Request, route: string) {
+  const headers = new Headers();
+  const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
+
+  // orphaned session cookies without a matching database record crash
+  // prisma so we need to delete that cookie first using a redirect to
+  // the page that is blocking the authenticated users.
+  if (sessionId) {
+    const databaseSessionExists = await prisma.session.findUnique({
+      where: { id: sessionId },
+    });
+
+    if (!databaseSessionExists) {
+      headers.append(
+        "Set-Cookie",
+        await sessionCookie.serialize("", {
+          maxAge: 0,
+        }),
+      );
+
+      throw redirect(route, { headers });
+    }
+  }
+
+  // redirect authenticated users back to homepage
+  let session = await getSession(request.headers.get("cookie"));
+  let user = session.get("user");
+
+  if (user) throw redirect(ROUTE_HOME);
 }
 
 // TODO solve this better

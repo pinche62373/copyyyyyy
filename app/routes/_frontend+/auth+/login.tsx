@@ -4,13 +4,7 @@ import type {
   LoaderFunctionArgs,
   MetaFunction,
 } from "react-router";
-import {
-  Form,
-  data,
-  redirect,
-  useLoaderData,
-  useNavigation,
-} from "react-router";
+import { Form, data, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
@@ -18,13 +12,11 @@ import zod from "zod";
 import { Button } from "#app/components/shared/button.tsx";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
-import { authenticate } from "#app/utils/auth.server";
+import { authenticate, blockAuthenticated } from "#app/utils/auth.server";
 import { ROUTE_LOGIN } from "#app/utils/constants";
-import { prisma } from "#app/utils/db.server";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { returnToCookie } from "#app/utils/return-to.server";
-import { getSession, sessionCookie } from "#app/utils/session.server";
 import { userSchemaLogin } from "#app/validations/user-schema";
 
 const intent = "login" as const;
@@ -39,29 +31,10 @@ type LoaderData = Omit<Awaited<ReturnType<typeof loader>>, "defaultValues"> & {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const sessionId = await sessionCookie.parse(request.headers.get("Cookie"));
+  await blockAuthenticated(request, ROUTE_LOGIN);
 
+  // prepare returnTo cookie
   const headers = new Headers();
-
-  // delete orphaned session cookies without matching database record (or prisma will break)
-  if (sessionId) {
-    const databaseSessionExists = await prisma.session.findUnique({
-      where: { id: sessionId },
-    });
-
-    if (!databaseSessionExists) {
-      headers.append(
-        "Set-Cookie",
-        await sessionCookie.serialize("", {
-          maxAge: 0,
-        }),
-      );
-
-      redirect(ROUTE_LOGIN, { headers });
-    }
-  }
-
-  // create returnTo cookie
   const url = new URL(request.url);
   const returnTo = url.searchParams.get("returnTo");
 
@@ -69,13 +42,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     headers.append("Set-Cookie", await returnToCookie.serialize(returnTo));
   }
 
-  // RR7: send already authenticated users back to the homepage
-  let session = await getSession(request.headers.get("cookie"));
-  let user = session.get("user");
-
-  if (user) throw redirect("/");
-
-  // continue to login (using headers to create redirectCookie)
+  // continue to login
   return data(
     {
       defaultValues: getDefaultValues(userSchemaLogin, { intent }),
