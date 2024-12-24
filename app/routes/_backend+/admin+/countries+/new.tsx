@@ -114,7 +114,7 @@ export default function Component() {
     setValue,
     formState: { errors },
   } = useRemixForm<FormData>({
-    mode: "onBlur",
+    mode: "onSubmit",
     resolver,
     defaultValues,
   });
@@ -131,6 +131,7 @@ export default function Component() {
           <Input
             label="Name"
             variant="ifta"
+            autoFocus
             {...register("country.name")}
             error={errors.country?.name?.message}
           />
