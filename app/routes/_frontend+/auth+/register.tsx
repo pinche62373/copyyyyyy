@@ -51,8 +51,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
 
   if (errors) {
-    return dataWithError({ errors }, "Form data rejected by server", {
-      status: 422,
+    return dataWithError(errors, "Form data rejected by server", {
+      // status: 422, // TODO re-enable when remix-toast fixes this
     });
   }
 
