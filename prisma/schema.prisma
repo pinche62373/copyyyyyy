@@ -129,7 +129,7 @@ model Region {
 model Movie {
   id   String @id @default(cuid())
   name String @unique
-  slug String @unique
+  permalink String @unique
 
   createdAt DateTime  @default(now())
   createdBy String
@@ -143,7 +143,7 @@ model Movie {
 // memory table to ensure historically unique permalinks
 model PermaLink {
   id   Int    @id @default(autoincrement())
-  slug String @unique
+  permalink String @unique
 
   createdAt DateTime @default(now())
 }

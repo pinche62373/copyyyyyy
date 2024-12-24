@@ -1,18 +1,18 @@
 import { LoaderFunctionArgs, redirect } from "react-router";
 import invariant from "tiny-invariant";
 
-import { getMovieIdBySlug } from "#app/models/movie.server";
-import { slug as slugSchema } from "#app/validations/movie-schema";
+import { getMovieIdByPermalink } from "#app/models/movie.server";
+import { permalink as permalinkSchema } from "#app/validations/movie-schema";
 
 /**
  * Loader only component used to redirect permalinks to movie pages.
  */
 export async function loader({ params }: LoaderFunctionArgs) {
-  const slug = params.movieSlug;
+  const permalink = params.moviePermalink;
 
   try {
-    invariant(slug, "Must be set");
-    slugSchema.parse(slug);
+    invariant(permalink, "Must be set");
+    permalinkSchema.parse(permalink);
   } catch (error) {
     throw new Response(`Not Found: ${error}`, {
       status: 404,
@@ -20,7 +20,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
     });
   }
 
-  const movie = await getMovieIdBySlug({ slug });
+  const movie = await getMovieIdByPermalink({ permalink });
 
   if (!movie) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });

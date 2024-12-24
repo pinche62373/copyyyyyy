@@ -13,9 +13,9 @@ export const COOKIE_SECURE = process.env.NODE_ENV === "production"; // requires 
 // cuid
 export const CUID_LENGTH = 25;
 
-// slug
-export const SLUG_ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyz";
-export const SLUG_LENGTH = 5;
+// permalinks
+export const PERMALINK_ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+export const PERMALINK_LENGTH = 5;
 
 // tables
 export const ADMIN_TABLE_PAGE_INDEX = 0;

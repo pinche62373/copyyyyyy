@@ -1,22 +1,22 @@
 import { z } from "zod";
 
-export const slug = z
+export const permalink = z
   .string()
   .length(6)
   .regex(/^Z([A-Z0-9]{5})$/, {
     message:
-      "Movie slug must start Z followed by 5 uppercase characters and/or numbers.",
+      "Movie permalink must start Z followed by 5 uppercase characters and/or numbers.",
   });
 
 export const movieSchema = z.object({
   id: z.string(),
   name: z.string(),
-  slug: slug,
+  permalink: permalink,
   createdAt: z.date(),
   updatedAt: z.date().optional().nullable(),
 });
 
 export const movieSchemaPermaLink = movieSchema.pick({
   id: true,
-  slug: true,
+  permalink: true,
 });

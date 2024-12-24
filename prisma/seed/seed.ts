@@ -266,7 +266,7 @@ const main = async () => {
       movies.map((movie) => ({
         id: cuid(movie),
         name: movie,
-        slug: permaLink(movie),
+        permalink: permaLink(movie),
         updatedAt,
         updatedBy,
         createdBy: cuid(
@@ -283,7 +283,9 @@ const main = async () => {
   // PermaLinks (DEV ONLY)
   // --------------------------------------------------------------------------
   if (prod === false) {
-    await seed.permaLink(movies.map((movie) => ({ slug: permaLink(movie) })));
+    await seed.permaLink(
+      movies.map((movie) => ({ permalink: permaLink(movie) })),
+    );
   }
 
   // --------------------------------------------------------------------------

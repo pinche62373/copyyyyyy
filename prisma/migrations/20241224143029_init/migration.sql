@@ -86,7 +86,7 @@ CREATE TABLE "Region" (
 CREATE TABLE "Movie" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT NOT NULL,
-    "slug" TEXT NOT NULL,
+    "permalink" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "createdBy" TEXT NOT NULL,
     "updatedAt" DATETIME,
@@ -98,7 +98,7 @@ CREATE TABLE "Movie" (
 -- CreateTable
 CREATE TABLE "PermaLink" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "slug" TEXT NOT NULL,
+    "permalink" TEXT NOT NULL,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -149,10 +149,10 @@ CREATE UNIQUE INDEX "Region_name_key" ON "Region"("name");
 CREATE UNIQUE INDEX "Movie_name_key" ON "Movie"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Movie_slug_key" ON "Movie"("slug");
+CREATE UNIQUE INDEX "Movie_permalink_key" ON "Movie"("permalink");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "PermaLink_slug_key" ON "PermaLink"("slug");
+CREATE UNIQUE INDEX "PermaLink_permalink_key" ON "PermaLink"("permalink");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "_RoleToUser_AB_unique" ON "_RoleToUser"("A", "B");

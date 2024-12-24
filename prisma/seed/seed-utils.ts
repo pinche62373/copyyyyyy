@@ -23,7 +23,7 @@ const alphaNumAlphabet = Array.from({ length: 36 }, (_x, i) =>
 );
 
 /**
- * Generates a deterministic tzbd-specific permalink slug
+ * Generates a deterministic tzbd-specific permalink
  */
 export const permaLink = (name: string) => {
   return "Z" + cuid(name, { length: 5 }).toUpperCase();

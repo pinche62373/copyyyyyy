@@ -22,7 +22,7 @@ export default function MovieIndexPage() {
             <li key={i}>
               <NavLink to={movie.id}>{movie.name}</NavLink>
               <span className="px-5">-</span>
-              <NavLink to={`/${movie.slug}`}>{movie.slug}</NavLink>
+              <NavLink to={`/${movie.permalink}`}>{movie.permalink}</NavLink>
             </li>
           ))}
         </ul>

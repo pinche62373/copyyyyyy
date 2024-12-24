@@ -10,10 +10,10 @@ export function getMovie({ id }: Pick<Movie, "id">) {
   });
 }
 
-export function getMovieIdBySlug({ slug }: Pick<Movie, "slug">) {
+export function getMovieIdByPermalink({ permalink }: Pick<Movie, "permalink">) {
   return prisma[model].findFirst({
     select: { id: true },
-    where: { slug },
+    where: { permalink },
   });
 }
 

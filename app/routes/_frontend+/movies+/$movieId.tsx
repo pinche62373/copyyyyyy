@@ -23,7 +23,7 @@ export default function Component() {
       <FrontendSection>
         <ul>
           <li>Title: {movie.name}</li>
-          <li>Slug: {movie.slug}</li>
+          <li>Permalink: {movie.permalink}</li>
           <li>CreatedBy: {movie.createdBy}</li>
         </ul>
       </FrontendSection>
