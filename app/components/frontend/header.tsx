@@ -1,13 +1,16 @@
 import { NavLink } from "react-router";
-
 import { UserMenu } from "#app/components/shared/user-menu";
+import { ThemeSwitch } from "#app/routes/resources+/theme-switch.tsx";
 import { cn } from "#app/utils/lib/cn";
+import { useRequestInfo } from "#app/utils/request-info.ts";
 
 interface Props {
   className?: string;
 }
 
 export const FrontendHeader = ({ className }: Props) => {
+  const requestInfo = useRequestInfo();
+
   return (
     <header className="w-full dark:bg-neutral-900">
       <div
@@ -39,6 +42,17 @@ export const FrontendHeader = ({ className }: Props) => {
           {/* Menu Right */}
           <div className="flex items-center justify-end gap-x-2 xl:col-span-2">
             <div className="flex items-center">
+              {/* Dark Mode Toggler  */}
+              <ThemeSwitch
+                userPreference={requestInfo.userPrefs.theme}
+                className={cn(
+                  "inline-flex size-[38px] items-center justify-center gap-x-2 rounded-full border border-transparent",
+                  "text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none",
+                  "disabled:pointer-events-none disabled:opacity-50",
+                  "dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700",
+                )}
+              />
+
               {/* Icon List */}
               <div className="flex h-[38px]">
                 <UserMenu />

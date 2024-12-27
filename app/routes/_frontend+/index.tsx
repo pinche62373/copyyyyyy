@@ -3,10 +3,9 @@ import { Icon } from "#app/components/ui/icon.tsx";
 import { useOptionalUser } from "#app/utils/user";
 
 export default function IndexPage() {
-  const user = useOptionalUser();
-
   // TODO : remove when done
-  console.log(JSON.stringify(user, null, 2));
+  // const user = useOptionalUser();
+  // console.log(JSON.stringify(user, null, 2));
 
   return (
     <main className="relative mt-20 align-middle sm:flex sm:items-center sm:justify-center">

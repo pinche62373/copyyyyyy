@@ -1,6 +1,6 @@
 # app/ui
 
-The `app/ui` folder is similar to `app/components` but is used for UI Kit/design system components.
+The `app/components/ui` folder is similar to `app/components` but is used for UI Kit/design system components.
 
 In this folder go things like Button, Card, Combobox, Datepicker, etc. that:
 

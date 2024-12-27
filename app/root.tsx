@@ -2,8 +2,7 @@ import reactMenuStyles from "@szhsin/react-menu/dist/index.css?url";
 import reactMenuTransitions from "@szhsin/react-menu/dist/transitions/zoom.css?url";
 import { useEffect } from "react";
 import type { LinksFunction, LoaderFunctionArgs } from "react-router";
-import { data } from "react-router";
-import { MetaFunction, Outlet, useLoaderData } from "react-router";
+import { MetaFunction, Outlet, data, useLoaderData } from "react-router";
 import { Slide, ToastContainer, toast as notify } from "react-toastify";
 import reactToastify from "react-toastify/dist/ReactToastify.css?url";
 import type { ToastMessage } from "remix-toast";
@@ -13,9 +12,12 @@ import { HoneypotInputProps } from "remix-utils/honeypot/server";
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
 import { href as iconsHref } from "#app/components/ui/icon.tsx";
+import { useTheme } from "#app/routes/resources+/theme-switch.tsx";
 import sharedStyles from "#app/styles/shared.css?url";
 import { getUser } from "#app/utils/auth.server";
+import { getHints } from "#app/utils/client-hints";
 import { honeypot } from "#app/utils/honeypot.server";
+import { getTheme } from "#app/utils/theme.server";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: iconsHref, as: "image" }, // svg sprite sheet
@@ -24,9 +26,6 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: reactToastify, as: "style" },
   { rel: "stylesheet", href: sharedStyles, as: "style" },
 ];
-
-// root layout of the entire app, all other routes render inside its <Outlet />
-export { Document as Layout };
 
 // ----------------------------------------------------------------------------
 // metadata
@@ -58,6 +57,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       user: await getUser(request),
       toast,
       honeypotInputProps: honeypot.getInputProps(),
+      requestInfo: {
+        hints: getHints(request),
+        path: new URL(request.url).pathname, // progressive enhancement
+        userPrefs: {
+          theme: getTheme(request),
+        },
+      },
     },
     { headers },
   );
@@ -68,6 +74,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 // ----------------------------------------------------------------------------
 function App() {
   const { toast } = useLoaderData<LoaderData>();
+  const theme = useTheme();
 
   useEffect(() => {
     if (toast?.type) {
@@ -77,21 +84,23 @@ function App() {
 
   return (
     <>
-      <Outlet />
+      <Document theme={theme}>
+        <Outlet />
 
-      <ToastContainer
-        position="bottom-right"
-        autoClose={5000}
-        hideProgressBar
-        newestOnTop
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        transition={Slide}
-      />
+        <ToastContainer
+          position="bottom-right"
+          autoClose={5000}
+          hideProgressBar
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          transition={Slide}
+        />
+      </Document>
     </>
   );
 }
@@ -110,7 +119,11 @@ export default function AppWithProviders() {
 }
 
 export function ErrorBoundary() {
-  return <ErrorBoundaryRoot />;
+  return (
+    <Document>
+      <ErrorBoundaryRoot />
+    </Document>
+  );
 }
 
 export function HydrateFallback() {
