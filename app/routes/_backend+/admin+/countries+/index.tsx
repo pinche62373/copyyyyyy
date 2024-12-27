@@ -37,7 +37,7 @@ import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions"
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
-import { countrySchemaAdminTable } from "#app/validations/country-schema";
+import { CountrySchemaAdminTable } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
@@ -66,7 +66,7 @@ export default function Component() {
   const user = useUser();
 
   const columnHelper =
-    createColumnHelper<z.infer<typeof countrySchemaAdminTable>>();
+    createColumnHelper<z.infer<typeof CountrySchemaAdminTable>>();
 
   const userCellActions = getUserTableCellActions({
     user,

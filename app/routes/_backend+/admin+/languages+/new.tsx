@@ -21,15 +21,15 @@ import {
   requireModelPermission,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
-import { languageSchemaCreate } from "#app/validations/language-schema";
+import { LanguageSchemaCreate } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
 const intent = "create" as const;
 
-const resolver = zodResolver(languageSchemaCreate);
+const resolver = zodResolver(LanguageSchemaCreate);
 
-type FormData = zod.infer<typeof languageSchemaCreate>;
+type FormData = zod.infer<typeof LanguageSchemaCreate>;
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
@@ -45,7 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   return {
-    defaultValues: getDefaultValues(languageSchemaCreate, { intent }),
+    defaultValues: getDefaultValues(LanguageSchemaCreate, { intent }),
   };
 }
 

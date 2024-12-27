@@ -21,15 +21,15 @@ import {
   requireModelPermission,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
-import { regionSchemaCreate } from "#app/validations/region-schema";
+import { RegionSchemaCreate } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
 
 const intent = "create" as const;
 
-const resolver = zodResolver(regionSchemaCreate);
+const resolver = zodResolver(RegionSchemaCreate);
 
-type FormData = zod.infer<typeof regionSchemaCreate>;
+type FormData = zod.infer<typeof RegionSchemaCreate>;
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
@@ -45,7 +45,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   return {
-    defaultValues: getDefaultValues(regionSchemaCreate, { intent }),
+    defaultValues: getDefaultValues(RegionSchemaCreate, { intent }),
   };
 }
 

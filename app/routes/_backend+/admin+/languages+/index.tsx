@@ -45,17 +45,17 @@ import {
 } from "#app/utils/permissions.server";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
 import {
-  languageSchemaAdminTable,
-  languageSchemaDelete,
+  LanguageSchemaAdminTable,
+  LanguageSchemaDelete,
 } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
 const intent = "delete" as const;
 
-const resolver = zodResolver(languageSchemaDelete);
+const resolver = zodResolver(LanguageSchemaDelete);
 
-type FormData = zod.infer<typeof languageSchemaDelete>;
+type FormData = zod.infer<typeof LanguageSchemaDelete>;
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
@@ -114,7 +114,7 @@ export default function Component() {
   const user = useUser();
 
   const columnHelper =
-    createColumnHelper<z.infer<typeof languageSchemaAdminTable>>();
+    createColumnHelper<z.infer<typeof LanguageSchemaAdminTable>>();
 
   const userCellActions = getUserTableCellActions({
     user,

@@ -20,13 +20,13 @@ import {
   requireModelPermission,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
-import { userSchemaUpdateAccount } from "#app/validations/user-schema";
+import { UserSchemaUpdateAccount } from "#app/validations/user-schema";
 
 const intent = "update" as const;
 
-const resolver = zodResolver(userSchemaUpdateAccount);
+const resolver = zodResolver(UserSchemaUpdateAccount);
 
-type FormData = zod.infer<typeof userSchemaUpdateAccount>;
+type FormData = zod.infer<typeof UserSchemaUpdateAccount>;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);

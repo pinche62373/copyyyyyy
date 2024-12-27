@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const userSchema = z.object({
+export const UserSchema = z.object({
   id: z.string().cuid2(),
   email: z
     .string()
@@ -16,26 +16,26 @@ export const userSchema = z.object({
     .min(6, "This field must be at least 6 characters"),
 });
 
-export const userSchemaLogin = z.object({
+export const UserSchemaLogin = z.object({
   intent: z.literal("login"),
-  user: userSchema.pick({
+  user: UserSchema.pick({
     email: true,
     password: true,
   }),
 });
 
-export const userSchemaRegister = z.object({
+export const UserSchemaRegister = z.object({
   intent: z.literal("register"),
-  user: userSchema.pick({
+  user: UserSchema.pick({
     email: true,
     username: true,
     password: true,
   }),
 });
 
-export const userSchemaUpdateAccount = z.object({
+export const UserSchemaUpdateAccount = z.object({
   intent: z.literal("update"),
-  user: userSchema.pick({
+  user: UserSchema.pick({
     id: true,
     username: true,
   }),

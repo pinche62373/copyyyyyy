@@ -4,10 +4,10 @@
 //
 import { z } from "zod";
 
-import { regionSchema } from "#app/validations/region-schema";
-import { userSchema } from "#app/validations/user-schema";
+import { RegionSchema } from "#app/validations/region-schema";
+import { UserSchema } from "#app/validations/user-schema";
 
-export const countrySchema = z.object({
+export const CountrySchema = z.object({
   id: z.string().min(1, "This field is required").cuid2(),
   name: z
     .string()
@@ -16,18 +16,18 @@ export const countrySchema = z.object({
       message:
         "This field only allows capitalized Latin words, separated by single spaces.",
     }),
-  regionId: regionSchema.shape.id,
+  regionId: RegionSchema.shape.id,
   createdAt: z.date(),
-  createdBy: userSchema.pick({ id: true }),
+  createdBy: UserSchema.pick({ id: true }),
   updatedAt: z.date().nullable(),
-  updatedBy: userSchema.pick({ id: true }).nullable(),
-  region: regionSchema.pick({
+  updatedBy: UserSchema.pick({ id: true }).nullable(),
+  region: RegionSchema.pick({
     id: true,
     name: true,
   }),
 });
 
-export const countrySchemaAdminTable = countrySchema.pick({
+export const CountrySchemaAdminTable = CountrySchema.pick({
   id: true,
   name: true,
   createdAt: true,
@@ -35,17 +35,17 @@ export const countrySchemaAdminTable = countrySchema.pick({
   region: true,
 });
 
-export const countrySchemaCreate = z.object({
+export const CountrySchemaCreate = z.object({
   intent: z.literal("create"),
-  country: countrySchema.pick({
+  country: CountrySchema.pick({
     name: true,
     regionId: true,
   }),
 });
 
-export const countrySchemaUpdate = z.object({
+export const CountrySchemaUpdate = z.object({
   intent: z.literal("update"),
-  country: countrySchema.pick({
+  country: CountrySchema.pick({
     id: true,
     name: true,
     regionId: true,

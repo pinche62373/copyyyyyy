@@ -17,13 +17,13 @@ import { ROUTE_LOGIN } from "#app/utils/constants";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { returnToCookie } from "#app/utils/return-to.server";
-import { userSchemaLogin } from "#app/validations/user-schema";
+import { UserSchemaLogin } from "#app/validations/user-schema";
 
 const intent = "login" as const;
 
-const resolver = zodResolver(userSchemaLogin);
+const resolver = zodResolver(UserSchemaLogin);
 
-type FormData = zod.infer<typeof userSchemaLogin>;
+type FormData = zod.infer<typeof UserSchemaLogin>;
 
 // TODO replace whenRemix fixes https://github.com/remix-run/remix/issues/9826#issuecomment-2491878937
 type LoaderData = Omit<Awaited<ReturnType<typeof loader>>, "defaultValues"> & {
@@ -45,7 +45,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   // continue to login
   return data(
     {
-      defaultValues: getDefaultValues(userSchemaLogin, { intent }),
+      defaultValues: getDefaultValues(UserSchemaLogin, { intent }),
     },
     { headers },
   );

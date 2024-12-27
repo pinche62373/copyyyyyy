@@ -31,7 +31,7 @@ import {
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { roleSchemaAdminTable } from "#app/validations/role-schema.ts";
+import { RoleSchemaAdminTable } from "#app/validations/role-schema.ts";
 
 const { roleCrud: crud } = getAdminCrud();
 
@@ -55,7 +55,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   };
 }
 
-const columnHelper = createColumnHelper<z.infer<typeof roleSchemaAdminTable>>();
+const columnHelper = createColumnHelper<z.infer<typeof RoleSchemaAdminTable>>();
 
 const columns = [
   columnHelper.display({

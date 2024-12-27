@@ -8,7 +8,7 @@ export const Roles = {
 
 export type Role = "admin" | "moderator" | "user";
 
-export const roleSchema = z.object({
+export const RoleSchema = z.object({
   id: z.string().cuid2(),
   name: z.string({ required_error: "Language name is required" }),
   description: z.string().nullable(),
@@ -16,7 +16,7 @@ export const roleSchema = z.object({
   updatedAt: z.date().nullable(),
 });
 
-export const roleSchemaAdminTable = roleSchema.pick({
+export const RoleSchemaAdminTable = RoleSchema.pick({
   id: true,
   name: true,
   description: true,

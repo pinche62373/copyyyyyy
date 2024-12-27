@@ -26,7 +26,7 @@ import {
   requireModelPermission,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
-import { countrySchemaCreate } from "#app/validations/country-schema";
+import { CountrySchemaCreate } from "#app/validations/country-schema";
 
 // https://stackoverflow.com/questions/76222652/how-to-use-register-from-react-hook-forms-with-headless-ui-combobox
 
@@ -34,9 +34,9 @@ const { countryCrud: crud } = getAdminCrud();
 
 const intent = "create" as const;
 
-const resolver = zodResolver(countrySchemaCreate);
+const resolver = zodResolver(CountrySchemaCreate);
 
-type FormData = zod.infer<typeof countrySchemaCreate>;
+type FormData = zod.infer<typeof CountrySchemaCreate>;
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
@@ -53,7 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   return {
     defaultValues: {
-      ...getDefaultValues(countrySchemaCreate),
+      ...getDefaultValues(CountrySchemaCreate),
       intent,
       regions: await getRegions(),
     },

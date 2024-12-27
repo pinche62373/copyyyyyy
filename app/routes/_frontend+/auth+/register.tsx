@@ -21,19 +21,19 @@ import { authenticate, blockAuthenticated } from "#app/utils/auth.server";
 import { ROUTE_REGISTER } from "#app/utils/constants.ts";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
-import { userSchemaRegister } from "#app/validations/user-schema";
+import { UserSchemaRegister } from "#app/validations/user-schema";
 
 const intent = "register" as const;
 
-const resolver = zodResolver(userSchemaRegister);
+const resolver = zodResolver(UserSchemaRegister);
 
-type FormData = zod.infer<typeof userSchemaRegister>;
+type FormData = zod.infer<typeof UserSchemaRegister>;
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await blockAuthenticated(request, ROUTE_REGISTER);
 
   return {
-    defaultValues: getDefaultValues(userSchemaRegister, { intent }),
+    defaultValues: getDefaultValues(UserSchemaRegister, { intent }),
     intent,
   };
 };
@@ -42,7 +42,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const { data, errors } = await getValidatedFormData<FormData>(
     request.clone(),
     zodResolver(
-      userSchemaRegister.refine(
+      UserSchemaRegister.refine(
         async (data) => {
           return isEmailAddressAvailable(data.user.email);
         },

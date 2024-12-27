@@ -22,17 +22,17 @@ import {
 } from "#app/utils/permissions.server";
 import { validatePageId } from "#app/utils/validate-page-id";
 import {
-  languageSchema,
-  languageSchemaUpdate,
+  LanguageSchema,
+  LanguageSchemaUpdate,
 } from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
 const intent = "update" as const;
 
-const resolver = zodResolver(languageSchemaUpdate);
+const resolver = zodResolver(LanguageSchemaUpdate);
 
-type FormData = zod.infer<typeof languageSchemaUpdate>;
+type FormData = zod.infer<typeof LanguageSchemaUpdate>;
 
 export const handle = {
   breadcrumb: ({
@@ -50,7 +50,7 @@ export const handle = {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const languageId = validatePageId(params.languageId, languageSchema);
+  const languageId = validatePageId(params.languageId, LanguageSchema);
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,

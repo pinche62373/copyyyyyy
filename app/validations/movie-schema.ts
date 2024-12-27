@@ -8,7 +8,7 @@ export const permalink = z
       "Movie permalink must start Z followed by 5 uppercase characters and/or numbers.",
   });
 
-export const movieSchema = z.object({
+export const MovieSchema = z.object({
   id: z.string(),
   name: z.string(),
   permalink: permalink,
@@ -16,7 +16,7 @@ export const movieSchema = z.object({
   updatedAt: z.date().optional().nullable(),
 });
 
-export const movieSchemaPermaLink = movieSchema.pick({
+export const MovieSchemaPermaLink = MovieSchema.pick({
   id: true,
   permalink: true,
 });

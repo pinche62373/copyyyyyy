@@ -22,17 +22,17 @@ import {
 } from "#app/utils/permissions.server";
 import { validatePageId } from "#app/utils/validate-page-id";
 import {
-  regionSchema,
-  regionSchemaUpdate,
+  RegionSchema,
+  RegionSchemaUpdate,
 } from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
 
 const intent = "update" as const;
 
-const resolver = zodResolver(regionSchemaUpdate);
+const resolver = zodResolver(RegionSchemaUpdate);
 
-type FormData = zod.infer<typeof regionSchemaUpdate>;
+type FormData = zod.infer<typeof RegionSchemaUpdate>;
 
 export const handle = {
   breadcrumb: ({
@@ -50,7 +50,7 @@ export const handle = {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const regionId = validatePageId(params.regionId, regionSchema);
+  const regionId = validatePageId(params.regionId, RegionSchema);
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,

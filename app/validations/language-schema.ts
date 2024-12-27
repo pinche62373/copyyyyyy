@@ -4,9 +4,9 @@
 //
 import { z } from "zod";
 
-import { userSchema } from "#app/validations/user-schema";
+import { UserSchema } from "#app/validations/user-schema";
 
-export const languageSchema = z.object({
+export const LanguageSchema = z.object({
   id: z.string().cuid2(),
   name: z
     .string()
@@ -16,36 +16,36 @@ export const languageSchema = z.object({
         "This field only allows capitalized Latin words, separated by single spaces.",
     }),
   createdAt: z.date(),
-  createdBy: userSchema.pick({ id: true }),
+  createdBy: UserSchema.pick({ id: true }),
   updatedAt: z.date().nullable(),
-  updatedBy: userSchema.pick({ id: true }).nullable(),
+  updatedBy: UserSchema.pick({ id: true }).nullable(),
 });
 
-export const languageSchemaAdminTable = languageSchema.pick({
+export const LanguageSchemaAdminTable = LanguageSchema.pick({
   id: true,
   name: true,
   createdAt: true,
   updatedAt: true,
 });
 
-export const languageSchemaCreate = z.object({
+export const LanguageSchemaCreate = z.object({
   intent: z.literal("create"),
-  language: languageSchema.pick({
+  language: LanguageSchema.pick({
     name: true,
   }),
 });
 
-export const languageSchemaUpdate = z.object({
+export const LanguageSchemaUpdate = z.object({
   intent: z.literal("update"),
-  language: languageSchema.pick({
+  language: LanguageSchema.pick({
     id: true,
     name: true,
   }),
 });
 
-export const languageSchemaDelete = z.object({
+export const LanguageSchemaDelete = z.object({
   intent: z.literal("delete"),
-  language: languageSchema.pick({
+  language: LanguageSchema.pick({
     id: true,
   }),
 });

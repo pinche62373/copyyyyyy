@@ -14,7 +14,7 @@ import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
 import { validatePageId } from "#app/utils/validate-page-id";
-import { countrySchema } from "#app/validations/country-schema";
+import { CountrySchema } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
@@ -30,7 +30,7 @@ export const handle = {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const countryId = validatePageId(params.countryId, countrySchema);
+  const countryId = validatePageId(params.countryId, CountrySchema);
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
