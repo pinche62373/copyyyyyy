@@ -5,9 +5,9 @@ import {
   Permission,
   RoutePermission,
 } from "#app/permissions/permission.types";
-import { type loader as rootLoader } from "#app/root.tsx";
+import type { loader as rootLoader } from "#app/root.tsx";
 import type { LoaderData } from "#app/root.tsx";
-import { type SerializeFrom } from "#types/serialize-from";
+import type { SerializeFrom } from "#types/serialize-from";
 
 type UserType = SerializeFrom<typeof rootLoader>["data"]["user"];
 

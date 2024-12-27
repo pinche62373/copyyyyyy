@@ -1,6 +1,6 @@
 {
-  "exclude": [],
   "include": [".react-router/types/**/*", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"],
   "compilerOptions": {
     "lib": ["DOM", "DOM.Iterable", "ES2023"],
     "types": ["@react-router/node", "vite/client", "vitest/globals"],
@@ -17,7 +17,7 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "#app/*": ["./app/*"],
+      "#*": ["./*"],
       "@/icon-name": [
         "./app/components/ui/icons/name.d.ts",
         "./types/icon-name.d.ts"

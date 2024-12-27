@@ -1,6 +1,6 @@
 // https://www.sitepoint.com/theming-tailwind-css-variables-clean-architecture/
 
-import { type Config } from "tailwindcss";
+import type { Config } from "tailwindcss";
 
 export const tailwindVariables = {
   colors: {

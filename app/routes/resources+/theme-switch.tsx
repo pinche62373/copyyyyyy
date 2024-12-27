@@ -16,7 +16,7 @@ import { Icon } from "#app/components/ui/icon.tsx";
 import { useHints } from "#app/utils/client-hints.tsx";
 import { useRequestInfo } from "#app/utils/request-info.ts";
 import { setTheme } from "#app/utils/theme.server";
-import { type Theme } from "#app/utils/theme.server.ts";
+import type { Theme } from "#app/utils/theme.server.ts";
 import { ThemeSchemaSwitch } from "#app/validations/theme-schema.ts";
 
 const resolver = zodResolver(ThemeSchemaSwitch);

@@ -1,4 +1,4 @@
-import { type Row, type Table } from "@tanstack/react-table";
+import type { Row, Table } from "@tanstack/react-table";
 
 interface PropTypes {
   // biome-ignore lint/suspicious/noExplicitAny: Known Tanstack issue

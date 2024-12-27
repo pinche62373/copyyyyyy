@@ -1,4 +1,4 @@
-import type { ForwardedRef } from "react";
+import { ForwardedRef } from "react";
 import React from "react";
 import {
   Modal as AriaModal,
