@@ -138,12 +138,7 @@ export default function Component() {
         />
 
         <Float direction="end">
-          <Button
-            type="button"
-            text="Cancel"
-            to={crud.routes.index}
-            secondary
-          />
+          <Button type="button" text="Close" to={crud.routes.index} secondary />
           <Button
             type="submit"
             text="Save"

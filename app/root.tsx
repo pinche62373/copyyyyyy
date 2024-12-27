@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import type { LinksFunction, LoaderFunctionArgs } from "react-router";
 import { MetaFunction, Outlet, data, useLoaderData } from "react-router";
 import { Slide, ToastContainer, toast as notify } from "react-toastify";
-import reactToastify from "react-toastify/dist/ReactToastify.css?url";
 import type { ToastMessage } from "remix-toast";
 import { getToast } from "remix-toast";
 import { HoneypotProvider } from "remix-utils/honeypot/react";
@@ -23,7 +22,6 @@ export const links: LinksFunction = () => [
   { rel: "stylesheet", href: iconsHref, as: "image" }, // svg sprite sheet
   { rel: "stylesheet", href: reactMenuStyles, as: "style" },
   { rel: "stylesheet", href: reactMenuTransitions, as: "style" },
-  { rel: "stylesheet", href: reactToastify, as: "style" },
   { rel: "stylesheet", href: sharedStyles, as: "style" },
 ];
 
@@ -56,7 +54,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     {
       user: await getUser(request),
       toast,
-      honeypotInputProps: honeypot.getInputProps(),
+      honeypotInputProps: await honeypot.getInputProps(),
       requestInfo: {
         hints: getHints(request),
         path: new URL(request.url).pathname, // progressive enhancement

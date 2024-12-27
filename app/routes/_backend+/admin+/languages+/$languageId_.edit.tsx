@@ -141,7 +141,7 @@ export default function Component() {
           <Float direction="end">
             <Button
               type="button"
-              text="Cancel"
+              text="Close"
               to={crud.routes.index}
               secondary
             />
