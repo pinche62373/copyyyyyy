@@ -1,6 +1,6 @@
+import { ForwardedRef } from "react";
 import { Button } from "#app/components/shared/button";
 import { Confirm } from "#app/components/shared/confirm";
-import { ForwardedRef } from "#node_modules/@types/react/index";
 
 interface PropTypes {
   formRef: ForwardedRef<HTMLFormElement>;

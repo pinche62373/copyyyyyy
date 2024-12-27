@@ -26,7 +26,4 @@ export default defineConfig({
   build: {
     assetsInlineLimit: 0, // or SVG sprites will not show (TODO: fix)
   },
-  ssr: {
-    noExternal: ["remix-utils"],
-  },
 });
