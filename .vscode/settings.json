@@ -9,7 +9,6 @@
   "editor.formatOnPaste": false, // optional
   "editor.formatOnSave": false, // optional
   "editor.formatOnSaveMode": "file", // required to format on save
-  "files.autoSave": "onFocusChange",
   "editor.codeActionsOnSave": {
     "source.organizeImports.biome": "explicit"
   },
