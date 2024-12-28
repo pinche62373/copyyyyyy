@@ -1,5 +1,6 @@
 import { reactRouter } from "@react-router/dev/vite";
 import { reactRouterDevTools } from "react-router-devtools";
+import { reactRouterHonoServer } from "react-router-hono-server/dev";
 import { visualizer } from "rollup-plugin-visualizer";
 import { defineConfig } from "vite";
 import { iconsSpritesheet } from "vite-plugin-icons-spritesheet";
@@ -7,6 +8,7 @@ import { iconsSpritesheet } from "vite-plugin-icons-spritesheet";
 export default defineConfig({
   plugins: [
     reactRouterDevTools(),
+    reactRouterHonoServer(),
     reactRouter(),
     iconsSpritesheet({
       withTypes: true, // True to generate TS types
