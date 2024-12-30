@@ -5,7 +5,7 @@ interface Props {
   limit: number;
 }
 
-export const rateLimiter = ({ minutes, limit }: Props) => {
+export function rateLimiter({ minutes, limit }: Props) {
   return honoRateLimiter({
     windowMs: minutes * 60 * 1000, // window for limit in minutes
     limit, // Limit each connection to `limit` requests per `window`
@@ -14,4 +14,4 @@ export const rateLimiter = ({ minutes, limit }: Props) => {
     message: { message: "Rate limit reached for requests" },
     // store: ... , // Redis, MemoryStore, etc. See below.
   });
-};
+}
