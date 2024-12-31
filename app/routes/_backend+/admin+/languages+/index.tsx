@@ -225,29 +225,31 @@ export default function Component() {
       <BackendPanel>
         <BackendTitle text={humanize(crud.plural)} foreground />
 
-        <Float direction="start">
-          <TableSearch
-            value={globalFilter ?? ""}
-            onChange={(value: string | number) =>
-              setGlobalFilter(String(value))
-            }
-            placeholder={`Search ${crud.plural}...`}
-          />
-        </Float>
-
-        {userHasRoutePermission(user, {
-          resource: crud.routes.new,
-          scope: "any",
-        }) && (
-          <Float direction="end">
-            <Button
-              type="button"
-              text={`New ${humanize(crud.singular)}`}
-              to={crud.routes.new}
-              className="mt-0.5"
+        <Float>
+          <Float.Left className="order-2 sm:order-1">
+            <TableSearch
+              value={globalFilter ?? ""}
+              onChange={(value: string | number) =>
+                setGlobalFilter(String(value))
+              }
+              placeholder={`Search ${crud.plural}...`}
             />
-          </Float>
-        )}
+          </Float.Left>
+
+          {userHasRoutePermission(user, {
+            resource: crud.routes.new,
+            scope: "any",
+          }) && (
+            <Float.Right className="order-1 mb-5 sm:order-2 sm:mb-0">
+              <Button
+                type="button"
+                text={`New ${humanize(crud.singular)}`}
+                to={crud.routes.new}
+                className="mt-0.5"
+              />
+            </Float.Right>
+          )}
+        </Float>
 
         <TanstackTable.Table table={table} className="mt-5">
           <TanstackTable.THead />

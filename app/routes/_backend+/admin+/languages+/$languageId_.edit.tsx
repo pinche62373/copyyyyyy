@@ -138,18 +138,20 @@ export default function Component() {
             error={errors.language?.name?.message}
           />
 
-          <Float direction="end">
-            <Button
-              type="button"
-              text="Close"
-              to={crud.routes.index}
-              secondary
-            />
-            <Button
-              type="submit"
-              text="Save"
-              disabled={navigation.state === "submitting"}
-            />
+          <Float>
+            <Float.Right>
+              <Button
+                type="button"
+                text="Close"
+                to={crud.routes.index}
+                secondary
+              />
+              <Button
+                type="submit"
+                text="Save"
+                disabled={navigation.state === "submitting"}
+              />
+            </Float.Right>
           </Float>
         </Form>
       </BackendPanel>

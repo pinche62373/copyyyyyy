@@ -5,7 +5,7 @@ import { FrontendHeader } from "#app/components/frontend/header";
 import frontendStyles from "#app/styles/frontend.css?url";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: frontendStyles, as: "style" },
+  { rel: "stylesheet", href: frontendStyles, as: "style", preload: "false" },
 ];
 
 export const meta: MetaFunction = () => [

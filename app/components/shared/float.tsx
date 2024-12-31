@@ -1,37 +1,53 @@
 import React from "react";
 import { cn } from "#app/utils/lib/cn";
 
-type Direction = "end" | "start";
-
 interface FloatProps {
-  direction: Direction;
   className?: string;
   children: React.ReactNode;
 }
 
-export const Float = ({
-  direction,
-  className,
-  children,
-  ...rest
-}: FloatProps) => {
-  if (direction === "end") {
-    return (
-      <div
-        className={cn(
-          "flex flex-col sm:flex-row sm:items-end sm:justify-end gap-2",
-          className,
-        )}
-      >
-        {children}
-      </div>
-    );
-  }
-
-  // start
+const Float = ({ className, children, ...rest }: FloatProps) => {
   return (
-    <div className={cn("float-start", className)} {...rest}>
+    <div
+      className={cn("flex flex-col sm:flex-row w-full", className)}
+      {...rest}
+    >
       {children}
     </div>
   );
 };
+
+const Left = ({ className, children, ...rest }: FloatProps) => {
+  return (
+    <div
+      className={cn(
+        "grow sm:flex sm:grow sm:float-start sm:justify-start",
+        "gap-2",
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+};
+
+const Right = ({ className, children, ...rest }: FloatProps) => {
+  return (
+    <div
+      className={cn(
+        "grow sm:flex sm:grow sm:float-end sm:justify-end",
+        "gap-2",
+        className,
+      )}
+      {...rest}
+    >
+      {children}
+    </div>
+  );
+};
+
+Float.Left = Left;
+Float.Right = Right;
+
+export { Float };

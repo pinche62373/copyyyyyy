@@ -84,25 +84,30 @@ export default function Component() {
         </PairList.Pair>
       </PairList>
 
-      <Float direction="end">
-        <Button
-          type="button"
-          text="Close"
-          to={crud.routes.index}
-          className="mr-2"
-          secondary
-        />
+      <Float>
+        <Float.Right>
+          <div className="order-2">
+            <Button
+              type="button"
+              text="Close"
+              to={crud.routes.index}
+              secondary
+            />
+          </div>
 
-        {userHasRoutePermission(user, {
-          resource: crud.routes.edit,
-          scope: "any",
-        }) && (
-          <Button
-            type="button"
-            text="Edit"
-            to={`${crud.routes.index}/${language.id}/edit`}
-          />
-        )}
+          {userHasRoutePermission(user, {
+            resource: crud.routes.edit,
+            scope: "any",
+          }) && (
+            <div className="order-1">
+              <Button
+                type="button"
+                text="Edit"
+                to={`${crud.routes.index}/${language.id}/edit`}
+              />
+            </div>
+          )}
+        </Float.Right>
       </Float>
     </BackendPanel>
   );
