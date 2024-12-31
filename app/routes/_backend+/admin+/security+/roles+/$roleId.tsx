@@ -11,8 +11,7 @@ import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { z } from "zod";
-
-import { BackendPanel } from "#app/components/backend/panel";
+import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { PairList } from "#app/components/shared/pair-list.tsx";
@@ -154,53 +153,39 @@ export default function Component() {
   return (
     <>
       {/* List role data */}
-      <BackendPanel>
-        <BackendPanel.Row>
-          <BackendTitle text={humanize(roleCrud.singular)} foreground />
-        </BackendPanel.Row>
+      <BackendPanel2>
+        <BackendTitle text={humanize(roleCrud.singular)} foreground />
 
-        <BackendPanel.Row last>
-          <PairList>
-            <PairList.Pair>
-              <PairList.Key>Name</PairList.Key>
-              <PairList.Value>{role.name}</PairList.Value>
-            </PairList.Pair>
+        <PairList>
+          <PairList.Pair>
+            <PairList.Key>Name</PairList.Key>
+            <PairList.Value>{role.name}</PairList.Value>
+          </PairList.Pair>
 
-            <PairList.Pair>
-              <PairList.Key last>Description</PairList.Key>
-              <PairList.Value last>{role.description}</PairList.Value>
-            </PairList.Pair>
-          </PairList>
-        </BackendPanel.Row>
-      </BackendPanel>
+          <PairList.Pair>
+            <PairList.Key last>Description</PairList.Key>
+            <PairList.Value last>{role.description}</PairList.Value>
+          </PairList.Pair>
+        </PairList>
+      </BackendPanel2>
 
       {/* Permissions table for role */}
-      <BackendPanel className="pb-4">
-        <BackendPanel.Row>
-          <BackendTitle text={"Permissions"} foreground />
-        </BackendPanel.Row>
+      <BackendPanel2 className="pb-4">
+        <BackendTitle text={"Permissions"} foreground />
 
-        <BackendPanel.Row>
-          <BackendPanel.Left>
-            <TableSearch
-              value={globalFilter ?? ""}
-              onChange={(value: string | number) =>
-                setGlobalFilter(String(value))
-              }
-              placeholder={`Search permissions`}
-            />
-          </BackendPanel.Left>
-        </BackendPanel.Row>
+        <TableSearch
+          value={globalFilter ?? ""}
+          onChange={(value: string | number) => setGlobalFilter(String(value))}
+          placeholder={`Search permissions`}
+        />
 
-        <BackendPanel.Row last>
-          <TanstackTable.Table table={table}>
-            <TanstackTable.THead />
-            <TanstackTable.TBody />
-          </TanstackTable.Table>
+        <TanstackTable.Table table={table}>
+          <TanstackTable.THead />
+          <TanstackTable.TBody />
+        </TanstackTable.Table>
 
-          <TableFooter table={table} />
-        </BackendPanel.Row>
-      </BackendPanel>
+        <TableFooter table={table} />
+      </BackendPanel2>
     </>
   );
 }

@@ -1,11 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useId, useRef } from "react";
+import { useRef } from "react";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod, { z } from "zod";
-import { BackendPanel } from "#app/components/backend/panel";
+import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { ActionButton } from "#app/components/shared/form/action-button.tsx";
@@ -83,40 +83,35 @@ export default function Component() {
   });
 
   return (
-    <BackendPanel>
-      <BackendPanel.Row>
-        <BackendTitle text={`System`} foreground />
-      </BackendPanel.Row>
+    <BackendPanel2>
+      <BackendTitle text={`System`} foreground />
 
-      <BackendPanel.Row last>
-        <Form
-          ref={formRef}
-          method="POST"
-          action="/admin/system"
-          onSubmit={handleSubmit}
-        >
-          <input type="hidden" {...register("intent")} />
-        </Form>
+      <Form
+        ref={formRef}
+        method="POST"
+        action="/admin/system"
+        onSubmit={handleSubmit}
+      >
+        <input type="hidden" {...register("intent")} />
+      </Form>
 
-        <PairList>
-          <PairList.Pair>
-            <PairList.Key className="align-middle" last>
-              Sessions
-            </PairList.Key>
-            <PairList.Value last>
-              <ActionButton
-                formRef={formRef}
-                label={invalidSessionsLabel}
-                buttonLabel="Purge"
-                disabled={expiredSessionCount === 0}
-                modalHeading="Delete expired sessions"
-                modalBody="Are you sure you want to permanently delete these expired sessions?"
-              />
-            </PairList.Value>
-          </PairList.Pair>
-        </PairList>
-        {/* </form> */}
-      </BackendPanel.Row>
-    </BackendPanel>
+      <PairList>
+        <PairList.Pair>
+          <PairList.Key className="align-middle" last>
+            Sessions
+          </PairList.Key>
+          <PairList.Value last>
+            <ActionButton
+              formRef={formRef}
+              label={invalidSessionsLabel}
+              buttonLabel="Purge"
+              disabled={expiredSessionCount === 0}
+              modalHeading="Delete expired sessions"
+              modalBody="Are you sure you want to permanently delete these expired sessions?"
+            />
+          </PairList.Value>
+        </PairList.Pair>
+      </PairList>
+    </BackendPanel2>
   );
 }

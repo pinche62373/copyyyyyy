@@ -5,7 +5,7 @@ import { Form, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod from "zod";
-import { BackendPanel2 } from "#app/components/backend/panel2";
+import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";

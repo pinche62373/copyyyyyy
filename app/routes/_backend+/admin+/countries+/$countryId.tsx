@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
-import { BackendPanel } from "#app/components/backend/panel";
+import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
@@ -54,44 +54,40 @@ export default function Component() {
   const user = useUser();
 
   return (
-    <BackendPanel>
-      <BackendPanel.Row>
-        <BackendTitle text={humanize(crud.singular)} foreground />
-      </BackendPanel.Row>
+    <BackendPanel2>
+      <BackendTitle text={humanize(crud.singular)} foreground />
 
-      <BackendPanel.Row last>
-        <PairList>
-          <PairList.Pair>
-            <PairList.Key>Name</PairList.Key>
-            <PairList.Value>{country.name}</PairList.Value>
-          </PairList.Pair>
+      <PairList>
+        <PairList.Pair>
+          <PairList.Key>Name</PairList.Key>
+          <PairList.Value>{country.name}</PairList.Value>
+        </PairList.Pair>
 
-          <PairList.Pair>
-            <PairList.Key>Region</PairList.Key>
-            <PairList.Value>{country.region.name}</PairList.Value>
-          </PairList.Pair>
+        <PairList.Pair>
+          <PairList.Key>Region</PairList.Key>
+          <PairList.Value>{country.region.name}</PairList.Value>
+        </PairList.Pair>
 
-          <PairList.Pair>
-            <PairList.Key>Created By</PairList.Key>
-            <PairList.Value>
-              {country.countryCreatedBy.username} at{" "}
-              {timeStampToHuman(country.createdAt)}
-            </PairList.Value>
-          </PairList.Pair>
+        <PairList.Pair>
+          <PairList.Key>Created By</PairList.Key>
+          <PairList.Value>
+            {country.countryCreatedBy.username} at{" "}
+            {timeStampToHuman(country.createdAt)}
+          </PairList.Value>
+        </PairList.Pair>
 
-          <PairList.Pair>
-            <PairList.Key>Updated By</PairList.Key>
-            <PairList.Value>
-              {country.updatedAt !== null && (
-                <>
-                  {country.countryUpdatedBy?.username} at{" "}
-                  {timeStampToHuman(country.updatedAt)}
-                </>
-              )}
-            </PairList.Value>
-          </PairList.Pair>
-        </PairList>
-      </BackendPanel.Row>
+        <PairList.Pair>
+          <PairList.Key>Updated By</PairList.Key>
+          <PairList.Value>
+            {country.updatedAt !== null && (
+              <>
+                {country.countryUpdatedBy?.username} at{" "}
+                {timeStampToHuman(country.updatedAt)}
+              </>
+            )}
+          </PairList.Value>
+        </PairList.Pair>
+      </PairList>
 
       <Float direction="end">
         <Button
@@ -113,6 +109,6 @@ export default function Component() {
           />
         )}
       </Float>
-    </BackendPanel>
+    </BackendPanel2>
   );
 }
