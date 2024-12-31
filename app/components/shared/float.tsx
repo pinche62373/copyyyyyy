@@ -21,8 +21,8 @@ const Left = ({ className, children, ...rest }: FloatProps) => {
   return (
     <div
       className={cn(
-        "grow sm:flex sm:grow sm:float-start sm:justify-start",
-        "gap-2",
+        "flex flex-col gap-5",
+        "sm:flex-row sm:grow sm:float-start sm:justify-start sm:gap-2",
         className,
       )}
       {...rest}
@@ -36,8 +36,8 @@ const Right = ({ className, children, ...rest }: FloatProps) => {
   return (
     <div
       className={cn(
-        "grow sm:flex sm:grow sm:float-end sm:justify-end",
-        "gap-2",
+        "flex flex-col gap-5",
+        "sm:flex-row sm:grow sm:float-end sm:justify-end sm:gap-2",
         className,
       )}
       {...rest}

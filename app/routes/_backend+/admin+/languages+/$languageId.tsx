@@ -86,7 +86,7 @@ export default function Component() {
 
       <Float>
         <Float.Right>
-          <div className="order-2">
+          <div className="order-2 sm:order-1">
             <Button
               type="button"
               text="Close"
@@ -99,7 +99,7 @@ export default function Component() {
             resource: crud.routes.edit,
             scope: "any",
           }) && (
-            <div className="order-1">
+            <div className="order-1 sm:order-2">
               <Button
                 type="button"
                 text="Edit"
