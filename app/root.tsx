@@ -10,7 +10,6 @@ import { HoneypotProvider } from "remix-utils/honeypot/react";
 import { HoneypotInputProps } from "remix-utils/honeypot/server";
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
-import { href as iconsHref } from "#app/components/ui/icon.tsx";
 import { useTheme } from "#app/routes/resources+/theme-switch.tsx";
 import sharedStyles from "#app/styles/shared.css?url";
 import { getUser } from "#app/utils/auth.server";
@@ -19,7 +18,6 @@ import { honeypot } from "#app/utils/honeypot.server";
 import { getTheme } from "#app/utils/theme.server";
 
 export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: iconsHref, as: "image" }, // svg sprite sheet
   { rel: "stylesheet", href: reactMenuStyles, as: "style" },
   { rel: "stylesheet", href: reactMenuTransitions, as: "style" },
   { rel: "stylesheet", href: sharedStyles, as: "style" },
