@@ -1,6 +1,6 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
-import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
+import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
@@ -54,7 +54,7 @@ export default function Component() {
   const user = useUser();
 
   return (
-    <BackendPanel2>
+    <BackendPanel>
       <BackendTitle text={humanize(crud.singular)} foreground />
 
       <PairList>
@@ -109,6 +109,6 @@ export default function Component() {
           />
         )}
       </Float>
-    </BackendPanel2>
+    </BackendPanel>
   );
 }

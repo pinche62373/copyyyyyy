@@ -11,7 +11,7 @@ import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { z } from "zod";
-import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
+import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
@@ -146,7 +146,7 @@ export default function Component() {
 
   return (
     <>
-      <BackendPanel2>
+      <BackendPanel>
         <BackendTitle
           text={`Permissions for ${resourceType} ${resourceName}`}
           foreground
@@ -164,7 +164,7 @@ export default function Component() {
         </TanstackTable.Table>
 
         <TableFooter table={table} />
-      </BackendPanel2>
+      </BackendPanel>
     </>
   );
 }

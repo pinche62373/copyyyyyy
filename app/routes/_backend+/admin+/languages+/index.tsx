@@ -14,7 +14,7 @@ import { useLoaderData } from "react-router";
 import { getValidatedFormData } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod, { z } from "zod";
-import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
+import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
@@ -222,7 +222,7 @@ export default function Component() {
 
   return (
     <>
-      <BackendPanel2>
+      <BackendPanel>
         <BackendTitle text={humanize(crud.plural)} foreground />
 
         <Float direction="start">
@@ -255,7 +255,7 @@ export default function Component() {
         </TanstackTable.Table>
 
         <TableFooter table={table} />
-      </BackendPanel2>
+      </BackendPanel>
     </>
   );
 }

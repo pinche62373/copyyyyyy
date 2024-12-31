@@ -5,7 +5,7 @@ import { Form, useLoaderData } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod, { z } from "zod";
-import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
+import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { ActionButton } from "#app/components/shared/form/action-button.tsx";
@@ -83,7 +83,7 @@ export default function Component() {
   });
 
   return (
-    <BackendPanel2>
+    <BackendPanel>
       <BackendTitle text={`System`} foreground />
 
       <Form
@@ -112,6 +112,6 @@ export default function Component() {
           </PairList.Value>
         </PairList.Pair>
       </PairList>
-    </BackendPanel2>
+    </BackendPanel>
   );
 }

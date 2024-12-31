@@ -5,7 +5,7 @@ import { Form, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod from "zod";
-import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
+import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
@@ -122,7 +122,7 @@ export default function Component() {
   });
 
   return (
-    <BackendPanel2>
+    <BackendPanel>
       <BackendTitle text={`Edit ${crud.singular}`} foreground />
 
       <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
@@ -146,6 +146,6 @@ export default function Component() {
           />
         </Float>
       </Form>
-    </BackendPanel2>
+    </BackendPanel>
   );
 }

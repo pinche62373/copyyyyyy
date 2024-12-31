@@ -11,7 +11,7 @@ import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { z } from "zod";
-import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
+import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { PairList } from "#app/components/shared/pair-list.tsx";
@@ -153,7 +153,7 @@ export default function Component() {
   return (
     <>
       {/* List role data */}
-      <BackendPanel2>
+      <BackendPanel>
         <BackendTitle text={humanize(roleCrud.singular)} foreground />
 
         <PairList>
@@ -167,10 +167,10 @@ export default function Component() {
             <PairList.Value last>{role.description}</PairList.Value>
           </PairList.Pair>
         </PairList>
-      </BackendPanel2>
+      </BackendPanel>
 
       {/* Permissions table for role */}
-      <BackendPanel2 className="pb-4">
+      <BackendPanel className="pb-4">
         <BackendTitle text={"Permissions"} foreground />
 
         <TableSearch
@@ -185,7 +185,7 @@ export default function Component() {
         </TanstackTable.Table>
 
         <TableFooter table={table} />
-      </BackendPanel2>
+      </BackendPanel>
     </>
   );
 }
