@@ -11,7 +11,7 @@ import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import z from "zod";
-import { BackendPanel } from "#app/components/backend/panel.tsx";
+import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
@@ -129,31 +129,23 @@ export default function Component() {
   });
 
   return (
-    <BackendPanel className="pb-4">
-      <BackendPanel.Row>
+    <>
+      <BackendPanel2>
         <BackendTitle text={humanize(crud.plural)} foreground />
-      </BackendPanel.Row>
 
-      <BackendPanel.Row>
-        <BackendPanel.Left>
-          <TableSearch
-            value={globalFilter ?? ""}
-            onChange={(value: string | number) =>
-              setGlobalFilter(String(value))
-            }
-            placeholder={`Search ${crud.plural}...`}
-          />
-        </BackendPanel.Left>
-      </BackendPanel.Row>
+        <TableSearch
+          value={globalFilter ?? ""}
+          onChange={(value: string | number) => setGlobalFilter(String(value))}
+          placeholder={`Search ${crud.plural}...`}
+        />
 
-      <BackendPanel.Row last>
-        <TanstackTable.Table table={table}>
+        <TanstackTable.Table table={table} className="mt-5">
           <TanstackTable.THead />
           <TanstackTable.TBody />
         </TanstackTable.Table>
 
         <TableFooter table={table} />
-      </BackendPanel.Row>
-    </BackendPanel>
+      </BackendPanel2>
+    </>
   );
 }

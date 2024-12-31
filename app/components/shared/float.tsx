@@ -30,7 +30,7 @@ export const Float = ({
 
   // start
   return (
-    <div className={className} {...rest}>
+    <div className={cn("float-start", className)} {...rest}>
       {children}
     </div>
   );

@@ -14,10 +14,11 @@ import { useLoaderData } from "react-router";
 import { getValidatedFormData } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod, { z } from "zod";
-import { BackendPanel } from "#app/components/backend/panel.tsx";
+import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
+import { Float } from "#app/components/shared/float.tsx";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
@@ -221,46 +222,40 @@ export default function Component() {
 
   return (
     <>
-      <BackendPanel className="pb-4">
-        <BackendPanel.Row>
-          <BackendTitle text={humanize(crud.plural)} foreground />
-        </BackendPanel.Row>
+      <BackendPanel2>
+        <BackendTitle text={humanize(crud.plural)} foreground />
 
-        <BackendPanel.Row>
-          <BackendPanel.Left>
-            <TableSearch
-              value={globalFilter ?? ""}
-              onChange={(value: string | number) =>
-                setGlobalFilter(String(value))
-              }
-              placeholder={`Search ${crud.plural}...`}
+        <Float direction="start">
+          <TableSearch
+            value={globalFilter ?? ""}
+            onChange={(value: string | number) =>
+              setGlobalFilter(String(value))
+            }
+            placeholder={`Search ${crud.plural}...`}
+          />
+        </Float>
+
+        {userHasRoutePermission(user, {
+          resource: crud.routes.new,
+          scope: "any",
+        }) && (
+          <Float direction="end">
+            <Button
+              type="button"
+              text={`New ${humanize(crud.singular)}`}
+              to={crud.routes.new}
+              className="mt-0.5"
             />
-          </BackendPanel.Left>
+          </Float>
+        )}
 
-          <BackendPanel.Right>
-            {userHasRoutePermission(user, {
-              resource: crud.routes.new,
-              scope: "any",
-            }) && (
-              <Button
-                type="button"
-                text={`New ${humanize(crud.singular)}`}
-                to={crud.routes.new}
-                className="mt-0.5"
-              />
-            )}
-          </BackendPanel.Right>
-        </BackendPanel.Row>
+        <TanstackTable.Table table={table} className="mt-5">
+          <TanstackTable.THead />
+          <TanstackTable.TBody />
+        </TanstackTable.Table>
 
-        <BackendPanel.Row last>
-          <TanstackTable.Table table={table}>
-            <TanstackTable.THead />
-            <TanstackTable.TBody />
-          </TanstackTable.Table>
-
-          <TableFooter table={table} />
-        </BackendPanel.Row>
-      </BackendPanel>
+        <TableFooter table={table} />
+      </BackendPanel2>
     </>
   );
 }

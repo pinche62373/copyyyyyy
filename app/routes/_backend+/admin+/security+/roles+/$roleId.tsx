@@ -179,7 +179,7 @@ export default function Component() {
           placeholder={`Search permissions`}
         />
 
-        <TanstackTable.Table table={table}>
+        <TanstackTable.Table table={table} className="mt-5">
           <TanstackTable.THead />
           <TanstackTable.TBody />
         </TanstackTable.Table>

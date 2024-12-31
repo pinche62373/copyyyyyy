@@ -11,10 +11,10 @@ import {
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
-
-import { BackendPanel } from "#app/components/backend/panel.tsx";
+import { BackendPanel2 } from "#app/components/backend/panel2.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
+import { Float } from "#app/components/shared/float.tsx";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
@@ -167,13 +167,11 @@ export default function Component() {
   };
 
   return (
-    <BackendPanel className="pb-4">
-      <BackendPanel.Row>
+    <>
+      <BackendPanel2>
         <BackendTitle text={humanize(permissionCrud.plural)} foreground />
-      </BackendPanel.Row>
 
-      <BackendPanel.Row>
-        <BackendPanel.Left>
+        <Float direction="start">
           <TableSearch
             value={globalFilter ?? ""}
             onChange={(value: string | number) =>
@@ -181,23 +179,21 @@ export default function Component() {
             }
             placeholder={`Search ${permissionCrud.plural}...`}
           />
-        </BackendPanel.Left>
+        </Float>
 
-        <BackendPanel.Right>
+        <Float direction="end">
           <PermissionTypeFilterComponent
             onClick={(value: Filter) => handleFilter(value)}
           />
-        </BackendPanel.Right>
-      </BackendPanel.Row>
+        </Float>
 
-      <BackendPanel.Row last>
-        <TanstackTable.Table table={table}>
+        <TanstackTable.Table table={table} className="mt-5">
           <TanstackTable.THead />
           <TanstackTable.TBody />
         </TanstackTable.Table>
 
         <TableFooter table={table} />
-      </BackendPanel.Row>
-    </BackendPanel>
+      </BackendPanel2>
+    </>
   );
 }
