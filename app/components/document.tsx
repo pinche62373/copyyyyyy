@@ -29,7 +29,7 @@ function InnerLayout({
         <Meta />
         <Links />
       </head>
-      <body suppressHydrationWarning>
+      <body>
         {children}
         <ScrollRestoration />
         <Scripts />
