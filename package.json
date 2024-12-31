@@ -7,7 +7,7 @@
     "#*": "./*"
   },
   "scripts": {
-    "build": "react-router build",
+    "build": "cross-env NODE_ENV=production react-router build",
     "check": "biome check .",
     "check:fix": "biome check --fix .",
     "check:markdown": "markdownlint-cli2 \"**/*.md\" \"#node_modules\"",
@@ -16,7 +16,7 @@
     "migrate": "prisma migrate dev",
     "postmigrate": "npx @snaplet/seed sync",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
-    "start": "node ./build/server/index.js",
+    "start": "cross-env NODE_ENV=production node ./build/server/index.js",
     "test": "vitest",
     "pretest:e2e:run": "npm run build",
     "seed": "npx prisma db seed",
