@@ -1,10 +1,10 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
-
 import { BackendPanel } from "#app/components/backend/panel";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
+import { Float } from "#app/components/shared/float.tsx";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import { getRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
@@ -88,28 +88,26 @@ export default function Component() {
         </PairList>
       </BackendPanel.Row>
 
-      <BackendPanel.Row last>
-        <BackendPanel.Right>
+      <Float direction="end">
+        <Button
+          type="button"
+          text="Close"
+          className="mr-2"
+          to={crud.routes.index}
+          secondary
+        />
+
+        {userHasRoutePermission(user, {
+          resource: crud.routes.edit,
+          scope: "any",
+        }) && (
           <Button
             type="button"
-            text="Close"
-            className="mr-2"
-            to={crud.routes.index}
-            secondary
+            text="Edit"
+            to={`${crud.routes.index}/${region.id}/edit`}
           />
-
-          {userHasRoutePermission(user, {
-            resource: crud.routes.edit,
-            scope: "any",
-          }) && (
-            <Button
-              type="button"
-              text="Edit"
-              to={`${crud.routes.index}/${region.id}/edit`}
-            />
-          )}
-        </BackendPanel.Right>
-      </BackendPanel.Row>
+        )}
+      </Float>
     </BackendPanel>
   );
 }
