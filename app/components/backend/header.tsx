@@ -3,13 +3,17 @@ import Drawer from "react-modern-drawer";
 import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
 import { Breadcrumbs } from "#app/components/shared/breadcrumbs";
 import { UserMenu } from "#app/components/shared/user-menu";
+import { ThemeSwitch } from "#app/routes/resources+/theme-switch.tsx";
 import { cn } from "#app/utils/lib/cn";
+import { useRequestInfo } from "#app/utils/request-info.ts";
 
 interface Props {
   className?: string;
 }
 
 export const BackendHeader = ({ className }: Props) => {
+  const requestInfo = useRequestInfo();
+
   const [isOpen, setIsOpen] = React.useState(false);
   const toggleDrawer = () => {
     setIsOpen((prevState) => !prevState);
@@ -71,11 +75,23 @@ export const BackendHeader = ({ className }: Props) => {
           {/* Menu Right */}
           <div className="flex items-center justify-end gap-x-2 xl:col-span-2">
             <div className="flex items-center">
-              {/* Icon List */}
+              {/* Theme Toggler */}
+              <ThemeSwitch
+                userPreference={requestInfo.userPrefs.theme}
+                className={cn(
+                  "inline-flex size-[38px] items-center justify-center gap-x-2 rounded-full border border-transparent",
+                  "text-gray-500 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none",
+                  "disabled:pointer-events-none disabled:opacity-50",
+                  "dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700",
+                )}
+              />
+              {/* End Theme Toggler */}
+
+              {/* User Dropdown */}
               <div className="flex h-[38px]">
                 <UserMenu />
               </div>
-              {/* End Icon List */}
+              {/* End User Dropdown */}
             </div>
           </div>
           {/* End Menu Right */}

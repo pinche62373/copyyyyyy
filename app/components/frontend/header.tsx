@@ -42,7 +42,7 @@ export const FrontendHeader = ({ className }: Props) => {
           {/* Menu Right */}
           <div className="flex items-center justify-end gap-x-2 xl:col-span-2">
             <div className="flex items-center">
-              {/* Dark Mode Toggler  */}
+              {/* Theme Toggler  */}
               <ThemeSwitch
                 userPreference={requestInfo.userPrefs.theme}
                 className={cn(
@@ -52,12 +52,13 @@ export const FrontendHeader = ({ className }: Props) => {
                   "dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:bg-neutral-700",
                 )}
               />
+              {/* End Theme Toggler */}
 
-              {/* Icon List */}
+              {/* User Dropdown */}
               <div className="flex h-[38px]">
                 <UserMenu />
               </div>
-              {/* End Icon List */}
+              {/* End User Dropdown */}
             </div>
           </div>
           {/* End Menu Right */}
