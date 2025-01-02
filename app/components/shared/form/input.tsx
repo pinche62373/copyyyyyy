@@ -38,6 +38,7 @@ const tvo = tv({
         "border-none focus:ring-0 outline-none w-full rounded-md",
         "shadow-[inset_0_0_0_1px_#d4d4d8] hover:shadow-[inset_0_0_0_1px_#a1a1aa] group-focus-within:shadow-[inset_0_0_0_2px_#3b82f6_!important]",
         "group-data-[invalid=true]:shadow-[inset_0_0_0_2px_red_!important]",
+        "bg-input",
         "placeholder:text-[#dfdfdf] group-focus-within:placeholder:text-opacity-0",
       ),
     },
