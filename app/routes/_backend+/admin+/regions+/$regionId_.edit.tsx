@@ -132,7 +132,6 @@ export default function Component() {
         <Input
           label="Name"
           variant="ifta"
-          autoFocus
           {...register("region.name")}
           error={errors.region?.name?.message}
         />
