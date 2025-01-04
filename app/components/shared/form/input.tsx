@@ -1,5 +1,4 @@
-import { InputHTMLAttributes } from "react";
-import { useId } from "react";
+import { InputHTMLAttributes, useId } from "react";
 import { tv } from "tailwind-variants";
 import { cn } from "#app/utils/lib/cn";
 
@@ -15,7 +14,7 @@ const tvo = tv({
       stacked: cn("block pl-1 mb-1.5 font-medium text-md"),
       ifta: cn(
         "absolute text-sm text-secondary-foreground select-none",
-        "pl-[9px] top-5", // alignment
+        "pl-[9px] top-6", // alignment
         "duration-300 transform -translate-y-4 scale-75 z-10 origin-[0] start-2.5",
         "peer-focus:text-blue-600 peer-focus:dark:text-blue-500",
         "peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0",
@@ -36,18 +35,19 @@ const tvo = tv({
         "placeholder:text-[#dfdfdf] group-focus-within:placeholder:text-opacity-0",
       ),
       ifta: cn(
-        "peer block rounded-sm px-2.5 pb-2.5 pt-7 w-full appearance-none focus:outline-none focus:ring-0",
+        "peer block relative rounded-sm px-2.5 pb-2.5 pt-8 w-full appearance-none focus:outline-none focus:ring-0",
         "text-sm text-primary-foreground",
         "pl-[16px] focus:pl-[13px]", // alignment
         "bg-input hover:bg-input-hover",
         "border-1 border-border-foreground",
         "focus:border-l-4 focus:border-border-foreground focus:border-l-blue-500",
         "group-data-[invalid=true]:border-l-4 group-data-[invalid=true]:border-l-red-500",
+        "group-data-[invalid=true]:pl-[13px]",
       ),
     },
     fieldError: {
       stacked: "block pt-1 text-[90%] text-red-500 ml-1",
-      ifta: "pt-1 text-[90%] text-red-500 ml-3",
+      ifta: cn("pt-1.5 text-[85%] text-red-500"),
     },
   },
 });
