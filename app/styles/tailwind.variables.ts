@@ -1,10 +1,11 @@
 // https://www.sitepoint.com/theming-tailwind-css-variables-clean-architecture/
-
+//
+// IMPORTANT: server MUST be restarted when adding new variables
+//
 import type { Config } from "tailwindcss";
 
 export const tailwindVariables = {
   colors: {
-    input: "var(--input)",
     ring: "var(--ring)",
     background: "var(--background)",
     foreground: "var(--foreground)",
@@ -40,5 +41,11 @@ export const tailwindVariables = {
       hover: "var(--sidebar-hover)",
       focus: "var(--sidebar-focus)",
     },
+
+    input: {
+      DEFAULT: "var(--input)",
+      hover: "var(--input-hover)",
+    }
+
   },
 } satisfies Config["theme"];
