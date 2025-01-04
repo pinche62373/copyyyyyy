@@ -20,7 +20,7 @@ const tvo = tv({
         "peer-focus:text-blue-600 peer-focus:dark:text-blue-500",
         "peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0",
         "peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto",
-        "group-data-[invalid=true]:text-red-500",
+        "group-data-[invalid=true]:text-red-500 group-data-[invalid=true]:peer-focus:text-red-500",
       ),
     },
     input: {
