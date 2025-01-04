@@ -13,7 +13,7 @@
       "**/build",
       "**/public/build",
       "**/.env",
-      "./app/styles"
+      "**/app/styles"
     ]
   },
   "formatter": {
