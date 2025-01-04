@@ -39,6 +39,7 @@ import {
   ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
 import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions";
+import { cn } from "#app/utils/lib/cn.ts";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
@@ -240,7 +241,7 @@ export default function Component() {
             resource: crud.routes.new,
             scope: "any",
           }) && (
-            <Float.Right className="order-1 mb-5 sm:order-2 sm:mb-0">
+            <Float.Right className={cn("order-1 sm:order-2", "mb-5 sm:mb-0")}>
               <Button
                 type="button"
                 text={`New ${humanize(crud.singular)}`}

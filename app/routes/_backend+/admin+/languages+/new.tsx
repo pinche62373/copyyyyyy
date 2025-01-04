@@ -120,17 +120,22 @@ export default function Component() {
 
           <Float>
             <Float.Right>
-              <Button
-                type="button"
-                text="Cancel"
-                to={crud.routes.index}
-                secondary
-              />
-              <Button
-                type="submit"
-                text="Save"
-                disabled={navigation.state === "submitting"}
-              />
+              <div className="order-2 sm:order-1">
+                <Button
+                  type="button"
+                  text="Cancel"
+                  to={crud.routes.index}
+                  secondary
+                />
+              </div>
+
+              <div className="order-1 sm:order-2">
+                <Button
+                  type="submit"
+                  text="Save"
+                  disabled={navigation.state === "submitting"}
+                />
+              </div>
             </Float.Right>
           </Float>
         </Form>
