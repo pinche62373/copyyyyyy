@@ -11,16 +11,16 @@ import { HoneypotInputProps } from "remix-utils/honeypot/server";
 import { Document } from "#app/components/document";
 import { ErrorBoundaryRoot } from "#app/components/error-boundary-root";
 import { useTheme } from "#app/routes/resources+/theme-switch.tsx";
-import sharedStyles from "#app/styles/shared.css?url";
 import { getUser } from "#app/utils/auth.server";
 import { getHints } from "#app/utils/client-hints";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getTheme } from "#app/utils/theme.server";
 
+import "#app/styles/shared.css";
+
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: reactMenuStyles, as: "style" },
   { rel: "stylesheet", href: reactMenuTransitions, as: "style" },
-  { rel: "stylesheet", href: sharedStyles, as: "style" },
 ];
 
 // ----------------------------------------------------------------------------

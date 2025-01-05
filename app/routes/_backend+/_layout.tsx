@@ -9,18 +9,16 @@ import { Outlet } from "react-router";
 import { BackendHeader } from "#app/components/backend/header";
 import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import backendStyles from "#app/styles/backend.css?url";
-import sharedStyles from "#app/styles/shared.css?url";
 import { isAuthenticated } from "#app/utils/auth.server";
 import { ROUTE_LOGIN } from "#app/utils/constants";
 import { requireRole } from "#app/utils/permissions.server";
 import { Roles } from "#app/validations/role-schema";
 
+import "#app/styles/backend.css";
+
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: fontInter, as: "font" },
   { rel: "stylesheet", href: modernDrawerStyles, as: "style" },
-  { rel: "stylesheet", href: sharedStyles, as: "style" },
-  { rel: "stylesheet", href: backendStyles, as: "style", preload: "false" },
 ];
 
 export const meta: MetaFunction = () => [

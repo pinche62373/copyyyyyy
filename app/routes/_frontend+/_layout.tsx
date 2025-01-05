@@ -1,12 +1,8 @@
-import type { LinksFunction, MetaFunction } from "react-router";
+import type { MetaFunction } from "react-router";
 import { Outlet } from "react-router";
 import { FrontendHeader } from "#app/components/frontend/header";
 
-import frontendStyles from "#app/styles/frontend.css?url";
-
-export const links: LinksFunction = () => [
-  { rel: "stylesheet", href: frontendStyles, as: "style", preload: "false" },
-];
+import "#app/styles/frontend.css";
 
 export const meta: MetaFunction = () => [
   { title: "TZDB" },
