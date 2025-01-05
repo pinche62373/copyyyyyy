@@ -25,11 +25,6 @@ const resolver = zodResolver(UserSchemaLogin);
 
 type FormData = zod.infer<typeof UserSchemaLogin>;
 
-// TODO replace whenRemix fixes https://github.com/remix-run/remix/issues/9826#issuecomment-2491878937
-type LoaderData = Omit<Awaited<ReturnType<typeof loader>>, "defaultValues"> & {
-  defaultValues: {};
-};
-
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   await blockAuthenticated(request, ROUTE_LOGIN);
 
@@ -98,7 +93,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export const meta: MetaFunction = () => [{ title: "TZDB - Login" }];
 
 export default function LoginPage() {
-  const { defaultValues } = useLoaderData<LoaderData>();
+  const { defaultValues } = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
