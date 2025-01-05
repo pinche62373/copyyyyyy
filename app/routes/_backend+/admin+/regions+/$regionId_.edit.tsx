@@ -117,7 +117,7 @@ export default function Component() {
     register,
     formState: { errors },
   } = useRemixForm<FormData>({
-    mode: "onSubmit",
+    mode: "onBlur",
     resolver,
     defaultValues,
   });

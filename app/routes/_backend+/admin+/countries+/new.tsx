@@ -119,7 +119,7 @@ export default function Component() {
     setValue,
     formState: { errors },
   } = useRemixForm<FormData>({
-    mode: "onSubmit",
+    mode: "onBlur",
     resolver,
     defaultValues,
   });
