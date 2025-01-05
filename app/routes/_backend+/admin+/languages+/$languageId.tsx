@@ -2,8 +2,8 @@ import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
+import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Float } from "#app/components/shared/float.tsx";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { getLanguage } from "#app/models/language.server";
@@ -89,7 +89,7 @@ export default function Component() {
         </PairList.Pair>
       </PairList>
 
-      <Float className="mobile gap-5">
+      <Flex className="mobile gap-5">
         {userHasEditPermission && (
           <LinkButton
             text="Edit"
@@ -97,10 +97,10 @@ export default function Component() {
           />
         )}
         <LinkButton text="Cancel" to={crud.routes.index} secondary />
-      </Float>
+      </Flex>
 
-      <Float className="desktop">
-        <Float.Right>
+      <Flex className="desktop">
+        <Flex.End>
           <LinkButton text="Cancel" to={crud.routes.index} secondary />
 
           {userHasEditPermission && (
@@ -109,8 +109,8 @@ export default function Component() {
               to={`${crud.routes.index}/${language.id}/edit`}
             />
           )}
-        </Float.Right>
-      </Float>
+        </Flex.End>
+      </Flex>
     </BackendPanel>
   );
 }

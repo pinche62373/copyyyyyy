@@ -7,8 +7,8 @@ import { dataWithError, redirectWithSuccess } from "remix-toast";
 import zod from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
+import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
@@ -118,17 +118,17 @@ export default function Component() {
             error={errors.language?.name?.message}
           />
 
-          <Float className="mobile gap-5">
+          <Flex className="mobile gap-5">
             <SubmitButton navigation={navigation} />
             <LinkButton text="Cancel" to={crud.routes.index} secondary />
-          </Float>
+          </Flex>
 
-          <Float className="desktop">
-            <Float.Right>
+          <Flex className="desktop">
+            <Flex.End>
               <LinkButton text="Cancel" to={crud.routes.index} secondary />
               <SubmitButton navigation={navigation} />
-            </Float.Right>
-          </Float>
+            </Flex.End>
+          </Flex>
         </Form>
       </BackendPanel>
     </>

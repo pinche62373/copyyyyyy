@@ -7,9 +7,9 @@ import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
+import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
-import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
@@ -136,14 +136,14 @@ export default function Component() {
           error={errors.region?.name?.message}
         />
 
-        <Float direction="end">
+        <Flex direction="end">
           <Button type="button" text="Close" to={crud.routes.index} secondary />
           <Button
             type="submit"
             text="Save"
             disabled={navigation.state === "submitting"}
           />
-        </Float>
+        </Flex>
       </Form>
     </BackendPanel>
   );

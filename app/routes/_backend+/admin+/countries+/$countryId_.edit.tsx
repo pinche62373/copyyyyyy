@@ -8,9 +8,9 @@ import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
+import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
-import { Float } from "#app/components/shared/float.tsx";
 import { ComboBoxItem } from "#app/components/shared/form/combobox-item.tsx";
 import { ComboBox } from "#app/components/shared/form/combobox.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
@@ -174,7 +174,7 @@ export default function Component() {
             }}
           />
 
-          <Float direction="end">
+          <Flex direction="end">
             <Button
               type="button"
               text="Close"
@@ -186,7 +186,7 @@ export default function Component() {
               text="Save"
               disabled={navigation.state === "submitting"}
             />
-          </Float>
+          </Flex>
         </Form>
       </BackendPanel>
     </>

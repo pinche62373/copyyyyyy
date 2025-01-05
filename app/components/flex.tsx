@@ -1,12 +1,19 @@
 import React from "react";
 import { cn } from "#app/utils/lib/cn";
 
-interface FloatProps {
+interface Props {
   className?: string;
   children: React.ReactNode;
 }
 
-const Float = ({ className, children, ...rest }: FloatProps) => {
+/**
+ * Responsive helper component that generates columns on mobile, rows on desktop.
+ *
+ * Use Flex.Start to insert left floating child elements.
+ *
+ * Use Flex.End to insert right floating child elements.
+ */
+const Flex = ({ className, children, ...rest }: Props) => {
   return (
     <div
       className={cn("flex flex-col sm:flex-row w-full", className)}
@@ -17,7 +24,7 @@ const Float = ({ className, children, ...rest }: FloatProps) => {
   );
 };
 
-const Left = ({ className, children, ...rest }: FloatProps) => {
+const Start = ({ className, children, ...rest }: Props) => {
   return (
     <div
       className={cn(
@@ -32,7 +39,7 @@ const Left = ({ className, children, ...rest }: FloatProps) => {
   );
 };
 
-const Right = ({ className, children, ...rest }: FloatProps) => {
+const End = ({ className, children, ...rest }: Props) => {
   return (
     <div
       className={cn(
@@ -47,7 +54,7 @@ const Right = ({ className, children, ...rest }: FloatProps) => {
   );
 };
 
-Float.Left = Left;
-Float.Right = Right;
+Flex.Start = Start;
+Flex.End = End;
 
-export { Float };
+export { Flex };

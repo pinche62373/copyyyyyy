@@ -2,9 +2,9 @@ import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
+import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Button } from "#app/components/shared/button";
-import { Float } from "#app/components/shared/float.tsx";
 import { PairList } from "#app/components/shared/pair-list.tsx";
 import { getRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
@@ -84,7 +84,7 @@ export default function Component() {
         </PairList.Pair>
       </PairList>
 
-      <Float direction="end">
+      <Flex direction="end">
         <Button
           type="button"
           text="Close"
@@ -103,7 +103,7 @@ export default function Component() {
             to={`${crud.routes.index}/${region.id}/edit`}
           />
         )}
-      </Float>
+      </Flex>
     </BackendPanel>
   );
 }

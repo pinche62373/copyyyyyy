@@ -9,8 +9,8 @@ import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
 import zod from "zod";
+import { Flex } from "#app/components/flex.tsx";
 import { Button } from "#app/components/shared/button.tsx";
-import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { authenticate, blockAuthenticated } from "#app/utils/auth.server";
 import { ROUTE_LOGIN } from "#app/utils/constants";
@@ -132,14 +132,14 @@ export default function LoginPage() {
             error={errors.user?.password?.message}
           />
 
-          <Float direction="end">
+          <Flex direction="end">
             <Button type="button" text="Cancel" to="/" secondary />
             <Button
               type="submit"
               text="Login"
               disabled={navigation.state === "submitting"}
             />
-          </Float>
+          </Flex>
         </Form>
       </div>
     </div>

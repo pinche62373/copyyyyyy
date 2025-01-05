@@ -16,9 +16,8 @@ import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod, { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
+import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Button } from "#app/components/shared/button";
-import { Float } from "#app/components/shared/float.tsx";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
@@ -40,7 +39,6 @@ import {
   ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
 import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions";
-import { cn } from "#app/utils/lib/cn.ts";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
@@ -233,17 +231,17 @@ export default function Component() {
         <BackendTitle text={humanize(crud.plural)} foreground />
 
         {/* MOBILE */}
-        <Float className="mobile">
+        <Flex className="mobile">
           {userHasCreatePermission && (
-            <Float.Right className="mb-5 sm:mb-0">
+            <Flex.End className="mb-5 sm:mb-0">
               <LinkButton
                 text={`New ${humanize(crud.singular)}`}
                 to={crud.routes.new}
               />
-            </Float.Right>
+            </Flex.End>
           )}
 
-          <Float.Left>
+          <Flex.Start>
             <TableSearch
               value={globalFilter ?? ""}
               onChange={(value: string | number) =>
@@ -251,12 +249,12 @@ export default function Component() {
               }
               placeholder={`Search ${crud.plural}...`}
             />
-          </Float.Left>
-        </Float>
+          </Flex.Start>
+        </Flex>
 
         {/* DESKTOP */}
-        <Float className="desktop">
-          <Float.Left>
+        <Flex className="desktop">
+          <Flex.Start>
             <TableSearch
               value={globalFilter ?? ""}
               onChange={(value: string | number) =>
@@ -264,17 +262,17 @@ export default function Component() {
               }
               placeholder={`Search ${crud.plural}...`}
             />
-          </Float.Left>
+          </Flex.Start>
 
           {userHasCreatePermission && (
-            <Float.Right className="mb-5 sm:mb-0">
+            <Flex.End className="mb-5 sm:mb-0">
               <LinkButton
                 text={`New ${humanize(crud.singular)}`}
                 to={crud.routes.new}
               />
-            </Float.Right>
+            </Flex.End>
           )}
-        </Float>
+        </Flex>
 
         <TanstackTable.Table table={table} className="mt-5">
           <TanstackTable.THead />

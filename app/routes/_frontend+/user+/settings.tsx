@@ -9,9 +9,9 @@ import {
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
 import zod from "zod";
+import { Flex } from "#app/components/flex.tsx";
 import { FrontendSection } from "#app/components/frontend/section";
 import { Button } from "#app/components/shared/button";
-import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { updateUserAccountSettings } from "#app/models/user.server";
 import { getUserOrDie, isAuthenticated } from "#app/utils/auth.server";
@@ -112,14 +112,14 @@ export default function SettingsIndexPage() {
             error={errors.user?.username?.message}
           />
 
-          <Float direction="end">
+          <Flex direction="end">
             <Button type="button" text="Reset form" secondary />
             <Button
               type="submit"
               text="Save"
               disabled={navigation.state === "submitting"}
             />
-          </Float>
+          </Flex>
         </Form>
       </div>
       {/* End Profile Container */}

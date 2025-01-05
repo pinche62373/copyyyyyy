@@ -13,8 +13,8 @@ import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
+import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Float } from "#app/components/shared/float.tsx";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
@@ -171,7 +171,7 @@ export default function Component() {
       <BackendPanel>
         <BackendTitle text={humanize(permissionCrud.plural)} foreground />
 
-        <Float direction="start">
+        <Flex direction="start">
           <TableSearch
             value={globalFilter ?? ""}
             onChange={(value: string | number) =>
@@ -179,13 +179,13 @@ export default function Component() {
             }
             placeholder={`Search ${permissionCrud.plural}...`}
           />
-        </Float>
+        </Flex>
 
-        <Float direction="end">
+        <Flex direction="end">
           <PermissionTypeFilterComponent
             onClick={(value: Filter) => handleFilter(value)}
           />
-        </Float>
+        </Flex>
 
         <TanstackTable.Table table={table} className="mt-5">
           <TanstackTable.THead />
