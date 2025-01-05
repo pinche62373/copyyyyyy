@@ -4,8 +4,8 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Button } from "#app/components/shared/button";
 import { PairList } from "#app/components/shared/pair-list.tsx";
+import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { getCountry } from "#app/models/country.server";
 import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -53,6 +53,11 @@ export default function Component() {
 
   const user = useUser();
 
+  const userHasEditPermission = userHasRoutePermission(user, {
+    resource: crud.routes.edit,
+    scope: "any",
+  });
+
   return (
     <BackendPanel>
       <BackendTitle text={humanize(crud.singular)} foreground />
@@ -89,25 +94,27 @@ export default function Component() {
         </PairList.Pair>
       </PairList>
 
-      <Flex direction="end">
-        <Button
-          type="button"
-          text="Close"
-          to={crud.routes.index}
-          className="mr-2"
-          secondary
-        />
-
-        {userHasRoutePermission(user, {
-          resource: crud.routes.edit,
-          scope: "any",
-        }) && (
-          <Button
-            type="button"
+      <Flex className="mobile gap-5">
+        {userHasEditPermission && (
+          <LinkButton
             text="Edit"
             to={`${crud.routes.index}/${country.id}/edit`}
           />
         )}
+        <LinkButton text="Cancel" to={crud.routes.index} secondary />
+      </Flex>
+
+      <Flex className="desktop">
+        <Flex.End>
+          <LinkButton text="Cancel" to={crud.routes.index} secondary />
+
+          {userHasEditPermission && (
+            <LinkButton
+              text="Edit"
+              to={`${crud.routes.index}/${country.id}/edit`}
+            />
+          )}
+        </Flex.End>
       </Flex>
     </BackendPanel>
   );

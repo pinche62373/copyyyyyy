@@ -171,20 +171,22 @@ export default function Component() {
       <BackendPanel>
         <BackendTitle text={humanize(permissionCrud.plural)} foreground />
 
-        <Flex direction="start">
-          <TableSearch
-            value={globalFilter ?? ""}
-            onChange={(value: string | number) =>
-              setGlobalFilter(String(value))
-            }
-            placeholder={`Search ${permissionCrud.plural}...`}
-          />
-        </Flex>
+        <Flex className="flex-row">
+          <Flex.Start>
+            <TableSearch
+              value={globalFilter ?? ""}
+              onChange={(value: string | number) =>
+                setGlobalFilter(String(value))
+              }
+              placeholder={`Search ${permissionCrud.plural}...`}
+            />
+          </Flex.Start>
 
-        <Flex direction="end">
-          <PermissionTypeFilterComponent
-            onClick={(value: Filter) => handleFilter(value)}
-          />
+          <Flex.End className="ml-5 items-end grow">
+            <PermissionTypeFilterComponent
+              onClick={(value: Filter) => handleFilter(value)}
+            />
+          </Flex.End>
         </Flex>
 
         <TanstackTable.Table table={table} className="mt-5">

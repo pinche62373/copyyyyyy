@@ -2,8 +2,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "prisma-client";
 import { Controller } from "react-hook-form";
 import type { ActionFunctionArgs } from "react-router";
-import { LoaderFunctionArgs } from "react-router";
-import { Form, useLoaderData, useNavigation } from "react-router";
+import {
+  Form,
+  LoaderFunctionArgs,
+  useLoaderData,
+  useNavigation,
+} from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, redirectWithSuccess } from "remix-toast";
 import zod from "zod";
@@ -11,10 +15,11 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Button } from "#app/components/shared/button";
 import { ComboBoxItem } from "#app/components/shared/form/combobox-item.tsx";
 import { ComboBox } from "#app/components/shared/form/combobox.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
+import { LinkButton } from "#app/components/ui/link-button.tsx";
+import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { createCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
@@ -154,18 +159,16 @@ export default function Component() {
             }}
           />
 
-          <Flex direction="end">
-            <Button
-              type="button"
-              text="Cancel"
-              to={crud.routes.index}
-              secondary
-            />
-            <Button
-              type="submit"
-              text="Save"
-              disabled={navigation.state === "submitting"}
-            />
+          <Flex className="mobile gap-5">
+            <SubmitButton navigation={navigation} />
+            <LinkButton text="Cancel" to={crud.routes.index} secondary />
+          </Flex>
+
+          <Flex className="desktop">
+            <Flex.End>
+              <LinkButton text="Cancel" to={crud.routes.index} secondary />
+              <SubmitButton navigation={navigation} />
+            </Flex.End>
           </Flex>
         </Form>
       </BackendPanel>

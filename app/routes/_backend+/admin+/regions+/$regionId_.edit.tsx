@@ -9,8 +9,9 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Button } from "#app/components/shared/button";
 import { Input } from "#app/components/shared/form/input.tsx";
+import { LinkButton } from "#app/components/ui/link-button.tsx";
+import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -136,13 +137,16 @@ export default function Component() {
           error={errors.region?.name?.message}
         />
 
-        <Flex direction="end">
-          <Button type="button" text="Close" to={crud.routes.index} secondary />
-          <Button
-            type="submit"
-            text="Save"
-            disabled={navigation.state === "submitting"}
-          />
+        <Flex className="mobile gap-5">
+          <SubmitButton navigation={navigation} />
+          <LinkButton text="Cancel" to={crud.routes.index} secondary />
+        </Flex>
+
+        <Flex className="desktop">
+          <Flex.End className="hidden sm:flex">
+            <LinkButton text="Cancel" to={crud.routes.index} secondary />
+            <SubmitButton navigation={navigation} />
+          </Flex.End>
         </Flex>
       </Form>
     </BackendPanel>

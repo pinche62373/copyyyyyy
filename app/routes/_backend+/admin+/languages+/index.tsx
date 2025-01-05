@@ -225,53 +225,38 @@ export default function Component() {
     onPaginationChange: setPagination,
   });
 
+  const TableSearchComponent = () => (
+    <Flex.Start>
+      <TableSearch
+        value={globalFilter ?? ""}
+        onChange={(value: string | number) => setGlobalFilter(String(value))}
+        placeholder={`Search ${crud.plural}...`}
+      />
+    </Flex.Start>
+  );
+
+  const LinkButtonComponent = () => (
+    <Flex.End className="mb-5 sm:mb-0">
+      <LinkButton
+        text={`New ${humanize(crud.singular)}`}
+        to={crud.routes.new}
+      />
+    </Flex.End>
+  );
+
   return (
     <>
       <BackendPanel>
         <BackendTitle text={humanize(crud.plural)} foreground />
 
-        {/* MOBILE */}
         <Flex className="mobile">
-          {userHasCreatePermission && (
-            <Flex.End className="mb-5 sm:mb-0">
-              <LinkButton
-                text={`New ${humanize(crud.singular)}`}
-                to={crud.routes.new}
-              />
-            </Flex.End>
-          )}
-
-          <Flex.Start>
-            <TableSearch
-              value={globalFilter ?? ""}
-              onChange={(value: string | number) =>
-                setGlobalFilter(String(value))
-              }
-              placeholder={`Search ${crud.plural}...`}
-            />
-          </Flex.Start>
+          {userHasCreatePermission && <LinkButtonComponent />}
+          <TableSearchComponent />
         </Flex>
 
-        {/* DESKTOP */}
         <Flex className="desktop">
-          <Flex.Start>
-            <TableSearch
-              value={globalFilter ?? ""}
-              onChange={(value: string | number) =>
-                setGlobalFilter(String(value))
-              }
-              placeholder={`Search ${crud.plural}...`}
-            />
-          </Flex.Start>
-
-          {userHasCreatePermission && (
-            <Flex.End className="mb-5 sm:mb-0">
-              <LinkButton
-                text={`New ${humanize(crud.singular)}`}
-                to={crud.routes.new}
-              />
-            </Flex.End>
-          )}
+          <TableSearchComponent />
+          {userHasCreatePermission && <LinkButtonComponent />}
         </Flex>
 
         <TanstackTable.Table table={table} className="mt-5">

@@ -15,7 +15,6 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
@@ -28,6 +27,7 @@ import {
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
+import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { getCountries } from "#app/models/country.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
@@ -65,6 +65,11 @@ export default function Component() {
   const { countries } = useLoaderData<typeof loader>();
 
   const user = useUser();
+
+  const userHasCreatePermission = userHasRoutePermission(user, {
+    resource: crud.routes.new,
+    scope: "any",
+  });
 
   const columnHelper =
     createColumnHelper<z.infer<typeof CountrySchemaAdminTable>>();
@@ -177,34 +182,39 @@ export default function Component() {
     onPaginationChange: setPagination,
   });
 
+  const TableSearchComponent = () => (
+    <Flex.Start>
+      <TableSearch
+        value={globalFilter ?? ""}
+        onChange={(value: string | number) => setGlobalFilter(String(value))}
+        placeholder={`Search ${crud.plural}...`}
+      />
+    </Flex.Start>
+  );
+
+  const LinkButtonComponent = () => (
+    <Flex.End className="mb-5 sm:mb-0">
+      <LinkButton
+        text={`New ${humanize(crud.singular)}`}
+        to={crud.routes.new}
+      />
+    </Flex.End>
+  );
+
   return (
     <>
       <BackendPanel>
         <BackendTitle text={humanize(crud.plural)} foreground />
 
-        <Flex direction="start">
-          <TableSearch
-            value={globalFilter ?? ""}
-            onChange={(value: string | number) =>
-              setGlobalFilter(String(value))
-            }
-            placeholder={`Search ${crud.plural}...`}
-          />
+        <Flex className="mobile">
+          {userHasCreatePermission && <LinkButtonComponent />}
+          <TableSearchComponent />
         </Flex>
 
-        {userHasRoutePermission(user, {
-          resource: crud.routes.new,
-          scope: "any",
-        }) && (
-          <Flex direction="end">
-            <Button
-              type="button"
-              text={`New ${humanize(crud.singular)}`}
-              to={crud.routes.new}
-              className="mt-0.5"
-            />
-          </Flex>
-        )}
+        <Flex className="desktop">
+          <TableSearchComponent />
+          {userHasCreatePermission && <LinkButtonComponent />}
+        </Flex>
 
         <TanstackTable.Table table={table} className="mt-5">
           <TanstackTable.THead />
