@@ -3,9 +3,9 @@ import { useLoaderData } from "react-router";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Button } from "#app/components/shared/button";
 import { Float } from "#app/components/shared/float.tsx";
 import { PairList } from "#app/components/shared/pair-list.tsx";
+import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { getLanguage } from "#app/models/language.server";
 import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -53,6 +53,11 @@ export default function Component() {
 
   const user = useUser();
 
+  const userHasEditPermission = userHasRoutePermission(user, {
+    resource: crud.routes.edit,
+    scope: "any",
+  });
+
   return (
     <BackendPanel>
       <BackendTitle text={humanize(crud.singular)} foreground />
@@ -84,28 +89,25 @@ export default function Component() {
         </PairList.Pair>
       </PairList>
 
-      <Float>
-        <Float.Right>
-          <div className="order-2 sm:order-1">
-            <Button
-              type="button"
-              text="Close"
-              to={crud.routes.index}
-              secondary
-            />
-          </div>
+      <Float className="mobile gap-5">
+        {userHasEditPermission && (
+          <LinkButton
+            text="Edit"
+            to={`${crud.routes.index}/${language.id}/edit`}
+          />
+        )}
+        <LinkButton text="Cancel" to={crud.routes.index} secondary />
+      </Float>
 
-          {userHasRoutePermission(user, {
-            resource: crud.routes.edit,
-            scope: "any",
-          }) && (
-            <div className="order-1 sm:order-2">
-              <Button
-                type="button"
-                text="Edit"
-                to={`${crud.routes.index}/${language.id}/edit`}
-              />
-            </div>
+      <Float className="desktop">
+        <Float.Right>
+          <LinkButton text="Cancel" to={crud.routes.index} secondary />
+
+          {userHasEditPermission && (
+            <LinkButton
+              text="Edit"
+              to={`${crud.routes.index}/${language.id}/edit`}
+            />
           )}
         </Float.Right>
       </Float>

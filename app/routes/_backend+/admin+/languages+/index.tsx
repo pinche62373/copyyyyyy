@@ -31,6 +31,7 @@ import {
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
+import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { deleteLanguage, getLanguages } from "#app/models/language.server";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
@@ -114,6 +115,11 @@ export default function Component() {
   const { languages } = useLoaderData<typeof loader>();
 
   const user = useUser();
+
+  const userHasCreatePermission = userHasRoutePermission(user, {
+    resource: crud.routes.new,
+    scope: "any",
+  });
 
   const columnHelper =
     createColumnHelper<z.infer<typeof LanguageSchemaAdminTable>>();
@@ -226,8 +232,31 @@ export default function Component() {
       <BackendPanel>
         <BackendTitle text={humanize(crud.plural)} foreground />
 
-        <Float>
-          <Float.Left className="order-2 sm:order-1">
+        {/* MOBILE */}
+        <Float className="mobile">
+          {userHasCreatePermission && (
+            <Float.Right className="mb-5 sm:mb-0">
+              <LinkButton
+                text={`New ${humanize(crud.singular)}`}
+                to={crud.routes.new}
+              />
+            </Float.Right>
+          )}
+
+          <Float.Left>
+            <TableSearch
+              value={globalFilter ?? ""}
+              onChange={(value: string | number) =>
+                setGlobalFilter(String(value))
+              }
+              placeholder={`Search ${crud.plural}...`}
+            />
+          </Float.Left>
+        </Float>
+
+        {/* DESKTOP */}
+        <Float className="desktop">
+          <Float.Left>
             <TableSearch
               value={globalFilter ?? ""}
               onChange={(value: string | number) =>
@@ -237,16 +266,11 @@ export default function Component() {
             />
           </Float.Left>
 
-          {userHasRoutePermission(user, {
-            resource: crud.routes.new,
-            scope: "any",
-          }) && (
-            <Float.Right className={cn("order-1 sm:order-2", "mb-5 sm:mb-0")}>
-              <Button
-                type="button"
+          {userHasCreatePermission && (
+            <Float.Right className="mb-5 sm:mb-0">
+              <LinkButton
                 text={`New ${humanize(crud.singular)}`}
                 to={crud.routes.new}
-                className="mt-0.5"
               />
             </Float.Right>
           )}

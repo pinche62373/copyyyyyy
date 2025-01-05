@@ -8,9 +8,10 @@ import zod from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Button } from "#app/components/shared/button";
 import { Float } from "#app/components/shared/float.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
+import { LinkButton } from "#app/components/ui/link-button.tsx";
+import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { getLanguage, updateLanguage } from "#app/models/language.server";
 import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -116,7 +117,7 @@ export default function Component() {
     register,
     formState: { errors },
   } = useRemixForm<FormData>({
-    mode: "onSubmit",
+    mode: "onBlur",
     resolver,
     defaultValues,
   });
@@ -137,24 +138,15 @@ export default function Component() {
             error={errors.language?.name?.message}
           />
 
-          <Float>
-            <Float.Right>
-              <div className="order-2 sm:order-1">
-                <Button
-                  type="button"
-                  text="Close"
-                  to={crud.routes.index}
-                  secondary
-                />
-              </div>
+          <Float className="mobile gap-5">
+            <SubmitButton navigation={navigation} />
+            <LinkButton text="Cancel" to={crud.routes.index} secondary />
+          </Float>
 
-              <div className="order-1 sm:order-2">
-                <Button
-                  type="submit"
-                  text="Save"
-                  disabled={navigation.state === "submitting"}
-                />
-              </div>
+          <Float className="desktop">
+            <Float.Right className="hidden sm:flex">
+              <LinkButton text="Cancel" to={crud.routes.index} secondary />
+              <SubmitButton navigation={navigation} />
             </Float.Right>
           </Float>
         </Form>

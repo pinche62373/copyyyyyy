@@ -1,4 +1,21 @@
-/**
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Custom component classes.
+ */
+@layer components {
+  .mobile {
+    @apply sm:hidden !important;
+  }
+
+  .desktop {
+    @apply hidden sm:flex !important;
+  }  
+}
+
+/*
  * https://szhsin.github.io/react-menu/
  */
 .szh-menu {
@@ -10,3 +27,4 @@
 .szh-menu__item {
   padding-left: 0.5rem;
 }
+
