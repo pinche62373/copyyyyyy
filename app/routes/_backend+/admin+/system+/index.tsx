@@ -9,7 +9,7 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { ActionButton } from "#app/components/shared/form/action-button.tsx";
-import { PairList } from "#app/components/shared/pair-list.tsx";
+import { Pairs } from "#app/components/ui/pairs.tsx";
 import {
   deleteExpiredSessions,
   getExpiredSessionCount,
@@ -71,10 +71,10 @@ export default function Component() {
 
   const { expiredSessionCount } = useLoaderData<typeof loader>();
 
-  const invalidSessionsLabel =
+  const expiredSessionsLabel =
     expiredSessionCount === 0
-      ? "No expired database sessions to purge"
-      : `Purge ${expiredSessionCount} expired database sessions`;
+      ? "Database does not contain expired sessions."
+      : `Purge ${expiredSessionCount} expired database sessions?`;
 
   const { handleSubmit, register } = useRemixForm<FormData>({
     mode: "onBlur",
@@ -95,23 +95,24 @@ export default function Component() {
         <input type="hidden" {...register("intent")} />
       </Form>
 
-      <PairList>
-        <PairList.Pair>
-          <PairList.Key className="align-middle" last>
-            Sessions
-          </PairList.Key>
-          <PairList.Value last>
-            <ActionButton
-              formRef={formRef}
-              label={invalidSessionsLabel}
-              buttonLabel="Purge"
-              disabled={expiredSessionCount === 0}
-              modalHeading="Delete expired sessions"
-              modalBody="Are you sure you want to permanently delete these expired sessions?"
-            />
-          </PairList.Value>
-        </PairList.Pair>
-      </PairList>
+      <Pairs>
+        <Pairs.Key className="">Sessions</Pairs.Key>
+        <Pairs.Value className="sm:flex">
+          <div className="">{expiredSessionsLabel}</div>
+
+          {expiredSessionCount !== 0 && (
+            <div className="flex-grow items-end mt-4 sm:mt-0">
+              <ActionButton
+                formRef={formRef}
+                buttonLabel="Purge"
+                disabled={expiredSessionCount === 0}
+                modalHeading="Delete expired sessions"
+                modalBody="Are you sure you want to permanently delete these expired sessions?"
+              />
+            </div>
+          )}
+        </Pairs.Value>
+      </Pairs>
     </BackendPanel>
   );
 }

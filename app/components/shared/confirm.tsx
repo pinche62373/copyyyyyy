@@ -13,17 +13,26 @@ import { cn } from "#app/utils/lib/cn";
 interface ConfirmProps {
   ariaLabel: string;
   disabled?: boolean;
+  className?: string;
   children: React.ReactNode;
 }
 
-const Confirm = ({ ariaLabel, disabled, children, ...rest }: ConfirmProps) => {
+const Confirm = ({
+  ariaLabel,
+  disabled,
+  className,
+  children,
+  ...rest
+}: ConfirmProps) => {
   return (
     <DialogTrigger {...rest}>
       <Button
         aria-label={ariaLabel}
-        className={
-          disabled === true ? "opacity-50 cursor-not-allowed" : undefined
-        }
+        className={cn(
+          "react-aria-Button",
+          disabled === true ? "opacity-50 cursor-not-allowed" : undefined,
+          className,
+        )}
         isDisabled={disabled}
       >
         {children}
