@@ -4,8 +4,8 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { PairList } from "#app/components/shared/pair-list.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
+import { Pairs } from "#app/components/ui/pairs.tsx";
 import { getRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -62,32 +62,26 @@ export default function Component() {
     <BackendPanel>
       <BackendTitle text={humanize(crud.singular)} foreground />
 
-      <PairList>
-        <PairList.Pair>
-          <PairList.Key>Name</PairList.Key>
-          <PairList.Value>{region.name}</PairList.Value>
-        </PairList.Pair>
+      <Pairs>
+        <Pairs.Key>Name</Pairs.Key>
+        <Pairs.Value>{region.name}</Pairs.Value>
 
-        <PairList.Pair>
-          <PairList.Key>Created By</PairList.Key>
-          <PairList.Value>
-            {region.regionCreatedBy.username} at{" "}
-            {timeStampToHuman(region.createdAt)}
-          </PairList.Value>
-        </PairList.Pair>
+        <Pairs.Key>Created By</Pairs.Key>
+        <Pairs.Value>
+          {region.regionCreatedBy.username} at{" "}
+          {timeStampToHuman(region.createdAt)}
+        </Pairs.Value>
 
-        <PairList.Pair>
-          <PairList.Key>Updated By</PairList.Key>
-          <PairList.Value>
-            {region.updatedAt !== null && (
-              <>
-                {region.regionupdatedBy?.username} at{" "}
-                {timeStampToHuman(region.updatedAt)}
-              </>
-            )}
-          </PairList.Value>
-        </PairList.Pair>
-      </PairList>
+        <Pairs.Key>Updated By</Pairs.Key>
+        <Pairs.Value>
+          {region.updatedAt !== null && (
+            <>
+              {region.regionupdatedBy?.username} at{" "}
+              {timeStampToHuman(region.updatedAt)}
+            </>
+          )}
+        </Pairs.Value>
+      </Pairs>
 
       <Flex className="mobile gap-5">
         {userHasEditPermission && (

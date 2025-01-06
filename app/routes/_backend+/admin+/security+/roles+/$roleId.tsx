@@ -14,7 +14,6 @@ import { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { PairList } from "#app/components/shared/pair-list.tsx";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
@@ -24,6 +23,7 @@ import {
 } from "#app/components/tanstack-table/cell-types";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
+import { Pairs } from "#app/components/ui/pairs.tsx";
 import { getRoleWithPermissions } from "#app/models/role.server";
 import { handle as rolesHandle } from "#app/routes/_backend+/admin+/security+/roles+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -156,17 +156,13 @@ export default function Component() {
       <BackendPanel>
         <BackendTitle text={humanize(roleCrud.singular)} foreground />
 
-        <PairList>
-          <PairList.Pair>
-            <PairList.Key>Name</PairList.Key>
-            <PairList.Value>{role.name}</PairList.Value>
-          </PairList.Pair>
+        <Pairs>
+          <Pairs.Key>Name</Pairs.Key>
+          <Pairs.Value>{role.name}</Pairs.Value>
 
-          <PairList.Pair>
-            <PairList.Key last>Description</PairList.Key>
-            <PairList.Value last>{role.description}</PairList.Value>
-          </PairList.Pair>
-        </PairList>
+          <Pairs.Key>Description</Pairs.Key>
+          <Pairs.Value>{role.description}</Pairs.Value>
+        </Pairs>
       </BackendPanel>
 
       {/* Permissions table for role */}

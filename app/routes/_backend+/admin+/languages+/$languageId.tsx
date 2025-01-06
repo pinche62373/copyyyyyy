@@ -4,8 +4,8 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { PairList } from "#app/components/shared/pair-list.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
+import { Pairs } from "#app/components/ui/pairs.tsx";
 import { getLanguage } from "#app/models/language.server";
 import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -62,32 +62,26 @@ export default function Component() {
     <BackendPanel>
       <BackendTitle text={humanize(crud.singular)} foreground />
 
-      <PairList>
-        <PairList.Pair>
-          <PairList.Key>Name</PairList.Key>
-          <PairList.Value>{language.name}</PairList.Value>
-        </PairList.Pair>
+      <Pairs>
+        <Pairs.Key>Name</Pairs.Key>
+        <Pairs.Value>{language.name}</Pairs.Value>
 
-        <PairList.Pair>
-          <PairList.Key>Created By</PairList.Key>
-          <PairList.Value>
-            {language.languageCreatedBy.username} at{" "}
-            {timeStampToHuman(language.createdAt)}
-          </PairList.Value>
-        </PairList.Pair>
+        <Pairs.Key>Created By</Pairs.Key>
+        <Pairs.Value>
+          {language.languageCreatedBy.username} at{" "}
+          {timeStampToHuman(language.createdAt)}
+        </Pairs.Value>
 
-        <PairList.Pair>
-          <PairList.Key>Updated By</PairList.Key>
-          <PairList.Value>
-            {language.updatedAt !== null && (
-              <>
-                {language.languageUpdatedBy?.username} at{" "}
-                {timeStampToHuman(language.updatedAt)}
-              </>
-            )}
-          </PairList.Value>
-        </PairList.Pair>
-      </PairList>
+        <Pairs.Key>Updated By</Pairs.Key>
+        <Pairs.Value>
+          {language.updatedAt !== null && (
+            <>
+              {language.languageUpdatedBy?.username} at{" "}
+              {timeStampToHuman(language.updatedAt)}
+            </>
+          )}
+        </Pairs.Value>
+      </Pairs>
 
       <Flex className="mobile gap-5">
         {userHasEditPermission && (

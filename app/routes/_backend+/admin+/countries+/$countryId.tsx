@@ -4,8 +4,8 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { PairList } from "#app/components/shared/pair-list.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
+import { Pairs } from "#app/components/ui/pairs.tsx";
 import { getCountry } from "#app/models/country.server";
 import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -62,37 +62,29 @@ export default function Component() {
     <BackendPanel>
       <BackendTitle text={humanize(crud.singular)} foreground />
 
-      <PairList>
-        <PairList.Pair>
-          <PairList.Key>Name</PairList.Key>
-          <PairList.Value>{country.name}</PairList.Value>
-        </PairList.Pair>
+      <Pairs>
+        <Pairs.Key>Name</Pairs.Key>
+        <Pairs.Value>{country.name}</Pairs.Value>
 
-        <PairList.Pair>
-          <PairList.Key>Region</PairList.Key>
-          <PairList.Value>{country.region.name}</PairList.Value>
-        </PairList.Pair>
+        <Pairs.Key>Region</Pairs.Key>
+        <Pairs.Value>{country.region.name}</Pairs.Value>
 
-        <PairList.Pair>
-          <PairList.Key>Created By</PairList.Key>
-          <PairList.Value>
-            {country.countryCreatedBy.username} at{" "}
-            {timeStampToHuman(country.createdAt)}
-          </PairList.Value>
-        </PairList.Pair>
+        <Pairs.Key>Created By</Pairs.Key>
+        <Pairs.Value>
+          {country.countryCreatedBy.username} at{" "}
+          {timeStampToHuman(country.createdAt)}
+        </Pairs.Value>
 
-        <PairList.Pair>
-          <PairList.Key>Updated By</PairList.Key>
-          <PairList.Value>
-            {country.updatedAt !== null && (
-              <>
-                {country.countryUpdatedBy?.username} at{" "}
-                {timeStampToHuman(country.updatedAt)}
-              </>
-            )}
-          </PairList.Value>
-        </PairList.Pair>
-      </PairList>
+        <Pairs.Key>Updated By</Pairs.Key>
+        <Pairs.Value>
+          {country.updatedAt !== null && (
+            <>
+              {country.countryUpdatedBy?.username} at{" "}
+              {timeStampToHuman(country.updatedAt)}
+            </>
+          )}
+        </Pairs.Value>
+      </Pairs>
 
       <Flex className="mobile gap-5">
         {userHasEditPermission && (
