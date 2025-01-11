@@ -157,7 +157,9 @@ export default function Component() {
             render={({ field, fieldState: { invalid, error } }) => {
               return (
                 <ComboBox
-                  onSelectionChange={(id) => setValue(field.name, id as string)}
+                  onSelectionChange={(id) =>
+                    setValue(field.name, (id as string) || "")
+                  }
                   isInvalid={invalid}
                   errorMessage={error && error.message}
                   ariaLabel="Regions"
