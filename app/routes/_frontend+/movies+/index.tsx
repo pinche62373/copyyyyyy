@@ -77,7 +77,7 @@ export default function MovieIndexPage() {
           </li>
 
           <li className="text-lg">
-            <Icon name="home">Home</Icon>
+            <Icon name="checkmark" />
           </li>
 
           <li className="text-lg">

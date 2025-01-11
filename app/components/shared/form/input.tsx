@@ -1,5 +1,6 @@
 import { InputHTMLAttributes, useId } from "react";
 import { tv } from "tailwind-variants";
+import { Icon } from "#app/components/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 
 type Variant = "stacked" | "ifta";
@@ -43,6 +44,7 @@ const tvo = tv({
         "focus:border-l-4 focus:border-border-foreground focus:border-l-blue-500",
         "group-data-[invalid=true]:border-l-4 group-data-[invalid=true]:border-l-red-500",
         "group-data-[invalid=true]:pl-[13px]",
+        "pr-11", // leave room for the checkmark
       ),
     },
     fieldError: {
@@ -56,6 +58,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   variant?: Variant;
   className?: string;
+  isValid?: boolean;
   error: string | undefined;
 }
 
@@ -63,6 +66,7 @@ export function Input({
   label,
   variant = "stacked",
   className,
+  isValid,
   error,
   ...rest
 }: InputProps) {
@@ -73,24 +77,36 @@ export function Input({
       className={cn(tvo({ container: variant }), className)}
       data-invalid={error && true}
     >
-      <input
-        id={`input${id}`}
-        aria-labelledby={`label${id}`}
-        aria-invalid={error ? true : undefined}
-        data-invalid={error && true}
-        className={cn(tvo({ input: variant }), className)}
-        placeholder=" "
-        {...rest}
-      />
+      <div className="flex">
+        {/* INPUT FIELD */}
+        <input
+          id={`input${id}`}
+          aria-labelledby={`label${id}`}
+          aria-invalid={error ? true : undefined}
+          data-invalid={error && true}
+          className={cn(tvo({ input: variant }), className)}
+          placeholder=" "
+          {...rest}
+        />
 
-      <label
-        id={`label${id}`}
-        htmlFor={`input${id}`}
-        className={cn(tvo({ label: variant }), className)}
-      >
-        {label}
-      </label>
+        {/* SUCCESS CHECKMARK */}
+        {isValid && (
+          <span className="absolute top-5 right-4">
+            <Icon name="checkmark" className="text-2xl text-green-600" />
+          </span>
+        )}
 
+        {/* FLOATING LABEL */}
+        <label
+          id={`label${id}`}
+          htmlFor={`input${id}`}
+          className={cn(tvo({ label: variant }), className)}
+        >
+          {label}
+        </label>
+      </div>
+
+      {/* ERROR MESSAGE */}
       {!!error && <div className={tvo({ fieldError: variant })}>{error}</div>}
     </div>
   );

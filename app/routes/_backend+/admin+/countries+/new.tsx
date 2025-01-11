@@ -117,6 +117,7 @@ export default function Component() {
     control,
     register,
     setValue,
+    getFieldState,
     formState: { errors },
   } = useRemixForm<FormData>({
     mode: "onBlur",
@@ -138,6 +139,10 @@ export default function Component() {
             variant="ifta"
             {...register("country.name")}
             error={errors.country?.name?.message}
+            isValid={
+              getFieldState("country.name").isDirty &&
+              !getFieldState("country.name").invalid
+            }
           />
 
           <Controller
@@ -146,7 +151,9 @@ export default function Component() {
             render={({ field, fieldState: { invalid, error } }) => {
               return (
                 <ComboBox
-                  onSelectionChange={(id) => setValue(field.name, id as string)}
+                  onSelectionChange={(id) =>
+                    setValue(field.name, (id as string) || "")
+                  }
                   isInvalid={invalid}
                   errorMessage={error && error.message}
                   ariaLabel="Regions"
