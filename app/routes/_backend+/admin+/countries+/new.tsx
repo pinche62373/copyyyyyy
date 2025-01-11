@@ -118,9 +118,9 @@ export default function Component() {
     register,
     setValue,
     getFieldState,
-    formState: { errors },
+    formState,
   } = useRemixForm<FormData>({
-    mode: "onBlur",
+    mode: "onChange",
     resolver,
     defaultValues,
   });
@@ -138,8 +138,9 @@ export default function Component() {
             label="Name"
             variant="ifta"
             {...register("country.name")}
-            error={errors.country?.name?.message}
+            error={formState.errors.country?.name?.message}
             isValid={
+              formState.isDirty &&
               getFieldState("country.name").isDirty &&
               !getFieldState("country.name").invalid
             }

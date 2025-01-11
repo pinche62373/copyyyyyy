@@ -128,9 +128,10 @@ export default function Component() {
     control,
     register,
     setValue,
-    formState: { errors },
+    getFieldState,
+    formState,
   } = useRemixForm<FormData>({
-    mode: "onBlur",
+    mode: "onChange",
     resolver,
     defaultValues,
   });
@@ -148,13 +149,19 @@ export default function Component() {
             label="Name"
             variant="ifta"
             {...register("country.name")}
-            error={errors.country?.name?.message}
+            error={formState.errors.country?.name?.message}
+            isValid={
+              formState.isDirty &&
+              getFieldState("country.name").isDirty &&
+              !getFieldState("country.name").invalid
+            }
           />
 
           <Controller
             name="country.regionId"
             control={control}
             render={({ field, fieldState: { invalid, error } }) => {
+              // https://github.com/react-hook-form/react-hook-form/issues/4597#issuecomment-1069673930
               return (
                 <ComboBox
                   onSelectionChange={(id) =>
