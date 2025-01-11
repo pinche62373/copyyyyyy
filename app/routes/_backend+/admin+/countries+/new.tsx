@@ -151,6 +151,7 @@ export default function Component() {
                   errorMessage={error && error.message}
                   ariaLabel="Regions"
                   menuTrigger="focus"
+                  onBlur={field.onBlur}
                   defaultItems={defaultValues.regions}
                 >
                   {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}

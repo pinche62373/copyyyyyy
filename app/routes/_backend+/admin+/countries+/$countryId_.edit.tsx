@@ -163,6 +163,7 @@ export default function Component() {
                   ariaLabel="Regions"
                   menuTrigger="focus"
                   defaultItems={regions}
+                  onBlur={field.onBlur}
                   defaultSelectedKey={
                     regions.find(
                       (region) => region.id === defaultValues.country.regionId,
