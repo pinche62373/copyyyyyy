@@ -84,6 +84,8 @@ export function Input({
           aria-labelledby={`label${id}`}
           aria-invalid={error ? true : undefined}
           data-invalid={error && true}
+          autoCorrect="off"
+          spellCheck="false"
           className={cn(tvo({ input: variant }), className)}
           placeholder=" "
           {...rest}
