@@ -4,6 +4,10 @@
 {
   "css.customData": ["./app/styles/custom-data.json"],
 
+  "files.exclude": {
+    "**/node_modules": true
+  },
+
   "editor.defaultFormatter": "biomejs.biome",
   "editor.formatOnType": false, // required
   "editor.formatOnPaste": false, // optional
