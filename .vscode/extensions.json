@@ -2,6 +2,7 @@
   "recommendations": [
     "biomejs.biome",
     "davidanson.vscode-markdownlint",
-    "prisma.prisma"
+    "prisma.prisma",
+    "bradlc.vscode-tailwindcss"
   ]
 }
