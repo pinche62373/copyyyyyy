@@ -1,6 +1,7 @@
 import React from "react";
 import Drawer from "react-modern-drawer";
 import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
+import { Flex } from "#app/components/flex.tsx";
 import { Breadcrumbs } from "#app/components/shared/breadcrumbs";
 import { UserMenu } from "#app/components/shared/user-menu";
 import { ThemeSwitch } from "#app/routes/resources+/theme-switch.tsx";
@@ -34,7 +35,7 @@ export const BackendHeader = ({ className }: Props) => {
           aria-label="Global"
         >
           {/* Menu Left */}
-          <div className="flex items-center md:gap-x-3 xl:col-span-1">
+          <div className="flex items-center md:gap-x-3 xl:col-span-2">
             <div className="hidden items-start lg:block">
               <Breadcrumbs />
             </div>
@@ -73,7 +74,7 @@ export const BackendHeader = ({ className }: Props) => {
           {/* End Menu Left */}
 
           {/* Menu Right */}
-          <div className="flex items-center justify-end gap-x-2 xl:col-span-2">
+          <div className="flex items-center justify-end gap-x-2 xl:col-span-1">
             <div className="flex items-center">
               {/* Theme Toggler */}
               <ThemeSwitch
