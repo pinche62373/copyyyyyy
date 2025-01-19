@@ -86,14 +86,13 @@ function App() {
         <ToastContainer
           position="bottom-right"
           autoClose={5000}
-          hideProgressBar
           newestOnTop
           closeOnClick
           rtl={false}
           pauseOnFocusLoss
           draggable
           pauseOnHover
-          theme="colored"
+          theme={theme}
           transition={Slide}
         />
       </Document>
