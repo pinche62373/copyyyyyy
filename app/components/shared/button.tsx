@@ -103,7 +103,7 @@ export function Button({
 
       {/* Real button  */}
       {!to && !as && (
-        <div className={disabled ? "cursor-not-allowed" : undefined}>
+        <div>
           <button
             type={type}
             form={formId}

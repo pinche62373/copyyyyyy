@@ -98,6 +98,7 @@ interface MyComboBoxProps<T extends object>
   extends Omit<ComboBoxProps<T>, "children"> {
   ariaLabel: string;
   description?: string;
+  isValid?: boolean;
   errorMessage?: string | ((validation: ValidationResult) => string);
   children: React.ReactNode | ((item: T) => React.ReactNode);
 }
@@ -105,6 +106,7 @@ interface MyComboBoxProps<T extends object>
 export const ComboBox = <T extends object>({
   ariaLabel,
   description,
+  isValid,
   errorMessage,
   children,
   ...rest
@@ -119,6 +121,7 @@ export const ComboBox = <T extends object>({
       aria-label={ariaLabel}
     >
       <Group className={tvo({ group: "ifta" })}>
+        {/* INPUT FIELD */}
         <Input
           id={`input${id}`}
           aria-labelledby={`label${id}`}
@@ -126,6 +129,14 @@ export const ComboBox = <T extends object>({
           className={cn(tvo({ input: "ifta" }))}
         />
 
+        {/* SUCCESS CHECKMARK */}
+        {isValid && (
+          <span className="absolute top-5 right-[70px]">
+            <Icon name="checkmark" className="text-2xl text-green-600" />
+          </span>
+        )}
+
+        {/* FLOATING LABEL */}
         <label
           id={`label${id}`}
           htmlFor={`input${id}`}
@@ -134,6 +145,7 @@ export const ComboBox = <T extends object>({
           Region
         </label>
 
+        {/* CHEVRON BUTTON */}
         <Button className={tvo({ chevron: "ifta" })}>
           {/* {isOpen ? <>&#8593;</> : <>&#8595;</>} */}
           <Icon

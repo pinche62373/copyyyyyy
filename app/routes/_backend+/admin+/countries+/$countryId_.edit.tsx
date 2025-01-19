@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "prisma-client";
+import { useEffect } from "react";
+import type { FieldPath } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData, useNavigation } from "react-router";
@@ -15,6 +17,7 @@ import { ComboBox } from "#app/components/shared/form/combobox.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
+import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
 import { getCountry, updateCountry } from "#app/models/country.server";
 import { getRegionById, getRegions } from "#app/models/region.server";
 import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
@@ -26,10 +29,7 @@ import {
   requireRoutePermission,
 } from "#app/utils/permissions.server";
 import { validatePageId } from "#app/utils/validate-page-id";
-import {
-  CountrySchema,
-  CountrySchemaUpdate,
-} from "#app/validations/country-schema";
+import { CountrySchemaUpdate } from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
@@ -55,7 +55,7 @@ export const handle = {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const countryId = validatePageId(params.countryId, CountrySchema);
+  const countryId = validatePageId(params.countryId, CountrySchemaUpdate);
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
@@ -113,7 +113,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   return dataWithSuccess(
-    null,
+    {
+      defaultValues: {
+        country: data.country,
+        intent,
+      },
+    },
     `${humanize(crud.singular)} updated successfully`,
   );
 };
@@ -123,18 +128,30 @@ export default function Component() {
 
   const navigation = useNavigation();
 
-  const {
-    handleSubmit,
-    control,
-    register,
-    setValue,
-    getFieldState,
-    formState,
-  } = useRemixForm<FormData>({
-    mode: "onChange",
+  const form = useRemixForm<FormData>({
+    mode: "onBlur",
+    reValidateMode: "onBlur",
     resolver,
     defaultValues,
   });
+
+  const {
+    register,
+    control,
+    getFieldState,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitSuccessful },
+  } = form;
+
+  const { setFormFieldValue, isValidFormField } = useFormHelpers(form);
+
+  // Reset form after successful submission
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset(defaultValues);
+    }
+  }, [isSubmitSuccessful, reset, defaultValues]);
 
   return (
     <>
@@ -149,30 +166,35 @@ export default function Component() {
             label="Name"
             variant="ifta"
             {...register("country.name")}
-            error={formState.errors.country?.name?.message}
-            isValid={
-              formState.isDirty &&
-              getFieldState("country.name").isDirty &&
-              !getFieldState("country.name").invalid
+            error={errors.country?.name?.message}
+            onBlur={(e) =>
+              setFormFieldValue(
+                "country.name" as FieldPath<FormData>,
+                e.currentTarget.value,
+              )
             }
+            isValid={isValidFormField(getFieldState("country.name"))}
           />
 
           <Controller
             name="country.regionId"
             control={control}
-            render={({ field, fieldState: { invalid, error } }) => {
+            render={({ fieldState: { invalid, error } }) => {
               // https://github.com/react-hook-form/react-hook-form/issues/4597#issuecomment-1069673930
               return (
                 <ComboBox
-                  onSelectionChange={(id) =>
-                    setValue(field.name, (id as string) || "")
-                  }
+                  onSelectionChange={(id) => {
+                    setFormFieldValue(
+                      "country.regionId" as FieldPath<FormData>,
+                      (id as string) || "",
+                    );
+                  }}
                   isInvalid={invalid}
+                  isValid={isValidFormField(getFieldState("country.regionId"))}
                   errorMessage={error && error.message}
                   ariaLabel="Regions"
                   menuTrigger="focus"
                   defaultItems={regions}
-                  onBlur={field.onBlur}
                   defaultSelectedKey={
                     regions.find(
                       (region) => region.id === defaultValues.country.regionId,
@@ -186,14 +208,14 @@ export default function Component() {
           />
 
           <Flex className="mobile gap-5">
-            <SubmitButton navigation={navigation} />
+            <SubmitButton disabled={navigation.state === "submitting"} />
             <LinkButton text="Cancel" to={crud.routes.index} secondary />
           </Flex>
 
           <Flex className="desktop">
             <Flex.End className="hidden sm:flex">
               <LinkButton text="Cancel" to={crud.routes.index} secondary />
-              <SubmitButton navigation={navigation} />
+              <SubmitButton disabled={navigation.state === "submitting"} />
             </Flex.End>
           </Flex>
         </Form>
