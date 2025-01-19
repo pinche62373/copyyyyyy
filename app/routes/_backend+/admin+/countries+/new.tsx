@@ -128,6 +128,7 @@ export default function Component() {
     formState: { errors },
   } = form;
 
+  // @ts-ignore: awaits remix-hook-form fix for type `UseRemixFormReturn`
   const { setFormFieldValue, isValidFormField } = useFormHelpers(form);
 
   return (

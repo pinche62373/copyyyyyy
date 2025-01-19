@@ -10,15 +10,16 @@ import { dataWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
 import zod from "zod";
 import { Flex } from "#app/components/flex.tsx";
-import { Button } from "#app/components/shared/button";
 import { Input } from "#app/components/shared/form/input.tsx";
+import { LinkButton } from "#app/components/ui/link-button.tsx";
+import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import {
   assignRoleToUser,
   createUser,
   isEmailAddressAvailable,
 } from "#app/models/user.server";
 import { authenticate, blockAuthenticated } from "#app/utils/auth.server";
-import { ROUTE_REGISTER } from "#app/utils/constants.ts";
+import { ROUTE_HOME, ROUTE_REGISTER } from "#app/utils/constants.ts";
 import { honeypot } from "#app/utils/honeypot.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { UserSchemaRegister } from "#app/validations/user-schema";
@@ -148,13 +149,16 @@ export default function RegisterPage() {
             error={errors.user?.password?.message}
           />
 
-          <Flex direction="end">
-            <Button type="button" text="Cancel" to="/" secondary />
-            <Button
-              type="submit"
-              text="Save"
-              disabled={navigation.state === "submitting"}
-            />
+          <Flex className="mobile gap-5">
+            <SubmitButton disabled={navigation.state === "submitting"} />
+            <LinkButton text="Cancel" to={ROUTE_HOME} secondary />
+          </Flex>
+
+          <Flex className="desktop">
+            <Flex.End>
+              <LinkButton text="Cancel" to={ROUTE_HOME} secondary />
+              <SubmitButton disabled={navigation.state === "submitting"} />
+            </Flex.End>
           </Flex>
         </Form>
       </div>

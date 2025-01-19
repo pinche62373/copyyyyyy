@@ -138,14 +138,14 @@ export default function Component() {
         />
 
         <Flex className="mobile gap-5">
-          <SubmitButton navigation={navigation} />
+          <SubmitButton disabled={navigation.state === "submitting"} />
           <LinkButton text="Cancel" to={crud.routes.index} secondary />
         </Flex>
 
         <Flex className="desktop">
           <Flex.End className="hidden sm:flex">
             <LinkButton text="Cancel" to={crud.routes.index} secondary />
-            <SubmitButton navigation={navigation} />
+            <SubmitButton disabled={navigation.state === "submitting"} />
           </Flex.End>
         </Flex>
       </Form>
