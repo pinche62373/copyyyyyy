@@ -32,7 +32,9 @@
     "config": "prisma\\seed\\seed.config.ts"
   },
   "lint-staged": {
-    "!(app/styles/**/*|package.json)**.*": ["biome check --fix --no-errors-on-unmatched"]
+    "!(app/styles/**/*|package.json)**.*": [
+      "biome check --fix --no-errors-on-unmatched"
+    ]
   },
   "dependencies": {
     "@epic-web/client-hints": "^1.3.5",
