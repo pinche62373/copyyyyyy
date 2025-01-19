@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { FieldPath } from "react-hook-form";
 import type {
   ActionFunctionArgs,
   LoaderFunctionArgs,
@@ -13,6 +14,7 @@ import { Flex } from "#app/components/flex.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
+import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
 import {
   assignRoleToUser,
   createUser,
@@ -107,15 +109,21 @@ export default function RegisterPage() {
 
   const navigation = useNavigation();
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useRemixForm<FormData>({
+  const form = useRemixForm<FormData>({
     mode: "onBlur",
     resolver,
     defaultValues,
   });
+
+  const {
+    handleSubmit,
+    register,
+    getFieldState,
+    formState: { errors },
+  } = form;
+
+  // @ts-ignore: awaits remix-hook-form fix for type `UseRemixFormReturn`
+  const { setFormFieldValue, isValidFormField } = useFormHelpers(form);
 
   return (
     <div className="flex min-h-full flex-col justify-center">
@@ -132,6 +140,13 @@ export default function RegisterPage() {
             variant="ifta"
             {...register("user.email")}
             error={errors.user?.email?.message}
+            onBlur={(e) =>
+              setFormFieldValue(
+                "user.email" as FieldPath<FormData>,
+                e.currentTarget.value,
+              )
+            }
+            isValid={isValidFormField(getFieldState("user.email"))}
           />
 
           <Input
@@ -139,6 +154,13 @@ export default function RegisterPage() {
             variant="ifta"
             {...register("user.username")}
             error={errors.user?.username?.message}
+            onBlur={(e) =>
+              setFormFieldValue(
+                "user.username" as FieldPath<FormData>,
+                e.currentTarget.value,
+              )
+            }
+            isValid={isValidFormField(getFieldState("user.username"))}
           />
 
           <Input

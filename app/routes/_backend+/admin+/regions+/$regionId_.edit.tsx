@@ -1,5 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "prisma-client";
+import { useEffect } from "react";
+import type { FieldPath } from "react-hook-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
@@ -12,6 +14,7 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
+import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
 import { getRegion, updateRegion } from "#app/models/region.server";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
@@ -112,15 +115,30 @@ export default function Component() {
 
   const navigation = useNavigation();
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useRemixForm<FormData>({
+  const form = useRemixForm<FormData>({
     mode: "onBlur",
+    reValidateMode: "onBlur",
     resolver,
     defaultValues,
   });
+
+  const {
+    handleSubmit,
+    register,
+    getFieldState,
+    reset,
+    formState: { errors, isSubmitSuccessful },
+  } = form;
+
+  // @ts-ignore: awaits remix-hook-form fix for type `UseRemixFormReturn`
+  const { setFormFieldValue, isValidFormField } = useFormHelpers(form);
+
+  // Reset form after successful submission
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset(defaultValues);
+    }
+  }, [isSubmitSuccessful, reset, defaultValues]);
 
   return (
     <BackendPanel>
@@ -135,6 +153,13 @@ export default function Component() {
           variant="ifta"
           {...register("region.name")}
           error={errors.region?.name?.message}
+          onBlur={(e) =>
+            setFormFieldValue(
+              "region.name" as FieldPath<FormData>,
+              e.currentTarget.value,
+            )
+          }
+          isValid={isValidFormField(getFieldState("region.name"))}
         />
 
         <Flex className="mobile gap-5">

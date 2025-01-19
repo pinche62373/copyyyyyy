@@ -1,4 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { FieldPath } from "react-hook-form";
 import {
   ActionFunctionArgs,
   Form,
@@ -12,6 +13,7 @@ import zod from "zod";
 import { FrontendSection } from "#app/components/frontend/section";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
+import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
 import { updateUserAccountSettings } from "#app/models/user.server";
 import { getUserOrDie, isAuthenticated } from "#app/utils/auth.server";
 import { ROUTE_LOGIN } from "#app/utils/constants";
@@ -81,15 +83,21 @@ export default function SettingsIndexPage() {
 
   const navigation = useNavigation();
 
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useRemixForm<FormData>({
+  const form = useRemixForm<FormData>({
     mode: "onBlur",
     resolver,
     defaultValues,
   });
+
+  const {
+    handleSubmit,
+    register,
+    getFieldState,
+    formState: { errors },
+  } = form;
+
+  // @ts-ignore: awaits remix-hook-form fix for type `UseRemixFormReturn`
+  const { setFormFieldValue, isValidFormField } = useFormHelpers(form);
 
   return (
     <FrontendSection>
@@ -109,6 +117,13 @@ export default function SettingsIndexPage() {
             variant="ifta"
             {...register("user.username")}
             error={errors.user?.username?.message}
+            onBlur={(e) =>
+              setFormFieldValue(
+                "user.username" as FieldPath<FormData>,
+                e.currentTarget.value,
+              )
+            }
+            isValid={isValidFormField(getFieldState("user.username"))}
           />
 
           <SubmitButton disabled={navigation.state === "submitting"} />
