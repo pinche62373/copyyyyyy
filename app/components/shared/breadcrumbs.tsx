@@ -1,5 +1,6 @@
 import { HTMLAttributes } from "react";
 import { UIMatch, useMatches } from "react-router";
+import { cn } from "#app/utils/lib/cn.ts";
 
 import {
   Breadcrumb,
@@ -11,7 +12,10 @@ type BreadcrumbMatch = UIMatch<
   { breadcrumb: (data?: unknown) => BreadcrumbHandle }
 >;
 
-export const Breadcrumbs = ({ ...props }: HTMLAttributes<HTMLElement>) => {
+export const Breadcrumbs = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLElement>) => {
   const matches = useMatches() as unknown as BreadcrumbMatch[];
 
   const crumbs = matches
@@ -37,7 +41,7 @@ export const Breadcrumbs = ({ ...props }: HTMLAttributes<HTMLElement>) => {
       <ol
         itemScope
         itemType="https://schema.org/BreadcrumbList"
-        className="flex flex-wrap items-center"
+        className={cn("flex flex-wrap items-center", className)}
         {...props}
       >
         {crumbs.map((crumb, index, arr) => {
