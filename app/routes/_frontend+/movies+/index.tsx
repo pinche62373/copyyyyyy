@@ -76,12 +76,14 @@ export default function MovieIndexPage() {
             <Icon name="home">Home</Icon>
           </li>
 
-          <li className="text-lg">
+          <li>
             <Icon name="checkmark" />
           </li>
-
-          <li className="text-lg">
-            <Icon name="home">Home</Icon>
+          <li>
+            <Icon name="eye">Home</Icon>
+          </li>
+          <li>
+            <Icon name="eye-off">Home</Icon>
           </li>
         </ul>
       </FrontendSection>
