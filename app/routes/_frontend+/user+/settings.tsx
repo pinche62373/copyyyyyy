@@ -123,7 +123,7 @@ export default function SettingsIndexPage() {
                 e.currentTarget.value,
               )
             }
-            isValid={isValidFormField(getFieldState("user.username"))}
+            checkmark={isValidFormField(getFieldState("user.username"))}
           />
 
           <SubmitButton disabled={navigation.state === "submitting"} />

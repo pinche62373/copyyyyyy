@@ -98,7 +98,7 @@ interface MyComboBoxProps<T extends object>
   extends Omit<ComboBoxProps<T>, "children"> {
   ariaLabel: string;
   description?: string;
-  isValid?: boolean;
+  checkmark?: boolean;
   errorMessage?: string | ((validation: ValidationResult) => string);
   children: React.ReactNode | ((item: T) => React.ReactNode);
 }
@@ -106,7 +106,7 @@ interface MyComboBoxProps<T extends object>
 export const ComboBox = <T extends object>({
   ariaLabel,
   description,
-  isValid,
+  checkmark,
   errorMessage,
   children,
   ...rest
@@ -130,7 +130,7 @@ export const ComboBox = <T extends object>({
         />
 
         {/* SUCCESS CHECKMARK */}
-        {isValid && (
+        {checkmark && (
           <span className="absolute top-5 right-[70px]">
             <Icon name="checkmark" className="text-2xl text-green-600" />
           </span>

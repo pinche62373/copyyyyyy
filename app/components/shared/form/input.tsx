@@ -58,7 +58,7 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label: string;
   variant?: Variant;
   className?: string;
-  isValid?: boolean;
+  checkmark?: boolean;
   error: string | undefined;
 }
 
@@ -66,7 +66,7 @@ export function Input({
   label,
   variant = "stacked",
   className,
-  isValid,
+  checkmark,
   error,
   ...rest
 }: InputProps) {
@@ -92,7 +92,7 @@ export function Input({
         />
 
         {/* SUCCESS CHECKMARK */}
-        {isValid && (
+        {checkmark && (
           <span className="absolute top-5 right-4">
             <Icon name="checkmark" className="text-2xl text-green-600" />
           </span>

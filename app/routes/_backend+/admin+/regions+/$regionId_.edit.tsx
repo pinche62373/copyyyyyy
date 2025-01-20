@@ -159,7 +159,7 @@ export default function Component() {
               e.currentTarget.value,
             )
           }
-          isValid={isValidFormField(getFieldState("region.name"))}
+          checkmark={isValidFormField(getFieldState("region.name"))}
         />
 
         <Flex className="mobile gap-5">

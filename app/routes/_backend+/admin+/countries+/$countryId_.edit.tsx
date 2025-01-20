@@ -174,7 +174,7 @@ export default function Component() {
                 e.currentTarget.value,
               )
             }
-            isValid={isValidFormField(getFieldState("country.name"))}
+            checkmark={isValidFormField(getFieldState("country.name"))}
           />
 
           <Controller
@@ -191,7 +191,9 @@ export default function Component() {
                     );
                   }}
                   isInvalid={invalid}
-                  isValid={isValidFormField(getFieldState("country.regionId"))}
+                  checkmark={isValidFormField(
+                    getFieldState("country.regionId"),
+                  )}
                   errorMessage={error && error.message}
                   ariaLabel="Regions"
                   menuTrigger="focus"

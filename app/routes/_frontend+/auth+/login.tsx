@@ -137,7 +137,7 @@ export default function LoginPage() {
                 e.currentTarget.value,
               )
             }
-            isValid={isValidFormField(getFieldState("user.email"))}
+            checkmark={isValidFormField(getFieldState("user.email"))}
           />
 
           <Input

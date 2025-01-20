@@ -146,7 +146,7 @@ export default function RegisterPage() {
                 e.currentTarget.value,
               )
             }
-            isValid={isValidFormField(getFieldState("user.email"))}
+            checkmark={isValidFormField(getFieldState("user.email"))}
           />
 
           <Input
@@ -160,7 +160,7 @@ export default function RegisterPage() {
                 e.currentTarget.value,
               )
             }
-            isValid={isValidFormField(getFieldState("user.username"))}
+            checkmark={isValidFormField(getFieldState("user.username"))}
           />
 
           <Input
