@@ -1,4 +1,5 @@
-import { InputHTMLAttributes, useId } from "react";
+import type { HTMLInputTypeAttribute } from "react";
+import { InputHTMLAttributes, useId, useState } from "react";
 import { tv } from "tailwind-variants";
 import { Icon } from "#app/components/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
@@ -55,21 +56,31 @@ const tvo = tv({
 });
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+  type?: HTMLInputTypeAttribute;
   label: string;
   variant?: Variant;
-  className?: string;
   checkmark?: boolean;
   error: string | undefined;
+  className?: string;
 }
 
 export function Input({
+  type = "text",
   label,
   variant = "stacked",
-  className,
   checkmark,
   error,
+  className,
   ...rest
 }: InputProps) {
+  const [initialType] = useState(type);
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   const id = useId();
 
   return (
@@ -80,6 +91,7 @@ export function Input({
       <div className="flex">
         {/* INPUT FIELD */}
         <input
+          type={showPassword ? "text" : initialType}
           id={`input${id}`}
           aria-labelledby={`label${id}`}
           aria-invalid={error ? true : undefined}
@@ -95,6 +107,19 @@ export function Input({
         {checkmark && (
           <span className="absolute top-5 right-4">
             <Icon name="checkmark" className="text-2xl text-green-600" />
+          </span>
+        )}
+
+        {/* PASSWORD ICON */}
+        {type === "password" && (
+          <span
+            className="absolute top-5 right-4 hover:cursor-pointer"
+            onClick={togglePasswordVisibility}
+          >
+            <Icon
+              name={showPassword ? "eye-off" : "eye"}
+              className="text-2xl"
+            />
           </span>
         )}
 
