@@ -96,16 +96,18 @@ const tvo = tv({
 
 interface MyComboBoxProps<T extends object>
   extends Omit<ComboBoxProps<T>, "children"> {
-  ariaLabel: string;
+  label: string;
   description?: string;
+  required?: boolean;
   checkmark?: boolean;
   errorMessage?: string | ((validation: ValidationResult) => string);
   children: React.ReactNode | ((item: T) => React.ReactNode);
 }
 
 export const ComboBox = <T extends object>({
-  ariaLabel,
+  label,
   description,
+  required,
   checkmark,
   errorMessage,
   children,
@@ -118,7 +120,7 @@ export const ComboBox = <T extends object>({
       validationBehavior="aria"
       {...rest}
       className={"group flex w-full flex-col gap-1 mb-5"}
-      aria-label={ariaLabel}
+      aria-label={label}
     >
       <Group className={tvo({ group: "ifta" })}>
         {/* INPUT FIELD */}
@@ -142,7 +144,8 @@ export const ComboBox = <T extends object>({
           htmlFor={`input${id}`}
           className={cn(tvo({ label: "ifta" }))}
         >
-          Region
+          {label}
+          {!required && <span className="italic opacity-50"> (optional)</span>}
         </label>
 
         {/* CHEVRON BUTTON */}

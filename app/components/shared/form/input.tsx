@@ -58,8 +58,9 @@ const tvo = tv({
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   type?: HTMLInputTypeAttribute;
   label: string;
-  variant?: Variant;
+  required?: boolean;
   checkmark?: boolean;
+  variant?: Variant;
   error: string | undefined;
   className?: string;
 }
@@ -67,8 +68,9 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 export function Input({
   type = "text",
   label,
-  variant = "stacked",
+  required,
   checkmark,
+  variant = "stacked",
   error,
   className,
   ...rest
@@ -130,6 +132,7 @@ export function Input({
           className={cn(tvo({ label: variant }), className)}
         >
           {label}
+          {!required && <span className="italic opacity-50"> (optional)</span>}
         </label>
       </div>
 
