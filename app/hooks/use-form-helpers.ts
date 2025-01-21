@@ -1,11 +1,11 @@
-import type { FieldError } from "react-hook-form";
+import type { FieldError, FieldValues } from "react-hook-form";
 import { useFormState } from "react-hook-form";
 import type { UseRemixFormReturn } from "remix-hook-form";
 
 /**
  * Helper functions for react-hook-form fields.
  */
-export const useFormHelpers = (form: UseRemixFormReturn) => {
+export const useFormHelpers = (form: UseRemixFormReturn<FieldValues>) => {
   const { control, resetField, setValue, trigger } = form;
   const { defaultValues } = useFormState({ control });
 
