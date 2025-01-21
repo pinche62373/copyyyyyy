@@ -19,12 +19,13 @@ import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import {
-  tableCellActions,
   tableCellCreatedAt,
   tableCellLink,
   tableCellUpdatedAt,
   tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
+import { TableButtonDelete } from "#app/components/tanstack-table/cells/table-button-delete.tsx";
+import { TableButtonEdit } from "#app/components/tanstack-table/cells/table-button-edit.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
@@ -38,7 +39,10 @@ import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions"
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
-import { CountrySchemaAdminTable } from "#app/validations/country-schema";
+import {
+  CountrySchemaAdminTable,
+  CountrySchemaDelete,
+} from "#app/validations/country-schema";
 
 const { countryCrud: crud } = getAdminCrud();
 
@@ -135,12 +139,16 @@ export default function Component() {
                 className: "text-center",
               },
             },
-            cell: (info) =>
-              tableCellActions({
-                info,
-                crud,
-                actions: userCellActions,
-              }),
+            cell: (info) => (
+              <>
+                <TableButtonEdit info={info} crud={crud} />
+                <TableButtonDelete
+                  info={info}
+                  crud={crud}
+                  schema={CountrySchemaDelete}
+                />
+              </>
+            ),
           }),
         ]
       : []),

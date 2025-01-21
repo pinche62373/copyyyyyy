@@ -42,3 +42,10 @@ export const RegionSchemaUpdate = z.object({
     name: true,
   }),
 });
+
+export const RegionSchemaDelete = z.object({
+  intent: z.literal("delete"),
+  region: RegionSchema.pick({
+    id: true,
+  }),
+});

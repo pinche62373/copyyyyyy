@@ -91,7 +91,7 @@ export function userHasRoutePermission(
 /**
  * Helper function for checking model permissions.
  */
-export async function userHasModelPermission(
+export function userHasModelPermission(
   user: Pick<ReturnType<typeof useUser>, "roles" | "id"> | null,
   permission: Pick<
     ModelPermission,

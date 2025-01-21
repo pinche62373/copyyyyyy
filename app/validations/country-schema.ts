@@ -51,3 +51,10 @@ export const CountrySchemaUpdate = z.object({
     regionId: true,
   }),
 });
+
+export const CountrySchemaDelete = z.object({
+  intent: z.literal("delete"),
+  country: CountrySchema.pick({
+    id: true,
+  }),
+});

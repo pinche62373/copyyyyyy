@@ -66,7 +66,7 @@ export async function requireModelPermission(
 ) {
   const user = await getUser(request);
 
-  if ((await userHasModelPermission(user, permission)) === null) {
+  if (userHasModelPermission(user, permission) === null) {
     throw data(null, { status: 403, statusText: "Forbidden" });
   }
 

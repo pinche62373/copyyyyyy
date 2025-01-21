@@ -15,17 +15,17 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { Button } from "#app/components/shared/button";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import {
-  tableCellActions,
   tableCellCreatedAt,
   tableCellLink,
   tableCellUpdatedAt,
   tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
+import { TableButtonDelete } from "#app/components/tanstack-table/cells/table-button-delete.tsx";
+import { TableButtonEdit } from "#app/components/tanstack-table/cells/table-button-edit.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
@@ -39,7 +39,10 @@ import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions"
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
-import { RegionSchemaAdminTable } from "#app/validations/region-schema";
+import {
+  RegionSchemaAdminTable,
+  RegionSchemaDelete,
+} from "#app/validations/region-schema";
 
 const { regionCrud: crud } = getAdminCrud();
 
@@ -131,12 +134,16 @@ export default function Component() {
                 className: "text-center",
               },
             },
-            cell: (info) =>
-              tableCellActions({
-                info,
-                crud,
-                actions: userCellActions,
-              }),
+            cell: (info) => (
+              <>
+                <TableButtonEdit info={info} crud={crud} />
+                <TableButtonDelete
+                  info={info}
+                  crud={crud}
+                  schema={RegionSchemaDelete}
+                />
+              </>
+            ),
           }),
         ]
       : []),
