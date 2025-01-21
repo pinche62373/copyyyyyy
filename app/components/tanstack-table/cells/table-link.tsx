@@ -1,25 +1,25 @@
+import React from "react";
 import { NavLink } from "react-router";
-
 import { cn } from "#app/utils/lib/cn";
 
-interface PropTypes {
-  id: string;
-  name: string;
-  target: string;
+interface Props {
+  to: string;
+  children: React.ReactNode;
 }
 
-export const tableCellLink = ({ id, name, target }: PropTypes) => {
-  id = encodeURIComponent(id); // so we can use both cuids and strings
-
+/**
+ *
+ */
+export const TableLink = ({ to, children }: Props) => {
   return (
     <NavLink
-      to={`${target}/${id}`}
+      to={to}
       className={cn(
         "block focus:outline-none",
         "text-accent-foreground hover:underline",
       )}
     >
-      {name}
+      {children}
     </NavLink>
   );
 };

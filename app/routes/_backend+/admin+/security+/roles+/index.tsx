@@ -17,10 +17,8 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
-import {
-  tableCellLink,
-  tableCellVisibleRowIndex,
-} from "#app/components/tanstack-table/cell-types";
+import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
+import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { getRoles } from "#app/models/role.server";
@@ -74,12 +72,11 @@ const columns = [
     header: "Name",
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: ({ row }) =>
-      tableCellLink({
-        id: row.original.id,
-        name: row.original.name,
-        target: crud.routes.index,
-      }),
+    cell: ({ row }) => (
+      <TableLink to={`${crud.routes.index}/${row.original.id}`}>
+        {row.original.name}
+      </TableLink>
+    ),
   }),
   columnHelper.accessor("description", {
     header: "Description",

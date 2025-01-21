@@ -17,10 +17,8 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
-import {
-  tableCellLink,
-  tableCellVisibleRowIndex,
-} from "#app/components/tanstack-table/cell-types";
+import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
+import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { Pairs } from "#app/components/ui/pairs.tsx";
@@ -92,12 +90,13 @@ const columns = [
     header: () => <span>Resource</span>,
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: ({ row }) =>
-      tableCellLink({
-        id: row.original.resource,
-        name: row.original.resource,
-        target: resourceCrud.routes.index,
-      }),
+    cell: ({ row }) => (
+      <TableLink
+        to={`${resourceCrud.routes.index}/${encodeURIComponent(row.original.resource)}`}
+      >
+        {row.original.resource}
+      </TableLink>
+    ),
   }),
   columnHelper.accessor("action", {
     header: () => <span>Action</span>,

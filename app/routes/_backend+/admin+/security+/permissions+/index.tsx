@@ -18,10 +18,8 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
-import {
-  tableCellLink,
-  tableCellVisibleRowIndex,
-} from "#app/components/tanstack-table/cell-types";
+import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
+import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter";
 import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component";
@@ -89,12 +87,13 @@ const columns = [
     header: "Resource",
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-    cell: ({ row }) =>
-      tableCellLink({
-        id: row.original.resource,
-        name: row.original.resource,
-        target: resourceCrud.routes.index,
-      }),
+    cell: ({ row }) => (
+      <TableLink
+        to={`${resourceCrud.routes.index}/${encodeURIComponent(row.original.resource)}`}
+      >
+        {row.original.resource}
+      </TableLink>
+    ),
   }),
   columnHelper.accessor("action", {
     header: "Action",
@@ -111,12 +110,11 @@ const columns = [
   columnHelper.accessor("role", {
     header: "Role",
     enableGlobalFilter: true,
-    cell: ({ row }) =>
-      tableCellLink({
-        id: row.original.roleId,
-        name: row.original.role,
-        target: "/admin/security/roles",
-      }),
+    cell: ({ row }) => (
+      <TableLink to={`/admin/security/roles/${row.original.roleId}`}>
+        {row.original.role}
+      </TableLink>
+    ),
   }),
 ];
 

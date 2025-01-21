@@ -20,12 +20,12 @@ import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import {
   tableCellCreatedAt,
-  tableCellLink,
   tableCellUpdatedAt,
   tableCellVisibleRowIndex,
 } from "#app/components/tanstack-table/cell-types";
 import { TableButtonDelete } from "#app/components/tanstack-table/cells/table-button-delete.tsx";
 import { TableButtonEdit } from "#app/components/tanstack-table/cells/table-button-edit.tsx";
+import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
@@ -103,12 +103,11 @@ export default function Component() {
       header: "Name",
       filterFn: "fuzzy", //using our custom fuzzy filter function
       sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
-      cell: ({ row }) =>
-        tableCellLink({
-          id: row.original.id,
-          name: row.original.name,
-          target: crud.routes.index,
-        }),
+      cell: ({ row }) => (
+        <TableLink to={`${crud.routes.index}/${row.original.id}`}>
+          {row.original.name}
+        </TableLink>
+      ),
     }),
     columnHelper.accessor("createdAt", {
       header: "Created",
