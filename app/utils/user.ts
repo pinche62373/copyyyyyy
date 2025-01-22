@@ -103,3 +103,19 @@ export function userHasModelPermission(
     resourceId: permission.resourceId,
   });
 }
+
+/**
+ * Helper function to check if the authenticated user has at least one permission that
+ * allows creating, updating or deleting a model. Useful for conditional renders like
+ * a table column with (model) action buttons.
+ */
+export function userHasModelPermissions(
+  model: string, // crud.singular
+) {
+  const user = useUser();
+
+  // search all user roles
+  return user.roles.some((role) =>
+    role.permissions.some((p) => p.resource === model),
+  );
+}

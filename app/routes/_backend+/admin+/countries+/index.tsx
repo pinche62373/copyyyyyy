@@ -32,10 +32,13 @@ import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
-import { getUserTableCellActions } from "#app/utils/get-user-table-cell-actions";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { useUser, userHasRoutePermission } from "#app/utils/user";
+import {
+  useUser,
+  userHasModelPermissions,
+  userHasRoutePermission,
+} from "#app/utils/user";
 import {
   CountrySchemaAdminTable,
   CountrySchemaDelete,
@@ -65,6 +68,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function Component() {
   const { countries } = useLoaderData<typeof loader>();
 
+  const renderActionsColumn = userHasModelPermissions(crud.singular);
+
   const user = useUser();
 
   const userHasCreatePermission = userHasRoutePermission(user, {
@@ -74,14 +79,6 @@ export default function Component() {
 
   const columnHelper =
     createColumnHelper<z.infer<typeof CountrySchemaAdminTable>>();
-
-  const userCellActions = getUserTableCellActions({
-    user,
-    route: crud.routes.index,
-    actions: {
-      edit: true,
-    },
-  });
 
   const columns = [
     columnHelper.display({
@@ -122,7 +119,7 @@ export default function Component() {
       enableGlobalFilter: false,
       cell: (info) => <TableDate timestamp={info.getValue()} />,
     }),
-    ...(userCellActions
+    ...(renderActionsColumn
       ? [
           columnHelper.display({
             header: "Actions",
