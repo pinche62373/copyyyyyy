@@ -21,13 +21,10 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
-import {
-  tableCellCreatedAt,
-  tableCellUpdatedAt,
-  tableCellVisibleRowIndex,
-} from "#app/components/tanstack-table/cell-types";
+import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
 import { TableButtonDelete } from "#app/components/tanstack-table/cells/table-button-delete.tsx";
 import { TableButtonEdit } from "#app/components/tanstack-table/cells/table-button-edit.tsx";
+import { TableDate } from "#app/components/tanstack-table/cells/table-date.tsx";
 import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
@@ -157,12 +154,12 @@ export default function Component() {
     columnHelper.accessor("createdAt", {
       header: "Created",
       enableGlobalFilter: false,
-      cell: (info) => tableCellCreatedAt(info),
+      cell: (info) => <TableDate timestamp={info.getValue()}></TableDate>,
     }),
     columnHelper.accessor("updatedAt", {
       header: "Updated",
       enableGlobalFilter: false,
-      cell: (info) => tableCellUpdatedAt(info),
+      cell: (info) => <TableDate timestamp={info.getValue()}></TableDate>,
     }),
     ...(userCellActions
       ? [
