@@ -3,7 +3,7 @@ import { NavLink } from "react-router";
 import { IconContainerRound } from "#app/components/icon-container-round";
 import { Icon } from "#app/components/ui/icon.tsx";
 import type { Crud } from "#app/utils/admin-crud";
-import { useUser, userHasRoutePermission } from "#app/utils/user";
+import { useUser, userHasModelPermission } from "#app/utils/user";
 
 interface Props {
   // biome-ignore lint/suspicious/noExplicitAny: Known Tanstack issue
@@ -18,8 +18,9 @@ export const TableButtonEdit = ({ row, crud }: Props) => {
   const user = useUser();
 
   if (
-    userHasRoutePermission(user, {
-      resource: crud.routes.edit,
+    userHasModelPermission(user, {
+      resource: crud.singular,
+      action: "update",
       scope: "any",
     }) === false
   ) {
