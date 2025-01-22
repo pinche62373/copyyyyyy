@@ -1,5 +1,5 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CellContext } from "@tanstack/react-table";
+import type { Row } from "@tanstack/react-table";
 import { useRef } from "react";
 import { Form } from "react-router";
 import { useRemixForm } from "remix-hook-form";
@@ -8,12 +8,12 @@ import zod from "zod";
 import { IconContainerRound } from "#app/components/icon-container-round";
 import { Confirm } from "#app/components/shared/confirm.tsx";
 import { Icon } from "#app/components/ui/icon.tsx";
-import { Crud } from "#app/utils/admin-crud";
+import type { Crud } from "#app/utils/admin-crud";
 import { useUser, userHasModelPermission } from "#app/utils/user";
 
 interface Props {
   // biome-ignore lint/suspicious/noExplicitAny: Known Tanstack issue
-  info: CellContext<any, string>;
+  row: Row<any>;
   crud: Crud;
   schema: Schema;
 }
@@ -21,7 +21,7 @@ interface Props {
 /**
  * Returns a form element with confirm dialog pointing to the "delete" action for the given row.
  */
-export const TableButtonDelete = ({ info, crud, schema }: Props) => {
+export const TableButtonDelete = ({ row, crud, schema }: Props) => {
   const user = useUser();
 
   const resolver = zodResolver(schema);
@@ -36,7 +36,7 @@ export const TableButtonDelete = ({ info, crud, schema }: Props) => {
     defaultValues: {
       intent: "delete",
       [crud.singular]: {
-        id: info.row.original.id,
+        id: row.original.id,
       },
     },
   });
@@ -72,7 +72,7 @@ export const TableButtonDelete = ({ info, crud, schema }: Props) => {
         </Confirm.Trigger>
 
         <Confirm.Modal heading={`Delete ${crud.singular}`} formRef={formRef}>
-          {`Are you sure you want to permanently delete "${info.row.original.name}"?`}
+          {`Are you sure you want to permanently delete "${row.original.name}"?`}
         </Confirm.Modal>
       </Confirm>
     </>

@@ -1,12 +1,14 @@
-import { tableCellActions } from "#app/components/tanstack-table/cell-types/actions";
 import { useUser, userHasRoutePermission } from "#app/utils/user";
 
-type TableActionsResult = Parameters<typeof tableCellActions>[0]["actions"];
+interface ActionsResult {
+  edit?: boolean;
+  delete?: boolean;
+}
 
 interface TableActionsFunctionArgs {
   user: ReturnType<typeof useUser>;
   route: string;
-  actions: TableActionsResult;
+  actions: ActionsResult;
 }
 
 /**
@@ -20,12 +22,12 @@ export const getUserTableCellActions = ({
   user,
   route,
   actions,
-}: TableActionsFunctionArgs): TableActionsResult | undefined => {
-  const result: TableActionsResult = {};
+}: TableActionsFunctionArgs): ActionsResult | undefined => {
+  const result: ActionsResult = {};
 
   Object.keys(actions).forEach((action) => {
     // ignore actions set to false
-    if (actions[action as keyof TableActionsResult] === false) {
+    if (actions[action as keyof ActionsResult] === false) {
       return;
     }
 
@@ -36,7 +38,7 @@ export const getUserTableCellActions = ({
         scope: "any",
       })
     ) {
-      result[action as keyof TableActionsResult] = true;
+      result[action as keyof ActionsResult] = true;
 
       return;
     }

@@ -176,11 +176,11 @@ export default function Component() {
                 className: "text-center",
               },
             },
-            cell: (info) => (
+            cell: ({ row }) => (
               <>
-                <TableButtonEdit info={info} crud={crud} />
+                <TableButtonEdit row={row} crud={crud} />
                 <TableButtonDelete
-                  info={info}
+                  row={row}
                   crud={crud}
                   schema={LanguageSchemaDelete}
                 />
