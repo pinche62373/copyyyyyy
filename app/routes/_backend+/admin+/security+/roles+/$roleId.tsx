@@ -17,8 +17,8 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
+import { TableIndex } from "#app/components/tanstack-table/cells/table-index.tsx";
 import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
-import { TableRowIndex } from "#app/components/tanstack-table/cells/table-row-index.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { Pairs } from "#app/components/ui/pairs.tsx";
@@ -84,7 +84,7 @@ const columns = [
         className: "table-column-fit-content",
       },
     },
-    cell: ({ row, table }) => TableRowIndex({ row, table }),
+    cell: ({ row, table }) => TableIndex({ row, table }),
   }),
   columnHelper.accessor("resource", {
     header: () => <span>Resource</span>,
@@ -92,10 +92,9 @@ const columns = [
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: ({ row }) => (
       <TableLink
+        label={row.original.resource}
         to={`${resourceCrud.routes.index}/${encodeURIComponent(row.original.resource)}`}
-      >
-        {row.original.resource}
-      </TableLink>
+      />
     ),
   }),
   columnHelper.accessor("action", {

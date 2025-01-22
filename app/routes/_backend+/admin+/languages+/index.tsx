@@ -24,8 +24,8 @@ import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { TableButtonDelete } from "#app/components/tanstack-table/cells/table-button-delete.tsx";
 import { TableButtonEdit } from "#app/components/tanstack-table/cells/table-button-edit.tsx";
 import { TableDate } from "#app/components/tanstack-table/cells/table-date.tsx";
+import { TableIndex } from "#app/components/tanstack-table/cells/table-index.tsx";
 import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
-import { TableRowIndex } from "#app/components/tanstack-table/cells/table-row-index.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
@@ -139,16 +139,17 @@ export default function Component() {
           className: "table-column-fit-content",
         },
       },
-      cell: ({ row, table }) => TableRowIndex({ row, table }),
+      cell: ({ row, table }) => TableIndex({ row, table }),
     }),
     columnHelper.accessor("name", {
       header: "Name",
       filterFn: "fuzzy", //using our custom fuzzy filter function
       sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
       cell: ({ row }) => (
-        <TableLink to={`${crud.routes.index}/${row.original.id}`}>
-          {row.original.name}
-        </TableLink>
+        <TableLink
+          label={row.original.name}
+          to={`${crud.routes.index}/${row.original.id}`}
+        />
       ),
     }),
     columnHelper.accessor("createdAt", {

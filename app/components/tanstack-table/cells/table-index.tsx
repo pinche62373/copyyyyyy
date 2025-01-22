@@ -10,7 +10,7 @@ interface PropTypes {
 /**
  * Returns indexes for currently visible rows.
  */
-export const TableRowIndex = ({ row, table }: PropTypes) => {
+export const TableIndex = ({ row, table }: PropTypes) => {
   return (
     (table
       .getSortedRowModel()

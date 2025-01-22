@@ -4,13 +4,13 @@ import { cn } from "#app/utils/lib/cn";
 
 interface Props {
   to: string;
-  children: React.ReactNode;
+  label: string;
 }
 
 /**
  * Returns a NavLink object.
  */
-export const TableLink = ({ to, children }: Props) => {
+export const TableLink = ({ to, label }: Props) => {
   return (
     <NavLink
       to={to}
@@ -19,7 +19,7 @@ export const TableLink = ({ to, children }: Props) => {
         "text-accent-foreground hover:underline",
       )}
     >
-      {children}
+      {label}
     </NavLink>
   );
 };

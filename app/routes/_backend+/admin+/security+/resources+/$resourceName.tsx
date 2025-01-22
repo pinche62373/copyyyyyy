@@ -17,7 +17,7 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
-import { TableRowIndex } from "#app/components/tanstack-table/cells/table-row-index.tsx";
+import { TableIndex } from "#app/components/tanstack-table/cells/table-index.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { getPermissionsByResourceName } from "#app/models/permission.server";
@@ -83,7 +83,7 @@ const columns = [
         className: "table-column-fit-content",
       },
     },
-    cell: ({ row, table }) => TableRowIndex({ row, table }),
+    cell: ({ row, table }) => TableIndex({ row, table }),
   }),
   columnHelper.accessor("action", {
     header: "Action",
