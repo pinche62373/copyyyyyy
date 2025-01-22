@@ -18,8 +18,8 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
-import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
 import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
+import { TableRowIndex } from "#app/components/tanstack-table/cells/table-row-index.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter";
 import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component";
@@ -81,7 +81,7 @@ const columns = [
         className: "table-column-fit-content",
       },
     },
-    cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
+    cell: ({ row, table }) => TableRowIndex({ row, table }),
   }),
   columnHelper.accessor("resource", {
     header: "Resource",

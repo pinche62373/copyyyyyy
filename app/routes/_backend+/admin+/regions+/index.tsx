@@ -18,11 +18,11 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
 import { TableSearch } from "#app/components/tanstack-table/TableSearch";
-import { tableCellVisibleRowIndex } from "#app/components/tanstack-table/cell-types";
 import { TableButtonDelete } from "#app/components/tanstack-table/cells/table-button-delete.tsx";
 import { TableButtonEdit } from "#app/components/tanstack-table/cells/table-button-edit.tsx";
 import { TableDate } from "#app/components/tanstack-table/cells/table-date.tsx";
 import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
+import { TableRowIndex } from "#app/components/tanstack-table/cells/table-row-index.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
@@ -94,7 +94,7 @@ export default function Component() {
           className: "table-column-fit-content",
         },
       },
-      cell: ({ row, table }) => tableCellVisibleRowIndex({ row, table }),
+      cell: ({ row, table }) => TableRowIndex({ row, table }),
     }),
     columnHelper.accessor("name", {
       header: "Name",
@@ -109,12 +109,12 @@ export default function Component() {
     columnHelper.accessor("createdAt", {
       header: "Created",
       enableGlobalFilter: false,
-      cell: (info) => <TableDate timestamp={info.getValue()}></TableDate>,
+      cell: (info) => <TableDate timestamp={info.getValue()} />,
     }),
     columnHelper.accessor("updatedAt", {
       header: "Updated",
       enableGlobalFilter: false,
-      cell: (info) => <TableDate timestamp={info.getValue()}></TableDate>,
+      cell: (info) => <TableDate timestamp={info.getValue()} />,
     }),
     ...(userCellActions
       ? [

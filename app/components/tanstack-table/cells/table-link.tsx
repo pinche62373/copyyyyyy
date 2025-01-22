@@ -8,7 +8,7 @@ interface Props {
 }
 
 /**
- *
+ * Returns a NavLink object.
  */
 export const TableLink = ({ to, children }: Props) => {
   return (

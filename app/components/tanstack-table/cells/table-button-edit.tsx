@@ -11,6 +11,9 @@ interface Props {
   crud: Crud;
 }
 
+/**
+ * Returns a link element pointing to the /edit page for the given row.
+ */
 export const TableButtonEdit = ({ info, crud }: Props) => {
   const user = useUser();
 

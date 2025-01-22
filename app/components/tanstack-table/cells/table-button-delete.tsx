@@ -18,6 +18,9 @@ interface Props {
   schema: Schema;
 }
 
+/**
+ * Returns a form element with confirm dialog pointing to the "delete" action for the given row.
+ */
 export const TableButtonDelete = ({ info, crud, schema }: Props) => {
   const user = useUser();
 

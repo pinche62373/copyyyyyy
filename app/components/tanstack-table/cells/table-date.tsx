@@ -5,7 +5,7 @@ interface Props {
 }
 
 /**
- * Converts a SQLite timestamp to human readable format.
+ * Returns SQLite timestamp in human readable format.
  */
 export const TableDate = ({ timestamp }: Props) => {
   return timestamp ? timeStampToHuman(timestamp) : null; // allow null values
