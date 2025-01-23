@@ -5,13 +5,13 @@ import { Controller } from "react-hook-form";
 import type { ActionFunctionArgs } from "react-router";
 import {
   Form,
-  LoaderFunctionArgs,
+  type LoaderFunctionArgs,
   useLoaderData,
   useNavigation,
 } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, redirectWithSuccess } from "remix-toast";
-import zod from "zod";
+import type zod from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";

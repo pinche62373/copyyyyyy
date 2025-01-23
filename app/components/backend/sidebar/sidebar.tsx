@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { NavLink } from "react-router";
 import { SidebarFooter } from "#app/components/backend/sidebar/sidebar-footer";
 import { SidebarGroup } from "#app/components/backend/sidebar/sidebar-group";

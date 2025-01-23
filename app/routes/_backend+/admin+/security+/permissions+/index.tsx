@@ -1,6 +1,6 @@
 import {
-  FilterFnOption,
-  SortingState,
+  type FilterFnOption,
+  type SortingState,
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,

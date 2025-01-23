@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Links, Meta, Scripts, ScrollRestoration } from "react-router";
 import { ClientHintCheck } from "#app/utils/client-hints";
 import type { Theme } from "#app/utils/theme.server";

@@ -7,7 +7,7 @@ import { modelPermissions as resourcePermissions } from "#app/permissions/defini
 import { modelPermissions as rolePermissions } from "#app/permissions/definitions/role";
 import { modelPermissions as systemPermissions } from "#app/permissions/definitions/system";
 import { modelPermissions as userPermissions } from "#app/permissions/definitions/user";
-import { Permission } from "#app/permissions/permission.types";
+import type { Permission } from "#app/permissions/permission.types";
 import {
   generateModelPermissions,
   isDuplicatePermission,

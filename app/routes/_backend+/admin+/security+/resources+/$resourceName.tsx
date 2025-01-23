@@ -1,5 +1,5 @@
 import {
-  SortingState,
+  type SortingState,
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,

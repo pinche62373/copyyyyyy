@@ -1,5 +1,5 @@
-import { HTMLAttributes } from "react";
-import { UIMatch, useMatches } from "react-router";
+import type { HTMLAttributes } from "react";
+import { type UIMatch, useMatches } from "react-router";
 import { cn } from "#app/utils/lib/cn.ts";
 
 import {

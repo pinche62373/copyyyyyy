@@ -11,7 +11,7 @@ import {
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError } from "remix-toast";
 import { ServerOnly } from "remix-utils/server-only";
-import zod from "zod";
+import type zod from "zod";
 import { Icon } from "#app/components/ui/icon.tsx";
 import { useHints } from "#app/utils/client-hints.tsx";
 import { useRequestInfo } from "#app/utils/request-info.ts";

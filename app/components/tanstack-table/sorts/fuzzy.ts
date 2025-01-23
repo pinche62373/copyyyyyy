@@ -1,5 +1,5 @@
 import { compareItems } from "@tanstack/match-sorter-utils";
-import { Row, SortingFn, sortingFns } from "@tanstack/react-table";
+import { type Row, type SortingFn, sortingFns } from "@tanstack/react-table";
 
 /**
  * Define a custom fuzzy sort function that will sort by rank if the row has ranking information

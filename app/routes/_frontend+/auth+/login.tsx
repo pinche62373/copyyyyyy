@@ -9,7 +9,7 @@ import { Form, data, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError } from "remix-toast";
 import { SpamError } from "remix-utils/honeypot/server";
-import zod from "zod";
+import type zod from "zod";
 import { Flex } from "#app/components/flex.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";

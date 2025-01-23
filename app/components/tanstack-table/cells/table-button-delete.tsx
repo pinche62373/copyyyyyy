@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { Form } from "react-router";
 import { useRemixForm } from "remix-hook-form";
 import type { Schema } from "zod";
-import zod from "zod";
+import type zod from "zod";
 import { IconContainerRound } from "#app/components/icon-container-round";
 import { Confirm } from "#app/components/shared/confirm.tsx";
 import { Icon } from "#app/components/ui/icon.tsx";

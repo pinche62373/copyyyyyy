@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
-  SortingState,
+  type SortingState,
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
@@ -13,7 +13,8 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { getValidatedFormData } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
-import zod, { z } from "zod";
+import type zod from "zod";
+import type { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";
@@ -47,7 +48,7 @@ import {
   userHasModelPermissions,
 } from "#app/utils/user";
 import {
-  LanguageSchemaAdminTable,
+  type LanguageSchemaAdminTable,
   LanguageSchemaDelete,
 } from "#app/validations/language-schema";
 

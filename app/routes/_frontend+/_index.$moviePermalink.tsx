@@ -1,4 +1,4 @@
-import { LoaderFunctionArgs, redirect } from "react-router";
+import { type LoaderFunctionArgs, redirect } from "react-router";
 import invariant from "tiny-invariant";
 
 import { getMovieIdByPermalink } from "#app/models/movie.server";

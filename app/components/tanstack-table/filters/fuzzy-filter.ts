@@ -1,5 +1,5 @@
-import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
-import { FilterFn } from "@tanstack/react-table";
+import { type RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
+import type { FilterFn } from "@tanstack/react-table";
 
 // NOTE: re-declaring the module will make the filter required in all tables
 declare module "@tanstack/react-table" {

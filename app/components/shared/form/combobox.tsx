@@ -2,19 +2,19 @@
 // Tailwind Layout via https://react-spectrum.adobe.com/react-aria/examples/user-combobox.html
 //
 
-import React from "react";
+import type React from "react";
 import { useId } from "react";
 import {
   ComboBox as AriaComboBox,
   Button,
-  ComboBoxProps,
+  type ComboBoxProps,
   FieldError,
   Group,
   Input,
   ListBox,
   Popover,
   Text,
-  ValidationResult,
+  type ValidationResult,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
 import { Icon } from "#app/components/ui/icon.tsx";

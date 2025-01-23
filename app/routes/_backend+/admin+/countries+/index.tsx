@@ -1,5 +1,5 @@
 import {
-  SortingState,
+  type SortingState,
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
-import { z } from "zod";
+import type { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import { Flex } from "#app/components/flex.tsx";
@@ -40,7 +40,7 @@ import {
   userHasModelPermissions,
 } from "#app/utils/user";
 import {
-  CountrySchemaAdminTable,
+  type CountrySchemaAdminTable,
   CountrySchemaDelete,
 } from "#app/validations/country-schema";
 

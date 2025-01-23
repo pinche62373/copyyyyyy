@@ -1,5 +1,5 @@
 import type { HTMLInputTypeAttribute } from "react";
-import { InputHTMLAttributes, useId, useState } from "react";
+import { type InputHTMLAttributes, useId, useState } from "react";
 import { tv } from "tailwind-variants";
 import { Icon } from "#app/components/ui/icon.tsx";
 import { cn } from "#app/utils/lib/cn";

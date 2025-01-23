@@ -1,4 +1,4 @@
-import { RowData, Table } from "@tanstack/react-table";
+import type { RowData, Table } from "@tanstack/react-table";
 
 export type t_table<T> = Table<T>;
 

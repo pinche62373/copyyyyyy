@@ -1,15 +1,15 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { FieldPath } from "react-hook-form";
 import {
-  ActionFunctionArgs,
+  type ActionFunctionArgs,
   Form,
-  LoaderFunctionArgs,
+  type LoaderFunctionArgs,
   useLoaderData,
   useNavigation,
 } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, dataWithSuccess } from "remix-toast";
-import zod from "zod";
+import type zod from "zod";
 import { FrontendSection } from "#app/components/frontend/section";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";

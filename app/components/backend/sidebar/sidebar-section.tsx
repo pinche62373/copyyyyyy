@@ -1,7 +1,7 @@
-import React from "react";
+import type React from "react";
 import { cn } from "#app/utils/lib/cn";
 import { useUser, userHasRole } from "#app/utils/user";
-import { Role } from "#app/validations/role-schema";
+import type { Role } from "#app/validations/role-schema";
 
 interface Args {
   children: React.ReactNode;

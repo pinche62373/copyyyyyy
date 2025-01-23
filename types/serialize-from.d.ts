@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import type { useLoaderData } from "@remix-run/react";
 
 // Fix for deprecated SerializeFrom: https://github.com/remix-run/remix/pull/10173
 

@@ -1,5 +1,5 @@
 import {
-  SortingState,
+  type SortingState,
   createColumnHelper,
   getCoreRowModel,
   getFilteredRowModel,
@@ -10,7 +10,7 @@ import {
 import { useState } from "react";
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
-import z from "zod";
+import type z from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
@@ -29,7 +29,7 @@ import {
 } from "#app/utils/constants";
 import { humanize } from "#app/utils/lib/humanize";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { RoleSchemaAdminTable } from "#app/validations/role-schema.ts";
+import type { RoleSchemaAdminTable } from "#app/validations/role-schema.ts";
 
 const { roleCrud: crud } = getAdminCrud();
 

@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import type { Navigation } from "react-router";
 import { Button } from "#app/components/shared/button";
 

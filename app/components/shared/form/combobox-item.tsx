@@ -1,4 +1,4 @@
-import { ListBoxItem, ListBoxItemProps } from "react-aria-components";
+import { ListBoxItem, type ListBoxItemProps } from "react-aria-components";
 import { tv } from "tailwind-variants";
 
 export function ComboBoxItem(props: ListBoxItemProps) {

@@ -1,7 +1,7 @@
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
 
 import { cn } from "#app/utils/lib/cn";
-import { t_table } from "#types/table.js";
+import type { t_table } from "#types/table.js";
 
 interface IProps<T> {
   table: t_table<T>;

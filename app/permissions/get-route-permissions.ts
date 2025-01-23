@@ -7,7 +7,7 @@ import { routePermissions as resourcePermissions } from "#app/permissions/defini
 import { routePermissions as rolePermissions } from "#app/permissions/definitions/role";
 import { routePermissions as systemPermissions } from "#app/permissions/definitions/system";
 import { routePermissions as userPermissions } from "#app/permissions/definitions/user";
-import { Permission } from "#app/permissions/permission.types";
+import type { Permission } from "#app/permissions/permission.types";
 import {
   generateRoutePermissions,
   isDuplicatePermission,

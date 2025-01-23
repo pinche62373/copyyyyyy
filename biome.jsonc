@@ -66,6 +66,9 @@
         "useValidForDirection": "error",
         "useYield": "error"
       },
+      "style": {
+        "useImportType": "error"
+      },
       "suspicious": {
         "noAsyncPromiseExecutor": "error",
         "noCatchAssign": "error",

@@ -1,4 +1,4 @@
-import { Permission } from "#app/permissions/permission.types";
+import type { Permission } from "#app/permissions/permission.types";
 
 /**
  * This regex creates below named capturing groups for VIEW and EDIT route permissions:

@@ -1,4 +1,4 @@
-import { ForwardedRef } from "react";
+import type { ForwardedRef } from "react";
 import { Button } from "#app/components/shared/button";
 import { Confirm } from "#app/components/shared/confirm";
 import { cn } from "#app/utils/lib/cn.ts";

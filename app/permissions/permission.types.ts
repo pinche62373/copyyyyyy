@@ -1,5 +1,5 @@
 import type { MergeUnion } from "#app/utils/lib/merge-union";
-import { Role } from "#app/validations/role-schema";
+import type { Role } from "#app/validations/role-schema";
 
 export type PermissionType = "model" | "route";
 

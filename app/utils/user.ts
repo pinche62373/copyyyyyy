@@ -1,6 +1,6 @@
 import { useRouteLoaderData } from "react-router";
 import { normalizeRoutePermission } from "#app/permissions/normalize-route-permission";
-import {
+import type {
   ModelPermission,
   Permission,
   RoutePermission,

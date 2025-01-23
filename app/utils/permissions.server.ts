@@ -1,5 +1,5 @@
 import { data } from "react-router";
-import { getPermissions } from "#app/models/permission.server";
+import type { getPermissions } from "#app/models/permission.server";
 import { getAllPermissions } from "#app/permissions/get-all-permissions";
 import type {
   FlatPermission,
@@ -16,7 +16,7 @@ import {
   userHasModelPermission,
   userHasRoutePermission,
 } from "#app/utils/user";
-import { Role } from "#app/validations/role-schema";
+import type { Role } from "#app/validations/role-schema";
 import { cuid } from "#prisma/seed/seed-utils";
 
 // ----------------------------------------------------------------------------

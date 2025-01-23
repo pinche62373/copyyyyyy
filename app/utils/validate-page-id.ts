@@ -1,4 +1,4 @@
-import { z } from "zod";
+import type { z } from "zod";
 
 // throw 400 Bad Request unless page `id` parameter passed zod validation
 export function validatePageId(

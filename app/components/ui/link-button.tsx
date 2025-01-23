@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { Button } from "#app/components/shared/button";
 
 interface Props extends React.HTMLAttributes<HTMLButtonElement> {

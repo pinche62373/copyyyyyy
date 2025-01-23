@@ -1,4 +1,4 @@
-import { FilterFn } from "@tanstack/react-table";
+import type { FilterFn } from "@tanstack/react-table";
 
 // Custom filter that returns model OR route permissions
 export const permissionTypeFilter: FilterFn<unknown> = (
