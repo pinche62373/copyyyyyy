@@ -37,6 +37,7 @@ CREATE TABLE "Role" (
 CREATE TABLE "Permission" (
     "id" TEXT NOT NULL PRIMARY KEY,
     "resource" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
     "action" TEXT NOT NULL,
     "scope" TEXT NOT NULL,
     "description" TEXT NOT NULL DEFAULT '',

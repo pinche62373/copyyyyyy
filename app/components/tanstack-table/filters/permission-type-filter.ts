@@ -6,12 +6,11 @@ export const permissionTypeFilter: FilterFn<unknown> = (
   columnId,
   value,
 ) => {
-  if (value === "route") {
-    return row.getValue(columnId) === "access";
-  }
-
   if (value === "model") {
-    return row.getValue(columnId) !== "access";
+    return row.getValue(columnId) !== "allow";
+  }
+  if (value === "route") {
+    return row.getValue(columnId) === "allow";
   }
 
   return true;

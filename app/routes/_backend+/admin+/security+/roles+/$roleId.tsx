@@ -67,6 +67,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 interface Permission {
   id: string;
   resource: string;
+  type: string;
   action: string;
   scope: string;
 }
@@ -96,6 +97,10 @@ const columns = [
         to={`${resourceCrud.routes.index}/${encodeURIComponent(row.original.resource)}`}
       />
     ),
+  }),
+  columnHelper.accessor("type", {
+    header: () => <span>Type</span>,
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("action", {
     header: () => <span>Action</span>,

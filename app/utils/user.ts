@@ -84,7 +84,7 @@ export function userHasRoutePermission(
 ) {
   return userHasPermission(
     user,
-    normalizeRoutePermission({ ...permission, action: "access" }), // sets resourceId property
+    normalizeRoutePermission({ ...permission, action: "allow" }), // sets resourceId property
   );
 }
 

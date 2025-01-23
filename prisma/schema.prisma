@@ -70,6 +70,7 @@ model Role {
 model Permission {
   id          String @id @default(cuid())
   resource    String // e.g. note, user, admin/system, user/profile etc.
+  type        String // model or route  
   action      String // create, read, update, delete OR access (for routes)
   scope       String // own or any
   description String @default("")

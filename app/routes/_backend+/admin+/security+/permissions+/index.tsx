@@ -62,6 +62,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 interface FlatPermission {
   id: string;
   resource: string;
+  type: string;
   action: string;
   scope: string;
   role: string;
@@ -93,6 +94,10 @@ const columns = [
         to={`${resourceCrud.routes.index}/${encodeURIComponent(row.original.resource)}`}
       />
     ),
+  }),
+  columnHelper.accessor("type", {
+    header: "Type",
+    cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("action", {
     header: "Action",

@@ -11,7 +11,6 @@ import { BackendSidebar } from "#app/components/backend/sidebar/sidebar";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { isAuthenticated } from "#app/utils/auth.server";
 import { ROUTE_LOGIN } from "#app/utils/constants";
-import { requireRoutePermission } from "#app/utils/permissions.server";
 
 import "#app/styles/backend.css";
 
@@ -34,11 +33,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   // RR7: replaced with function clone
   await isAuthenticated(request, ROUTE_LOGIN + `?returnTo=${url.pathname}`);
-
-  await requireRoutePermission(request, {
-    resource: url.pathname,
-    scope: "any",
-  });
 
   return null;
 };

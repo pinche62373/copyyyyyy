@@ -27,6 +27,7 @@ import {
   ADMIN_TABLE_PAGE_INDEX,
   ADMIN_TABLE_PAGE_SIZE,
 } from "#app/utils/constants";
+import { humanize } from "#app/utils/lib/humanize";
 import {
   flattenPermissions,
   requireRoutePermission,
@@ -42,6 +43,8 @@ export const handle = {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
+  console.log("Resource crud", crud);
+
   await requireRoutePermission(request, {
     resource: crud.routes.view,
     scope: "any",
@@ -106,8 +109,6 @@ const columns = [
 export default function Component() {
   const { resourceName, permissions } = useLoaderData<typeof loader>();
 
-  const resourceType = permissions[0].action === "access" ? "route" : "model";
-
   const [pagination, setPagination] = useState({
     pageIndex: ADMIN_TABLE_PAGE_INDEX,
     pageSize: ADMIN_TABLE_PAGE_SIZE,
@@ -148,7 +149,7 @@ export default function Component() {
     <>
       <BackendPanel>
         <BackendTitle
-          text={`Permissions for ${resourceType} ${resourceName}`}
+          text={`${humanize(permissions[0].type)} permissions for ${resourceName}`}
           foreground
         />
 

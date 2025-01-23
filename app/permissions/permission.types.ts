@@ -1,13 +1,15 @@
 import type { MergeUnion } from "#app/utils/lib/merge-union";
 import { Role } from "#app/validations/role-schema";
 
+export type PermissionType = "model" | "route";
+
 // consts as used in the permission definitions
 export const C = "create" as const;
 export const U = "update" as const;
 export const D = "delete" as const;
 
 // consts as used by the exported interfaces below
-const routeActions = ["access"] as const;
+const routeActions = ["allow"] as const;
 const routeScopes = ["own", "any"] as const;
 
 const modelActions = ["create", "update", "delete"] as const;
@@ -18,6 +20,7 @@ const modelScopes = ["own", "any"] as const;
 export interface Permission {
   id: string;
   resource: string;
+  type: PermissionType;
   action: MergeUnion<ModelPermission["action"] | RoutePermission["action"]>;
   scope: MergeUnion<ModelPermission["scope"] | RoutePermission["scope"]>;
   resourceId: string | undefined;
@@ -36,6 +39,7 @@ export interface FlatPermission extends Omit<Permission, "roles"> {
 
 export interface RoutePermission {
   resource: string;
+  type: "route";
   action: (typeof routeActions)[number];
   scope: (typeof routeScopes)[number];
   description?: string;
@@ -51,6 +55,7 @@ export interface RoutePermissionFunctionArgs {
 
 export interface ModelPermission {
   resource: string;
+  type: "model";
   action: (typeof modelActions)[number];
   scope: (typeof modelScopes)[number];
   resourceId?: string;

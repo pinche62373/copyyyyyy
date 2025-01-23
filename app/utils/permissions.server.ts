@@ -1,5 +1,4 @@
 import { data } from "react-router";
-
 import { getPermissions } from "#app/models/permission.server";
 import { getAllPermissions } from "#app/permissions/get-all-permissions";
 import type {
@@ -10,6 +9,7 @@ import type {
   RoutePermission,
   RoutePermissionFunctionArgs,
 } from "#app/permissions/permission.types";
+import type { PermissionType } from "#app/permissions/permission.types.ts";
 import { getUser, requireUserId } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import {
@@ -81,7 +81,12 @@ export const getSeedPermissions = () => {
 
   const result = permissions.map((permission) => ({
     ...permission,
-    id: cuid(permission.resource + permission.action + permission.scope),
+    id: cuid(
+      permission.resource +
+        permission.type +
+        permission.action +
+        permission.scope,
+    ),
     updatedAt: null,
   }));
 
@@ -101,11 +106,14 @@ export const generateModelPermissions = ({
   actions = Array.isArray(actions) ? actions : [actions];
   roles = Array.isArray(roles) ? roles : [roles];
 
+  const type: PermissionType = "model";
+
   const result = [];
 
   for (const action of actions) {
     result.push({
       resource,
+      type,
       action,
       scope,
       description,
@@ -124,12 +132,15 @@ export const generateRoutePermissions = ({
   roles,
   description,
 }: RoutePermissionFunctionArgs): RoutePermission[] => {
+  const type = "route";
+
   roles = Array.isArray(roles) ? roles : [roles];
 
   return [
     {
       resource,
-      action: "access",
+      type,
+      action: "allow",
       scope,
       description,
       roles,
