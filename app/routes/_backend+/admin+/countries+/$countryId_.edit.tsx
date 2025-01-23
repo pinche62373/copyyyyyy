@@ -167,9 +167,7 @@ export default function Component() {
             label="Name"
             variant="ifta"
             {...register("country.name")}
-            required={
-              !CountrySchemaUpdate.shape.country.shape.name.isOptional()
-            }
+            optional={CountrySchemaUpdate.shape.country.shape.name.isOptional()}
             error={errors.country?.name?.message}
             onBlur={(e) =>
               setFormFieldValue(
@@ -193,9 +191,7 @@ export default function Component() {
                       (id as string) || "",
                     );
                   }}
-                  required={
-                    !CountrySchemaUpdate.shape.country.shape.regionId.isOptional()
-                  }
+                  optional={CountrySchemaUpdate.shape.country.shape.regionId.isOptional()}
                   isInvalid={invalid}
                   checkmark={isValidFormField(
                     getFieldState("country.regionId"),

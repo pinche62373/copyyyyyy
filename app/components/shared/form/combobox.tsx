@@ -98,7 +98,7 @@ interface MyComboBoxProps<T extends object>
   extends Omit<ComboBoxProps<T>, "children"> {
   label: string;
   description?: string;
-  required?: boolean;
+  optional?: boolean;
   checkmark?: boolean;
   errorMessage?: string | ((validation: ValidationResult) => string);
   children: React.ReactNode | ((item: T) => React.ReactNode);
@@ -107,7 +107,7 @@ interface MyComboBoxProps<T extends object>
 export const ComboBox = <T extends object>({
   label,
   description,
-  required,
+  optional,
   checkmark,
   errorMessage,
   children,
@@ -145,7 +145,7 @@ export const ComboBox = <T extends object>({
           className={cn(tvo({ label: "ifta" }))}
         >
           {label}
-          {!required && <span className="italic opacity-50"> (optional)</span>}
+          {optional && <span className="italic opacity-50"> (optional)</span>}
         </label>
 
         {/* CHEVRON BUTTON */}
