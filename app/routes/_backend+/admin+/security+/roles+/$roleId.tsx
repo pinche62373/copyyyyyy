@@ -1,4 +1,5 @@
 import {
+  FilterFnOption,
   SortingState,
   createColumnHelper,
   getCoreRowModel,
@@ -13,6 +14,7 @@ import { useLoaderData } from "react-router";
 import { z } from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
+import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import TanstackTable from "#app/components/tanstack-table";
 import { TableFooter } from "#app/components/tanstack-table/TableFooter";
@@ -20,6 +22,8 @@ import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { TableIndex } from "#app/components/tanstack-table/cells/table-index.tsx";
 import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
+import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component.tsx";
+import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter.ts";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { Pairs } from "#app/components/ui/pairs.tsx";
 import { getRoleWithPermissions } from "#app/models/role.server";
@@ -64,7 +68,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
   };
 }
 
-interface Permission {
+interface FlatPermission {
   id: string;
   resource: string;
   type: string;
@@ -72,7 +76,7 @@ interface Permission {
   scope: string;
 }
 
-const columnHelper = createColumnHelper<Permission>();
+const columnHelper = createColumnHelper<FlatPermission>();
 
 const columns = [
   columnHelper.display({
@@ -101,6 +105,7 @@ const columns = [
   columnHelper.accessor("type", {
     header: "Type",
     cell: (info) => info.getValue(),
+    filterFn: permissionTypeFilter as FilterFnOption<FlatPermission>,
   }),
   columnHelper.accessor("action", {
     header: "Action",
@@ -153,6 +158,13 @@ export default function Component() {
     onPaginationChange: setPagination,
   });
 
+  // table filter
+  type Filter = "all" | "model" | "route";
+
+  const handleFilter = (filter: Filter) => {
+    table.getColumn("type")?.setFilterValue(filter);
+  };
+
   return (
     <>
       {/* List role data */}
@@ -172,11 +184,23 @@ export default function Component() {
       <BackendPanel className="pb-4">
         <BackendTitle text={"Permissions"} foreground />
 
-        <TableSearch
-          value={globalFilter ?? ""}
-          onChange={(value: string | number) => setGlobalFilter(String(value))}
-          placeholder={`Search permissions`}
-        />
+        <Flex className="flex-row">
+          <Flex.Start>
+            <TableSearch
+              value={globalFilter ?? ""}
+              onChange={(value: string | number) =>
+                setGlobalFilter(String(value))
+              }
+              placeholder={`Search permissions...`}
+            />
+          </Flex.Start>
+
+          <Flex.End className="ml-5 items-end grow">
+            <PermissionTypeFilterComponent
+              onClick={(value: Filter) => handleFilter(value)}
+            />
+          </Flex.End>
+        </Flex>
 
         <TanstackTable.Table table={table} className="mt-5">
           <TanstackTable.THead />

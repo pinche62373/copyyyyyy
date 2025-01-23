@@ -98,13 +98,13 @@ const columns = [
   columnHelper.accessor("type", {
     header: "Type",
     cell: (info) => info.getValue(),
+    filterFn: permissionTypeFilter as FilterFnOption<FlatPermission>,
   }),
   columnHelper.accessor("action", {
     header: "Action",
     enableGlobalFilter: true,
     enableColumnFilter: true,
     cell: (info) => info.getValue(),
-    filterFn: permissionTypeFilter as FilterFnOption<FlatPermission>,
   }),
   columnHelper.accessor("scope", {
     header: "Scope",
