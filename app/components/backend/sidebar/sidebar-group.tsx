@@ -48,7 +48,7 @@ export function SidebarGroup({
           className={cn(" relative mt-1.5 space-y-1.5 ml-5")}
           buttonProps={{
             className: cn(
-              "flex w-full gap-x-3 rounded-lg px-3 py-2 mr-2",
+              "flex w-full gap-x-3 rounded-xs px-3 py-2 mr-2",
               "focus:outline-none disabled:pointer-events-none disabled:opacity-50",
               "text-start text-sm text-sidebar-secondary",
               "hover:bg-sidebar-hover hover:text-sidebar-primary",

@@ -27,7 +27,7 @@ export function SidebarLink({
 
   className = cn(
     `mb-1.5 ${marginLeft}`,
-    "flex gap-x-3 rounded-lg px-3 py-2 focus:outline-none",
+    "flex gap-x-3 rounded-xs px-3 py-2 focus:outline-none",
     "text-sm text-sidebar-secondary",
     "hover:bg-sidebar-hover hover:text-sidebar-primary",
     "focus:bg-sidebar-hover focus:text-sidebar-primary",
