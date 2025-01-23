@@ -88,7 +88,7 @@ const columns = [
     cell: ({ row, table }) => TableIndex({ row, table }),
   }),
   columnHelper.accessor("resource", {
-    header: () => <span>Resource</span>,
+    header: "Resource",
     filterFn: "fuzzy", //using our custom fuzzy filter function
     sortingFn: fuzzySort, //sort by fuzzy rank (falls back to alphanumeric)
     cell: ({ row }) => (
@@ -99,16 +99,16 @@ const columns = [
     ),
   }),
   columnHelper.accessor("type", {
-    header: () => <span>Type</span>,
+    header: "Type",
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("action", {
-    header: () => <span>Action</span>,
+    header: "Action",
     enableGlobalFilter: true,
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor("scope", {
-    header: () => <span>Scope</span>,
+    header: "Scope",
     enableGlobalFilter: true,
     cell: (info) => info.getValue(),
   }),
