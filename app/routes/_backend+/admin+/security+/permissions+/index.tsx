@@ -166,7 +166,7 @@ export default function Component() {
   type Filter = "all" | "model" | "route";
 
   const handleFilter = (filter: Filter) => {
-    table.getColumn("action")?.setFilterValue(filter);
+    table.getColumn("type")?.setFilterValue(filter);
   };
 
   return (

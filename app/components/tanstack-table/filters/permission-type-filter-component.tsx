@@ -5,7 +5,7 @@ import { cn } from "#app/utils/lib/cn.ts";
 type Filter = "all" | "model" | "route";
 
 interface Args {
-  onClick: (e: Filter) => void;
+  onClick: (e: Filter) => void; // this requires an onClick() handler in the parent component
 }
 
 export const PermissionTypeFilterComponent = ({ onClick }: Args) => {

@@ -7,10 +7,10 @@ export const permissionTypeFilter: FilterFn<unknown> = (
   value,
 ) => {
   if (value === "model") {
-    return row.getValue(columnId) !== "allow";
+    return row.getValue(columnId) === "model";
   }
   if (value === "route") {
-    return row.getValue(columnId) === "allow";
+    return row.getValue(columnId) === "route";
   }
 
   return true;
