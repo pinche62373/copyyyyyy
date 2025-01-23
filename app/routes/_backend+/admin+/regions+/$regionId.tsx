@@ -12,7 +12,7 @@ import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { requireRoutePermission } from "#app/utils/permissions.server";
-import { useUser, userHasRoutePermission } from "#app/utils/user";
+import { useUser, userHasModelPermission } from "#app/utils/user";
 import { validatePageId } from "#app/utils/validate-page-id";
 import { RegionSchema } from "#app/validations/region-schema";
 
@@ -53,8 +53,9 @@ export default function Component() {
 
   const user = useUser();
 
-  const userHasEditPermission = userHasRoutePermission(user, {
-    resource: crud.routes.edit,
+  const renderEditButton = userHasModelPermission(user, {
+    resource: crud.singular,
+    action: "update",
     scope: "any",
   });
 
@@ -84,7 +85,7 @@ export default function Component() {
       </Pairs>
 
       <Flex className="mobile gap-5">
-        {userHasEditPermission && (
+        {renderEditButton && (
           <LinkButton
             text="Edit"
             to={`${crud.routes.index}/${region.id}/edit`}
@@ -97,7 +98,7 @@ export default function Component() {
         <Flex.End>
           <LinkButton text="Cancel" to={crud.routes.index} secondary />
 
-          {userHasEditPermission && (
+          {renderEditButton && (
             <LinkButton
               text="Edit"
               to={`${crud.routes.index}/${region.id}/edit`}

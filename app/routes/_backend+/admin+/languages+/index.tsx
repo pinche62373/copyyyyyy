@@ -43,8 +43,8 @@ import {
 } from "#app/utils/permissions.server";
 import {
   useUser,
+  userHasModelPermission,
   userHasModelPermissions,
-  userHasRoutePermission,
 } from "#app/utils/user";
 import {
   LanguageSchemaAdminTable,
@@ -117,8 +117,9 @@ export default function Component() {
 
   const user = useUser();
 
-  const userHasCreatePermission = userHasRoutePermission(user, {
-    resource: crud.routes.new,
+  const renderCreateButton = userHasModelPermission(user, {
+    resource: crud.singular,
+    action: "create",
     scope: "any",
   });
 
@@ -249,13 +250,13 @@ export default function Component() {
         <BackendTitle text={humanize(crud.plural)} foreground />
 
         <Flex className="mobile">
-          {userHasCreatePermission && <LinkButtonComponent />}
+          {renderCreateButton && <LinkButtonComponent />}
           <TableSearchComponent />
         </Flex>
 
         <Flex className="desktop">
           <TableSearchComponent />
-          {userHasCreatePermission && <LinkButtonComponent />}
+          {renderCreateButton && <LinkButtonComponent />}
         </Flex>
 
         <TanstackTable.Table table={table} className="mt-5">
