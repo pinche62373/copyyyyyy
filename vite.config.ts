@@ -8,7 +8,9 @@ import { iconsSpritesheet } from "vite-plugin-icons-spritesheet";
 export default defineConfig({
   plugins: [
     reactRouterDevTools(),
-    reactRouterHonoServer(),
+    reactRouterHonoServer({
+      serverEntryPoint: "./app/hono",
+    }),
     reactRouter(),
     iconsSpritesheet({
       withTypes: true, // True to generate TS types
