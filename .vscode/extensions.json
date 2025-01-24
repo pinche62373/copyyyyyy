@@ -3,6 +3,7 @@
     "biomejs.biome",
     "davidanson.vscode-markdownlint",
     "prisma.prisma",
-    "bradlc.vscode-tailwindcss"
+    "bradlc.vscode-tailwindcss",
+    "ms-azuretools.vscode-docker"
   ]
 }
