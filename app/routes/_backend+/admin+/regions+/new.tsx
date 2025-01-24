@@ -14,7 +14,7 @@ import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
-import { createRegion } from "#app/models/region.server";
+import { createRegion } from "#app/queries/region.server.ts";
 import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";

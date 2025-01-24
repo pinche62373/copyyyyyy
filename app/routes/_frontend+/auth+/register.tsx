@@ -19,7 +19,7 @@ import {
   assignRoleToUser,
   createUser,
   isEmailAddressAvailable,
-} from "#app/models/user.server";
+} from "#app/queries/user.server.ts";
 import { authenticate, blockAuthenticated } from "#app/utils/auth.server";
 import { ROUTE_HOME, ROUTE_REGISTER } from "#app/utils/constants.ts";
 import { honeypot } from "#app/utils/honeypot.server";

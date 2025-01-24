@@ -24,7 +24,7 @@ import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter
 import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter";
 import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { getPermissions } from "#app/models/permission.server";
+import { getPermissions } from "#app/queries/permission.server.ts";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,

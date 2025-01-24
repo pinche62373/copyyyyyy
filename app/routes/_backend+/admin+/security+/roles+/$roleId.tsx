@@ -26,7 +26,7 @@ import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/fi
 import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter.ts";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { Pairs } from "#app/components/ui/pairs.tsx";
-import { getRoleWithPermissions } from "#app/models/role.server";
+import { getRoleWithPermissions } from "#app/queries/role.server.ts";
 import { handle as rolesHandle } from "#app/routes/_backend+/admin+/security+/roles+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {

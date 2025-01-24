@@ -2,8 +2,8 @@ import { redirect } from "react-router";
 import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 import { parseFormData } from "remix-hook-form";
-import type { User } from "#app/models/user.server";
-import { getUserById, verifyLogin } from "#app/models/user.server";
+import type { User } from "#app/queries/user.server.ts";
+import { getUserById, verifyLogin } from "#app/queries/user.server.ts";
 import { ROUTE_HOME, ROUTE_LOGIN } from "#app/utils/constants";
 import { prisma } from "#app/utils/db.server";
 import {

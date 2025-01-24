@@ -26,7 +26,7 @@ import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
-import { getRegions } from "#app/models/region.server";
+import { getRegions } from "#app/queries/region.server.ts";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,

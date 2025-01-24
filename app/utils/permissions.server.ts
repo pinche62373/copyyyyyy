@@ -1,5 +1,4 @@
 import { data } from "react-router";
-import type { getPermissions } from "#app/models/permission.server";
 import { getAllPermissions } from "#app/permissions/get-all-permissions";
 import type {
   FlatPermission,
@@ -10,6 +9,7 @@ import type {
   RoutePermissionFunctionArgs,
 } from "#app/permissions/permission.types";
 import type { PermissionType } from "#app/permissions/permission.types.ts";
+import type { getPermissions } from "#app/queries/permission.server.ts";
 import { getUser, requireUserId } from "#app/utils/auth.server";
 import { prisma } from "#app/utils/db.server";
 import {

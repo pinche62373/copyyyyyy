@@ -21,7 +21,7 @@ import { TableIndex } from "#app/components/tanstack-table/cells/table-index.tsx
 import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { getRoles } from "#app/models/role.server";
+import { getRoles } from "#app/queries/role.server.ts";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,

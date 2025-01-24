@@ -6,7 +6,7 @@ import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { Pairs } from "#app/components/ui/pairs.tsx";
-import { getCountry } from "#app/models/country.server";
+import { getCountry } from "#app/queries/country.server.ts";
 import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";

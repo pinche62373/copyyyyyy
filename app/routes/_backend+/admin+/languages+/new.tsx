@@ -14,7 +14,7 @@ import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
-import { createLanguage } from "#app/models/language.server";
+import { createLanguage } from "#app/queries/language.server.ts";
 import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";

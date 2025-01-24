@@ -30,7 +30,7 @@ import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
-import { deleteLanguage, getLanguages } from "#app/models/language.server";
+import { deleteLanguage, getLanguages } from "#app/queries/language.server.ts";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import {

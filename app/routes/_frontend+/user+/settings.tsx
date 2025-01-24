@@ -14,7 +14,7 @@ import { FrontendSection } from "#app/components/frontend/section";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
-import { updateUserAccountSettings } from "#app/models/user.server";
+import { updateUserAccountSettings } from "#app/queries/user.server.ts";
 import { getUserOrDie, isAuthenticated } from "#app/utils/auth.server";
 import { ROUTE_LOGIN } from "#app/utils/constants";
 import {

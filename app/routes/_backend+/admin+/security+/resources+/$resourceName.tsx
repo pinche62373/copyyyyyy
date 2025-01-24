@@ -20,7 +20,7 @@ import { TableSearch } from "#app/components/tanstack-table/TableSearch";
 import { TableIndex } from "#app/components/tanstack-table/cells/table-index.tsx";
 import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
 import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
-import { getPermissionsByResourceName } from "#app/models/permission.server";
+import { getPermissionsByResourceName } from "#app/queries/permission.server.ts";
 import { handle as permissionsHandle } from "#app/routes/_backend+/admin+/security+/permissions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {

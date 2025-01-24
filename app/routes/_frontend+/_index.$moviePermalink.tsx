@@ -1,7 +1,7 @@
 import { type LoaderFunctionArgs, redirect } from "react-router";
 import invariant from "tiny-invariant";
 
-import { getMovieIdByPermalink } from "#app/models/movie.server";
+import { getMovieIdByPermalink } from "#app/queries/movie.server.ts";
 import { permalink as permalinkSchema } from "#app/validations/movie-schema";
 
 /**

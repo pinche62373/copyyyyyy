@@ -2,7 +2,7 @@ import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { z } from "zod";
 import { FrontendSection } from "#app/components/frontend/section";
-import { getMovie } from "#app/models/movie.server";
+import { getMovie } from "#app/queries/movie.server.ts";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const movieId = z.coerce.string().parse(params.movieId);

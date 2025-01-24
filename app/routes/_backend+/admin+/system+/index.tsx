@@ -14,7 +14,7 @@ import { Pairs } from "#app/components/ui/pairs.tsx";
 import {
   deleteExpiredSessions,
   getExpiredSessionCount,
-} from "#app/models/session";
+} from "#app/queries/session.ts";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 
 const intent = "purge" as const;
