@@ -8,5 +8,5 @@ By default, Hono runs in [Easy Mode](https://github.com/rphlmr/react-router-hono
 
 If you want to customize your server or need middlewares:
 
-- Do not update [index.ts](index.ts).
+- Do not update [index.ts](index.ts), it is managed by the upstream repo.
 - Instead, create `config.ts` with your customizations. For inspiration, see this [config.example.ts](config.example.ts).

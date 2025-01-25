@@ -1,3 +1,8 @@
+/**
+ * @fileoverview THIS FILE IS MANAGED BY THE UPSTREAM REPO - DO NOT MODIFY.
+ * Any changes to this file will be overwritten during the next sync.
+ * To make changes, please modify the upstream code instead.
+ */
 import fs from "fs-extra";
 import { createHonoServer } from "react-router-hono-server/node";
 
