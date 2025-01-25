@@ -1,20 +1,23 @@
 # -------------------------------------
-# App
-# -------------------------------------
-
-# auto-generated SVG sprite sheet and typings
-app/components/ui/icons
-
-# -------------------------------------
 # Dev
 # -------------------------------------
+.env
+.react-router/
+
 node_modules
 
 /build
 /public/build
-.env
-.react-router/
 
 /prisma/data.db
 /prisma/data.db-journal
 /prisma/seed/.snaplet/dataModel.json
+
+/sync/cherry-picker.js
+/sync/cherry-picker.cjs
+
+# -------------------------------------
+# App
+# -------------------------------------
+# auto-generated SVG sprite sheet and typings
+/app/components/ui/icons
