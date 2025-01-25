@@ -1,6 +1,7 @@
 import { execSync } from "child_process";
 import * as fs from "fs";
 import * as path from "path";
+import * as readline from "readline";
 
 interface CherryPickOptions {
   sourceRepoPath: string;
@@ -82,14 +83,17 @@ class GitCherryPicker {
     }
   }
 
-  private getMatchingCommits(): string[] {
-    const command = `git log --reverse ${this.branch} --pretty=format:"%H %s"`;
+  private getMatchingCommits(): Array<{ hash: string; message: string }> {
+    const command = `git log --reverse ${this.branch} --pretty=format:"%H||%s"`;
     const output = this.runCommand(command, this.sourceRepoPath);
 
     return output
       .split("\n")
       .filter((line) => line.includes(this.regex))
-      .map((line) => line.split(" ")[0]);
+      .map((line) => {
+        const [hash, message] = line.split("||");
+        return { hash, message };
+      });
   }
 
   private getFileChanges(commit: string): Array<[string, string]> {
@@ -111,7 +115,31 @@ class GitCherryPicker {
     return fileChanges;
   }
 
-  public cherryPick(): void {
+  private async promptForConfirmation(
+    commits: Array<{ hash: string; message: string }>,
+  ): Promise<boolean> {
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    console.log("\nCommits to be cherry-picked:");
+    commits.forEach(({ hash, message }, index) => {
+      console.log(`${index + 1}. ${hash.slice(0, 8)} - ${message}`);
+    });
+
+    return new Promise((resolve) => {
+      rl.question(
+        "\nProceed with cherry-picking these commits? (y/N) ",
+        (answer) => {
+          rl.close();
+          resolve(answer.toLowerCase() === "y");
+        },
+      );
+    });
+  }
+
+  public async cherryPick(): Promise<void> {
     const commits = this.getMatchingCommits();
 
     if (commits.length === 0) {
@@ -121,15 +149,17 @@ class GitCherryPicker {
 
     console.log(`Found ${commits.length} matching commits.`);
 
-    for (const commit of commits) {
+    const shouldProceed = await this.promptForConfirmation(commits);
+    if (!shouldProceed) {
+      console.log("Cherry-pick operation aborted.");
+      return;
+    }
+
+    for (const { hash: commit, message } of commits) {
       try {
         console.log(`\nProcessing commit: ${commit}`);
-        const commitMessage = this.runCommand(
-          `git log -1 --pretty=%B ${commit}`,
-          this.sourceRepoPath,
-        );
 
-        if (this.isCommitMerged(commitMessage)) {
+        if (this.isCommitMerged(message)) {
           console.log(`Commit already merged, skipping: ${commit}`);
           continue;
         }
@@ -167,7 +197,7 @@ class GitCherryPicker {
         }
 
         this.runCommand(
-          `git commit -m "${commitMessage}" --no-verify`,
+          `git commit -m "${message}" --no-verify`,
           this.targetRepoPath,
         );
         console.log(`Successfully processed commit: ${commit}`);
