@@ -1,6 +1,6 @@
 # Base Stack
 
-This repo contains the upstream `Base Stack`.
+This repo contains the upstream `Base Stack` code.
 
 ## Components
 
