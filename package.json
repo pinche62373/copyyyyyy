@@ -16,7 +16,7 @@
     "lint-staged": "lint-staged --verbose",
     "migrate": "prisma migrate dev",
     "postmigrate": "npx @snaplet/seed sync",
-    "prepare": "husky && ./sync/init-upstream.sh",
+    "prepare": "husky && bash sync/init-upstream.sh",
     "pretest:e2e:run": "npm run build",
     "seed": "npx prisma db seed",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
