@@ -1,3 +1,32 @@
 #!/usr/bin/env sh
 
+# -----------------------------------------------------------------------------
+# Warn developers when updating files that are centrally managed.
+# -----------------------------------------------------------------------------
+# Get list of protected patterns from gitignore-upstream
+PROTECTED_PATTERNS=$(cat ./sync/.gitignore-upstream)
+
+# Get staged files
+STAGED_FILES=$(git diff --cached --name-only)
+
+# Check each staged file against protected patterns
+for file in $STAGED_FILES; do
+    for pattern in $PROTECTED_PATTERNS; do
+        if [[ $file == $pattern ]]; then
+            echo "⚠️  Warning: $file matches protected pattern $pattern"
+            echo "This file should be edited in the upstream repository instead."
+            echo "Continue commit? (y/N)"
+            read -r response
+            if [[ ! $response =~ ^[Yy]$ ]]; then
+                exit 1
+            fi
+        fi
+    done
+done
+
+exit 0
+
+# -----------------------------------------------------------------------------
+# Not a centrally managed file, run biome
+# -----------------------------------------------------------------------------
 npm run lint-staged

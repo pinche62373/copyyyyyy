@@ -1,20 +1,20 @@
-# TZDB
+# Base Stack
 
-Movie Database
+This repo contains the upstream `Base Stack`.
 
-## Stack
+## Components
 
-| Component       | Solution                                 |
-|-----------------|------------------------------------------|
-| Language        | [Typescript](https://typescriptlang.org) |
-| Framework       | [React Router](https://github.com/remix-run/react-router) |
-| Database        | [SQLite](https://sqlite.org) |
-| Styling         |  [Tailwind](https://tailwindcss.com/) |
+| Component       | Solution                                                                                               |
+|-----------------|--------------------------------------------------------------------------------------------------------|
+| Language        | [Typescript](https://typescriptlang.org)                                                               |
+| Framework       | [React Router](https://github.com/remix-run/react-router)                                              |
+| Database        | [SQLite](https://sqlite.org)                                                                           |
+| Styling         | [Tailwind](https://tailwindcss.com/)                                                                   |
 | Code Formatting | [Biome](https://biomejs.dev/) and [markdownlint-cli2](https://github.com/DavidAnson/markdownlint-cli2) |
-| Testing         |  [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com) |
-| Web Server      | [Hono](https://hono.dev/)|
-| CI              | [GitHub Actions](https://github.com/features/actions) |
-| Authentication  | [Remix Auth](https://github.com/sergiodxa/remix-auth) |
+| Testing         | [Vitest](https://vitest.dev) and [Testing Library](https://testing-library.com)                        |
+| Web Server      | [Hono](https://hono.dev/)                                                                              |
+| CI              | [GitHub Actions](https://github.com/features/actions)                                                  |
+| Authentication  | [Remix Auth](https://github.com/sergiodxa/remix-auth)                                                  |
 
 ## Quickstart
 
@@ -25,7 +25,7 @@ npm run seed -- -- --force
 npm run dev
 ```
 
-Your SQLite database file is now at [./prisma/data.db](./prisma/data.db).
+Your SQLite database file is now located at [./prisma/data.db](./prisma/data.db).
 
 You can log in to [http://localhost:5173](http://localhost:5173) using one of these three seeded accounts:
 
