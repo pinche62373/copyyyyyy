@@ -37,7 +37,7 @@ import { requireRoutePermission } from "#app/utils/permissions.server";
 import {
   useUser,
   userHasModelPermission,
-  userHasModelPermissions,
+  userHasOneOfModelPermissions,
 } from "#app/utils/user";
 import {
   type RegionSchemaAdminTable,
@@ -68,7 +68,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 export default function Component() {
   const { regions } = useLoaderData<typeof loader>();
 
-  const renderActionsColumn = userHasModelPermissions(crud.singular);
+  const renderActionsColumn = userHasOneOfModelPermissions(crud.singular);
 
   const user = useUser();
 

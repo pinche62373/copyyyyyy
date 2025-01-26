@@ -109,7 +109,7 @@ export function userHasModelPermission(
  * allows creating, updating or deleting a model. Useful for conditional renders like
  * a table column with (model) action buttons.
  */
-export function userHasModelPermissions(
+export function userHasOneOfModelPermissions(
   model: string, // crud.singular
 ) {
   const user = useUser();

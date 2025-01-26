@@ -45,7 +45,7 @@ import {
 import {
   useUser,
   userHasModelPermission,
-  userHasModelPermissions,
+  userHasOneOfModelPermissions,
 } from "#app/utils/user";
 import {
   type LanguageSchemaAdminTable,
@@ -114,7 +114,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 export default function Component() {
   const { languages } = useLoaderData<typeof loader>();
 
-  const renderActionsColumn = userHasModelPermissions(crud.singular);
+  const renderActionsColumn = userHasOneOfModelPermissions(crud.singular);
 
   const user = useUser();
 
