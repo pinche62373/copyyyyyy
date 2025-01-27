@@ -80,6 +80,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@faker-js/faker": "^9.3.0",
+    "@paralleldrive/cuid2": "^2.2.2",
     "@react-router/dev": "^7.1.1",
     "@sly-cli/sly": "https://pkg.pr.new/jacobparis-insiders/sly/@sly-cli/sly@71",
     "@snaplet/copycat": "^5.1.1",
