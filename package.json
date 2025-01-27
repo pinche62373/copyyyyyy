@@ -16,7 +16,7 @@
     "lint-staged": "lint-staged --verbose",
     "migrate": "prisma migrate dev",
     "postmigrate": "npx @snaplet/seed sync",
-    "prepare": "husky && tsc sync/init-upstream.ts",
+    "prepare": "husky && tsx sync/init-upstream.ts",
     "pretest:e2e:run": "npm run build",
     "seed": "npx prisma db seed",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
