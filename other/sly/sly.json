@@ -1,0 +1,31 @@
+{
+  "$schema": "https://sly-cli.fly.dev/registry/config/v2.json",
+  "config": {
+    "icons": {
+      "directory": "./other/svg-icons"
+    }
+  },
+  "libraries": {
+    "iconify:proicons": {
+      "config": "icons"
+    },
+    "iconify:feathericons": {
+      "config": "icons"
+    },
+    "iconify:fe": {
+      "config": "icons"
+    },
+    "iconify:lucid-lab": {
+      "config": "icons"
+    },
+    "iconify:lucidLab": {
+      "config": "icons"
+    },
+    "iconify:lucide": {
+      "config": "icons"
+    },
+    "iconify:tabler": {
+      "config": "icons"
+    }
+  }
+}

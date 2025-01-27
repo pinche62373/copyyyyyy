@@ -1,0 +1,34 @@
+{
+  "include": [".react-router/types/**/*", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2023"],
+    "types": ["@react-router/node", "vite/client", "vitest/globals"],
+    "rootDirs": [".", "./.react-router/types"],
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "resolveJsonModule": true,
+    "target": "ES2023",
+    "strict": true,
+    "allowJs": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "#*": ["./*"],
+      "@/icon-name": [
+        "./app/components/ui/icons/name.ts",
+        "./types/icon-name.d.ts"
+      ]
+    },
+    "skipLibCheck": true,
+
+    // Vite takes care of building everything, not tsc.
+    "noEmit": true,
+
+    // Epic stack
+    "allowImportingTsExtensions": true
+  }
+}

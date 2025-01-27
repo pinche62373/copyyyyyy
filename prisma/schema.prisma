@@ -1,0 +1,150 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/prisma-client"
+}
+
+model User {
+  id       String @id @default(cuid())
+  email    String @unique
+  username String @unique
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  password Password?
+  roles    Role[]
+  sessions Session[]
+
+  // admin creators and updators
+  countryCreatedBy Country[] @relation("CreatedCountries")
+  countryUpdatedBy Country[] @relation("UpdatedCountries")
+
+  languageCreatedBy Language[] @relation("CreatedLanguages")
+  languageUpdatedBy Language[] @relation("UpdatedLanguages")
+
+  movieCreatedBy Movie[] @relation("CreatedMovies")
+  movieUpdatedBy Movie[] @relation("UpdatedMovies")
+
+  regionCreatedBy Region[] @relation("CreatedRegions")
+  regionUpdatedBy Region[] @relation("UpdatedRegions")
+}
+
+model Password {
+  hash String
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String @unique
+}
+
+model Session {
+  id             String   @id @default(cuid())
+  expirationDate DateTime
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+
+  // non-unique foreign key
+  @@index([userId])
+}
+
+model Role {
+  id          String @id @default(cuid())
+  name        String @unique
+  description String @default("")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  users       User[]
+  permissions Permission[]
+}
+
+model Permission {
+  id          String @id @default(cuid())
+  resource    String // e.g. note, user, admin/system, user/profile etc.
+  type        String // model or route  
+  action      String // create, read, update, delete OR access (for routes)
+  scope       String // own or any
+  description String @default("")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  roles Role[]
+
+  @@unique([action, resource, scope])
+}
+
+model Country {
+  id   String @id @default(cuid())
+  name String @unique
+
+  region   Region @relation(fields: [regionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  regionId String
+
+  createdAt DateTime  @default(now())
+  createdBy String
+  updatedAt DateTime? @updatedAt
+  updatedBy String?
+
+  countryCreatedBy User  @relation("CreatedCountries", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  countryUpdatedBy User? @relation("UpdatedCountries", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Language {
+  id   String @id @default(cuid())
+  name String @unique
+
+  createdAt DateTime  @default(now())
+  createdBy String
+  updatedAt DateTime? @updatedAt
+  updatedBy String?
+
+  languageCreatedBy User  @relation("CreatedLanguages", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  languageUpdatedBy User? @relation("UpdatedLanguages", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Region {
+  id   String @id @default(cuid())
+  name String @unique
+
+  createdAt DateTime  @default(now())
+  createdBy String
+  updatedAt DateTime? @updatedAt
+  updatedBy String?
+
+  regionCreatedBy User  @relation("CreatedRegions", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  regionupdatedBy User? @relation("UpdatedRegions", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  countries Country[]
+}
+
+model Movie {
+  id   String @id @default(cuid())
+  name String @unique
+  permalink String @unique
+
+  createdAt DateTime  @default(now())
+  createdBy String
+  updatedAt DateTime? @updatedAt
+  updatedBy String?
+
+  movieCreatedBy User  @relation("CreatedMovies", fields: [createdBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  movieUpdatedBy User? @relation("UpdatedMovies", fields: [updatedBy], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+// memory table to ensure historically unique permalinks
+model PermaLink {
+  id   Int    @id @default(autoincrement())
+  permalink String @unique
+
+  createdAt DateTime @default(now())
+}
