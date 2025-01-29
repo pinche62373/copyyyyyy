@@ -52,26 +52,58 @@ class UpstreamPuller {
     }
   }
 
-  private getUncommittedChanges(): string[] {
+  private checkWorkingDirectoryClean(): void {
     try {
-      // Get both staged and unstaged changes
-      const statusOutput = this.execGitCommand("git status --porcelain");
-      return statusOutput
-        .split("\n")
-        .filter((line) => line.trim())
-        .map((line) => line.substring(3).trim()); // Remove status codes (first 2 chars + space)
+      // Get complete status including untracked files
+      const statusOutput = this.execGitCommand("git status --porcelain -uall");
+
+      // If there's any output, the directory isn't clean
+      if (statusOutput.trim()) {
+        console.error(
+          "\nError: sync-upstream requires a clean working directory but found:",
+        );
+
+        // Parse and display all changes in a structured way
+        statusOutput
+          .split("\n")
+          .filter((line) => line.trim())
+          .forEach((line) => {
+            const status = line.substring(0, 2);
+            const file = line.substring(3);
+
+            let description = "";
+            switch (status.trim()) {
+              case "M":
+                description = "modified:";
+                break;
+              case "A":
+                description = "added:";
+                break;
+              case "D":
+                description = "deleted:";
+                break;
+              case "R":
+                description = "renamed:";
+                break;
+              case "??":
+                description = "untracked:";
+                break;
+              default:
+                description = "changed:";
+                break;
+            }
+            console.error(`  ${description.padEnd(12)} ${file}`);
+          });
+
+        console.error(
+          "\nPlease commit or stash these changes before running git sync-upstream",
+        );
+        process.exit(1);
+      }
     } catch (error) {
-      console.error("Failed to check for uncommitted changes:", error);
-      throw new Error("Failed to check for uncommitted changes");
+      console.error("Failed to check working directory status:", error);
+      throw new Error("Failed to check working directory status");
     }
-  }
-
-  private checkConflictingChanges(proposedChanges: FileChange[]): string[] {
-    const uncommittedFiles = this.getUncommittedChanges();
-    const proposedPaths = proposedChanges.map((change) => change.path);
-
-    // Find intersection between uncommitted files and files we want to modify
-    return uncommittedFiles.filter((file) => proposedPaths.includes(file));
   }
 
   private getChangedFiles(): FileChange[] {
@@ -287,6 +319,10 @@ class UpstreamPuller {
       this.log(`Changing to repository root: ${repoRoot}`);
       process.chdir(repoRoot);
 
+      // Check for clean working directory before proceeding
+      this.log("Checking working directory status");
+      this.checkWorkingDirectoryClean();
+
       // Fetch upstream changes
       this.log("Fetching latest changes from upstream");
       this.execGitCommand("git fetch upstream");
@@ -304,20 +340,6 @@ class UpstreamPuller {
       this.log("Filtering changes based on ignore patterns");
       const filteredChanges = this.filterFiles(changes, ignorePatterns);
       this.log(`${filteredChanges.length} changes remain after filtering`);
-
-      // Check for uncommitted changes that would conflict
-      this.log("Checking for conflicting uncommitted changes");
-      const conflictingFiles = this.checkConflictingChanges(filteredChanges);
-      if (conflictingFiles.length > 0) {
-        console.error(
-          "\nError: You have uncommitted changes that would be overwritten by sync:",
-        );
-        conflictingFiles.forEach((file) => console.error(`  ${file}`));
-        console.error(
-          "\nPlease commit or stash these changes before running git sync-upstream",
-        );
-        process.exit(1);
-      }
 
       // Get confirmation and proceed
       const proceed = await this.promptForConfirmation(filteredChanges);
