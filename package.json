@@ -16,13 +16,13 @@
     "lint-staged": "lint-staged --verbose",
     "migrate": "prisma migrate dev",
     "postmigrate": "npx @snaplet/seed sync",
-    "prepare": "husky && tsx sync/init-upstream.ts",
+    "prepare": "husky && tsx .sync/init-upstream.ts",
     "pretest:e2e:run": "npm run build",
     "seed": "npx prisma db seed",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "start": "cross-env NODE_ENV=production node ./build/server/index.js",
     "test": "vitest",
-    "typecheck": "react-router typegen && tsc",
+    "typecheck": "react-router typegen && npx prisma generate && tsc",
     "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
   },
   "prisma": {
