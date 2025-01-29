@@ -1,64 +1,36 @@
-import { execSync } from "child_process";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
 import { config } from "./.config";
+import { GitUtils } from "./git-utils";
 
 interface ConfigureOptions {
   verbose?: boolean;
 }
 
 class GitConfigurator {
-  private readonly options: Required<ConfigureOptions>;
+  private readonly git: GitUtils;
 
   constructor(options: ConfigureOptions = {}) {
-    this.options = {
-      verbose: config.sync.verbose,
-      ...options,
-    };
-  }
-
-  private log(message: string): void {
-    if (this.options.verbose) {
-      console.log(message);
-    }
-  }
-
-  private execGitCommand(command: string): string {
-    try {
-      this.log(`Executing: ${command}`);
-      const output = execSync(command, { encoding: "utf8", stdio: "pipe" });
-      this.log(`Command output: ${output}`);
-      return output;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(`Git command failed: ${error.message}`);
-        throw new Error(`Git command failed: ${error.message}`);
-      }
-      throw error;
-    }
+    const verbose = options.verbose ?? config.sync.verbose;
+    this.git = new GitUtils({ verbose });
   }
 
   public configure(): void {
     try {
-      this.log("Configuring git settings...");
+      this.git.log("Configuring git settings...");
 
       // Change to repository root
-      const scriptDir = dirname(fileURLToPath(import.meta.url));
-      const repoRoot = join(scriptDir, "..");
-      this.log(`Changing to repository root: ${repoRoot}`);
-      process.chdir(repoRoot);
+      this.git.changeToRepoRoot();
 
       // Configure the sync-from-upstream alias
       const upstreamScript = "!npx tsx ./.sync/sync-from-upstream.ts";
-      this.execGitCommand(
+      this.git.execCommand(
         `git config alias.sync-from-upstream "${upstreamScript}"`,
       );
 
       // Configure the sync-to-origin alias
       const originScript = "!npx tsx ./.sync/sync-to-origin.ts";
-      this.execGitCommand(`git config alias.sync-to-origin "${originScript}"`);
+      this.git.execCommand(`git config alias.sync-to-origin "${originScript}"`);
 
-      this.log(
+      this.git.log(
         "✓ Git configuration complete\n" +
           '  - Use "git sync-from-upstream" to pull from upstream while respecting exclusions\n' +
           '  - Use "git sync-to-origin" to commit and push upstream sync changes',

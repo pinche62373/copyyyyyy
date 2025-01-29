@@ -1,13 +1,12 @@
-import { execSync } from "child_process";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
 import { config } from "./.config";
+import { GitUtils } from "./git-utils";
 
 interface SyncOptions {
   verbose?: boolean;
 }
 
 class OriginSyncer {
+  private readonly git: GitUtils;
   private readonly options: Required<SyncOptions>;
 
   constructor(options: SyncOptions = {}) {
@@ -15,32 +14,14 @@ class OriginSyncer {
       verbose: config.sync.verbose,
       ...options,
     };
-  }
-
-  private log(message: string, isMainStep: boolean = false): void {
-    if (isMainStep || this.options.verbose) {
-      console.log(message);
-    }
-  }
-
-  private execGitCommand(command: string): string {
-    try {
-      this.log(`Executing: ${command}`);
-      const output = execSync(command, { encoding: "utf8", stdio: "pipe" });
-      this.log(`Command output: ${output}`);
-      return output;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(`Git command failed: ${error.message}`);
-        throw new Error(`Git command failed: ${error.message}`);
-      }
-      throw error;
-    }
+    this.git = new GitUtils({ verbose: this.options.verbose });
   }
 
   private getUpstreamCommitHash(): string {
     try {
-      const hash = this.execGitCommand("git rev-parse upstream/main").trim();
+      const hash = this.git
+        .execCommand("git rev-parse upstream/main", { suppressOutput: true })
+        .trim();
       return hash.substring(0, 10); // Get first 10 characters of the commit hash
     } catch (error) {
       console.error("Failed to get upstream commit hash:", error);
@@ -55,42 +36,41 @@ class OriginSyncer {
   }
 
   private hasChangesToCommit(): boolean {
-    const status = this.execGitCommand("git status --porcelain");
+    const status = this.git.execCommand("git status --porcelain", {
+      suppressOutput: true,
+    });
     return status.length > 0;
   }
 
   public sync(): void {
     try {
       // Change to repository root
-      const scriptDir = dirname(fileURLToPath(import.meta.url));
-      const repoRoot = join(scriptDir, "..");
-      this.log(`Changing to repository root: ${repoRoot}`);
-      process.chdir(repoRoot);
+      this.git.changeToRepoRoot();
 
       // Check if there are changes to commit
       if (!this.hasChangesToCommit()) {
-        this.log("✓ No changes to sync with origin", true);
+        this.git.log("✓ No changes to sync with origin", true);
         return;
       }
 
       // Stage all changes
-      this.log("Staging changes...", true);
-      this.execGitCommand("git add .");
+      this.git.log("Staging changes...", true);
+      this.git.execCommand("git add .");
 
       // Create commit with formatted message
       const commitMessage = this.generateCommitMessage();
-      this.log(`Creating commit: ${commitMessage}`, true);
+      this.git.log(`Creating commit: ${commitMessage}`, true);
 
       // Set environment variable to bypass protection check for this commit
       process.env.UPSTREAM_SYNC_OPERATION = "true";
-      this.execGitCommand(`git commit -m "${commitMessage}"`);
+      this.git.execCommand(`git commit -m "${commitMessage}"`);
       process.env.UPSTREAM_SYNC_OPERATION = "false";
 
       // Push to origin
-      this.log("Pushing to origin...", true);
-      this.execGitCommand("git push origin");
+      this.git.log("Pushing to origin...", true);
+      this.git.execCommand("git push origin");
 
-      this.log("✓ Successfully synced changes with origin", true);
+      this.git.log("✓ Successfully synced changes with origin", true);
     } catch (error) {
       console.error("Sync failed:", error);
       throw error;

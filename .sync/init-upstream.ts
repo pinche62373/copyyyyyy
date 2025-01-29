@@ -1,10 +1,9 @@
-import { execSync } from "child_process";
 import { readFileSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
+import { join } from "path";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
+import { GitUtils } from "./git-utils";
 
 interface InitOptions {
   upstreamUrl?: string;
@@ -13,6 +12,7 @@ interface InitOptions {
 }
 
 class UpstreamInitializer {
+  private readonly git: GitUtils;
   private readonly options: Required<InitOptions>;
   private readonly tempFile: string;
 
@@ -23,37 +23,20 @@ class UpstreamInitializer {
       verbose: config.sync.verbose,
       ...options,
     };
+
+    this.git = new GitUtils({ verbose: this.options.verbose });
     const createId = init();
     this.tempFile = join(tmpdir(), `gitignore-upstream-${createId()}`);
   }
 
-  private log(message: string, isMainStep: boolean = false): void {
-    if (isMainStep || this.options.verbose) {
-      console.log(message);
-    }
-  }
-
-  private execGitCommand(command: string): string {
-    try {
-      this.log(`Executing: ${command}`);
-      const output = execSync(command, { encoding: "utf8", stdio: "pipe" });
-      this.log(`Command output: ${output}`);
-      return output;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(`Git command failed: ${error.message}`);
-        throw new Error(`Git command failed: ${error.message}`);
-      }
-      throw error;
-    }
-  }
-
   private copyGitignoreToTemp(): void {
     try {
-      this.log(`Reading gitignore from: ${this.options.gitignoreUpstreamPath}`);
+      this.git.log(
+        `Reading gitignore from: ${this.options.gitignoreUpstreamPath}`,
+      );
       const content = readFileSync(this.options.gitignoreUpstreamPath, "utf8");
       writeFileSync(this.tempFile, content, "utf8");
-      this.log("Gitignore copied to temp location");
+      this.git.log("Gitignore copied to temp location");
     } catch (error) {
       console.error(`Failed to copy gitignore: ${error}`);
       throw new Error(`Failed to copy gitignore: ${error}`);
@@ -61,31 +44,31 @@ class UpstreamInitializer {
   }
 
   private setupUpstreamRemote(): void {
-    this.log("1. Setting up upstream remote...", true);
-    const remotes = this.execGitCommand("git remote");
+    this.git.log("1. Setting up upstream remote...", true);
+    const hasUpstream = this.git.hasRemote("upstream");
 
-    if (!remotes.includes("upstream")) {
-      this.log(`Adding upstream remote: ${this.options.upstreamUrl}`);
-      this.execGitCommand(
+    if (!hasUpstream) {
+      this.git.log(`Adding upstream remote: ${this.options.upstreamUrl}`);
+      this.git.execCommand(
         `git remote add upstream ${this.options.upstreamUrl}`,
       );
     } else {
-      this.log("Upstream remote already exists");
+      this.git.log("Upstream remote already exists");
     }
   }
 
   private initializeSparseCheckout(): void {
-    this.log("2. Initializing sparse-checkout...", true);
-    this.execGitCommand("git sparse-checkout init --no-cone");
-    this.log("Sparse-checkout initialized");
+    this.git.log("2. Initializing sparse-checkout...", true);
+    this.git.execCommand("git sparse-checkout init --no-cone");
+    this.git.log("Sparse-checkout initialized");
   }
 
   private configureSparseCheckoutPatterns(): void {
-    this.log("3. Configuring inclusion patterns...", true);
+    this.git.log("3. Configuring inclusion patterns...", true);
 
     // Write the base include pattern
     const sparseCheckoutPath = ".git/info/sparse-checkout";
-    this.log(`Writing base pattern to ${sparseCheckoutPath}`);
+    this.git.log(`Writing base pattern to ${sparseCheckoutPath}`);
     writeFileSync(sparseCheckoutPath, "/*\n", "utf8");
 
     // Read and process ignore patterns
@@ -94,8 +77,8 @@ class UpstreamInitializer {
       .filter((line) => line && !line.startsWith("#"))
       .map((pattern) => `:(upstream)${pattern}`);
 
-    this.log("Adding exclusion patterns:");
-    patterns.forEach((pattern) => this.log(`  ${pattern}`));
+    this.git.log("Adding exclusion patterns:");
+    patterns.forEach((pattern) => this.git.log(`  ${pattern}`));
 
     // Append patterns to sparse-checkout file
     writeFileSync(sparseCheckoutPath, patterns.join("\n"), { flag: "a" });
@@ -106,22 +89,18 @@ class UpstreamInitializer {
       // Remove temporary file using fs promises
       const fs = await import("fs/promises");
       await fs.unlink(this.tempFile);
-      this.log("Cleanup completed");
+      this.git.log("Cleanup completed");
     } catch (error) {
-      this.log(`Warning: Cleanup failed: ${error}`);
+      this.git.log(`Warning: Cleanup failed: ${error}`);
     }
   }
 
   public async initialize(): Promise<void> {
     try {
-      this.log("Initializing upstream sync configuration...", true);
+      this.git.log("Initializing upstream sync configuration...", true);
 
-      // Get the directory where the script is located
-      const scriptDir = dirname(fileURLToPath(import.meta.url));
-      const repoRoot = join(scriptDir, "..");
-
-      this.log(`Changing to repository root: ${repoRoot}`);
-      process.chdir(repoRoot);
+      // Change to repository root using GitUtils
+      this.git.changeToRepoRoot();
 
       this.copyGitignoreToTemp();
       this.setupUpstreamRemote();
@@ -129,14 +108,14 @@ class UpstreamInitializer {
       this.configureSparseCheckoutPatterns();
 
       // Fetch and reapply
-      this.log("Fetching upstream...");
-      this.execGitCommand("git fetch upstream");
+      this.git.log("Fetching upstream...");
+      this.git.execCommand("git fetch upstream");
 
-      this.log("Reapplying sparse-checkout...");
-      this.execGitCommand("git sparse-checkout reapply");
+      this.git.log("Reapplying sparse-checkout...");
+      this.git.execCommand("git sparse-checkout reapply");
 
       await this.cleanup();
-      this.log(
+      this.git.log(
         "✓ Initialization complete - Repository is now in sparse-checkout mode",
         true,
       );

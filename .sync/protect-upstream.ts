@@ -1,8 +1,6 @@
-import { execSync } from "child_process";
 import { readFileSync } from "fs";
-import { dirname, join } from "path";
-import { fileURLToPath } from "url";
 import { config } from "./.config";
+import { GitUtils } from "./git-utils";
 
 interface ProtectOptions {
   allowedOverridesPath?: string;
@@ -15,6 +13,7 @@ interface ViolatingFile {
 }
 
 class UpstreamProtector {
+  private readonly git: GitUtils;
   private readonly options: Required<ProtectOptions>;
 
   constructor(options: ProtectOptions = {}) {
@@ -23,35 +22,13 @@ class UpstreamProtector {
       verbose: config.sync.verbose,
       ...options,
     };
-  }
-
-  private log(message: string): void {
-    if (this.options.verbose) {
-      console.log(message);
-    }
-  }
-
-  private execGitCommand(command: string): string {
-    try {
-      this.log(`Executing: ${command}`);
-      const output = execSync(command, { encoding: "utf8", stdio: "pipe" });
-      this.log(`Command output: ${output}`);
-      return output;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(`Git command failed: ${error.message}`);
-        throw new Error(`Git command failed: ${error.message}`);
-      }
-      throw error;
-    }
+    this.git = new GitUtils({ verbose: this.options.verbose });
   }
 
   private isUpstreamRepo(): boolean {
     try {
       // Get the remote URL of origin
-      const originUrl = this.execGitCommand(
-        "git config --get remote.origin.url",
-      ).trim();
+      const originUrl = this.git.getRemoteUrl("origin");
 
       // Extract org/repo from origin URL
       const match = originUrl.match(/[:/]([^/]+)\/([^/]+?)(?:\.git)?$/);
@@ -67,7 +44,7 @@ class UpstreamProtector {
         repo === config.upstream.repository
       );
     } catch (error) {
-      this.log(
+      this.git.log(
         `Warning: Could not determine if this is upstream repo: ${error}`,
       );
       return false;
@@ -76,7 +53,7 @@ class UpstreamProtector {
 
   private readAllowedOverrides(): string[] {
     try {
-      this.log(
+      this.git.log(
         `Reading allowed overrides from: ${this.options.allowedOverridesPath}`,
       );
       const content = readFileSync(this.options.allowedOverridesPath, "utf8");
@@ -93,12 +70,13 @@ class UpstreamProtector {
   private getUpstreamFiles(): Set<string> {
     try {
       // Fetch latest upstream if needed
-      this.execGitCommand("git fetch upstream");
+      this.git.execCommand("git fetch upstream");
 
       // Get list of files that exist in upstream
-      const files = this.execGitCommand(
-        "git ls-tree -r --name-only upstream/main",
-      )
+      const files = this.git
+        .execCommand("git ls-tree -r --name-only upstream/main", {
+          suppressOutput: true,
+        })
         .split("\n")
         .filter((file) => file.trim());
 
@@ -130,7 +108,8 @@ class UpstreamProtector {
 
   private getStagedChanges(): ViolatingFile[] {
     // Get status of staged files with rename detection
-    const status = this.execGitCommand("git diff --cached --name-status")
+    const status = this.git
+      .execCommand("git diff --cached --name-status", { suppressOutput: true })
       .split("\n")
       .filter((line) => line.trim());
 
@@ -213,19 +192,22 @@ class UpstreamProtector {
     try {
       // Skip check if this is a sync operation
       if (process.env.UPSTREAM_SYNC_OPERATION === "true") {
-        this.log("✓ Upstream sync operation - skipping protection check");
+        this.git.log(
+          "✓ Upstream sync operation - skipping protection check",
+          true,
+        );
         process.exit(0);
       }
 
       // Change to repository root
-      const scriptDir = dirname(fileURLToPath(import.meta.url));
-      const repoRoot = join(scriptDir, "..");
-      this.log(`Changing to repository root: ${repoRoot}`);
-      process.chdir(repoRoot);
+      this.git.changeToRepoRoot();
 
       // Skip check if we're in the upstream repo
       if (this.isUpstreamRepo()) {
-        this.log("✓ In upstream repository - skipping protection check");
+        this.git.log(
+          "✓ In upstream repository - skipping protection check",
+          true,
+        );
         process.exit(0);
       }
 
@@ -237,7 +219,7 @@ class UpstreamProtector {
         process.exit(1);
       }
 
-      this.log("✓ No unauthorized modifications to upstream files");
+      this.git.log("✓ No unauthorized modifications to upstream files", true);
       process.exit(0);
     } catch (error) {
       console.error("Check failed:", error);

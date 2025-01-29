@@ -1,10 +1,8 @@
-import { execSync } from "child_process";
 import { existsSync, readFileSync, unlinkSync, writeFileSync } from "fs";
-import { dirname, join } from "path";
 import { createInterface } from "readline";
-import { fileURLToPath } from "url";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
+import { GitUtils } from "./git-utils";
 
 interface PullOptions {
   gitignoreUpstreamPath?: string;
@@ -18,6 +16,7 @@ interface FileChange {
 }
 
 class UpstreamPuller {
+  private readonly git: GitUtils;
   private readonly options: Required<PullOptions>;
   private readonly tempBranch: string;
 
@@ -27,40 +26,18 @@ class UpstreamPuller {
       verbose: config.sync.verbose,
       ...options,
     };
+    this.git = new GitUtils({ verbose: this.options.verbose });
     const createId = init();
     this.tempBranch = `temp-upstream-${createId()}`;
-  }
-
-  private log(message: string, isMainStep: boolean = false): void {
-    if (isMainStep || this.options.verbose) {
-      console.log(message);
-    }
-  }
-
-  private execGitCommand(
-    command: string,
-    suppressOutput: boolean = false,
-  ): string {
-    try {
-      this.log(`Executing: ${command}`);
-      const output = execSync(command, { encoding: "utf8", stdio: "pipe" });
-      if (!suppressOutput) {
-        this.log(`Command output: ${output}`);
-      }
-      return output;
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(`Git command failed: ${error.message}`);
-        throw new Error(`Git command failed: ${error.message}`);
-      }
-      throw error;
-    }
   }
 
   private checkWorkingDirectoryClean(): void {
     try {
       // Get complete status including untracked files
-      const statusOutput = this.execGitCommand("git status --porcelain -uall");
+      const statusOutput = this.git.execCommand(
+        "git status --porcelain -uall",
+        { suppressOutput: true },
+      );
 
       // If there's any output, the directory isn't clean
       if (statusOutput.trim()) {
@@ -112,8 +89,11 @@ class UpstreamPuller {
   }
 
   private getChangedFiles(): FileChange[] {
-    const output = this.execGitCommand("git diff --name-status upstream/main");
-    this.log("Parsing changed files from git diff output");
+    const output = this.git.execCommand(
+      "git diff --name-status upstream/main",
+      { suppressOutput: true },
+    );
+    this.git.log("Parsing changed files from git diff output");
     return output
       .split("\n")
       .filter((line) => line.trim())
@@ -130,9 +110,9 @@ class UpstreamPuller {
           // paths[1] is where file WAS in upstream, matching our local (start.sh)
           change.path = paths[0]; // New upstream path (where we need to get content from)
           change.oldPath = paths[1]; // Current local path (where we need to write to)
-          this.log(`Detected rename: ${change.oldPath} -> ${change.path}`);
+          this.git.log(`Detected rename: ${change.oldPath} -> ${change.path}`);
         } else {
-          this.log(`Detected ${status} change for: ${change.path}`);
+          this.git.log(`Detected ${status} change for: ${change.path}`);
         }
 
         return change;
@@ -141,7 +121,7 @@ class UpstreamPuller {
 
   private readIgnorePatterns(): string[] {
     try {
-      this.log(
+      this.git.log(
         `Reading ignore patterns from: ${this.options.gitignoreUpstreamPath}`,
       );
       const content = readFileSync(this.options.gitignoreUpstreamPath, "utf8");
@@ -149,7 +129,7 @@ class UpstreamPuller {
         .split("\n")
         .filter((line) => line && !line.startsWith("#"))
         .map((pattern) => pattern.trim());
-      this.log(`Found ${patterns.length} ignore patterns`);
+      this.git.log(`Found ${patterns.length} ignore patterns`);
       return patterns;
     } catch (error) {
       console.error(`Failed to read ignore patterns: ${error}`);
@@ -161,28 +141,23 @@ class UpstreamPuller {
     files: FileChange[],
     ignorePatterns: string[],
   ): FileChange[] {
-    this.log("Filtering files based on ignore patterns");
+    this.git.log("Filtering files based on ignore patterns");
     return files.filter(({ path }) => {
       for (const pattern of ignorePatterns) {
         const regexPattern = pattern
           .replace(/\./g, "\\.")
           .replace(/\*/g, ".*")
-          .replace(/\?/g, ".");
-        const regex = new RegExp(`^${regexPattern}$`);
+          .replace(/\?/g, ".")
+          .replace(/\//g, "[/\\\\]");
+        const regex = new RegExp(`^${regexPattern}($|[/\\\\])`);
         if (regex.test(path)) {
-          this.log(`Excluding ${path} (matched pattern: ${pattern})`);
+          this.git.log(`Excluding ${path} (matched pattern: ${pattern})`);
           return false;
         }
       }
-      this.log(`Including ${path} (no matching ignore patterns)`);
+      this.git.log(`Including ${path} (no matching ignore patterns)`);
       return true;
     });
-  }
-
-  private getCurrentState(): { branch: string; sha: string } {
-    const branch = this.execGitCommand("git branch --show-current").trim();
-    const sha = this.execGitCommand("git rev-parse HEAD").trim();
-    return { branch, sha };
   }
 
   private formatChangesForDisplay(changes: FileChange[]): string[] {
@@ -206,13 +181,13 @@ class UpstreamPuller {
 
   private async promptForConfirmation(changes: FileChange[]): Promise<boolean> {
     if (changes.length === 0) {
-      this.log("No files to update after applying filters", true);
+      this.git.log("No files to update after applying filters", true);
       return false;
     }
 
-    this.log("\nProposed changes:", true);
+    this.git.log("\nProposed changes:", true);
     this.formatChangesForDisplay(changes).forEach((line) =>
-      this.log(line, true),
+      this.git.log(line, true),
     );
     console.log();
 
@@ -231,18 +206,18 @@ class UpstreamPuller {
     }
   }
 
-  private async applyChanges(
-    changes: FileChange[],
-    currentBranch: string,
-  ): Promise<void> {
-    try {
-      // Create temp branch from upstream
-      this.log("Creating temporary branch from upstream/main");
-      this.execGitCommand(`git checkout -b ${this.tempBranch} upstream/main`);
+  private async applyChanges(changes: FileChange[]): Promise<void> {
+    const originalBranch = this.git.getCurrentBranch();
 
-      // Get back to original branch
-      this.log(`Returning to original branch: ${currentBranch}`);
-      this.execGitCommand(`git checkout ${currentBranch}`);
+    try {
+      // Create temp branch from upstream/main
+      this.git.log("Creating temporary branch from upstream/main");
+      // Explicitly create branch from upstream/main
+      this.git.execCommand(`git checkout -b ${this.tempBranch} upstream/main`);
+
+      // Get back to original branch immediately
+      this.git.log(`Returning to original branch: ${originalBranch}`);
+      this.git.execCommand(`git checkout ${originalBranch}`);
 
       // Apply changes based on their type
       for (const change of changes) {
@@ -250,26 +225,28 @@ class UpstreamPuller {
           switch (change.status) {
             case "D": {
               // Deleted in upstream = Add locally
-              this.log(`Retrieving deleted file from upstream: ${change.path}`);
-              const addContent = this.execGitCommand(
-                `git show ${this.tempBranch}:"${change.path}"`,
-                true, // suppress output logging because we do not want to show full file content, too verbose
+              this.git.log(
+                `Retrieving deleted file from upstream: ${change.path}`,
               );
-              this.log(`Writing recovered file: ${change.path}`);
+              const addContent = this.git.execCommand(
+                `git show ${this.tempBranch}:"${change.path}"`,
+                { suppressOutput: true },
+              );
+              this.git.log(`Writing recovered file: ${change.path}`);
               writeFileSync(change.path, addContent, "utf8");
               break;
             }
 
             case "M": {
               // Modified = copy from upstream
-              this.log(
+              this.git.log(
                 `Getting modified content from upstream: ${change.path}`,
               );
-              const modContent = this.execGitCommand(
+              const modContent = this.git.execCommand(
                 `git show ${this.tempBranch}:"${change.path}"`,
-                true, // suppress output logging
+                { suppressOutput: true },
               );
-              this.log(`Writing updated content to: ${change.path}`);
+              this.git.log(`Writing updated content to: ${change.path}`);
               writeFileSync(change.path, modContent, "utf8");
               break;
             }
@@ -277,19 +254,21 @@ class UpstreamPuller {
             case "A": {
               // Added in upstream = Delete locally
               if (existsSync(change.path)) {
-                this.log(
+                this.git.log(
                   `Deleting file that was added in upstream: ${change.path}`,
                 );
                 unlinkSync(change.path);
               } else {
-                this.log(`File already doesn't exist locally: ${change.path}`);
+                this.git.log(
+                  `File already doesn't exist locally: ${change.path}`,
+                );
               }
               break;
             }
 
             case "R": {
-              const upstreamPath = change.path; // Where file exists in upstream now (orignal-renamed.sh)
-              const localOldPath = change.oldPath; // Where file exists locally now (original.sh)
+              const upstreamPath = change.path; // Where file exists in upstream now
+              const localOldPath = change.oldPath; // Where file exists locally now
 
               if (!localOldPath) {
                 throw new Error(
@@ -299,20 +278,21 @@ class UpstreamPuller {
 
               // Delete the old file if it exists
               if (existsSync(localOldPath)) {
-                this.log(`Deleting old local file: ${localOldPath}`);
+                this.git.log(`Deleting old local file: ${localOldPath}`);
                 unlinkSync(localOldPath);
               }
 
-              this.log(
+              this.git.log(
                 `Getting renamed file content from upstream: ${upstreamPath}`,
               );
-              const renameContent = this.execGitCommand(
-                `git show ${this.tempBranch}:"${upstreamPath}"`,
-                true, // suppress output logging
+              // For renames, we need to use the upstream path to get content
+              const renameContent = this.git.execCommand(
+                `git show upstream/main:"${upstreamPath}"`,
+                { suppressOutput: true },
               );
 
-              // Write to the new path (upstreamPath) to match upstream's structure
-              this.log(`Writing to new local path: ${upstreamPath}`);
+              // Write to the new path to match upstream's structure
+              this.git.log(`Writing to new local path: ${upstreamPath}`);
               writeFileSync(upstreamPath, renameContent, "utf8");
               break;
             }
@@ -323,57 +303,80 @@ class UpstreamPuller {
         }
       }
     } finally {
-      // Clean up temp branch - attempt cleanup even if changes failed
+      // Cleanup phase - always try to get back to original branch and clean up
       try {
-        this.log("Cleaning up temporary branch");
-        this.execGitCommand(`git branch -D ${this.tempBranch}`);
+        // First ensure we're not on the temp branch
+        const currentBranch = this.git.getCurrentBranch();
+        if (currentBranch === this.tempBranch) {
+          this.git.log("Ensuring we're back on the original branch");
+          this.git.execCommand(`git checkout ${originalBranch}`);
+        }
+
+        // Now try to delete the temp branch
+        this.git.log("Cleaning up temporary branch");
+        // Force delete and ignore errors about worktree
+        this.git.execCommand(`git branch -D ${this.tempBranch}`, {
+          throwOnError: false,
+        });
+
+        // If the branch still exists due to worktree, try to remove the worktree first
+        if (
+          this.git
+            .execCommand(`git branch --list ${this.tempBranch}`, {
+              suppressOutput: true,
+            })
+            .trim()
+        ) {
+          this.git.log("Branch still exists, attempting to remove worktree");
+          this.git.execCommand(`git worktree remove ${this.tempBranch}`, {
+            throwOnError: false,
+          });
+          // Try branch deletion one more time
+          this.git.execCommand(`git branch -D ${this.tempBranch}`, {
+            throwOnError: false,
+          });
+        }
       } catch (error) {
-        this.log(`Warning: Failed to clean up temporary branch: ${error}`);
+        // Log cleanup errors but don't throw - we don't want cleanup failures to mask the original error
+        this.git.log(`Warning: Cleanup encountered issues: ${error}`);
       }
     }
   }
 
   public async pull(): Promise<void> {
     try {
-      this.log("Starting upstream sync process...");
+      this.git.log("Starting upstream sync process...");
 
       // Change to repository root
-      const scriptDir = dirname(fileURLToPath(import.meta.url));
-      const repoRoot = join(scriptDir, "..");
-      this.log(`Changing to repository root: ${repoRoot}`);
-      process.chdir(repoRoot);
+      this.git.changeToRepoRoot();
 
       // Check for clean working directory before proceeding
-      this.log("Checking working directory status");
+      this.git.log("Checking working directory status");
       this.checkWorkingDirectoryClean();
 
       // Fetch upstream changes
-      this.log("Fetching latest changes from upstream");
-      this.execGitCommand("git fetch upstream");
-
-      // Store current state
-      const { branch } = this.getCurrentState();
-      this.log(`Current branch: ${branch}`);
+      this.git.log("Fetching latest changes from upstream");
+      this.git.execCommand("git fetch upstream");
 
       // Get changed files
       const changes = this.getChangedFiles();
-      this.log(`Found ${changes.length} changed files`);
+      this.git.log(`Found ${changes.length} changed files`);
 
       // Read and apply ignore patterns
       const ignorePatterns = this.readIgnorePatterns();
-      this.log("Filtering changes based on ignore patterns");
+      this.git.log("Filtering changes based on ignore patterns");
       const filteredChanges = this.filterFiles(changes, ignorePatterns);
-      this.log(`${filteredChanges.length} changes remain after filtering`);
+      this.git.log(`${filteredChanges.length} changes remain after filtering`);
 
       // Get confirmation and proceed
       const proceed = await this.promptForConfirmation(filteredChanges);
 
       if (proceed) {
-        this.log("Beginning to apply changes");
-        await this.applyChanges(filteredChanges, branch);
-        this.log("✓ Sync complete", true);
+        this.git.log("Beginning to apply changes");
+        await this.applyChanges(filteredChanges);
+        this.git.log("✓ Sync complete", true);
       } else {
-        this.log("Update cancelled", true);
+        this.git.log("Update cancelled", true);
         process.exit(1);
       }
     } catch (error) {
