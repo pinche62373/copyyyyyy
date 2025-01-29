@@ -4,9 +4,10 @@ import { tmpdir } from "os";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
 import { init } from "@paralleldrive/cuid2";
+import { config } from "./.config";
 
 interface InitOptions {
-  upstreamUrl: string;
+  upstreamUrl?: string;
   gitignoreUpstreamPath?: string;
   verbose?: boolean;
 }
@@ -15,10 +16,11 @@ class UpstreamInitializer {
   private readonly options: Required<InitOptions>;
   private readonly tempFile: string;
 
-  constructor(options: InitOptions) {
+  constructor(options: InitOptions = {}) {
     this.options = {
-      gitignoreUpstreamPath: "./sync/.gitignore-upstream",
-      verbose: false,
+      upstreamUrl: config.upstream.url,
+      gitignoreUpstreamPath: config.sync.gitignoreUpstreamPath,
+      verbose: config.sync.verbose,
       ...options,
     };
     const createId = init();
@@ -145,23 +147,14 @@ class UpstreamInitializer {
   }
 }
 
-// Debug information
-console.log("Script starting...");
-console.log("import.meta.url:", import.meta.url);
-console.log("process.argv[1]:", process.argv[1]);
-
-// Example usage
-// Check if file is being run directly using a different approach
+// Check if file is being run directly
 const isRunDirectly =
   process.argv[1]?.endsWith("init-upstream.ts") ||
   process.argv[1]?.includes("tsx");
 
 if (isRunDirectly) {
   console.log("Running script directly...");
-  const initializer = new UpstreamInitializer({
-    upstreamUrl: "git@github.com:pinche62373/tzdb.git",
-    verbose: false,
-  });
+  const initializer = new UpstreamInitializer();
 
   initializer.initialize().catch((error) => {
     console.error("Initialization failed:", error);

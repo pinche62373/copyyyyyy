@@ -1,6 +1,7 @@
 import { execSync } from "child_process";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import { config } from "./.config";
 
 interface ConfigureOptions {
   verbose?: boolean;
@@ -11,7 +12,7 @@ class GitConfigurator {
 
   constructor(options: ConfigureOptions = {}) {
     this.options = {
-      verbose: false,
+      verbose: config.sync.verbose,
       ...options,
     };
   }
@@ -73,7 +74,7 @@ const isRunDirectly =
 
 if (isRunDirectly) {
   console.log("Running script directly...");
-  const configurator = new GitConfigurator({ verbose: true });
+  const configurator = new GitConfigurator();
 
   try {
     configurator.configure();
