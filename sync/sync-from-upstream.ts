@@ -23,7 +23,7 @@ class UpstreamPuller {
 
   constructor(options: PullOptions = {}) {
     this.options = {
-      gitignoreUpstreamPath: config.sync.gitignoreUpstreamPath,
+      gitignoreUpstreamPath: config.sync.allowedOverridesPath,
       verbose: config.sync.verbose,
       ...options,
     };
@@ -60,7 +60,7 @@ class UpstreamPuller {
       // If there's any output, the directory isn't clean
       if (statusOutput.trim()) {
         console.error(
-          "\nError: sync-upstream requires a clean working directory but found:",
+          "\nError: sync-from-upstream requires a clean working directory but found:",
         );
 
         // Parse and display all changes in a structured way
@@ -96,7 +96,7 @@ class UpstreamPuller {
           });
 
         console.error(
-          "\nPlease commit or stash these changes before running git sync-upstream",
+          "\nPlease commit or stash these changes before running git sync-from-upstream",
         );
         process.exit(1);
       }
@@ -361,7 +361,7 @@ class UpstreamPuller {
 
 // Check if file is being run directly
 const isRunDirectly =
-  process.argv[1]?.endsWith("pull-upstream.ts") ||
+  process.argv[1]?.endsWith("sync-from-upstream.ts") ||
   process.argv[1]?.includes("tsx");
 
 if (isRunDirectly) {

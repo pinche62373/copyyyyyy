@@ -1,0 +1,30 @@
+# Allowed Upstream Overrides
+#
+# Lists files and directories from the upstream repository that can be modified locally.
+# All other files from upstream will be protected from local modifications to prevent
+# accidental changes.
+#
+# Use cases:
+# - Local customizations that shouldn't be pushed upstream
+# - Project-specific overrides of upstream defaults
+# - Development environment configurations
+#
+# Format: 
+# - One pattern per line
+# - Supports glob patterns (like .gitignore):
+#   - * matches any number of characters except /
+#   - ** matches any number of characters including /
+#   - ? matches a single character
+#   - directory/ matches directory and contents
+# - Lines starting with # are comments
+#
+# Examples:
+# config/*.json        # All JSON files in config directory
+# assets/**/*.css      # All CSS files in assets and subdirectories
+# local.settings.js    # Specific file
+# dev/                 # Entire directory and contents
+
+README.md
+node_modules/
+package.json
+package-lock.json

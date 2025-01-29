@@ -6,7 +6,7 @@ export interface GitConfig {
     defaultBranch: string;
   };
   sync: {
-    gitignoreUpstreamPath: string;
+    allowedOverridesPath: string; // Updated from gitignoreUpstreamPath
     verbose: boolean;
   };
 }
@@ -19,7 +19,7 @@ export const config: GitConfig = {
     defaultBranch: "main",
   },
   sync: {
-    gitignoreUpstreamPath: "./sync/.gitignore-upstream",
-    verbose: true,
+    allowedOverridesPath: "./sync/.allowed-upstream-overrides", // Updated path
+    verbose: false,
   },
 };

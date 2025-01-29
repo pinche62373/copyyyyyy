@@ -19,7 +19,7 @@ class UpstreamInitializer {
   constructor(options: InitOptions = {}) {
     this.options = {
       upstreamUrl: config.upstream.url,
-      gitignoreUpstreamPath: config.sync.gitignoreUpstreamPath,
+      gitignoreUpstreamPath: config.sync.allowedOverridesPath,
       verbose: config.sync.verbose,
       ...options,
     };

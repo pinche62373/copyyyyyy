@@ -48,12 +48,20 @@ class GitConfigurator {
       this.log(`Changing to repository root: ${repoRoot}`);
       process.chdir(repoRoot);
 
-      // Configure the sync-upstream alias
-      const aliasScript = "!npx tsx ./sync/pull-upstream.ts";
-      this.execGitCommand(`git config alias.sync-upstream "${aliasScript}"`);
+      // Configure the sync-from-upstream alias
+      const upstreamScript = "!npx tsx ./sync/sync-from-upstream.ts";
+      this.execGitCommand(
+        `git config alias.sync-from-upstream "${upstreamScript}"`,
+      );
+
+      // Configure the sync-to-origin alias
+      const originScript = "!npx tsx ./sync/sync-to-origin.ts";
+      this.execGitCommand(`git config alias.sync-to-origin "${originScript}"`);
 
       this.log(
-        '✓ Git configuration complete - Use "git sync-upstream" to pull from upstream while respecting exclusions',
+        "✓ Git configuration complete\n" +
+          '  - Use "git sync-from-upstream" to pull from upstream while respecting exclusions\n' +
+          '  - Use "git sync-to-origin" to commit and push upstream sync changes',
       );
     } catch (error) {
       console.error("Configuration failed:", error);
