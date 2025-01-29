@@ -62,11 +62,6 @@ class GitConfigurator {
   }
 }
 
-// Debug information
-console.log("Script starting...");
-console.log("import.meta.url:", import.meta.url);
-console.log("process.argv[1]:", process.argv[1]);
-
 // Check if file is being run directly
 const isRunDirectly =
   process.argv[1]?.endsWith("configure-git.ts") ||
