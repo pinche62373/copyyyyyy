@@ -19,7 +19,7 @@ export const config: GitConfig = {
     defaultBranch: "main",
   },
   sync: {
-    allowedOverridesPath: "./sync/.allowed-upstream-overrides", // Updated path
+    allowedOverridesPath: "./.sync/.allowed-upstream-overrides", // Updated path
     verbose: false,
   },
 };

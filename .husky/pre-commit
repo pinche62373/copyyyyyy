@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Warn developers when updating files that are centrally managed.
-npx tsx ./sync/protect-upstream.ts
+npx tsx ./.sync/protect-upstream.ts
 
 # Not a centrally managed file, run biome
 npm run lint-staged

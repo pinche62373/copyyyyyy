@@ -49,13 +49,13 @@ class GitConfigurator {
       process.chdir(repoRoot);
 
       // Configure the sync-from-upstream alias
-      const upstreamScript = "!npx tsx ./sync/sync-from-upstream.ts";
+      const upstreamScript = "!npx tsx ./.sync/sync-from-upstream.ts";
       this.execGitCommand(
         `git config alias.sync-from-upstream "${upstreamScript}"`,
       );
 
       // Configure the sync-to-origin alias
-      const originScript = "!npx tsx ./sync/sync-to-origin.ts";
+      const originScript = "!npx tsx ./.sync/sync-to-origin.ts";
       this.execGitCommand(`git config alias.sync-to-origin "${originScript}"`);
 
       this.log(
