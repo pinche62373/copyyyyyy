@@ -121,8 +121,10 @@ class UpstreamPuller {
 
         // Handle renamed files (R100 old-name new-name)
         if (status.startsWith("R")) {
-          change.oldPath = paths[0];
-          change.path = paths[1];
+          // paths[0] is where file exists in upstream NOW (start-me.sh)
+          // paths[1] is where file WAS in upstream, matching our local (start.sh)
+          change.path = paths[0]; // New upstream path (where we need to get content from)
+          change.oldPath = paths[1]; // Current local path (where we need to write to)
           this.log(`Detected rename: ${change.oldPath} -> ${change.path}`);
         } else {
           this.log(`Detected ${status} change for: ${change.path}`);
@@ -180,7 +182,6 @@ class UpstreamPuller {
 
   private formatChangesForDisplay(changes: FileChange[]): string[] {
     return changes.map((change) => {
-      // Flip ADD/DEL from upstream perspective to downstream perspective
       const prefix = {
         A: "[DEL]", // If it exists in upstream but not here, we need to delete it locally
         M: "[MOD]",
@@ -189,6 +190,9 @@ class UpstreamPuller {
       }[change.status];
 
       if (change.status === "R" && change.oldPath) {
+        // Display format: local -> upstream
+        // oldPath is where it was (our local state)
+        // path is where it is in upstream now
         return `${prefix} ${change.oldPath} -> ${change.path}`;
       }
       return `${prefix} ${change.path}`;
@@ -277,19 +281,31 @@ class UpstreamPuller {
             }
 
             case "R": {
-              // Rename = handle both deletion and addition
-              if (change.oldPath && existsSync(change.oldPath)) {
-                this.log(`Deleting old file for rename: ${change.oldPath}`);
-                unlinkSync(change.oldPath);
+              const upstreamPath = change.path; // Where file exists in upstream now (orignal-renamed.sh)
+              const localOldPath = change.oldPath; // Where file exists locally now (original.sh)
+
+              if (!localOldPath) {
+                throw new Error(
+                  `Rename operation missing local path for: ${upstreamPath}`,
+                );
               }
+
+              // Delete the old file if it exists
+              if (existsSync(localOldPath)) {
+                this.log(`Deleting old local file: ${localOldPath}`);
+                unlinkSync(localOldPath);
+              }
+
               this.log(
-                `Getting renamed file content from upstream: ${change.path}`,
+                `Getting renamed file content from upstream: ${upstreamPath}`,
               );
               const renameContent = this.execGitCommand(
-                `git show ${this.tempBranch}:"${change.path}"`,
+                `git show ${this.tempBranch}:"${upstreamPath}"`,
               );
-              this.log(`Writing renamed file: ${change.path}`);
-              writeFileSync(change.path, renameContent, "utf8");
+
+              // Write to the new path (upstreamPath) to match upstream's structure
+              this.log(`Writing to new local path: ${upstreamPath}`);
+              writeFileSync(upstreamPath, renameContent, "utf8");
               break;
             }
           }

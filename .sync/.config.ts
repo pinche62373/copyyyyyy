@@ -20,6 +20,6 @@ export const config: GitConfig = {
   },
   sync: {
     allowedOverridesPath: "./.sync/.allowed-upstream-overrides", // Updated path
-    verbose: false,
+    verbose: true,
   },
 };
