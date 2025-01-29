@@ -37,11 +37,16 @@ class UpstreamPuller {
     }
   }
 
-  private execGitCommand(command: string): string {
+  private execGitCommand(
+    command: string,
+    suppressOutput: boolean = false,
+  ): string {
     try {
       this.log(`Executing: ${command}`);
       const output = execSync(command, { encoding: "utf8", stdio: "pipe" });
-      this.log(`Command output: ${output}`);
+      if (!suppressOutput) {
+        this.log(`Command output: ${output}`);
+      }
       return output;
     } catch (error) {
       if (error instanceof Error) {
@@ -248,6 +253,7 @@ class UpstreamPuller {
               this.log(`Retrieving deleted file from upstream: ${change.path}`);
               const addContent = this.execGitCommand(
                 `git show ${this.tempBranch}:"${change.path}"`,
+                true, // suppress output logging because we do not want to show full file content, too verbose
               );
               this.log(`Writing recovered file: ${change.path}`);
               writeFileSync(change.path, addContent, "utf8");
@@ -261,6 +267,7 @@ class UpstreamPuller {
               );
               const modContent = this.execGitCommand(
                 `git show ${this.tempBranch}:"${change.path}"`,
+                true, // suppress output logging
               );
               this.log(`Writing updated content to: ${change.path}`);
               writeFileSync(change.path, modContent, "utf8");
@@ -301,6 +308,7 @@ class UpstreamPuller {
               );
               const renameContent = this.execGitCommand(
                 `git show ${this.tempBranch}:"${upstreamPath}"`,
+                true, // suppress output logging
               );
 
               // Write to the new path (upstreamPath) to match upstream's structure
