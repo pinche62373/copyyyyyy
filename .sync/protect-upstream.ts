@@ -19,7 +19,7 @@ class UpstreamProtector {
 
   constructor(options: ProtectOptions = {}) {
     this.options = {
-      allowedOverridesPath: config.sync.allowedOverridesPath, // Updated config property
+      allowedOverridesPath: config.sync.allowedOverridesPath,
       verbose: config.sync.verbose,
       ...options,
     };
