@@ -16,6 +16,6 @@ export const config: GitConfig = {
   },
   sync: {
     gitignoreUpstreamPath: "./sync/.gitignore-upstream",
-    verbose: false,
+    verbose: true,
   },
 };
