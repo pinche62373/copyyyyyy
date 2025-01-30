@@ -17,7 +17,7 @@ node_modules
 # Temporary
 # -------------------------------------
 /.sync/README.md
-/.sync/todo.md
+/.sync/wip/
 
 # -------------------------------------
 # App
