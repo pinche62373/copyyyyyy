@@ -1,3 +1,5 @@
+// ./sync/utils/git-utils.ts
+
 import { execSync } from "child_process";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -105,13 +107,31 @@ export class GitUtils {
    */
   public changeToRepoRoot(): string {
     const previousCwd = process.cwd();
-    const scriptDir = dirname(fileURLToPath(import.meta.url));
-    const repoRoot = dirname(scriptDir);
 
-    this.log(`Changing to repository root: ${repoRoot}`);
-    process.chdir(repoRoot);
+    // Get the git root directory using git rev-parse
+    try {
+      const rootDir = this.execCommand("git rev-parse --show-toplevel", {
+        suppressOutput: true,
+      }).trim();
 
-    return previousCwd;
+      this.log(`Changing to repository root: ${rootDir}`);
+      process.chdir(rootDir);
+      return previousCwd;
+    } catch (error) {
+      // Fallback to finding .git directory if rev-parse fails
+      try {
+        const scriptDir = dirname(fileURLToPath(import.meta.url));
+        const repoRoot = dirname(dirname(scriptDir)); // Go up two levels from utils/git-utils.ts
+
+        this.log(`Changing to repository root (fallback): ${repoRoot}`);
+        process.chdir(repoRoot);
+        return previousCwd;
+      } catch (fallbackError) {
+        throw new Error(
+          `Failed to determine repository root: ${error}\nFallback error: ${fallbackError}`,
+        );
+      }
+    }
   }
 
   /**

@@ -1,8 +1,15 @@
-import { existsSync, readFileSync, unlinkSync, writeFileSync } from "fs";
+import {
+  existsSync,
+  mkdirSync,
+  readFileSync,
+  unlinkSync,
+  writeFileSync,
+} from "fs";
+import { dirname } from "path";
 import { createInterface } from "readline";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
-import { GitUtils } from "./git-utils";
+import { GitUtils } from "./utils/git-utils";
 
 interface PullOptions {
   gitignoreUpstreamPath?: string;
@@ -33,19 +40,16 @@ class UpstreamPuller {
 
   private checkWorkingDirectoryClean(): void {
     try {
-      // Get complete status including untracked files
       const statusOutput = this.git.execCommand(
         "git status --porcelain -uall",
         { suppressOutput: true },
       );
 
-      // If there's any output, the directory isn't clean
       if (statusOutput.trim()) {
         console.error(
           "\nError: sync-from-upstream requires a clean working directory but found:",
         );
 
-        // Parse and display all changes in a structured way
         statusOutput
           .split("\n")
           .filter((line) => line.trim())
@@ -104,12 +108,9 @@ class UpstreamPuller {
           path: paths[paths.length - 1],
         };
 
-        // Handle renamed files (R100 old-name new-name)
         if (status.startsWith("R")) {
-          // paths[0] is where file exists in upstream NOW (start-me.sh)
-          // paths[1] is where file WAS in upstream, matching our local (start.sh)
-          change.path = paths[0]; // New upstream path (where we need to get content from)
-          change.oldPath = paths[1]; // Current local path (where we need to write to)
+          change.path = paths[0];
+          change.oldPath = paths[1];
           this.git.log(`Detected rename: ${change.oldPath} -> ${change.path}`);
         } else {
           this.git.log(`Detected ${status} change for: ${change.path}`);
@@ -163,16 +164,13 @@ class UpstreamPuller {
   private formatChangesForDisplay(changes: FileChange[]): string[] {
     return changes.map((change) => {
       const prefix = {
-        A: "[DEL]", // If it exists in upstream but not here, we need to delete it locally
+        A: "[DEL]",
         M: "[MOD]",
-        D: "[ADD]", // If it's deleted in upstream but exists here, we need to add it locally
+        D: "[ADD]",
         R: "[REN]",
       }[change.status];
 
       if (change.status === "R" && change.oldPath) {
-        // Display format: local -> upstream
-        // oldPath is where it was (our local state)
-        // path is where it is in upstream now
         return `${prefix} ${change.oldPath} -> ${change.path}`;
       }
       return `${prefix} ${change.path}`;
@@ -206,69 +204,78 @@ class UpstreamPuller {
     }
   }
 
+  private ensureDirectoryExists(filePath: string): void {
+    const directory = dirname(filePath);
+    if (!existsSync(directory)) {
+      this.git.log(`Creating directory: ${directory}`);
+      mkdirSync(directory, { recursive: true });
+    }
+  }
+
   private async applyChanges(changes: FileChange[]): Promise<void> {
     const originalBranch = this.git.getCurrentBranch();
 
     try {
-      // Create temp branch from upstream/main
       this.git.log("Creating temporary branch from upstream/main");
-      // Explicitly create branch from upstream/main
       this.git.execCommand(`git checkout -b ${this.tempBranch} upstream/main`);
 
-      // Get back to original branch immediately
       this.git.log(`Returning to original branch: ${originalBranch}`);
       this.git.execCommand(`git checkout ${originalBranch}`);
 
-      // Apply changes based on their type
       for (const change of changes) {
         try {
+          this.git.log(`\nProcessing: ${change.path}`, true);
+
           switch (change.status) {
             case "D": {
-              // Deleted in upstream = Add locally
               this.git.log(
-                `Retrieving deleted file from upstream: ${change.path}`,
+                `📥 Retrieving deleted file from upstream: ${change.path}`,
               );
               const addContent = this.git.execCommand(
                 `git show ${this.tempBranch}:"${change.path}"`,
                 { suppressOutput: true },
               );
-              this.git.log(`Writing recovered file: ${change.path}`);
+              this.ensureDirectoryExists(change.path);
+              this.git.log(`📝 Writing recovered file: ${change.path}`);
               writeFileSync(change.path, addContent, "utf8");
+              this.git.log(`✓ Successfully restored: ${change.path}`, true);
               break;
             }
 
             case "M": {
-              // Modified = copy from upstream
               this.git.log(
-                `Getting modified content from upstream: ${change.path}`,
+                `📥 Getting modified content from upstream: ${change.path}`,
               );
               const modContent = this.git.execCommand(
                 `git show ${this.tempBranch}:"${change.path}"`,
                 { suppressOutput: true },
               );
-              this.git.log(`Writing updated content to: ${change.path}`);
+              this.ensureDirectoryExists(change.path);
+              this.git.log(`📝 Writing updated content to: ${change.path}`);
               writeFileSync(change.path, modContent, "utf8");
+              this.git.log(`✓ Successfully updated: ${change.path}`, true);
               break;
             }
 
             case "A": {
-              // Added in upstream = Delete locally
               if (existsSync(change.path)) {
                 this.git.log(
-                  `Deleting file that was added in upstream: ${change.path}`,
+                  `🗑️ Deleting file that was added in upstream: ${change.path}`,
                 );
                 unlinkSync(change.path);
+                this.git.log(`✓ Successfully deleted: ${change.path}`, true);
               } else {
                 this.git.log(
-                  `File already doesn't exist locally: ${change.path}`,
+                  `ℹ️ File already doesn't exist locally: ${change.path}`,
+                  true,
                 );
               }
               break;
             }
 
             case "R": {
-              const upstreamPath = change.path; // Where file exists in upstream now
-              const localOldPath = change.oldPath; // Where file exists locally now
+              const upstreamPath = change.path;
+              const localOldPath = change.oldPath;
 
               if (!localOldPath) {
                 throw new Error(
@@ -276,50 +283,50 @@ class UpstreamPuller {
                 );
               }
 
-              // Delete the old file if it exists
               if (existsSync(localOldPath)) {
-                this.git.log(`Deleting old local file: ${localOldPath}`);
+                this.git.log(`🗑️ Deleting old local file: ${localOldPath}`);
                 unlinkSync(localOldPath);
+                this.git.log(
+                  `✓ Successfully deleted old file: ${localOldPath}`,
+                  true,
+                );
               }
 
               this.git.log(
-                `Getting renamed file content from upstream: ${upstreamPath}`,
+                `📥 Getting renamed file content from upstream: ${upstreamPath}`,
               );
-              // For renames, we need to use the upstream path to get content
+
               const renameContent = this.git.execCommand(
                 `git show upstream/main:"${upstreamPath}"`,
                 { suppressOutput: true },
               );
 
-              // Write to the new path to match upstream's structure
-              this.git.log(`Writing to new local path: ${upstreamPath}`);
+              this.ensureDirectoryExists(upstreamPath);
+
+              this.git.log(`📝 Writing to new local path: ${upstreamPath}`);
               writeFileSync(upstreamPath, renameContent, "utf8");
+              this.git.log(`✓ Successfully moved to: ${upstreamPath}`, true);
               break;
             }
           }
         } catch (error) {
-          console.error(`Failed to apply change for ${change.path}:`, error);
+          console.error(`\n❌ Failed to process ${change.path}:`, error);
           throw error;
         }
       }
     } finally {
-      // Cleanup phase - always try to get back to original branch and clean up
       try {
-        // First ensure we're not on the temp branch
         const currentBranch = this.git.getCurrentBranch();
         if (currentBranch === this.tempBranch) {
           this.git.log("Ensuring we're back on the original branch");
           this.git.execCommand(`git checkout ${originalBranch}`);
         }
 
-        // Now try to delete the temp branch
         this.git.log("Cleaning up temporary branch");
-        // Force delete and ignore errors about worktree
         this.git.execCommand(`git branch -D ${this.tempBranch}`, {
           throwOnError: false,
         });
 
-        // If the branch still exists due to worktree, try to remove the worktree first
         if (
           this.git
             .execCommand(`git branch --list ${this.tempBranch}`, {
@@ -331,14 +338,12 @@ class UpstreamPuller {
           this.git.execCommand(`git worktree remove ${this.tempBranch}`, {
             throwOnError: false,
           });
-          // Try branch deletion one more time
           this.git.execCommand(`git branch -D ${this.tempBranch}`, {
             throwOnError: false,
           });
         }
       } catch (error) {
-        // Log cleanup errors but don't throw - we don't want cleanup failures to mask the original error
-        this.git.log(`Warning: Cleanup encountered issues: ${error}`);
+        this.git.log(`⚠️ Warning: Cleanup encountered issues: ${error}`);
       }
     }
   }
@@ -347,28 +352,22 @@ class UpstreamPuller {
     try {
       this.git.log("Starting upstream sync process...");
 
-      // Change to repository root
       this.git.changeToRepoRoot();
 
-      // Check for clean working directory before proceeding
       this.git.log("Checking working directory status");
       this.checkWorkingDirectoryClean();
 
-      // Fetch upstream changes
       this.git.log("Fetching latest changes from upstream");
       this.git.execCommand("git fetch upstream");
 
-      // Get changed files
       const changes = this.getChangedFiles();
       this.git.log(`Found ${changes.length} changed files`);
 
-      // Read and apply ignore patterns
       const ignorePatterns = this.readIgnorePatterns();
       this.git.log("Filtering changes based on ignore patterns");
       const filteredChanges = this.filterFiles(changes, ignorePatterns);
       this.git.log(`${filteredChanges.length} changes remain after filtering`);
 
-      // Get confirmation and proceed
       const proceed = await this.promptForConfirmation(filteredChanges);
 
       if (proceed) {

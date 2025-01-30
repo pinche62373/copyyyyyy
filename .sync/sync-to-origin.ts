@@ -1,5 +1,5 @@
 import { config } from "./.config";
-import { GitUtils } from "./git-utils";
+import { GitUtils } from "./utils/git-utils";
 
 interface SyncOptions {
   verbose?: boolean;

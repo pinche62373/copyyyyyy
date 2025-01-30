@@ -1,9 +1,9 @@
 import { readFileSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
-import { join } from "path";
+import { join, resolve } from "path";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
-import { GitUtils } from "./git-utils";
+import { GitUtils } from "./utils/git-utils";
 
 interface InitOptions {
   upstreamUrl?: string;
@@ -31,15 +31,32 @@ class UpstreamInitializer {
 
   private copyGitignoreToTemp(): void {
     try {
-      this.git.log(
-        `Reading gitignore from: ${this.options.gitignoreUpstreamPath}`,
+      // First change to repository root
+      this.git.changeToRepoRoot();
+
+      // Now that we're in the repo root, resolve the full path to the allowed overrides file
+      const allowedOverridesPath = resolve(
+        process.cwd(),
+        this.options.gitignoreUpstreamPath,
       );
-      const content = readFileSync(this.options.gitignoreUpstreamPath, "utf8");
-      writeFileSync(this.tempFile, content, "utf8");
-      this.git.log("Gitignore copied to temp location");
+
+      this.git.log(`Reading allowed overrides from: ${allowedOverridesPath}`);
+
+      try {
+        const content = readFileSync(allowedOverridesPath, "utf8");
+        this.git.log("Successfully read allowed overrides file");
+
+        writeFileSync(this.tempFile, content, "utf8");
+        this.git.log(`Copied to temp location: ${this.tempFile}`);
+      } catch (readError) {
+        throw new Error(
+          `Failed to read allowed overrides file at ${allowedOverridesPath}. ` +
+            `Make sure the file exists in the .sync directory. Error: ${readError.message}`,
+        );
+      }
     } catch (error) {
-      console.error(`Failed to copy gitignore: ${error}`);
-      throw new Error(`Failed to copy gitignore: ${error}`);
+      console.error(`Failed to copy allowed overrides: ${error}`);
+      throw error;
     }
   }
 
@@ -86,7 +103,6 @@ class UpstreamInitializer {
 
   private async cleanup(): Promise<void> {
     try {
-      // Remove temporary file using fs promises
       const fs = await import("fs/promises");
       await fs.unlink(this.tempFile);
       this.git.log("Cleanup completed");
@@ -99,7 +115,7 @@ class UpstreamInitializer {
     try {
       this.git.log("Initializing upstream sync configuration...", true);
 
-      // Change to repository root using GitUtils
+      // Change to repository root
       this.git.changeToRepoRoot();
 
       this.copyGitignoreToTemp();
