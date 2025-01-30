@@ -374,7 +374,10 @@ class UpstreamPuller {
       if (proceed) {
         this.git.log("Beginning to apply changes");
         await this.applyChanges(filteredChanges);
-        this.git.log("✓ Sync complete", true);
+        this.git.log(
+          "✓ Sync complete: successfully synced core changes from upstream",
+          true,
+        );
       } else {
         this.git.log("Update cancelled", true);
         process.exit(1);
