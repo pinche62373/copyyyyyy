@@ -13,8 +13,11 @@ node_modules
 /prisma/data.db-journal
 /prisma/seed/.snaplet/dataModel.json
 
-/sync/cherry-picker.js
-/sync/cherry-picker.cjs
+# -------------------------------------
+# Temporary
+# -------------------------------------
+/.sync/README.md
+/.sync/todo.md
 
 # -------------------------------------
 # App
