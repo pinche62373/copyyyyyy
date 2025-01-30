@@ -3,7 +3,7 @@ import { tmpdir } from "os";
 import { join } from "path";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
-import { GitUtils } from "./git-utils";
+import { GitUtils } from "./utils/git-utils";
 
 interface InitOptions {
   upstreamUrl?: string;

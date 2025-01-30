@@ -1,6 +1,6 @@
 import { readFileSync } from "fs";
 import { config } from "./.config";
-import { GitUtils } from "./git-utils";
+import { GitUtils } from "./utils/git-utils";
 
 interface ProtectOptions {
   allowedOverridesPath?: string;

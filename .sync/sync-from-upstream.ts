@@ -2,7 +2,7 @@ import { existsSync, readFileSync, unlinkSync, writeFileSync } from "fs";
 import { createInterface } from "readline";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
-import { GitUtils } from "./git-utils";
+import { GitUtils } from "./utils/git-utils";
 
 interface PullOptions {
   gitignoreUpstreamPath?: string;
