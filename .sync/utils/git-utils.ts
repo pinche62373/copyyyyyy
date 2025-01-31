@@ -77,31 +77,28 @@ export class GitUtils {
 
     // Add .git if missing
     if (!url.endsWith(".git")) {
-      console.log("URL NOT ENDING WITH .GIT, ADDING IT");
+      this.log("URL NOT ENDING WITH .GIT, ADDING IT");
       url = `${url}.git`;
     }
 
     // No token, return original URL
     if (!token) {
-      console.log("NO TOKEN, RETURN URL");
+      this.log("NO TOKEN, RETURN URL");
       return url;
     }
 
     // Transform SSH URL to HTTPS with OAuth2 token
     if (url.startsWith("git@github.com:")) {
-      console.log("SHOULD TRANSFORM");
+      this.log("SHOULD TRANSFORM");
       const match = url.match(/git@github\.com:(.+?)(?:\.git)?$/);
       if (match) {
-        console.log("SHOULD ADD OAUTH");
+        this.log("SHOULD ADD OAUTH");
 
         const [, repoPath] = match;
         const normalizedUrl = `https://oauth2:${token}@github.com/${repoPath}.git`;
 
         // Log modified URL, masking the token for security
-        this.log(
-          `Modified upstream URL: https://oauth2:***@github.com/${repoPath}.git`,
-          true,
-        );
+        this.log(`Modified upstream URL: ${normalizedUrl}`, true);
 
         return normalizedUrl;
       }
