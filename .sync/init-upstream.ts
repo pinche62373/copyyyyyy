@@ -197,17 +197,22 @@ class UpstreamInitializer {
         this.git.execCommand(publicTest, { suppressOutput: true });
         this.git.log("✓ Public repository test successful", true);
       } catch (error) {
-        this.git.log(
-          "❌ Public repository test failed - possible network/git issue",
-          true,
-        );
+        this.git.log("❌ Public repository test failed", true);
         throw error;
       }
 
-      // Now test with our private repository
+      // Configure git credentials
+      this.git.log("\nSetting up git credentials...", true);
+      this.git.execCommand('git config --global credential.helper ""');
+      this.git.execCommand(
+        `git config --global url."https://${token}@github.com/".insteadOf "https://github.com/"`,
+      );
+
+      // Test private repo access with new credential setup
       this.git.log("\nTesting with private repository...", true);
-      const testCommand = `git ls-remote https://${token}@github.com/pinche62373/tzdb.git`;
-      console.log("Raw command:", testCommand.replace(token!, "***"));
+      const testCommand =
+        "git ls-remote https://github.com/pinche62373/tzdb.git";
+      console.log("Raw command:", testCommand);
       console.log("CWD:", process.cwd());
       this.git.execCommand(testCommand);
       this.git.log("✓ Private repository test successful", true);
