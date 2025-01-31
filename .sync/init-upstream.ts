@@ -180,14 +180,35 @@ class UpstreamInitializer {
     try {
       this.git.log("Initializing upstream sync configuration...", true);
 
-      this.git.log("Testing basic Git auth...", true);
-      // Get token directly from env
+      this.git.log("\n=== Git Authentication Test ===", true);
       const token = process.env.PAT_TOKEN;
 
-      // Most basic test possible
+      // Log token presence (safely)
+      console.log(`Token exists: ${Boolean(token)}`);
+      console.log(`Token length: ${token?.length || 0}`);
+
+      // First test with a public repository
+      this.git.log("\nTesting with public repository...", true);
+      try {
+        const publicTest =
+          "git ls-remote https://github.com/microsoft/vscode.git";
+        this.git.execCommand(publicTest);
+        this.git.log("✓ Public repository test successful", true);
+      } catch (error) {
+        this.git.log(
+          "❌ Public repository test failed - possible network/git issue",
+          true,
+        );
+        throw error;
+      }
+
+      // Now test with our private repository
+      this.git.log("\nTesting with private repository...", true);
       const testCommand = `git ls-remote https://${token}@github.com/pinche62373/tzdb.git`;
-      this.git.execCommand(testCommand, { suppressOutput: true });
-      this.git.log("✓ Basic auth test successful", true);
+      console.log("Raw command:", testCommand.replace(token!, "***"));
+      console.log("CWD:", process.cwd());
+      this.git.execCommand(testCommand);
+      this.git.log("✓ Private repository test successful", true);
 
       // Exit early for now
       process.exit(0);
