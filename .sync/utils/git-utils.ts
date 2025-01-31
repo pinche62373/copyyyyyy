@@ -68,6 +68,8 @@ export class GitUtils {
    * @returns The normalized URL
    */
   public normalizeGitUrl(url: string, token: string | null = null): string {
+    this.log("Normalizing Git URL...");
+
     url = url.replace(/\/$/, ""); // Remove trailing slash if present
 
     // Add .git if missing
