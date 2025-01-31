@@ -30,6 +30,32 @@ class UpstreamInitializer {
     this.tempFile = join(tmpdir(), `gitignore-upstream-${createId()}`);
   }
 
+  private isUpstreamRepo(): boolean {
+    try {
+      // Get the remote URL of origin
+      const originUrl = this.git.getRemoteUrl("origin");
+
+      // Extract org/repo from origin URL
+      const match = originUrl.match(/[:/]([^/]+)\/([^/]+?)(?:\.git)?$/);
+      if (!match) {
+        return false;
+      }
+
+      const [, org, repo] = match;
+
+      // Compare with configured upstream
+      return (
+        org === config.upstream.organization &&
+        repo === config.upstream.repository
+      );
+    } catch (error) {
+      this.git.log(
+        `Warning: Could not determine if this is upstream repo: ${error}`,
+      );
+      return false;
+    }
+  }
+
   private copyGitignoreToTemp(): void {
     try {
       // First change to repository root
@@ -145,6 +171,15 @@ class UpstreamInitializer {
 
       // Change to repository root
       this.git.changeToRepoRoot();
+
+      // Check if we're in the upstream repo
+      if (this.isUpstreamRepo()) {
+        this.git.log(
+          "ℹ Skipping initialization: sync must not be used in the upstream repository itself",
+          true,
+        );
+        return;
+      }
 
       this.copyGitignoreToTemp();
       this.setupUpstreamRemote();

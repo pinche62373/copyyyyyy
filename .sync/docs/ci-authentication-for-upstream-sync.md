@@ -26,17 +26,28 @@ Our `npm prepare` script fails in CI environments when trying to access private 
 
 ## Configuring GitHub Actions
 
-Add the token to your workflow file:
+Add the token as an environment variable to your npm install step:
 
 ```yaml
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup node
+        uses: actions/setup-node@v4
         with:
-          token: ${{ secrets.PAT_TOKEN }}
+          node-version: 20
+
+      - name: Install dependencies
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: npm install
 ```
+
+The token must be available during `npm install` since our `prepare` script accesses the upstream repository.
 
 ## Our Implementation
 
