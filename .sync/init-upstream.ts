@@ -3,6 +3,7 @@ import { tmpdir } from "os";
 import { join, resolve } from "path";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
+import { detectCI } from "./utils/detect-ci";
 import { GitUtils } from "./utils/git-utils";
 
 interface InitOptions {
@@ -64,13 +65,40 @@ class UpstreamInitializer {
     this.git.log("1. Setting up upstream remote...", true);
     const hasUpstream = this.git.hasRemote("upstream");
 
+    // Detect CI environment and modify URL if needed
+    const ciEnv = detectCI();
+    let upstreamUrl = this.options.upstreamUrl;
+
+    if (ciEnv.isCI && ciEnv.accessToken) {
+      // Convert SSH URL to HTTPS with token
+      // Example: git@github.com:org/repo.git -> https://${token}@github.com/org/repo.git
+      if (upstreamUrl.startsWith("git@")) {
+        const match = upstreamUrl.match(/git@github\.com:(.+?)(?:\.git)?$/);
+        if (match) {
+          const [, repoPath] = match;
+          upstreamUrl = `https://${ciEnv.accessToken}@github.com/${repoPath}.git`;
+          this.git.log(
+            `Configured upstream URL for CI environment (${ciEnv.name})`,
+          );
+        }
+      }
+    }
+
     if (!hasUpstream) {
-      this.git.log(`Adding upstream remote: ${this.options.upstreamUrl}`);
-      this.git.execCommand(
-        `git remote add upstream ${this.options.upstreamUrl}`,
-      );
+      this.git.log("Adding upstream remote...");
+      // Using execCommand with suppressOutput to prevent token exposure in logs
+      this.git.execCommand(`git remote add upstream ${upstreamUrl}`, {
+        suppressOutput: true,
+      });
     } else {
       this.git.log("Upstream remote already exists");
+      // Update the URL in case token needs to be added
+      if (ciEnv.isCI && ciEnv.accessToken) {
+        this.git.execCommand(`git remote set-url upstream ${upstreamUrl}`, {
+          suppressOutput: true,
+        });
+        this.git.log("Updated upstream remote URL for CI environment");
+      }
     }
   }
 
