@@ -32,6 +32,8 @@ export interface GitCommandOptions {
   throwOnError?: boolean;
   /** Encoding for the command output. Defaults to 'utf8' */
   encoding?: BufferEncoding;
+  env?: Record<string, string>; // Added env option
+  input?: string; // Added input option for stdin
 }
 
 export interface GitUtilsConfig {
@@ -114,6 +116,8 @@ export class GitUtils {
       timeout = 30000,
       throwOnError = true,
       encoding = "utf8",
+      env = {},
+      input,
     } = options;
 
     try {
@@ -131,6 +135,8 @@ export class GitUtils {
         stdio: "pipe",
         cwd,
         timeout,
+        env: { ...process.env, ...env },
+        input,
       });
 
       if (verbose && !suppressOutput) {

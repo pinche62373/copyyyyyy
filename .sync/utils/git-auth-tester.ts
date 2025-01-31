@@ -1,128 +1,112 @@
 import { GitUtils } from "./git-utils";
 
-interface AuthTestOptions {
-  verbose?: boolean;
+interface GitAuthTesterConfig {
   token: string;
   repoUrl: string;
+  verbose?: boolean;
 }
 
-class GitAuthTester {
+export class GitAuthTester {
   private readonly git: GitUtils;
-  private readonly options: Required<AuthTestOptions>;
+  private readonly token: string;
+  private readonly repoUrl: string;
 
-  constructor(options: AuthTestOptions) {
-    this.options = {
-      verbose: true,
-      ...options,
-    };
-    this.git = new GitUtils({ verbose: this.options.verbose });
+  constructor(config: GitAuthTesterConfig) {
+    this.git = new GitUtils({ verbose: config.verbose ?? false });
+    this.token = config.token;
+    this.repoUrl = config.repoUrl;
   }
 
   private async testMethod1(): Promise<boolean> {
-    // Method 1: Direct token in URL
     try {
-      const tokenUrl = this.options.repoUrl.replace(
-        "https://",
-        `https://${this.options.token}@`,
+      // Test basic HTTPS access with token
+      const httpsUrl = this.repoUrl.replace(
+        "git@github.com:",
+        "https://github.com/",
       );
-      this.git.log("Testing Method 1: Direct token in URL");
-      this.git.execCommand(`git ls-remote ${tokenUrl}`);
+      const command = `git ls-remote ${httpsUrl}`;
+      this.git.execCommand(command, {
+        suppressOutput: true,
+        env: { GIT_ASKPASS: "echo", GIT_TOKEN: this.token },
+      });
       return true;
     } catch (error) {
-      this.git.log(`Method 1 failed: ${error}`);
+      console.error("Error", error);
       return false;
     }
   }
 
   private async testMethod2(): Promise<boolean> {
-    // Method 2: Using credential.helper store
     try {
-      this.git.log("Testing Method 2: Using credential.helper store");
-
-      // Create temporary credential store
-      this.git.execCommand("git config --global credential.helper store");
-
-      // Store credentials
-      const protocol = this.options.repoUrl.startsWith("https")
-        ? "https"
-        : "http";
-      const credentials = `protocol=${protocol}\nhost=github.com\nusername=${this.options.token}\npassword=x-oauth-basic\n`;
-      this.git.execCommand(`printf "${credentials}" | git credential approve`);
-
-      // Test access
-      this.git.execCommand(`git ls-remote ${this.options.repoUrl}`);
+      // Test with explicit token in URL
+      const [org, repo] = this.repoUrl
+        .split(":")[1]
+        .replace(".git", "")
+        .split("/");
+      const tokenUrl = `https://${this.token}@github.com/${org}/${repo}.git`;
+      const command = `git ls-remote ${tokenUrl}`;
+      this.git.execCommand(command, { suppressOutput: true });
       return true;
     } catch (error) {
-      this.git.log(`Method 2 failed: ${error}`);
+      console.error("Error", error);
       return false;
     }
   }
 
   private async testMethod3(): Promise<boolean> {
-    // Method 3: Using insteadOf configuration
     try {
-      this.git.log("Testing Method 3: Using insteadOf configuration");
+      // Test with credential helper
+      const command = "git config --global credential.helper store";
+      this.git.execCommand(command);
 
-      // Clear any existing credential helper
-      this.git.execCommand('git config --global credential.helper ""');
-
-      // Set up insteadOf
-      this.git.execCommand(
-        `git config --global url."https://${this.options.token}@github.com/".insteadOf "https://github.com/"`,
-      );
+      // Store credentials
+      const credentialInput = `protocol=https\nhost=github.com\nusername=x-access-token\npassword=${this.token}\n`;
+      this.git.execCommand("git credential approve", {
+        input: credentialInput,
+        suppressOutput: true,
+      });
 
       // Test access
-      this.git.execCommand(`git ls-remote ${this.options.repoUrl}`);
+      const httpsUrl = this.repoUrl.replace(
+        "git@github.com:",
+        "https://github.com/",
+      );
+      this.git.execCommand(`git ls-remote ${httpsUrl}`, {
+        suppressOutput: true,
+      });
       return true;
     } catch (error) {
-      this.git.log(`Method 3 failed: ${error}`);
+      console.error("Error", error);
       return false;
     }
   }
 
   private async testMethod4(): Promise<boolean> {
-    // Method 4: Using GH_TOKEN environment variable
     try {
-      this.git.log("Testing Method 4: Using GH_TOKEN environment variable");
+      // Test with GitHub CLI authentication
+      if (!process.env.GITHUB_TOKEN) {
+        process.env.GITHUB_TOKEN = this.token;
+      }
 
-      // Temporarily set GH_TOKEN
-      process.env.GH_TOKEN = this.options.token;
+      const [org, repo] = this.repoUrl
+        .split(":")[1]
+        .replace(".git", "")
+        .split("/");
+      const command = `curl -H "Authorization: token ${this.token}" https://api.github.com/repos/${org}/${repo}`;
 
-      // Configure git to use GH_TOKEN
-      this.git.execCommand('git config --global credential.helper ""');
-      this.git.execCommand(
-        'git config --global credential.helper "env --username=GH_TOKEN"',
-      );
+      const result = this.git.execCommand(command, {
+        suppressOutput: true,
+        throwOnError: false,
+      });
 
-      // Test access
-      this.git.execCommand(`git ls-remote ${this.options.repoUrl}`);
-      return true;
+      return !result.includes("Bad credentials");
     } catch (error) {
-      this.git.log(`Method 4 failed: ${error}`);
+      console.error("Error", error);
       return false;
     }
   }
 
   public async testAll(): Promise<void> {
-    this.git.log("\n=== Starting Authentication Tests ===\n");
-
-    // Log token info (safely)
-    this.git.log(`Token exists: ${Boolean(this.options.token)}`);
-    this.git.log(`Token length: ${this.options.token?.length || 0}`);
-
-    // Test public repo access first
-    try {
-      this.git.log("\nTesting public repository access...");
-      this.git.execCommand(
-        "git ls-remote https://github.com/sindresorhus/is-up.git",
-      );
-      this.git.log("✓ Public repository test successful\n");
-    } catch (error) {
-      this.git.log("❌ Public repository test failed\n");
-      throw error;
-    }
-
-    // Test each authentication method
     const results = await Promise.all([
       this.testMethod1(),
       this.testMethod2(),
@@ -130,25 +114,13 @@ class GitAuthTester {
       this.testMethod4(),
     ]);
 
-    // Log results
-    this.git.log("\n=== Authentication Test Results ===");
+    console.log("\n=== Authentication Test Results ===");
     results.forEach((success, index) => {
-      this.git.log(
-        `Method ${index + 1}: ${success ? "✓ Success" : "❌ Failed"}`,
-      );
+      console.log(`Method ${index + 1}: ${success ? "✓ Passed" : "❌ Failed"}`);
     });
-
-    // Clean up
-    this.git.log("\nCleaning up git configurations...");
-    this.git.execCommand('git config --global credential.helper ""');
-    this.git.execCommand(
-      "git config --global --unset-all url.https://github.com/.insteadOf",
-    );
 
     if (!results.some((r) => r)) {
       throw new Error("All authentication methods failed");
     }
   }
 }
-
-export { GitAuthTester, type AuthTestOptions };
