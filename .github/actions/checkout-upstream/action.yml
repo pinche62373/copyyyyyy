@@ -40,4 +40,5 @@ runs:
 
     - name: List dit
       if: steps.check_upstream.outputs.is_upstream == 'false'
-      shell: ls -al ${{ github.workspace }}
+      shell: bash
+      run: ls -al ${{ github.workspace }}
