@@ -103,7 +103,7 @@ jobs:
 
       - name: ⬇️ Checkout upstream repository
         uses: actions/checkout@v4
-        if: ${{ env.IS_UPSTREAM == 'true' }}
+        if: ${{ env.IS_UPSTREAM == 'false' }}
         with:
           path: upstream-repo
           pat_token: ${{ secrets.PAT_TOKEN }}
