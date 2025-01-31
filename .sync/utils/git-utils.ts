@@ -92,6 +92,9 @@ export class GitUtils {
     return url;
   }
 
+  /**
+   * Executes a git command and returns its output
+   */
   public execCommand(command: string, options: GitCommandOptions = {}): string {
     const {
       suppressOutput = false,
@@ -103,13 +106,10 @@ export class GitUtils {
     } = options;
 
     try {
-      // Debug logging
-      console.log("Executing git command:", {
-        command: command.replace(/token [a-zA-Z0-9]+@/, "token ***@"),
-        cwd,
-        timeout,
-        throwOnError,
-      });
+      if (verbose) {
+        this.log(`Executing: ${command}`);
+        this.log(`Working directory: ${cwd}`);
+      }
 
       const output = execSync(command, {
         encoding,
@@ -119,20 +119,15 @@ export class GitUtils {
       });
 
       if (verbose && !suppressOutput) {
-        // Safely log output without exposing tokens
-        const safeOutput = output.replace(/token [a-zA-Z0-9]+@/, "token ***@");
-        console.log("Command output:", safeOutput);
+        this.log(`Command output: ${output}`);
       }
 
       return output;
     } catch (error) {
       const gitError = error as Error;
-      console.error("Git command error details:", {
-        message: gitError.message,
-        command: command.replace(/token [a-zA-Z0-9]+@/, "token ***@"),
-        errorName: gitError.name,
-        stack: gitError.stack,
-      });
+      if (verbose) {
+        console.error(`Git command failed: ${gitError.message}`);
+      }
 
       if (throwOnError) {
         throw new Error(`Git command failed: ${gitError.message}`);
