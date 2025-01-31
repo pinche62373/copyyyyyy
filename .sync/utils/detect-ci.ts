@@ -57,6 +57,11 @@ export function detectCI(): Environment {
 
   // GitHub Actions
   if (process.env.GITHUB_ACTIONS === "true") {
+    // temporary token debug
+    const token = process.env.PAT_TOKEN;
+    console.log("Token exists:", !!token); // Will print true/false without exposing token
+    console.log("Token length:", token?.length || 0); // Safe way to verify token content
+
     return {
       isCI: true,
       name: "GitHub Actions",
