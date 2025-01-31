@@ -97,6 +97,8 @@ export class GitUtils {
         const [, repoPath] = match;
         const normalizedUrl = `https://oauth2:${token}@github.com/${repoPath}.git`;
 
+        this.log(`NORMALIZED = ${normalizedUrl}`, true);
+
         // Log modified URL, masking the token for security
         this.log(`Modified upstream URL: ${normalizedUrl}`, true);
 
