@@ -72,6 +72,7 @@ export class GitUtils {
 
     // Log original URL for transparency
     this.log(`Original upstream URL: ${url}`, true);
+    this.log(`TOKEN = ${token}`, true);
 
     url = url.replace(/\/$/, ""); // Remove trailing slash if present
 
