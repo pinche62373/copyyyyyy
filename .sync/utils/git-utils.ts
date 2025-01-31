@@ -93,7 +93,8 @@ export class GitUtils {
       const match = url.match(/git@github\.com:(.+?)(?:\.git)?$/);
       if (match) {
         const [, repoPath] = match;
-        url = `https://${token}@github.com/${repoPath}.git`;
+        // url = `https://${token}@github.com/${repoPath}.git`;
+        url = `https://github.com/${repoPath}.git`;
       }
     }
     // Log modified URL, no need to mask the token (handled by CI)
@@ -254,6 +255,25 @@ export class GitUtils {
   public deleteBranch(branch: string, force: boolean = false): void {
     const flag = force ? "-D" : "-d";
     this.execCommand(`git branch ${flag} ${branch}`, { throwOnError: false });
+  }
+
+  /**
+   * Configure git credentials to make Git use the token for all HTTPS requests to GitHub.
+   */
+  public setupGitCredentials(token: string): void {
+    this.log("Configuring Git credentials for HTTPS...");
+
+    // Configure Git to use HTTPS with credentials
+    this.execCommand("git config --global credential.helper store");
+
+    // Store the credentials
+    // Use suppressOutput to prevent token exposure in logs
+    this.execCommand(
+      `git config --global url."https://${token}@github.com/".insteadOf "https://github.com/"`,
+      { suppressOutput: true },
+    );
+
+    this.log("Git credentials configured for HTTPS");
   }
 }
 

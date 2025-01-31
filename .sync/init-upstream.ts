@@ -98,6 +98,8 @@ class UpstreamInitializer {
     // Normalize URL for CI environments
     if (ciEnv.isCI && ciEnv.accessToken) {
       upstreamUrl = this.git.normalizeGitUrl(upstreamUrl, ciEnv.accessToken);
+
+      this.git.setupGitCredentials(ciEnv.accessToken); // temporary: setup credentials
     }
 
     if (!hasUpstream) {
