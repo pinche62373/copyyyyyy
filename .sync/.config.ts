@@ -15,7 +15,7 @@ export const config: GitConfig = {
   upstream: {
     organization: "pinche62373",
     repository: "tzdb",
-    url: "git@github.com:pinche62373/tzdb.git/",
+    url: "git@github.com:pinche62373/tzdb.git",
     defaultBranch: "main",
   },
   sync: {
