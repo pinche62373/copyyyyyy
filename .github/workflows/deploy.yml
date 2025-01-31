@@ -1,4 +1,6 @@
 name: 🚀 CI
+env:
+  UPSTREAM_REPOSITORY: "pinche62373/tzdb"
 
 on:
   push:
@@ -69,8 +71,13 @@ jobs:
     name: ⚡ Vitest
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Checkout repo
+      - name: ⬇️ Checkout downstream repository
         uses: actions/checkout@v4
+
+      - name: ⬇️ Checkout upstream repository
+        uses: ./.github/actions/checkout-upstream
+        with:
+          pat_token: ${{ secrets.PAT_TOKEN }}
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
@@ -80,6 +87,8 @@ jobs:
           node-version: 20
 
       - name: 📥 Install deps
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: npm install
 
       - name: ⚡ Run vitest

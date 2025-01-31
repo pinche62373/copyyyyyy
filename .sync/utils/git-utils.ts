@@ -31,6 +31,8 @@ export interface GitCommandOptions {
   throwOnError?: boolean;
   /** Encoding for the command output. Defaults to 'utf8' */
   encoding?: BufferEncoding;
+  env?: Record<string, string>; // Added env option
+  input?: string; // Added input option for stdin
 }
 
 export interface GitUtilsConfig {
@@ -57,6 +59,52 @@ export class GitUtils {
   }
 
   /**
+   * Normalizes a Git URL to a consistent format.
+   * - Removes trailing slashes
+   * - Adds .git suffix if missing
+   * - Converts SSH URLs to HTTPS format
+   * - Adds authentication token if provided
+   *
+   * @param url The Git URL to normalize
+   * @param token Optional authentication token to add to HTTPS URLs
+   * @returns The normalized URL
+   */
+  public normalizeGitUrl(url: string, token: string | null = null): string {
+    this.log("Normalizing Git URL...");
+
+    // Log original URL for transparency
+    this.log(`Original URL: ${url}`, true);
+
+    // Remove trailing slash
+    if (url.endsWith("/")) {
+      this.log("Removing trailing slash");
+      url = url.replace(/\/$/, "");
+    }
+
+    // Add .git if missing
+    if (!url.endsWith(".git")) {
+      this.log("Adding .git");
+      url = `${url}.git`;
+    }
+
+    // If CI, SSH URL to HTTPS and insert access token
+    if (token && url.startsWith("git@github.com:")) {
+      this.log("CI: converting SSH url to HTTPS and inserting access token");
+
+      const match = url.match(/git@github\.com:(.+?)(?:\.git)?$/);
+      if (match) {
+        const [, repoPath] = match;
+        // url = `https://${token}@github.com/${repoPath}.git`;
+        url = `https://github.com/${repoPath}.git`;
+      }
+    }
+    // Log modified URL, no need to mask the token (handled by CI)
+    this.log(`Modified URL: ${url}`, true);
+
+    return url;
+  }
+
+  /**
    * Executes a git command and returns its output
    */
   public execCommand(command: string, options: GitCommandOptions = {}): string {
@@ -67,10 +115,16 @@ export class GitUtils {
       timeout = 30000,
       throwOnError = true,
       encoding = "utf8",
+      env = {},
+      input,
     } = options;
 
     try {
       if (verbose) {
+        // temporary debugging
+        this.log(`Raw command: ${command}`); // Add this
+        this.log(`CWD: ${options.cwd || process.cwd()}`); // Add this
+
         this.log(`Executing: ${command}`);
         this.log(`Working directory: ${cwd}`);
       }
@@ -80,6 +134,8 @@ export class GitUtils {
         stdio: "pipe",
         cwd,
         timeout,
+        env: { ...process.env, ...env },
+        input,
       });
 
       if (verbose && !suppressOutput) {
