@@ -1,54 +1,57 @@
 // ./sync/utils/detect-ci.ts
 
-/** Represents a CI environment configuration */
-interface CIEnvironment {
-  /** Whether running in a CI environment */
-  isCI: boolean;
+/** Base interface for environment configuration */
+interface BaseEnvironment {
   /** Name of the CI platform */
   name: string | null;
-  /** Access token for CI operations */
-  accessToken: string | null;
 }
+
+/** Environment configuration for non-CI environment */
+interface NonCIEnvironment extends BaseEnvironment {
+  isCI: false;
+  accessToken?: never; // accessToken doesn't make sense in non-CI
+}
+
+/** Environment configuration for CI environment */
+interface CIEnvironment extends BaseEnvironment {
+  isCI: true;
+  accessToken: string; // Required in CI - no null allowed!
+}
+
+/** Union type for all environment configurations */
+type Environment = CIEnvironment | NonCIEnvironment;
 
 /**
  * Safely retrieves a token from environment variables
- * @param tokenName The name of the token in process.env
- * @returns The token value or null if not found
+ * Throws error if token is not found
  */
-function getToken(tokenName: string): string | null {
-  try {
-    return process.env[tokenName] || null;
-  } catch (error) {
-    console.warn(`Failed to access token ${tokenName}:`, error);
-    return null;
+function getToken(tokenName: string): string {
+  const token = process.env[tokenName];
+  if (!token) {
+    throw new Error(
+      `Required CI environment variable ${tokenName} is not configured. ` +
+        `This token is required for private repository access.`,
+    );
   }
+  return token;
 }
 
 /**
  * Type guard for CIEnvironment
- * @param env Value to check
- * @returns Whether the value is a CIEnvironment
  */
-export function isCIEnvironment(env: unknown): env is CIEnvironment {
-  return (
-    typeof env === "object" &&
-    env !== null &&
-    "isCI" in env &&
-    "name" in env &&
-    "accessToken" in env
-  );
+export function isCIEnvironment(env: Environment): env is CIEnvironment {
+  return env.isCI === true;
 }
 
 /**
- * Detects the current CI environment and returns its configuration
- * @returns {CIEnvironment} The detected CI environment information
+ * Detects the current CI environment and returns its configuration.
+ * Each CI system uses its specific token for private repository access.
  */
-export function detectCI(): CIEnvironment {
-  // Default response
-  const result: CIEnvironment = {
+export function detectCI(): Environment {
+  // Default response - non-CI
+  const defaultEnv: NonCIEnvironment = {
     isCI: false,
     name: null,
-    accessToken: null,
   };
 
   // GitHub Actions
@@ -56,7 +59,7 @@ export function detectCI(): CIEnvironment {
     return {
       isCI: true,
       name: "GitHub Actions",
-      accessToken: getToken("GITHUB_TOKEN") || getToken("PAT_TOKEN"),
+      accessToken: getToken("PAT_TOKEN"), // Personal Access Token for GitHub
     };
   }
 
@@ -74,7 +77,7 @@ export function detectCI(): CIEnvironment {
     return {
       isCI: true,
       name: "GitLab CI",
-      accessToken: getToken("CI_JOB_TOKEN") || getToken("PAT_TOKEN"),
+      accessToken: getToken("CI_JOB_TOKEN"),
     };
   }
 
@@ -96,25 +99,21 @@ export function detectCI(): CIEnvironment {
     };
   }
 
-  return result;
+  return defaultEnv;
 }
 
 /**
  * Checks if the code is running in a CI environment
- * @returns {boolean} True if running in CI, false otherwise
  */
 export function isRunningInCI(): boolean {
   return detectCI().isCI;
 }
 
-/**
- * Example usage with type checking
- */
-const ciInfo = detectCI();
-if (ciInfo.isCI && ciInfo.accessToken) {
-  console.log(`Running in ${ciInfo.name} with access token`);
-} else if (ciInfo.isCI) {
-  console.log(`Running in ${ciInfo.name} without access token`);
+// Example usage with type checking
+const env = detectCI();
+if (isCIEnvironment(env)) {
+  // TypeScript knows accessToken exists and is non-null here
+  console.log(`Running in ${env.name} with access token`);
 } else {
   console.log("Not running in CI environment");
 }
