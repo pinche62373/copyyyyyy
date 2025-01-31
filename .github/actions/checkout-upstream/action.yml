@@ -1,11 +1,17 @@
 name: Checkout Upstream
 description: "Checkout upstream repo UNLESS we are in upstream itself"
 
+inputs:
+  pat_token:
+    description: 'PAT token for checkout'
+    required: true
+
 runs:
   using: composite
   steps:
-  - name: Check if upstream repo
+    - name: Check if upstream repo
       id: check_upstream
+      shell: bash
       run: |
         REPO_URL=$(git config --get remote.origin.url)
         if [[ "$REPO_URL" == *"${{ env.UPSTREAM_REPOSITORY }}"* ]]; then
@@ -14,10 +20,15 @@ runs:
           echo "is_upstream=false" >> $GITHUB_OUTPUT
         fi
 
+    - name: Skip checkout
+      if: steps.check_upstream.outputs.is_upstream == 'true'
+      shell: bash
+      run: echo "Skipping checkout because we are in upstream itself"
+
     - name: Checkout upstream repo
       if: steps.check_upstream.outputs.is_upstream == 'false'
       uses: actions/checkout@v4
       with:
         repository: ${{ env.UPSTREAM_REPOSITORY }}
         path: .upstream
-        token: ${{ secrets.PAT_TOKEN }}
+        token: ${{ inputs.pat_token }}

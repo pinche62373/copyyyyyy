@@ -76,6 +76,8 @@ jobs:
 
       - name: ⬇️ Checkout upstream repository
         uses: ./.github/actions/checkout-upstream
+        with:
+          pat_token: ${{ secrets.PAT_TOKEN }}
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
