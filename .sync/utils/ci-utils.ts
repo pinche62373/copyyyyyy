@@ -1,4 +1,4 @@
-// ./sync/utils/ci.ts
+// ./sync/utils/ci-utils.ts
 
 /** Base interface for environment configuration */
 interface BaseEnvironment {
