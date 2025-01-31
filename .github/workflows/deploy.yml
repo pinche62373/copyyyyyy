@@ -92,6 +92,9 @@ jobs:
     name: ⚡ Vitest
     runs-on: ubuntu-latest
     needs: check-upstream
+    defaults:
+      run:
+        working-directory: main-repo
     env:
       IS_UPSTREAM: ${{ needs.check-upstream.outputs.is_upstream }}
 
@@ -119,8 +122,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           cache: npm
-          cache-dependency-path: ./package.json
-          node-version: 20
+          node-version-file: ./main-repo/.nvmrc
+          cache-dependency-path: ./main-repo/package.json
 
       - name: 📥 Install deps
         env:
