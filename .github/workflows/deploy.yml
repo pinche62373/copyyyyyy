@@ -1,6 +1,7 @@
 name: 🚀 CI
 env:
   UPSTREAM_REPOSITORY: "pinche62373/tzdb"
+  UPSTREAM_FOLDER: ".upstream-repo"
 
 on:
   push:

@@ -1,0 +1,16 @@
+# Simple action for main-repo part of below checkout structure.
+#
+# /home/runner/work/repo-name/repo-name/
+# ├── main-repo/         # Your main repository
+# └── upstream-repo/     # The upstream repository
+
+name: Checkout Main Repo
+description: "Checkout main repo to ${{env.CHECKOUT_PATH_DOWNSTREAM}} folder"
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout downstream repo
+      uses: actions/checkout@v4
+      with:
+        path: ${{env.CHECKOUT_PATH_DOWNSTREAM}}
