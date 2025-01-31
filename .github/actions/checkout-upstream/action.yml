@@ -36,9 +36,9 @@ runs:
     - name: Move upstream repo
       if: steps.check_upstream.outputs.is_upstream == 'false'
       shell: bash
-      run: mv ${{ env.UPSTREAM_FOLDER }} ${{ github.workspace }}/${{ env.UPSTREAM_FOLDER }}
+      run: mv ${{ env.UPSTREAM_FOLDER }} ${{ runner.temp }}/${{ env.UPSTREAM_FOLDER }}
 
     - name: List dit
       if: steps.check_upstream.outputs.is_upstream == 'false'
       shell: bash
-      run: ls -al ${{ github.workspace }}
+      run: ls -al ${{ runner.temp }}
