@@ -4,6 +4,7 @@ import { join, resolve } from "path";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
 import { detectCI } from "./utils/detect-ci";
+import { GitAuthTester } from "./utils/git-auth-tester";
 import { GitUtils } from "./utils/git-utils";
 
 interface InitOptions {
@@ -183,39 +184,26 @@ class UpstreamInitializer {
       // ----------------------------------------------------
 
       this.git.log("\n=== Git Authentication Test ===", true);
+
       const token = process.env.PAT_TOKEN;
-
-      // Log token presence (safely)
-      console.log(`Token exists: ${Boolean(token)}`);
-      console.log(`Token length: ${token?.length || 0}`);
-
-      // First test with a small public repository
-      this.git.log("\nTesting with public repository...", true);
-      try {
-        const publicTest =
-          "git ls-remote https://github.com/sindresorhus/is-up.git";
-        this.git.execCommand(publicTest, { suppressOutput: true });
-        this.git.log("✓ Public repository test successful", true);
-      } catch (error) {
-        this.git.log("❌ Public repository test failed", true);
-        throw error;
+      if (!token) {
+        throw new Error("PAT_TOKEN environment variable is required");
       }
 
-      // Configure git credentials
-      this.git.log("\nSetting up git credentials...", true);
-      this.git.execCommand('git config --global credential.helper ""');
-      this.git.execCommand(
-        `git config --global url."https://${token}@github.com/".insteadOf "https://github.com/"`,
-      );
+      this.git.log("Running authentication tests...", true);
+      const authTester = new GitAuthTester({
+        token,
+        repoUrl: this.options.upstreamUrl,
+        verbose: this.options.verbose,
+      });
 
-      // Test private repo access with new credential setup
-      this.git.log("\nTesting with private repository...", true);
-      const testCommand =
-        "git ls-remote https://github.com/pinche62373/tzdb.git";
-      console.log("Raw command:", testCommand);
-      console.log("CWD:", process.cwd());
-      this.git.execCommand(testCommand);
-      this.git.log("✓ Private repository test successful", true);
+      try {
+        await authTester.testAll();
+        this.git.log("✓ Authentication test successful", true);
+      } catch (error) {
+        this.git.log("❌ Authentication test failed", true);
+        throw error;
+      }
 
       // Exit early for now
       process.exit(0);
