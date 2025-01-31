@@ -33,12 +33,12 @@ runs:
         path: ${{ env.UPSTREAM_FOLDER }}
         token: ${{ inputs.pat_token }}
 
-    - name: Move upstream repo
-      if: steps.check_upstream.outputs.is_upstream == 'false'
-      shell: bash
-      run: mv ${{ env.UPSTREAM_FOLDER }} ${{ runner.temp }}/${{ env.UPSTREAM_FOLDER }}
+    # - name: Move upstream repo
+    #   if: steps.check_upstream.outputs.is_upstream == 'false'
+    #   shell: bash
+    #   run: mv ${{ env.UPSTREAM_FOLDER }} ${{ runner.temp }}/${{ env.UPSTREAM_FOLDER }}
 
-    - name: List dit
-      if: steps.check_upstream.outputs.is_upstream == 'false'
-      shell: bash
-      run: ls -al ${{ runner.temp }}
+    # - name: List dit
+    #   if: steps.check_upstream.outputs.is_upstream == 'false'
+    #   shell: bash
+    #   run: ls -al ${{ runner.temp }}
