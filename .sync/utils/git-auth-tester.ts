@@ -17,7 +17,7 @@ export class GitAuthTester {
     this.repoUrl = config.repoUrl;
   }
 
-  private async testMethod4(): Promise<boolean> {
+  private async testBasicAuth(): Promise<boolean> {
     try {
       // Test with GitHub CLI authentication
       if (!process.env.GITHUB_TOKEN) {
@@ -37,21 +37,50 @@ export class GitAuthTester {
 
       return !result.includes("Bad credentials");
     } catch (error) {
-      console.error("Error", error);
+      console.error("Error in basic auth test:", error);
+      return false;
+    }
+  }
+
+  private async testUpstreamAccess(): Promise<boolean> {
+    try {
+      // Convert SSH URL to HTTPS with token
+      const httpsUrl = this.repoUrl
+        .replace("git@github.com:", "https://github.com/")
+        .replace(".git", "");
+
+      // Try to clone a single file to test access
+      const command = `git archive --remote=${httpsUrl} HEAD README.md | tar t`;
+
+      this.git.execCommand(command, {
+        suppressOutput: true,
+        throwOnError: true,
+      });
+
+      return true;
+    } catch (error) {
+      console.error("Error in upstream access test:", error);
       return false;
     }
   }
 
   public async testAll(): Promise<void> {
-    const results = await Promise.all([this.testMethod4()]);
+    const results = await Promise.all([
+      this.testBasicAuth(),
+      this.testUpstreamAccess(),
+    ]);
 
     console.log("\n=== Authentication Test Results ===");
-    results.forEach((success, index) => {
-      console.log(`Method ${index + 1}: ${success ? "✓ Passed" : "❌ Failed"}`);
-    });
+    console.log(`Basic Auth: ${results[0] ? "✓ Passed" : "❌ Failed"}`);
+    console.log(`Upstream Access: ${results[1] ? "✓ Passed" : "❌ Failed"}`);
 
     if (!results.some((r) => r)) {
       throw new Error("All authentication methods failed");
+    }
+
+    // Require upstream access specifically
+    if (!results[1]) {
+      throw new Error("Unable to access upstream repository");
     }
   }
 }
