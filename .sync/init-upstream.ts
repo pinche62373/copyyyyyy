@@ -177,9 +177,8 @@ class UpstreamInitializer {
           CircleCI: ["CIRCLE_TOKEN"],
         }[ciEnv.name || ""] || [];
 
-      const isPlural = tokenNames.length > 1;
       console.error(
-        `\n❌ Error: Required CI environment ${isPlural ? "variables" : "variable"} ${tokenNames.join(" or ")} ${isPlural ? "are" : "is"} missing.`,
+        `\n❌ Error: Required CI environment variable ${tokenNames.join(" or ")} is missing.`,
       );
       process.exit(1);
     }
