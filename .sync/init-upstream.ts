@@ -38,35 +38,34 @@ class UpstreamInitializer {
 
       // ----------------------------------------------------
 
-      // this.git.log("\n=== Git Authentication Test ===", true);
+      this.git.log("\n=== Git Authentication Test ===", true);
 
-      // const token = process.env.PAT_TOKEN;
-      // if (!token) {
-      //   throw new Error("PAT_TOKEN environment variable is required");
-      // }
+      const token = process.env.PAT_TOKEN;
+      if (!token) {
+        throw new Error("PAT_TOKEN environment variable is required");
+      }
 
-      // this.git.log("Running authentication tests...", true);
-      // const authTester = new GitAuthTester({
-      //   token,
-      //   repoUrl: this.options.upstreamUrl,
-      //   verbose: this.options.verbose,
-      // });
+      this.git.log("Running authentication tests...", true);
+      const authTester = new GitAuthTester({
+        token,
+        repoUrl: this.options.upstreamUrl,
+        verbose: this.options.verbose,
+      });
 
-      // try {
-      //   await authTester.testAll();
-      //   this.git.log("✓ Authentication test successful", true);
-      // } catch (error) {
-      //   this.git.log("❌ Authentication test failed", true);
-      //   throw error;
-      // }
+      try {
+        await authTester.testAll();
+        this.git.log("✓ Authentication test successful", true);
+      } catch (error) {
+        this.git.log("❌ Authentication test failed", true);
+        throw error;
+      }
 
-      // // Exit early for now
-      // process.exit(0);
+      // Exit early for now
+      process.exit(0);
 
       // ----------------------------------------------------
 
-      // Validate CI environment before proceeding
-      this.validateCIEnvironment();
+      this.ciRequireToken();
 
       // Change to repository root
       this.git.changeToRepoRoot();
@@ -88,7 +87,7 @@ class UpstreamInitializer {
       //   });
       // }
 
-      this.copyGitignoreToTemp();
+      this.copyAllowedOverridesToTemp();
       this.setupUpstreamRemote();
       this.initializeSparseCheckout();
       this.configureSparseCheckoutPatterns();
@@ -111,33 +110,33 @@ class UpstreamInitializer {
     }
   }
 
-  private isUpstreamRepo(): boolean {
-    try {
-      // Get the remote URL of origin
-      const originUrl = this.git.getRemoteUrl("origin");
+  /**
+   * Makes sure
+   */
+  private ciRequireToken(): void {
+    const ciEnv = detectCI();
+    if (ciEnv.isCI && !ciEnv.accessToken) {
+      const tokenNames =
+        {
+          "GitHub Actions": ["GITHUB_TOKEN", "PAT_TOKEN"],
+          "GitLab CI": ["CI_JOB_TOKEN", "PAT_TOKEN"],
+          "Azure DevOps": ["SYSTEM_ACCESSTOKEN"],
+          Jenkins: ["JENKINS_TOKEN"],
+          CircleCI: ["CIRCLE_TOKEN"],
+        }[ciEnv.name || ""] || [];
 
-      // Extract org/repo from origin URL
-      const match = originUrl.match(/[:/]([^/]+)\/([^/]+?)(?:\.git)?$/);
-      if (!match) {
-        return false;
-      }
-
-      const [, org, repo] = match;
-
-      // Compare with configured upstream
-      return (
-        org === config.upstream.organization &&
-        repo === config.upstream.repository
+      console.error(
+        `\n❌ Error: Required CI environment variable ${tokenNames.join(" or ")} is missing.`,
       );
-    } catch (error) {
-      this.git.log(
-        `Warning: Could not determine if this is upstream repo: ${error}`,
-      );
-      return false;
+      process.exit(1);
     }
   }
 
-  private copyGitignoreToTemp(): void {
+  /**
+   * Copy .allowed-upstream-overrides file to temp folder because we will not be
+   * able to it in the working directory once we switch to sparse-checkout mode.
+   */
+  private copyAllowedOverridesToTemp(): void {
     try {
       // First change to repository root
       this.git.changeToRepoRoot();
@@ -165,6 +164,32 @@ class UpstreamInitializer {
     } catch (error) {
       console.error(`Failed to copy allowed overrides: ${error}`);
       throw error;
+    }
+  }
+
+  private isUpstreamRepo(): boolean {
+    try {
+      // Get the remote URL of origin
+      const originUrl = this.git.getRemoteUrl("origin");
+
+      // Extract org/repo from origin URL
+      const match = originUrl.match(/[:/]([^/]+)\/([^/]+?)(?:\.git)?$/);
+      if (!match) {
+        return false;
+      }
+
+      const [, org, repo] = match;
+
+      // Compare with configured upstream
+      return (
+        org === config.upstream.organization &&
+        repo === config.upstream.repository
+      );
+    } catch (error) {
+      this.git.log(
+        `Warning: Could not determine if this is upstream repo: ${error}`,
+      );
+      return false;
     }
   }
 
@@ -242,25 +267,6 @@ class UpstreamInitializer {
       this.git.log("Cleanup completed");
     } catch (error) {
       this.git.log(`Warning: Cleanup failed: ${error}`);
-    }
-  }
-
-  private validateCIEnvironment(): void {
-    const ciEnv = detectCI();
-    if (ciEnv.isCI && !ciEnv.accessToken) {
-      const tokenNames =
-        {
-          "GitHub Actions": ["GITHUB_TOKEN", "PAT_TOKEN"],
-          "GitLab CI": ["CI_JOB_TOKEN", "PAT_TOKEN"],
-          "Azure DevOps": ["SYSTEM_ACCESSTOKEN"],
-          Jenkins: ["JENKINS_TOKEN"],
-          CircleCI: ["CIRCLE_TOKEN"],
-        }[ciEnv.name || ""] || [];
-
-      console.error(
-        `\n❌ Error: Required CI environment variable ${tokenNames.join(" or ")} is missing.`,
-      );
-      process.exit(1);
     }
   }
 }
