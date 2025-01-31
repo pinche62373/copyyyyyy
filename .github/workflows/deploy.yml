@@ -80,6 +80,8 @@ jobs:
           node-version: 20
 
       - name: 📥 Install deps
+        env:
+          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: npm install
 
       - name: ⚡ Run vitest
