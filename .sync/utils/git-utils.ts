@@ -70,23 +70,30 @@ export class GitUtils {
   public normalizeGitUrl(url: string, token: string | null = null): string {
     this.log("Normalizing Git URL...");
 
+    // Log original URL for transparency
+    this.log(`Original upstream URL: ${url}`, true);
+
     url = url.replace(/\/$/, ""); // Remove trailing slash if present
 
     // Add .git if missing
     if (!url.endsWith(".git")) {
+      console.log("URL NOT ENDING WITH .GIT, ADDING IT");
       url = `${url}.git`;
     }
 
     // No token, return original URL
-    if (!token) return url;
-
-    // Log original URL for transparency
-    this.log(`Original upstream URL: ${url}`, true);
+    if (!token) {
+      console.log("NO TOKEN, RETURN URL");
+      return url;
+    }
 
     // Transform SSH URL to HTTPS with OAuth2 token
     if (url.startsWith("git@github.com:")) {
+      console.log("SHOULD TRANSFORM");
       const match = url.match(/git@github\.com:(.+?)(?:\.git)?$/);
       if (match) {
+        console.log("SHOULD ADD OAUTH");
+
         const [, repoPath] = match;
         const normalizedUrl = `https://oauth2:${token}@github.com/${repoPath}.git`;
 

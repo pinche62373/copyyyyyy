@@ -46,6 +46,7 @@ export function isCIEnvironment(env: Environment): env is CIEnvironment {
 /**
  * Detects the current CI environment and returns its configuration.
  * Each CI system uses its specific token for private repository access.
+ * Currently limited to Github Actions due to a corporate architecture choice.
  */
 export function detectCI(): Environment {
   // Default response - non-CI
@@ -60,42 +61,6 @@ export function detectCI(): Environment {
       isCI: true,
       name: "GitHub Actions",
       accessToken: getToken("PAT_TOKEN"), // Personal Access Token for GitHub
-    };
-  }
-
-  // Azure DevOps
-  if (process.env.TF_BUILD === "True") {
-    return {
-      isCI: true,
-      name: "Azure DevOps",
-      accessToken: getToken("SYSTEM_ACCESSTOKEN"),
-    };
-  }
-
-  // GitLab CI
-  if (process.env.GITLAB_CI === "true") {
-    return {
-      isCI: true,
-      name: "GitLab CI",
-      accessToken: getToken("CI_JOB_TOKEN"),
-    };
-  }
-
-  // Jenkins
-  if (process.env.JENKINS_URL) {
-    return {
-      isCI: true,
-      name: "Jenkins",
-      accessToken: getToken("JENKINS_TOKEN"),
-    };
-  }
-
-  // CircleCI
-  if (process.env.CIRCLECI === "true") {
-    return {
-      isCI: true,
-      name: "CircleCI",
-      accessToken: getToken("CIRCLE_TOKEN"),
     };
   }
 
