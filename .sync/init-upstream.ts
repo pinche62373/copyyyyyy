@@ -180,6 +180,8 @@ class UpstreamInitializer {
     try {
       this.git.log("Initializing upstream sync configuration...", true);
 
+      // ----------------------------------------------------
+
       this.git.log("\n=== Git Authentication Test ===", true);
       const token = process.env.PAT_TOKEN;
 
@@ -187,12 +189,12 @@ class UpstreamInitializer {
       console.log(`Token exists: ${Boolean(token)}`);
       console.log(`Token length: ${token?.length || 0}`);
 
-      // First test with a public repository
+      // First test with a small public repository
       this.git.log("\nTesting with public repository...", true);
       try {
         const publicTest =
-          "git ls-remote https://github.com/microsoft/vscode.git";
-        this.git.execCommand(publicTest);
+          "git ls-remote https://github.com/sindresorhus/is-up.git";
+        this.git.execCommand(publicTest, { suppressOutput: true });
         this.git.log("✓ Public repository test successful", true);
       } catch (error) {
         this.git.log(
