@@ -75,21 +75,30 @@ export class GitUtils {
       url = `${url}.git`;
     }
 
-    if (url.startsWith("git@")) {
-      // Convert SSH to HTTPS
+    // No token, return original URL
+    if (!token) return url;
+
+    // Log original URL for transparency
+    this.log(`Original upstream URL: ${url}`, true);
+
+    // Transform SSH URL to HTTPS with OAuth2 token
+    if (url.startsWith("git@github.com:")) {
       const match = url.match(/git@github\.com:(.+?)(?:\.git)?$/);
       if (match) {
         const [, repoPath] = match;
-        url = `https://github.com/${repoPath}.git`;
+        const normalizedUrl = `https://oauth2:${token}@github.com/${repoPath}.git`;
+
+        // Log modified URL, masking the token for security
+        this.log(
+          `Modified upstream URL: https://oauth2:***@github.com/${repoPath}.git`,
+          true,
+        );
+
+        return normalizedUrl;
       }
     }
 
-    // Add token to HTTPS URL if provided
-    if (token && url.startsWith("https://")) {
-      url = url.replace("https://", `https://${token}@`);
-    }
-
-    return url;
+    return "UNEXPECTED-GIT-URL";
   }
 
   /**

@@ -95,46 +95,9 @@ class UpstreamInitializer {
     const ciEnv = detectCI();
     let upstreamUrl = this.options.upstreamUrl;
 
+    // Normalize URL for CI environments
     if (ciEnv.isCI && ciEnv.accessToken) {
-      // Log original URL for transparency
-      this.git.log(`Original upstream URL: ${upstreamUrl}`, true);
-
-      // Transform SSH URL to HTTPS with OAuth2 token
-      if (upstreamUrl.startsWith("git@github.com:")) {
-        const match = upstreamUrl.match(/git@github\.com:(.+?)(?:\.git)?$/);
-        if (match) {
-          const [, repoPath] = match;
-          upstreamUrl = `https://oauth2:${ciEnv.accessToken}@github.com/${repoPath}.git`;
-
-          // Log modified URL, masking the token for security
-          this.git.log(
-            `Modified upstream URL: https://oauth2:***@github.com/${repoPath}.git`,
-            true,
-          );
-        } else {
-          throw new Error("Invalid GitHub SSH URL format");
-        }
-      }
-      // Handle HTTPS URLs that might already exist
-      else if (upstreamUrl.startsWith("https://github.com/")) {
-        const match = upstreamUrl.match(
-          /https:\/\/github\.com\/(.+?)(?:\.git)?$/,
-        );
-        if (match) {
-          const [, repoPath] = match;
-          upstreamUrl = `https://oauth2:${ciEnv.accessToken}@github.com/${repoPath}.git`;
-
-          // Log modified URL, masking the token for security
-          this.git.log(
-            `Modified upstream URL: https://oauth2:***@github.com/${repoPath}.git`,
-            true,
-          );
-        } else {
-          throw new Error("Invalid GitHub HTTPS URL format");
-        }
-      } else {
-        throw new Error("Unsupported upstream URL format for GitHub");
-      }
+      upstreamUrl = this.git.normalizeGitUrl(upstreamUrl, ciEnv.accessToken);
     }
 
     if (!hasUpstream) {
