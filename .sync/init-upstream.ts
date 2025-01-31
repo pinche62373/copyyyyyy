@@ -180,6 +180,20 @@ class UpstreamInitializer {
     try {
       this.git.log("Initializing upstream sync configuration...", true);
 
+      this.git.log("Testing basic Git auth...", true);
+      // Get token directly from env
+      const token = process.env.PAT_TOKEN;
+
+      // Most basic test possible
+      const testCommand = `git ls-remote https://${token}@github.com/pinche62373/tzdb.git`;
+      this.git.execCommand(testCommand, { suppressOutput: true });
+      this.git.log("✓ Basic auth test successful", true);
+
+      // Exit early for now
+      process.exit(0);
+
+      // ----------------------------------------------------
+
       // Validate CI environment before proceeding
       this.validateCIEnvironment();
 
