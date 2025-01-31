@@ -117,6 +117,10 @@ export class GitUtils {
 
     try {
       if (verbose) {
+        // temporary debugging
+        this.log(`Raw command: ${command}`); // Add this
+        this.log(`CWD: ${options.cwd || process.cwd()}`); // Add this
+
         this.log(`Executing: ${command}`);
         this.log(`Working directory: ${cwd}`);
       }
