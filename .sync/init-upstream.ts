@@ -21,11 +21,11 @@ class UpstreamInitializer {
     this.options = {
       upstreamUrl: config.upstream.url,
       gitignoreUpstreamPath: config.sync.allowedOverridesPath,
-      verbose: config.sync.verbose,
+      verbose: true,
       ...options,
     };
 
-    this.git = new GitUtils({ verbose: this.options.verbose });
+    this.git = new GitUtils({ verbose: true }); // Force verbose mode
     const createId = init();
     this.tempFile = join(tmpdir(), `gitignore-upstream-${createId()}`);
   }
@@ -91,32 +91,91 @@ class UpstreamInitializer {
     this.git.log("1. Setting up upstream remote...", true);
     const hasUpstream = this.git.hasRemote("upstream");
 
-    // Detect CI environment and modify URL if needed
+    // Debug: Log CI environment details
     const ciEnv = detectCI();
+    console.log("CI Environment Details:", {
+      isCI: ciEnv.isCI,
+      name: ciEnv.name,
+      hasToken: !!ciEnv.accessToken,
+      tokenLength: ciEnv.accessToken ? ciEnv.accessToken.length : 0,
+      tokenStart: ciEnv.accessToken
+        ? ciEnv.accessToken.substring(0, 4) + "..."
+        : null,
+    });
+
     let upstreamUrl = this.options.upstreamUrl;
+    console.log("Original upstream URL:", upstreamUrl);
 
     if (ciEnv.isCI && ciEnv.accessToken) {
-      upstreamUrl = this.git.normalizeGitUrl(upstreamUrl, ciEnv.accessToken);
-      this.git.log(
-        `Configured upstream URL for CI environment (${ciEnv.name})`,
-      );
-    } else {
-      upstreamUrl = this.git.normalizeGitUrl(upstreamUrl);
+      if (upstreamUrl.startsWith("git@")) {
+        const match = upstreamUrl.match(/git@github\.com:(.+?)(?:\.git)?$/);
+        if (match) {
+          const [, repoPath] = match;
+          upstreamUrl = `https://${ciEnv.accessToken}@github.com/${repoPath}.git`;
+          console.log(
+            "Modified upstream URL:",
+            upstreamUrl.replace(ciEnv.accessToken, "TOKEN_HIDDEN"),
+          );
+        } else {
+          console.log("Failed to match SSH URL pattern");
+        }
+      }
     }
 
     if (!hasUpstream) {
-      this.git.log("Adding upstream remote...");
-      // Using execCommand with suppressOutput to prevent token exposure in logs
-      this.git.execCommand(`git remote add upstream ${upstreamUrl}`, {
-        suppressOutput: true,
-      });
+      console.log("Adding upstream remote...");
+      try {
+        // Test GitHub API access
+        const testCmd = `curl -s -I -H "Authorization: token ${ciEnv.accessToken}" https://api.github.com/repos/${config.upstream.organization}/${config.upstream.repository}`;
+        const testResult = this.git.execCommand(testCmd, {
+          suppressOutput: true,
+          throwOnError: false,
+        });
+        console.log("GitHub API Test Response:", testResult);
+
+        // Add the remote
+        const result = this.git.execCommand(
+          `git remote add upstream ${upstreamUrl}`,
+          {
+            suppressOutput: true,
+            throwOnError: false,
+          },
+        );
+        console.log("Add remote result:", result);
+
+        // Test the remote
+        const fetchTest = this.git.execCommand("git fetch upstream --dry-run", {
+          suppressOutput: true,
+          throwOnError: false,
+        });
+        console.log("Fetch test result:", fetchTest);
+      } catch (error) {
+        console.error("Error during remote setup:", error);
+        throw error;
+      }
     } else {
-      this.git.log("Upstream remote already exists");
-      // Update the URL in case token needs to be added
-      this.git.execCommand(`git remote set-url upstream ${upstreamUrl}`, {
-        suppressOutput: true,
-      });
-      this.git.log("Updated upstream remote URL");
+      console.log("Upstream remote exists, testing connection...");
+      try {
+        const listResult = this.git.execCommand("git remote -v", {
+          suppressOutput: true,
+          throwOnError: false,
+        });
+        console.log("Remote list:", listResult);
+
+        if (ciEnv.isCI && ciEnv.accessToken) {
+          const updateResult = this.git.execCommand(
+            `git remote set-url upstream ${upstreamUrl}`,
+            {
+              suppressOutput: true,
+              throwOnError: false,
+            },
+          );
+          console.log("Update remote result:", updateResult);
+        }
+      } catch (error) {
+        console.error("Error during remote verification:", error);
+        throw error;
+      }
     }
   }
 
