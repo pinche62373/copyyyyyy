@@ -96,18 +96,12 @@ class UpstreamInitializer {
     let upstreamUrl = this.options.upstreamUrl;
 
     if (ciEnv.isCI && ciEnv.accessToken) {
-      // Convert SSH URL to HTTPS with token
-      // Example: git@github.com:org/repo.git -> https://${token}@github.com/org/repo.git
-      if (upstreamUrl.startsWith("git@")) {
-        const match = upstreamUrl.match(/git@github\.com:(.+?)(?:\.git)?$/);
-        if (match) {
-          const [, repoPath] = match;
-          upstreamUrl = `https://${ciEnv.accessToken}@github.com/${repoPath}.git`;
-          this.git.log(
-            `Configured upstream URL for CI environment (${ciEnv.name})`,
-          );
-        }
-      }
+      upstreamUrl = this.git.normalizeGitUrl(upstreamUrl, ciEnv.accessToken);
+      this.git.log(
+        `Configured upstream URL for CI environment (${ciEnv.name})`,
+      );
+    } else {
+      upstreamUrl = this.git.normalizeGitUrl(upstreamUrl);
     }
 
     if (!hasUpstream) {
@@ -119,12 +113,10 @@ class UpstreamInitializer {
     } else {
       this.git.log("Upstream remote already exists");
       // Update the URL in case token needs to be added
-      if (ciEnv.isCI && ciEnv.accessToken) {
-        this.git.execCommand(`git remote set-url upstream ${upstreamUrl}`, {
-          suppressOutput: true,
-        });
-        this.git.log("Updated upstream remote URL for CI environment");
-      }
+      this.git.execCommand(`git remote set-url upstream ${upstreamUrl}`, {
+        suppressOutput: true,
+      });
+      this.git.log("Updated upstream remote URL");
     }
   }
 

@@ -57,6 +57,42 @@ export class GitUtils {
   }
 
   /**
+   * Normalizes a Git URL to a consistent format
+   * - Removes trailing slashes
+   * - Adds .git suffix if missing
+   * - Converts SSH URLs to HTTPS format
+   * - Adds authentication token if provided
+   *
+   * @param url The Git URL to normalize
+   * @param token Optional authentication token to add to HTTPS URLs
+   * @returns The normalized URL
+   */
+  public normalizeGitUrl(url: string, token: string | null = null): string {
+    url = url.replace(/\/$/, ""); // Remove trailing slash if present
+
+    // Add .git if missing
+    if (!url.endsWith(".git")) {
+      url = `${url}.git`;
+    }
+
+    if (url.startsWith("git@")) {
+      // Convert SSH to HTTPS
+      const match = url.match(/git@github\.com:(.+?)(?:\.git)?$/);
+      if (match) {
+        const [, repoPath] = match;
+        url = `https://github.com/${repoPath}.git`;
+      }
+    }
+
+    // Add token to HTTPS URL if provided
+    if (token && url.startsWith("https://")) {
+      url = url.replace("https://", `https://${token}@`);
+    }
+
+    return url;
+  }
+
+  /**
    * Executes a git command and returns its output
    */
   public execCommand(command: string, options: GitCommandOptions = {}): string {
