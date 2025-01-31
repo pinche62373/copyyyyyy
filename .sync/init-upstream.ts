@@ -3,10 +3,9 @@ import { tmpdir } from "os";
 import { join, resolve } from "path";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
-import { detectCI } from "./utils/detect-ci";
-import { GitAuthTester } from "./utils/git-auth-tester";
+import { defaultCIUtils } from "./utils/ci-utils";
+// import { detectCI } from "./utils/detect-ci";
 import { GitUtils } from "./utils/git-utils";
-import { GitHubAuthHandler } from "./utils/github-auth-handler";
 
 interface InitOptions {
   upstreamUrl?: string;
@@ -36,38 +35,7 @@ class UpstreamInitializer {
     try {
       this.git.log("Initializing upstream sync configuration...", true);
 
-      // ----------------------------------------------------
-
-      this.git.log("\n=== Git Authentication Test ===", true);
-
-      const token = process.env.PAT_TOKEN;
-      if (!token) {
-        throw new Error("PAT_TOKEN environment variable is required");
-      }
-
-      this.git.log("Running authentication tests...", true);
-      const authTester = new GitAuthTester({
-        token,
-        repoUrl: this.options.upstreamUrl,
-        verbose: this.options.verbose,
-      });
-
-      try {
-        await authTester.testAll();
-        this.git.log("✓ Authentication test successful", true);
-      } catch (error) {
-        this.git.log("❌ Authentication test failed", true);
-        throw error;
-      }
-
-      // Exit early for now
-      process.exit(0);
-
-      // ----------------------------------------------------
-
-      this.ciRequireToken();
-
-      // Change to repository root
+      defaultCIUtils.requireToken();
       this.git.changeToRepoRoot();
 
       // Check if we're in the upstream repo
@@ -78,14 +46,6 @@ class UpstreamInitializer {
         );
         return;
       }
-
-      // if (detectCI()) {
-      //   const auth = new GitHubAuthHandler({
-      //     token: process.env.PAT_TOKEN!,
-      //     repoUrl: config.upstream.url,
-      //     verbose: this.options.verbose,
-      //   });
-      // }
 
       this.copyAllowedOverridesToTemp();
       this.setupUpstreamRemote();
@@ -107,28 +67,6 @@ class UpstreamInitializer {
     } catch (error) {
       await this.cleanup();
       throw error;
-    }
-  }
-
-  /**
-   * Makes sure
-   */
-  private ciRequireToken(): void {
-    const ciEnv = detectCI();
-    if (ciEnv.isCI && !ciEnv.accessToken) {
-      const tokenNames =
-        {
-          "GitHub Actions": ["GITHUB_TOKEN", "PAT_TOKEN"],
-          "GitLab CI": ["CI_JOB_TOKEN", "PAT_TOKEN"],
-          "Azure DevOps": ["SYSTEM_ACCESSTOKEN"],
-          Jenkins: ["JENKINS_TOKEN"],
-          CircleCI: ["CIRCLE_TOKEN"],
-        }[ciEnv.name || ""] || [];
-
-      console.error(
-        `\n❌ Error: Required CI environment variable ${tokenNames.join(" or ")} is missing.`,
-      );
-      process.exit(1);
     }
   }
 
@@ -198,21 +136,12 @@ class UpstreamInitializer {
     const hasUpstream = this.git.hasRemote("upstream");
 
     // Detect CI environment and modify URL if needed
-    const ciEnv = detectCI();
+    const ciEnv = defaultCIUtils.getEnv();
     let upstreamUrl = this.options.upstreamUrl;
 
     // Normalize URL for CI environments
     if (ciEnv.isCI && ciEnv.accessToken) {
       upstreamUrl = this.git.normalizeGitUrl(upstreamUrl, ciEnv.accessToken);
-
-      // authenticate first to make upstream repo available later
-      const auth = new GitHubAuthHandler({
-        token: process.env.PAT_TOKEN!,
-        repoUrl: config.upstream.url,
-        verbose: this.options.verbose,
-      });
-
-      await auth.authenticate();
     }
 
     if (!hasUpstream) {

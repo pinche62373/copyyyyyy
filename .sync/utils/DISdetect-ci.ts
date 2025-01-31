@@ -72,13 +72,6 @@ export function detectCI(): Environment {
   return defaultEnv;
 }
 
-/**
- * Checks if the code is running in a CI environment
- */
-export function isRunningInCI(): boolean {
-  return detectCI().isCI;
-}
-
 // Example usage with type checking
 const env = detectCI();
 if (isCIEnvironment(env)) {
