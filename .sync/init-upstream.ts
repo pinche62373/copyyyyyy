@@ -165,9 +165,32 @@ class UpstreamInitializer {
     }
   }
 
+  private validateCIEnvironment(): void {
+    const ciEnv = detectCI();
+    if (ciEnv.isCI && !ciEnv.accessToken) {
+      const tokenNames =
+        {
+          "GitHub Actions": ["GITHUB_TOKEN", "PAT_TOKEN"],
+          "GitLab CI": ["CI_JOB_TOKEN", "PAT_TOKEN"],
+          "Azure DevOps": ["SYSTEM_ACCESSTOKEN"],
+          Jenkins: ["JENKINS_TOKEN"],
+          CircleCI: ["CIRCLE_TOKEN"],
+        }[ciEnv.name || ""] || [];
+
+      const isPlural = tokenNames.length > 1;
+      console.error(
+        `\n❌ Error: Required CI environment ${isPlural ? "variables" : "variable"} ${tokenNames.join(" or ")} ${isPlural ? "are" : "is"} missing.`,
+      );
+      process.exit(1);
+    }
+  }
+
   public async initialize(): Promise<void> {
     try {
       this.git.log("Initializing upstream sync configuration...", true);
+
+      // Validate CI environment before proceeding
+      this.validateCIEnvironment();
 
       // Change to repository root
       this.git.changeToRepoRoot();
