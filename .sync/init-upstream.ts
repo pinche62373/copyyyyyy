@@ -111,7 +111,8 @@ class UpstreamInitializer {
         const match = upstreamUrl.match(/git@github\.com:(.+?)(?:\.git)?$/);
         if (match) {
           const [, repoPath] = match;
-          upstreamUrl = `https://${ciEnv.accessToken}@github.com/${repoPath}.git`;
+          // Format as https://oauth2:TOKEN@github.com/org/repo.git
+          upstreamUrl = `https://oauth2:${ciEnv.accessToken}@github.com/${repoPath}.git`;
           console.log(
             "Modified upstream URL:",
             upstreamUrl.replace(ciEnv.accessToken, "TOKEN_HIDDEN"),
@@ -124,6 +125,14 @@ class UpstreamInitializer {
 
     if (!hasUpstream) {
       console.log("Adding upstream remote...");
+      // Verify URL format (safely)
+      const urlTest = upstreamUrl.replace(ciEnv.accessToken, "HIDDEN_TOKEN");
+      console.log(
+        "URL format check:",
+        urlTest.match(/^https:\/\/oauth2:.+@github\.com\/.+\/.+\.git$/)
+          ? "Valid"
+          : "Invalid",
+      );
       try {
         // Test GitHub API access
         const testCmd = `curl -s -I -H "Authorization: token ${ciEnv.accessToken}" https://api.github.com/repos/${config.upstream.organization}/${config.upstream.repository}`;
