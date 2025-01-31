@@ -3,6 +3,7 @@
 import { execSync } from "child_process";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import { detectCI } from "./detect-ci";
 
 type BufferEncoding =
   | "ascii"
@@ -57,7 +58,7 @@ export class GitUtils {
   }
 
   /**
-   * Normalizes a Git URL to a consistent format
+   * Normalizes a Git URL to a consistent format.
    * - Removes trailing slashes
    * - Adds .git suffix if missing
    * - Converts SSH URLs to HTTPS format
@@ -71,43 +72,34 @@ export class GitUtils {
     this.log("Normalizing Git URL...");
 
     // Log original URL for transparency
-    this.log(`Original upstream URL: ${url}`, true);
-    this.log(`TOKEN = ${token}`, true);
+    this.log(`Original URL: ${url}`, true);
 
-    url = url.replace(/\/$/, ""); // Remove trailing slash if present
+    // Remove trailing slash
+    if (url.endsWith("/")) {
+      this.log("Removing trailing slash");
+      url = url.replace(/\/$/, "");
+    }
 
     // Add .git if missing
     if (!url.endsWith(".git")) {
-      this.log("URL NOT ENDING WITH .GIT, ADDING IT");
+      this.log("Adding .git");
       url = `${url}.git`;
     }
 
-    // No token, return original URL
-    if (!token) {
-      this.log("NO TOKEN, RETURN URL");
-      return url;
-    }
+    // If CI, SSH URL to HTTPS and insert access token
+    if (token && url.startsWith("git@github.com:")) {
+      this.log("CI: converting SSH url to HTTPS and inserting access token");
 
-    // Transform SSH URL to HTTPS with OAuth2 token
-    if (url.startsWith("git@github.com:")) {
-      this.log("SHOULD TRANSFORM");
       const match = url.match(/git@github\.com:(.+?)(?:\.git)?$/);
       if (match) {
-        this.log("SHOULD ADD OAUTH");
-
         const [, repoPath] = match;
-        const normalizedUrl = `https://${token}@github.com/${repoPath}.git`;
-
-        this.log(`NORMALIZED = >${normalizedUrl}<`, true);
-
-        // Log modified URL, masking the token for security
-        this.log(`Modified upstream URL: ${normalizedUrl}`, true);
-
-        return normalizedUrl;
+        url = `https://${token}@github.com/${repoPath}.git`;
       }
     }
+    // Log modified URL, no need to mask the token (handled by CI)
+    this.log(`Modified URL: ${url}`, true);
 
-    return "UNEXPECTED-GIT-URL";
+    return url;
   }
 
   /**
