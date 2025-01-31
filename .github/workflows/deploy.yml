@@ -1,4 +1,6 @@
 name: 🚀 CI
+env:
+  UPSTREAM_REPOSITORY: "pinche62373/tzdb"
 
 on:
   push:
@@ -69,8 +71,11 @@ jobs:
     name: ⚡ Vitest
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Checkout repo
+      - name: ⬇️ Checkout downstream repository
         uses: actions/checkout@v4
+
+      - name: ⬇️ Checkout upstream repository
+        uses: ./.github/actions/checkout-upstream
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v4

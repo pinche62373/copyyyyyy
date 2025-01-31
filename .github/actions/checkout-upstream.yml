@@ -1,0 +1,23 @@
+name: Checkout Upstream
+description: "Checkout upstream repo UNLESS we are in upstream itself"
+
+runs:
+  using: composite
+  steps:
+  - name: Check if upstream repo
+      id: check_upstream
+      run: |
+        REPO_URL=$(git config --get remote.origin.url)
+        if [[ "$REPO_URL" == *"${{ env.UPSTREAM_REPOSITORY }}"* ]]; then
+          echo "is_upstream=true" >> $GITHUB_OUTPUT
+        else
+          echo "is_upstream=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Checkout upstream repo
+      if: steps.check_upstream.outputs.is_upstream == 'false'
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ env.UPSTREAM_REPOSITORY }}
+        path: .upstream
+        token: ${{ secrets.PAT_TOKEN }}
