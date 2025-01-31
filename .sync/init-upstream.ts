@@ -6,6 +6,7 @@ import { config } from "./.config";
 import { detectCI } from "./utils/detect-ci";
 import { GitAuthTester } from "./utils/git-auth-tester";
 import { GitUtils } from "./utils/git-utils";
+import { GitHubAuthHandler } from "./utils/github-auth-handler";
 
 interface InitOptions {
   upstreamUrl?: string;
@@ -29,6 +30,85 @@ class UpstreamInitializer {
     this.git = new GitUtils({ verbose: this.options.verbose });
     const createId = init();
     this.tempFile = join(tmpdir(), `gitignore-upstream-${createId()}`);
+  }
+
+  public async initialize(): Promise<void> {
+    try {
+      this.git.log("Initializing upstream sync configuration...", true);
+
+      // ----------------------------------------------------
+
+      // this.git.log("\n=== Git Authentication Test ===", true);
+
+      // const token = process.env.PAT_TOKEN;
+      // if (!token) {
+      //   throw new Error("PAT_TOKEN environment variable is required");
+      // }
+
+      // this.git.log("Running authentication tests...", true);
+      // const authTester = new GitAuthTester({
+      //   token,
+      //   repoUrl: this.options.upstreamUrl,
+      //   verbose: this.options.verbose,
+      // });
+
+      // try {
+      //   await authTester.testAll();
+      //   this.git.log("✓ Authentication test successful", true);
+      // } catch (error) {
+      //   this.git.log("❌ Authentication test failed", true);
+      //   throw error;
+      // }
+
+      // // Exit early for now
+      // process.exit(0);
+
+      // ----------------------------------------------------
+
+      // Validate CI environment before proceeding
+      this.validateCIEnvironment();
+
+      // Change to repository root
+      this.git.changeToRepoRoot();
+
+      // Check if we're in the upstream repo
+      if (this.isUpstreamRepo()) {
+        this.git.log(
+          "ℹ Skipping initialization: sync must not be used in the upstream repository itself",
+          true,
+        );
+        return;
+      }
+
+      // if (detectCI()) {
+      //   const auth = new GitHubAuthHandler({
+      //     token: process.env.PAT_TOKEN!,
+      //     repoUrl: config.upstream.url,
+      //     verbose: this.options.verbose,
+      //   });
+      // }
+
+      this.copyGitignoreToTemp();
+      this.setupUpstreamRemote();
+      this.initializeSparseCheckout();
+      this.configureSparseCheckoutPatterns();
+
+      // Fetch and reapply
+      this.git.log("Fetching upstream...");
+      this.git.execCommand("git fetch upstream");
+
+      this.git.log("Reapplying sparse-checkout...");
+      this.git.execCommand("git sparse-checkout reapply");
+
+      await this.cleanup();
+      this.git.log(
+        "✓ Initialization complete - Repository is now in sparse-checkout mode",
+        true,
+      );
+    } catch (error) {
+      await this.cleanup();
+      throw error;
+    }
   }
 
   private isUpstreamRepo(): boolean {
@@ -88,7 +168,7 @@ class UpstreamInitializer {
     }
   }
 
-  private setupUpstreamRemote(): void {
+  private async setupUpstreamRemote(): Promise<void> {
     this.git.log("1. Setting up upstream remote...", true);
     const hasUpstream = this.git.hasRemote("upstream");
 
@@ -100,7 +180,14 @@ class UpstreamInitializer {
     if (ciEnv.isCI && ciEnv.accessToken) {
       upstreamUrl = this.git.normalizeGitUrl(upstreamUrl, ciEnv.accessToken);
 
-      this.git.setupGitCredentials(ciEnv.accessToken); // temporary: setup credentials
+      // authenticate first to make upstream repo available later
+      const auth = new GitHubAuthHandler({
+        token: process.env.PAT_TOKEN!,
+        repoUrl: config.upstream.url,
+        verbose: this.options.verbose,
+      });
+
+      await auth.authenticate();
     }
 
     if (!hasUpstream) {
@@ -174,77 +261,6 @@ class UpstreamInitializer {
         `\n❌ Error: Required CI environment variable ${tokenNames.join(" or ")} is missing.`,
       );
       process.exit(1);
-    }
-  }
-
-  public async initialize(): Promise<void> {
-    try {
-      this.git.log("Initializing upstream sync configuration...", true);
-
-      // ----------------------------------------------------
-
-      this.git.log("\n=== Git Authentication Test ===", true);
-
-      const token = process.env.PAT_TOKEN;
-      if (!token) {
-        throw new Error("PAT_TOKEN environment variable is required");
-      }
-
-      this.git.log("Running authentication tests...", true);
-      const authTester = new GitAuthTester({
-        token,
-        repoUrl: this.options.upstreamUrl,
-        verbose: this.options.verbose,
-      });
-
-      try {
-        await authTester.testAll();
-        this.git.log("✓ Authentication test successful", true);
-      } catch (error) {
-        this.git.log("❌ Authentication test failed", true);
-        throw error;
-      }
-
-      // Exit early for now
-      process.exit(0);
-
-      // ----------------------------------------------------
-
-      // Validate CI environment before proceeding
-      this.validateCIEnvironment();
-
-      // Change to repository root
-      this.git.changeToRepoRoot();
-
-      // Check if we're in the upstream repo
-      if (this.isUpstreamRepo()) {
-        this.git.log(
-          "ℹ Skipping initialization: sync must not be used in the upstream repository itself",
-          true,
-        );
-        return;
-      }
-
-      this.copyGitignoreToTemp();
-      this.setupUpstreamRemote();
-      this.initializeSparseCheckout();
-      this.configureSparseCheckoutPatterns();
-
-      // Fetch and reapply
-      this.git.log("Fetching upstream...");
-      this.git.execCommand("git fetch upstream");
-
-      this.git.log("Reapplying sparse-checkout...");
-      this.git.execCommand("git sparse-checkout reapply");
-
-      await this.cleanup();
-      this.git.log(
-        "✓ Initialization complete - Repository is now in sparse-checkout mode",
-        true,
-      );
-    } catch (error) {
-      await this.cleanup();
-      throw error;
     }
   }
 }
