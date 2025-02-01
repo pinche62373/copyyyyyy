@@ -224,7 +224,7 @@ class UpstreamPuller {
 
       for (const change of changes) {
         try {
-          this.git.log(`\n⚡Processing: ${change.path}`, true);
+          this.git.log(`\n⚡ Processing: ${change.path}`, true);
 
           switch (change.status) {
             case "D": {
@@ -251,7 +251,7 @@ class UpstreamPuller {
                 { suppressOutput: true },
               );
               this.ensureDirectoryExists(change.path);
-              this.git.log(`Writing updated content to: ${change.path}`);
+              this.git.log(`Writing updated content to ${change.path}`);
               writeFileSync(change.path, modContent, "utf8");
               this.git.log(`Successfully updated ${change.path}`, true);
               break;

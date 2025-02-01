@@ -2,8 +2,8 @@ name: 🚀 CI
 env:
   UPSTREAM_REPOSITORY: "pinche62373/tzdb"
   UPSTREAM_FOLDER: "upstream-repo"
-  MAIN_REPO_PATH: /home/runner/work/${{ github.repository }}/main-repo
-  UPSTREAM_REPO_PATH: /home/runner/work/${{ github.repository }}/upstream-repo  
+  MAIN_REPO_PATH: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/main-repo
+  UPSTREAM_REPO_PATH: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/upstream-repo
 
 on:
   push:
