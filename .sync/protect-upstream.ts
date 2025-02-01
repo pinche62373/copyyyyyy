@@ -51,6 +51,45 @@ class UpstreamProtector {
     }
   }
 
+  // Add new method to check if commit is a sync commit
+  private isSyncCommit(commitMessage: string): boolean {
+    const pattern = new RegExp(config.sync.ci.syncCommitPattern);
+    return pattern.test(commitMessage);
+  }
+
+  // Add method to get the commit message in CI
+  private getCommitMessage(): string {
+    try {
+      // In CI, we want to check the commit that triggered the workflow
+      if (process.env.GITHUB_EVENT_PATH) {
+        const eventPath = process.env.GITHUB_EVENT_PATH;
+        const eventData = JSON.parse(readFileSync(eventPath, "utf8"));
+
+        // Handle different event types
+        if (eventData.pull_request) {
+          // For pull requests, get the HEAD commit message
+          return this.git
+            .execCommand(
+              `git log -1 --format=%B ${eventData.pull_request.head.sha}`,
+              { suppressOutput: true },
+            )
+            .trim();
+        } else if (eventData.head_commit) {
+          // For push events
+          return eventData.head_commit.message;
+        }
+      }
+
+      // Fallback to getting the last commit message
+      return this.git
+        .execCommand("git log -1 --format=%B", { suppressOutput: true })
+        .trim();
+    } catch (error) {
+      this.git.log(`Warning: Failed to get commit message: ${error}`);
+      return "";
+    }
+  }
+
   private readAllowedOverrides(): string[] {
     try {
       this.git.log(
@@ -188,15 +227,28 @@ class UpstreamProtector {
     return messages.join("\n");
   }
 
+  // Modify the check method to handle CI environment
   public check(): void {
     try {
-      // Skip check if this is a sync operation
+      // Skip check if this is a sync operation (local machine case)
       if (process.env.UPSTREAM_SYNC_OPERATION === "true") {
         this.git.log(
           "✓ Upstream sync operation - skipping protection check",
           true,
         );
         process.exit(0);
+      }
+
+      // Skip check if this is a sync commit in CI
+      if (process.env.GITHUB_ACTIONS === "true") {
+        const commitMessage = this.getCommitMessage();
+        if (this.isSyncCommit(commitMessage)) {
+          this.git.log(
+            "✓ Sync commit detected in CI - skipping protection check",
+            true,
+          );
+          process.exit(0);
+        }
       }
 
       // Change to repository root

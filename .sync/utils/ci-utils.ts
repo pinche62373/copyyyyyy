@@ -16,6 +16,8 @@ interface NonCIEnvironment extends BaseEnvironment {
 interface CIEnvironment extends BaseEnvironment {
   isCI: true;
   accessToken: string; // Required in CI - no null allowed!
+  mainRepoPath: string; // paths for side-by-side repo checkout
+  upstreamRepoPath: string;
 }
 
 /** Union type for all environment configurations */
@@ -80,10 +82,22 @@ export class CIUtils {
       this.log(`Token exists: ${!!token}`);
       this.log(`Token length: ${token?.length || 0}`);
 
+      // Get repo paths from environment
+      const mainRepoPath = process.env.MAIN_REPO_PATH;
+      const upstreamRepoPath = process.env.UPSTREAM_REPO_PATH;
+
+      if (!mainRepoPath || !upstreamRepoPath) {
+        this.log(
+          "Warning: CI repo paths not found, will be required during initialization",
+        );
+      }
+
       this.currentEnvironment = {
         isCI: true,
         name: "GitHub Actions",
         accessToken: this.getToken("PAT_TOKEN"), // Personal Access Token for GitHub
+        mainRepoPath: mainRepoPath || "", // Initialize with empty string, will be set during init
+        upstreamRepoPath: upstreamRepoPath || "", // Initialize with empty string, will be set during init
       };
 
       return this.currentEnvironment;
@@ -93,6 +107,31 @@ export class CIUtils {
     this.currentEnvironment = defaultEnv;
     this.log("No CI environment detected");
     return this.currentEnvironment;
+  }
+
+  /**
+   * Gets the paths for side-by-side repositories in GitHub Actions
+   * @throws Error if paths cannot be determined
+   */
+  public getCIRepoPaths(): { mainRepoPath: string; upstreamRepoPath: string } {
+    const env = this.getEnv();
+
+    if (!this.isCIEnvironment(env)) {
+      throw new Error("Not in CI environment");
+    }
+
+    // In GitHub Actions, we expect these to be set by the workflow
+    const mainRepoPath = process.env.MAIN_REPO_PATH;
+    const upstreamRepoPath = process.env.UPSTREAM_REPO_PATH;
+
+    if (!mainRepoPath || !upstreamRepoPath) {
+      throw new Error(
+        "Required CI repository paths are not configured. " +
+          "Please ensure MAIN_REPO_PATH and UPSTREAM_REPO_PATH are set in the workflow.",
+      );
+    }
+
+    return { mainRepoPath, upstreamRepoPath };
   }
 
   /**
