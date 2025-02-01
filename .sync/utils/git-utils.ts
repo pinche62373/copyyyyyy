@@ -19,25 +19,18 @@ type BufferEncoding =
   | "hex";
 
 export interface GitCommandOptions {
-  /** Whether to suppress command output in logs */
-  suppressOutput?: boolean;
-  /** Whether to enable verbose logging */
-  verbose?: boolean;
-  /** Working directory for the command. If not provided, uses current directory */
-  cwd?: string;
-  /** Command timeout in milliseconds */
-  timeout?: number;
-  /** Whether to throw on non-zero exit code */
-  throwOnError?: boolean;
-  /** Encoding for the command output. Defaults to 'utf8' */
-  encoding?: BufferEncoding;
-  env?: Record<string, string>; // Added env option
-  input?: string; // Added input option for stdin
+  suppressOutput?: boolean; // Whether to suppress command output in logs
+  verbose?: boolean; // Whether to enable verbose logging
+  cwd?: string; //   // Working directory for the command. If not provided, uses current directory
+  timeout?: number; //  Command timeout in milliseconds
+  throwOnError?: boolean; // Whether to throw on non-zero exit code */
+  encoding?: BufferEncoding; // Encoding for the command output. Defaults to 'utf8' */
+  env?: Record<string, string>; // @Claude: unused ?!?
+  input?: string; // @Claude: unused ?!?
 }
 
 export interface GitUtilsConfig {
-  /** Default verbose setting for all operations */
-  verbose: boolean;
+  verbose: boolean; // Default verbose setting for all operations
 }
 
 export class GitUtils {
@@ -56,52 +49,6 @@ export class GitUtils {
     if (force || this.config.verbose) {
       console.log(message);
     }
-  }
-
-  /**
-   * Normalizes a Git URL to a consistent format.
-   * - Removes trailing slashes
-   * - Adds .git suffix if missing
-   * - Converts SSH URLs to HTTPS format
-   * - Adds authentication token if provided
-   *
-   * @param url The Git URL to normalize
-   * @param token Optional authentication token to add to HTTPS URLs
-   * @returns The normalized URL
-   */
-  public normalizeGitUrl(url: string, token: string | null = null): string {
-    this.log("Normalizing Git URL...");
-
-    // Log original URL for transparency
-    this.log(`Original URL: ${url}`, true);
-
-    // Remove trailing slash
-    if (url.endsWith("/")) {
-      this.log("Removing trailing slash");
-      url = url.replace(/\/$/, "");
-    }
-
-    // Add .git if missing
-    if (!url.endsWith(".git")) {
-      this.log("Adding .git");
-      url = `${url}.git`;
-    }
-
-    // If CI, SSH URL to HTTPS and insert access token
-    if (token && url.startsWith("git@github.com:")) {
-      this.log("CI: converting SSH url to HTTPS and inserting access token");
-
-      const match = url.match(/git@github\.com:(.+?)(?:\.git)?$/);
-      if (match) {
-        const [, repoPath] = match;
-        // url = `https://${token}@github.com/${repoPath}.git`;
-        url = `https://github.com/${repoPath}.git`;
-      }
-    }
-    // Log modified URL, no need to mask the token (handled by CI)
-    this.log(`Modified URL: ${url}`, true);
-
-    return url;
   }
 
   /**

@@ -34,16 +34,15 @@ class UpstreamInitializer {
     try {
       this.git.log("Initializing upstream sync configuration...", true);
 
-      // Check if we're in CI
+      // Initialize for CI
       const env = defaultCIUtils.getEnv();
       if (defaultCIUtils.isCIEnvironment(env)) {
-        // Fix: Use defaultCIUtils.isCIEnvironment
         await this.initializeForCI();
+
         return;
       }
 
-      // If not in CI, continue with normal initialization
-      defaultCIUtils.requireToken();
+      // Initialize for workstations
       this.git.changeToRepoRoot();
 
       // Check if we're in the upstream repo
@@ -101,7 +100,7 @@ class UpstreamInitializer {
       config.sync.ci.upstreamRepoPath = upstreamRepoPath;
 
       this.git.log(
-        "✓ CI initialization complete - Using side-by-side repositories:",
+        "CI initialization complete - Using side-by-side repositories:",
         true,
       );
       this.git.log(`  Main repo: ${mainRepoPath}`, true);
@@ -180,11 +179,6 @@ class UpstreamInitializer {
     const ciEnv = defaultCIUtils.getEnv();
     let upstreamUrl = this.options.upstreamUrl;
 
-    // Normalize URL for CI environments
-    if (ciEnv.isCI && ciEnv.accessToken) {
-      upstreamUrl = this.git.normalizeGitUrl(upstreamUrl, ciEnv.accessToken);
-    }
-
     if (!hasUpstream) {
       this.git.log("Adding upstream remote...");
       // Using execCommand with suppressOutput to prevent token exposure in logs
@@ -194,7 +188,7 @@ class UpstreamInitializer {
     } else {
       this.git.log("Upstream remote already exists");
       // Update the URL in case token needs to be added
-      if (ciEnv.isCI && ciEnv.accessToken) {
+      if (ciEnv.isCI) {
         this.git.execCommand(`git remote set-url upstream ${upstreamUrl}`, {
           suppressOutput: true,
         });
