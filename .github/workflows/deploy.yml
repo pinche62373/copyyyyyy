@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Check if upstream repo
+      - name: Check if inside upstream repo
         id: check_upstream
         shell: bash
         run: |
@@ -43,7 +43,7 @@ jobs:
     name: ⬣ Biome
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Checkout main repo
+      - name: ⬇️ Checkout main repository
         uses: actions/checkout@v4
 
       - name: ⎔ Setup Biome
@@ -59,7 +59,7 @@ jobs:
     name: ⬣ Markdown
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Checkout repo
+      - name: ⬇️ Checkout main repository
         uses: actions/checkout@v4
 
       - name: 🔬 Run Markdownlint2
@@ -72,7 +72,7 @@ jobs:
     name: ʦ TypeScript
     runs-on: ubuntu-latest
     steps:
-      - name: ⬇️ Checkout repo
+      - name: ⬇️ Checkout main repository
         uses: actions/checkout@v4
 
       - name: ⎔ Setup node
@@ -99,7 +99,7 @@ jobs:
       IS_UPSTREAM: ${{ needs.check-upstream.outputs.is_upstream }}
 
     steps:
-      - name: ⬇️ Checkout downstream repository
+      - name: ⬇️ Checkout main repository
         uses: actions/checkout@v4
         with:
           path: main-repo
@@ -141,7 +141,7 @@ jobs:
   #   if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
 
   #   steps:
-  #     - name: ⬇️ Checkout repo
+  #     - name: ⬇️ Checkout main repo
   #       uses: actions/checkout@v4
 
   #     - name: 👀 Read app name
