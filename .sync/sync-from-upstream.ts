@@ -121,7 +121,7 @@ class UpstreamPuller {
 
   private readIgnorePatterns(): string[] {
     try {
-      log.info(
+      log.debug(
         `Reading ignore patterns from: ${this.options.gitignoreUpstreamPath}`,
       );
       const content = readFileSync(this.options.gitignoreUpstreamPath, "utf8");
@@ -142,7 +142,7 @@ class UpstreamPuller {
     files: FileChange[],
     ignorePatterns: string[],
   ): FileChange[] {
-    log.info("Filtering files based on ignore patterns");
+    log.debug("Filtering files based on ignore patterns");
     return files.filter(({ path }) => {
       for (const pattern of ignorePatterns) {
         const regexPattern = pattern
@@ -184,7 +184,7 @@ class UpstreamPuller {
       return false;
     }
 
-    log.info("\nProposed changes:");
+    log.info("Proposed changes:");
     this.formatChangesForDisplay(changes).forEach((line) => log.info(line));
     log.info("");
 
@@ -223,7 +223,7 @@ class UpstreamPuller {
 
       for (const change of changes) {
         try {
-          log.info(`\n⚡ Processing: ${change.path}`, true);
+          log.info(`⚡ Processing: ${change.path}`, true);
 
           switch (change.status) {
             case "D": {
@@ -364,7 +364,7 @@ class UpstreamPuller {
       log.debug("Checking working directory status");
       this.checkWorkingDirectoryClean();
 
-      log.info("Fetching latest changes from upstream");
+      log.debug("Fetching latest changes from upstream");
       this.git.execCommand("git fetch upstream");
 
       const changes = this.getChangedFiles();
@@ -381,7 +381,7 @@ class UpstreamPuller {
         log.debug("Beginning to apply changes");
         await this.applyChanges(filteredChanges);
         log.info(
-          "✓ Sync complete: successfully synced core changes from upstream",
+          "Sync complete: successfully synced core changes from upstream ✓",
           true,
         );
       } else {
