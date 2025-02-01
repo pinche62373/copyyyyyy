@@ -4,7 +4,7 @@ import { join, resolve } from "path";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
 import { defaultCIHelper } from "./utils/ci-helper";
-import { GitUtils } from "./utils/git-utils";
+import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
 
 interface InitOptions {
@@ -13,7 +13,7 @@ interface InitOptions {
 }
 
 class UpstreamInitializer {
-  private readonly git: GitUtils;
+  private readonly git: GitHelper;
   private readonly options: Required<InitOptions>;
   private readonly tempFile: string;
 
@@ -24,7 +24,7 @@ class UpstreamInitializer {
       ...options,
     };
 
-    this.git = new GitUtils({});
+    this.git = new GitHelper({});
     const createId = init();
     this.tempFile = join(tmpdir(), `gitignore-upstream-${createId()}`);
   }
