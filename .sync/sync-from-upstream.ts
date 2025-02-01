@@ -394,7 +394,7 @@ class UpstreamPuller {
         console.log("");
         console.log(getInfoBox(getExplainer("sync-from-upstream-complete")));
       } else {
-        log.info("Update cancelled", true);
+        log.info("Sync aborted", true);
         process.exit(1);
       }
     } catch (error) {
