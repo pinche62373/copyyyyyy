@@ -3,6 +3,7 @@
 import { execSync } from "child_process";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
+import log from "./logger";
 
 type BufferEncoding =
   | "ascii"
@@ -20,7 +21,6 @@ type BufferEncoding =
 
 export interface GitCommandOptions {
   suppressOutput?: boolean; // Whether to suppress command output in logs
-  verbose?: boolean; // Whether to enable verbose logging
   cwd?: string; //   // Working directory for the command. If not provided, uses current directory
   timeout?: number; //  Command timeout in milliseconds
   throwOnError?: boolean; // Whether to throw on non-zero exit code */
@@ -29,9 +29,7 @@ export interface GitCommandOptions {
   input?: string; // @Claude: unused ?!?
 }
 
-export interface GitUtilsConfig {
-  verbose: boolean; // Default verbose setting for all operations
-}
+export interface GitUtilsConfig {}
 
 export class GitUtils {
   private config: GitUtilsConfig;
@@ -41,23 +39,11 @@ export class GitUtils {
   }
 
   /**
-   * Logs a message if verbose mode is enabled
-   * @param message The message to log
-   * @param force Force log even if verbose is disabled
-   */
-  public log(message: string, force: boolean = false): void {
-    if (force || this.config.verbose) {
-      console.log(message);
-    }
-  }
-
-  /**
    * Executes a git command and returns its output
    */
   public execCommand(command: string, options: GitCommandOptions = {}): string {
     const {
       suppressOutput = false,
-      verbose = this.config.verbose,
       cwd = process.cwd(),
       timeout = 30000,
       throwOnError = true,
@@ -67,14 +53,11 @@ export class GitUtils {
     } = options;
 
     try {
-      if (verbose) {
-        // temporary debugging
-        this.log(`Raw command: ${command}`); // Add this
-        this.log(`CWD: ${options.cwd || process.cwd()}`); // Add this
+      log.debug(`Raw command: ${command}`); // Add this
+      log.debug(`CWD: ${options.cwd || process.cwd()}`); // Add this
 
-        this.log(`Executing: ${command}`);
-        this.log(`Working directory: ${cwd}`);
-      }
+      log.debug(`Executing: ${command}`);
+      log.debug(`Working directory: ${cwd}`);
 
       const output = execSync(command, {
         encoding,
@@ -85,16 +68,15 @@ export class GitUtils {
         input,
       });
 
-      if (verbose && !suppressOutput) {
-        this.log(`Command output: ${output}`);
+      if (!suppressOutput) {
+        log.debug(`Command output: ${output}`);
       }
 
       return output;
     } catch (error) {
       const gitError = error as Error;
-      if (verbose) {
-        console.error(`Git command failed: ${gitError.message}`);
-      }
+
+      log.error("Git command failed:", gitError.message);
 
       if (throwOnError) {
         throw new Error(`Git command failed: ${gitError.message}`);
@@ -117,7 +99,8 @@ export class GitUtils {
         suppressOutput: true,
       }).trim();
 
-      this.log(`Changing to repository root: ${rootDir}`);
+      log.debug(`Changing to repository root: ${rootDir}`);
+
       process.chdir(rootDir);
       return previousCwd;
     } catch (error) {
@@ -126,7 +109,8 @@ export class GitUtils {
         const scriptDir = dirname(fileURLToPath(import.meta.url));
         const repoRoot = dirname(dirname(scriptDir)); // Go up two levels from utils/git-utils.ts
 
-        this.log(`Changing to repository root (fallback): ${repoRoot}`);
+        log.debug(`Changing to repository root (fallback): ${repoRoot}`);
+
         process.chdir(repoRoot);
         return previousCwd;
       } catch (fallbackError) {
@@ -211,4 +195,4 @@ export class GitUtils {
 }
 
 // Export a default instance that can be used directly
-export const defaultGitUtils = new GitUtils({ verbose: false });
+export const defaultGitUtils = new GitUtils({});

@@ -5,11 +5,11 @@ import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
 import { defaultCIHelper } from "./utils/ci-helper";
 import { GitUtils } from "./utils/git-utils";
+import log from "./utils/logger";
 
 interface InitOptions {
   upstreamUrl?: string;
   gitignoreUpstreamPath?: string;
-  verbose?: boolean;
 }
 
 class UpstreamInitializer {
@@ -21,18 +21,17 @@ class UpstreamInitializer {
     this.options = {
       upstreamUrl: config.upstream.url,
       gitignoreUpstreamPath: config.sync.allowedOverridesPath,
-      verbose: config.sync.verbose,
       ...options,
     };
 
-    this.git = new GitUtils({ verbose: this.options.verbose });
+    this.git = new GitUtils({});
     const createId = init();
     this.tempFile = join(tmpdir(), `gitignore-upstream-${createId()}`);
   }
 
   public async initialize(): Promise<void> {
     try {
-      this.git.log("Initializing upstream sync configuration...", true);
+      log.info("Initializing upstream sync configuration...");
 
       // Initialize for CI
       if (defaultCIHelper.isGithubActions()) {
@@ -46,9 +45,8 @@ class UpstreamInitializer {
 
       // Check if we're in the upstream repo
       if (this.isUpstreamRepo()) {
-        this.git.log(
+        log.info(
           "ℹ Skipping initialization: sync must not be used in the upstream repository itself",
-          true,
         );
         return;
       }
@@ -59,14 +57,14 @@ class UpstreamInitializer {
       this.configureSparseCheckoutPatterns();
 
       // Fetch and reapply
-      this.git.log("Fetching upstream...");
+      log.info("Fetching upstream...");
       this.git.execCommand("git fetch upstream");
 
-      this.git.log("Reapplying sparse-checkout...");
+      log.info("Reapplying sparse-checkout...");
       this.git.execCommand("git sparse-checkout reapply");
 
       await this.cleanup();
-      this.git.log(
+      log.info(
         "✓ Initialization complete - Repository is now in sparse-checkout mode",
         true,
       );
@@ -78,7 +76,7 @@ class UpstreamInitializer {
 
   private async initializeForCI(): Promise<void> {
     try {
-      this.git.log("Initializing for CI environment...", true);
+      log.info("Initializing for CI environment...", true);
 
       const { mainRepoPath, upstreamRepoPath } = defaultCIHelper.getRepoPaths();
 
@@ -89,12 +87,9 @@ class UpstreamInitializer {
       config.sync.ci.mainRepoPath = mainRepoPath;
       config.sync.ci.upstreamRepoPath = upstreamRepoPath;
 
-      this.git.log(
-        "CI initialization complete - Using side-by-side repositories:",
-        true,
-      );
-      this.git.log(`  Main repo: ${mainRepoPath}`, true);
-      this.git.log(`  Upstream repo: ${upstreamRepoPath}`, true);
+      log.info("CI initialization complete - Using side-by-side repositories:");
+      log.info(`  Main repo: ${mainRepoPath}`, true);
+      log.info(`  Upstream repo: ${upstreamRepoPath}`, true);
     } catch (error) {
       throw new Error(`CI initialization failed: ${error.message}`);
     }
@@ -115,14 +110,14 @@ class UpstreamInitializer {
         this.options.gitignoreUpstreamPath,
       );
 
-      this.git.log(`Reading allowed overrides from: ${allowedOverridesPath}`);
+      log.info(`Reading allowed overrides from: ${allowedOverridesPath}`);
 
       try {
         const content = readFileSync(allowedOverridesPath, "utf8");
-        this.git.log("Successfully read allowed overrides file");
+        log.info("Successfully read allowed overrides file");
 
         writeFileSync(this.tempFile, content, "utf8");
-        this.git.log(`Copied to temp location: ${this.tempFile}`);
+        log.info(`Copied to temp location: ${this.tempFile}`);
       } catch (readError) {
         throw new Error(
           `Failed to read allowed overrides file at ${allowedOverridesPath}. ` +
@@ -130,7 +125,7 @@ class UpstreamInitializer {
         );
       }
     } catch (error) {
-      console.error(`Failed to copy allowed overrides: ${error}`);
+      log.error(`Failed to copy allowed overrides: ${error}`);
       throw error;
     }
   }
@@ -154,49 +149,51 @@ class UpstreamInitializer {
         repo === config.upstream.repository
       );
     } catch (error) {
-      this.git.log(
-        `Warning: Could not determine if this is upstream repo: ${error}`,
+      log.error(
+        "Warning: Could not determine if this is upstream repo:",
+        error,
       );
+
       return false;
     }
   }
 
   private async setupUpstreamRemote(): Promise<void> {
-    this.git.log("1. Setting up upstream remote...", true);
+    log.info("1. Setting up upstream remote...", true);
     const hasUpstream = this.git.hasRemote("upstream");
 
     let upstreamUrl = this.options.upstreamUrl;
 
     if (!hasUpstream) {
-      this.git.log("Adding upstream remote...");
+      log.info("Adding upstream remote...");
       // Using execCommand with suppressOutput to prevent token exposure in logs
       this.git.execCommand(`git remote add upstream ${upstreamUrl}`, {
         suppressOutput: true,
       });
     } else {
-      this.git.log("Upstream remote already exists");
+      log.info("Upstream remote already exists");
       // Update the URL in case token needs to be added
       if (defaultCIHelper.isGithubActions()) {
         this.git.execCommand(`git remote set-url upstream ${upstreamUrl}`, {
           suppressOutput: true,
         });
-        this.git.log("Updated upstream remote URL for CI environment");
+        log.info("Updated upstream remote URL for CI environment");
       }
     }
   }
 
   private initializeSparseCheckout(): void {
-    this.git.log("2. Initializing sparse-checkout...", true);
+    log.info("2. Initializing sparse-checkout...", true);
     this.git.execCommand("git sparse-checkout init --no-cone");
-    this.git.log("Sparse-checkout initialized");
+    log.info("Sparse-checkout initialized");
   }
 
   private configureSparseCheckoutPatterns(): void {
-    this.git.log("3. Configuring inclusion patterns...", true);
+    log.info("3. Configuring inclusion patterns...", true);
 
     // Write the base include pattern
     const sparseCheckoutPath = ".git/info/sparse-checkout";
-    this.git.log(`Writing base pattern to ${sparseCheckoutPath}`);
+    log.debug(`Writing base pattern to ${sparseCheckoutPath}`);
     writeFileSync(sparseCheckoutPath, "/*\n", "utf8");
 
     // Read and process ignore patterns
@@ -205,8 +202,8 @@ class UpstreamInitializer {
       .filter((line) => line && !line.startsWith("#"))
       .map((pattern) => `:(upstream)${pattern}`);
 
-    this.git.log("Adding exclusion patterns:");
-    patterns.forEach((pattern) => this.git.log(`  ${pattern}`));
+    log.info("Adding exclusion patterns:");
+    patterns.forEach((pattern) => log.debug(`  ${pattern}`));
 
     // Append patterns to sparse-checkout file
     writeFileSync(sparseCheckoutPath, patterns.join("\n"), { flag: "a" });
@@ -216,9 +213,9 @@ class UpstreamInitializer {
     try {
       const fs = await import("fs/promises");
       await fs.unlink(this.tempFile);
-      this.git.log("Cleanup completed");
+      log.info("Cleanup completed");
     } catch (error) {
-      this.git.log(`Warning: Cleanup failed: ${error}`);
+      log.error("Warning: Cleanup failed", error);
     }
   }
 }
@@ -229,15 +226,15 @@ const isRunDirectly =
   process.argv[1]?.includes("tsx");
 
 if (isRunDirectly) {
-  console.log("Running script directly...");
+  log.debug("Running script directly...");
   const initializer = new UpstreamInitializer();
 
   initializer.initialize().catch((error) => {
-    console.error("Initialization failed:", error);
+    log.error("Initialization failed:", error);
     process.exit(1);
   });
 } else {
-  console.log("Script loaded as module");
+  log.debug("Script loaded as module");
 }
 
 export { UpstreamInitializer, type InitOptions };

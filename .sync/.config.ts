@@ -8,7 +8,6 @@ export interface GitConfig {
   };
   sync: {
     allowedOverridesPath: string;
-    verbose: boolean;
     ci: {
       syncCommitPattern: string; // Regex pattern to identify sync commits
       mainRepoPath?: string;
@@ -26,7 +25,6 @@ export const config: GitConfig = {
   },
   sync: {
     allowedOverridesPath: "./.sync/.allowed-upstream-overrides",
-    verbose: true,
     ci: {
       // This pattern matches commits created by `git sync-to-origin`
       syncCommitPattern:

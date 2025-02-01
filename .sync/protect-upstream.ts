@@ -4,10 +4,10 @@ import { config } from "./.config";
 import { getInfoBox } from "./utils/boxen";
 import { defaultCIHelper } from "./utils/ci-helper";
 import { GitUtils } from "./utils/git-utils";
+import log from "./utils/logger";
 
 interface ProtectOptions {
   allowedOverridesPath?: string;
-  verbose?: boolean;
 }
 
 interface ViolatingFile {
@@ -23,16 +23,9 @@ class UpstreamProtector {
   constructor(options: ProtectOptions = {}) {
     this.options = {
       allowedOverridesPath: config.sync.allowedOverridesPath,
-      verbose: config.sync.verbose,
       ...options,
     };
-    this.git = new GitUtils({ verbose: this.options.verbose });
-  }
-
-  private log(message: string, force: boolean = false): void {
-    if (force || this.options.verbose) {
-      console.log(message);
-    }
+    this.git = new GitUtils({});
   }
 
   // Shared methods between CI and local environments
@@ -42,7 +35,7 @@ class UpstreamProtector {
         process.cwd(),
         this.options.allowedOverridesPath,
       );
-      this.log(`Reading allowed overrides from: ${allowedOverridesPath}`);
+      log.info(`Reading allowed overrides from: ${allowedOverridesPath}`);
 
       const content = readFileSync(allowedOverridesPath, "utf8");
       return content
@@ -50,7 +43,7 @@ class UpstreamProtector {
         .filter((line) => line && !line.startsWith("#"))
         .map((pattern) => pattern.trim());
     } catch (error) {
-      console.error(`Failed to read allowed overrides: ${error}`);
+      log.error(`Failed to read allowed overrides: ${error}`);
       throw error;
     }
   }
@@ -106,7 +99,7 @@ class UpstreamProtector {
     const { mainRepoPath, upstreamRepoPath } = defaultCIHelper.getRepoPaths();
 
     // Get all files from both repositories
-    this.log("Scanning repositories...");
+    log.debug("Scanning repositories...");
     const mainFiles = new Set(this.getAllFiles(mainRepoPath));
     const upstreamFiles = new Set(this.getAllFiles(upstreamRepoPath));
 
@@ -147,7 +140,7 @@ class UpstreamProtector {
         repo === config.upstream.repository
       );
     } catch (error) {
-      this.log(
+      log.error(
         `Warning: Could not determine if this is upstream repo: ${error}`,
       );
       return false;
@@ -165,7 +158,7 @@ class UpstreamProtector {
         .filter((file) => file.trim());
       return new Set(files);
     } catch (error) {
-      console.error("Failed to get upstream files:", error);
+      log.error("Failed to get upstream files:", error);
       throw error;
     }
   }
@@ -249,7 +242,7 @@ class UpstreamProtector {
     violations: ViolatingFile[],
   ): void {
     if (changes.length > 0) {
-      this.log("\nDetected changes:", true);
+      log.info("\nDetected changes:", true);
       changes.forEach(({ file, type }) => {
         const prefix = {
           modified: "[MOD]",
@@ -258,9 +251,10 @@ class UpstreamProtector {
           renamed: "[REN]",
         }[type];
         const status = violations.some((v) => v.file === file) ? "❌" : "✓";
-        this.log(`  ${status} ${prefix} ${file}`, true);
+
+        log.info(`  ${status} ${prefix} ${file}`, true);
       });
-      this.log(""); // Empty line for spacing
+      log.info(""); // Empty line for spacing
     }
   }
 
@@ -268,7 +262,7 @@ class UpstreamProtector {
     try {
       // Skip check if this is a sync operation
       if (process.env.UPSTREAM_SYNC_OPERATION === "true") {
-        this.log("✓ Upstream sync operation - skipping protection check", true);
+        log.info("✓ Upstream sync operation - skipping protection check", true);
         process.exit(0);
       }
 
@@ -277,7 +271,7 @@ class UpstreamProtector {
       let changes: ViolatingFile[] = [];
 
       if (defaultCIHelper.isGithubActions()) {
-        this.log("Running in CI environment...", true);
+        log.debug("Running in CI environment...", true);
         changes = await this.getChangedFilesCI();
         violations = changes.filter(
           (change) =>
@@ -287,13 +281,13 @@ class UpstreamProtector {
             ),
         );
       } else {
-        this.log("Running in local environment...", true);
+        log.debug("Running in local environment...", true);
         // Change to repository root
         this.git.changeToRepoRoot();
 
         // Skip check if we're in the upstream repo
         if (this.isUpstreamRepo()) {
-          this.log(
+          log.info(
             "✓ In upstream repository - skipping protection check",
             true,
           );
@@ -308,14 +302,14 @@ class UpstreamProtector {
       this.formatChanges(changes, violations);
 
       if (violations.length > 0) {
-        console.error(this.formatErrorMessage(violations));
+        log.error(this.formatErrorMessage(violations));
         process.exit(1);
       }
 
-      this.log("✓ No unauthorized modifications to upstream files", true);
+      log.info("✓ No unauthorized modifications to upstream files", true);
       process.exit(0);
     } catch (error) {
-      console.error("Protection check failed:", error);
+      log.error("Protection check failed:", error);
       process.exit(1);
     }
   }
@@ -327,11 +321,11 @@ const isRunDirectly =
   process.argv[1]?.includes("tsx");
 
 if (isRunDirectly) {
-  console.log("Running protection check...");
+  log.info("Running protection check...");
   const protector = new UpstreamProtector();
   protector.check();
 } else {
-  console.log("Script loaded as module");
+  log.debug("Script loaded as module");
 }
 
 export { UpstreamProtector, type ProtectOptions };
