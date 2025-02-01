@@ -2,7 +2,7 @@ import { readFileSync, readdirSync, statSync } from "fs";
 import { join, relative, resolve } from "path";
 import { config } from "./.config";
 import { getInfoBox } from "./utils/boxen";
-import { defaultCIUtils } from "./utils/ci-utils";
+import { defaultCIUtils } from "./utils/ci-helpers";
 import { GitUtils } from "./utils/git-utils";
 
 interface ProtectOptions {
@@ -99,13 +99,11 @@ class UpstreamProtector {
   }
 
   private async getChangedFilesCI(): Promise<ViolatingFile[]> {
-    const env = defaultCIUtils.getEnv();
-    if (!defaultCIUtils.isCIEnvironment(env)) {
+    if (!defaultCIUtils.isGithubActions()) {
       throw new Error("Not in CI environment");
     }
 
-    const mainRepoPath = env.mainRepoPath;
-    const upstreamRepoPath = env.upstreamRepoPath;
+    const { mainRepoPath, upstreamRepoPath } = defaultCIUtils.getRepoPaths();
 
     // Get all files from both repositories
     this.log("Scanning repositories...");
@@ -275,11 +273,10 @@ class UpstreamProtector {
       }
 
       // Determine environment
-      const env = defaultCIUtils.getEnv();
       let violations: ViolatingFile[] = [];
       let changes: ViolatingFile[] = [];
 
-      if (defaultCIUtils.isCIEnvironment(env)) {
+      if (defaultCIUtils.isGithubActions()) {
         this.log("Running in CI environment...", true);
         changes = await this.getChangedFilesCI();
         violations = changes.filter(
