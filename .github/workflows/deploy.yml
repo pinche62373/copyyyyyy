@@ -1,17 +1,16 @@
 name: 🚀 CI
 env:
+  UPSTREAM_REPOSITORY: "pinche62373/tzdb"
   MAIN_REPO_FOLDER: "main-repo"
   MAIN_REPO_PATH: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/main-repo
   UPSTREAM_REPO_FOLDER: "upstream-repo"
   UPSTREAM_REPO_PATH: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/upstream-repo
 
-
 on:
   push:
-    branches:
-      - main
-      - dev
+    branches: [ main ]
   pull_request:
+    branches: [ main ]
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -22,73 +21,112 @@ permissions:
   contents: read
 
 jobs:
-  lint-code:
-    name: ⬣ Biome
+  protect-upstream:
+    name: 🛡️ Protect Upstream Files
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ env.MAIN_REPO_FOLDER }}    
+
     steps:
-      - name: ⬇️ Checkout main repository
+      - name: Checkout main repository
+        uses: actions/checkout@v4
+        with:
+          path: ${{ env.MAIN_REPO_FOLDER }}
+          
+      - name: Checkout upstream repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.UPSTREAM_REPOSITORY }}
+          path: ${{ env.UPSTREAM_REPO_FOLDER }}
+          
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: ./${{ env.MAIN_REPO_FOLDER }}/.nvmrc
+          cache-dependency-path: ./${{ env.MAIN_REPO_FOLDER }}/package.json
+
+      - name: Install dependencies
+        run: npm install
+          
+      - name: Init and Protect
+        run: |
+          npx tsx .sync/init-upstream.ts
+          npx tsx .sync/protect-upstream.ts
+
+  lint-code:
+    name: 🌳 Biome
+    needs: protect-upstream
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout main repository
         uses: actions/checkout@v4
 
-      - name: ⎔ Setup Biome
+      - name: Setup Biome
         uses: biomejs/setup-biome@v2
         with:
           version: latest
     
-      - name: 🔬 Run Biome
+      - name: Run Biome
         run: biome ci .
 
   # can be removed once Biome supports Markdown
   lint-markdown:
-    name: ⬣ Markdown
+    name: 📝 Markdown
+    needs: protect-upstream
     runs-on: ubuntu-latest
+
     steps:
-      - name: ⬇️ Checkout main repository
+      - name: Checkout main repository
         uses: actions/checkout@v4
 
-      - name: 🔬 Run Markdownlint2
+      - name: Run Markdownlint2
         uses: DavidAnson/markdownlint-cli2-action@v17
         with:
           config: '.markdownlint-cli2.jsonc'
           globs: '**/*.md'
 
   typecheck:
-    name: ʦ TypeScript
+    name: 🔷 TypeScript
+    needs: protect-upstream    
     runs-on: ubuntu-latest
+
     steps:
-      - name: ⬇️ Checkout main repository
+      - name: Checkout main repository
         uses: actions/checkout@v4
 
-      - name: ⎔ Setup node
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
           cache: npm
           cache-dependency-path: ./package.json
           node-version: 20
 
-      - name: 💃 Setup database
+      - name: Setup database
         uses: ./.github/actions/database
 
-      - name: 🔎 Type check
+      - name: Run type check
         run: npm run typecheck --if-present
 
   vitest:
-    name: ⚡ Vitest
+    name: 🧪 Vitest
+    needs: protect-upstream    
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ${{ env.MAIN_REPO_FOLDER }}
 
     steps:
-      - name: ⬇️ Checkout main repository
+      - name: Checkout main repository
         uses: actions/checkout@v4
         with:
           path: ${{ env.MAIN_REPO_FOLDER }}
 
-      - name: ⬇️ Checkout upstream repository
+      - name: Checkout upstream repository
         uses: actions/checkout@v4
         with:
           path: ${{ env.UPSTREAM_REPO_FOLDER }}
-          # pat_token: ${{ secrets.PAT_TOKEN }}
 
       - name: List workspace folder structure
         shell: bash
@@ -97,48 +135,15 @@ jobs:
           echo "DIR = ${{ github.workspace }}"
           ls -al ${{ github.workspace }}
 
-      - name: ⎔ Setup node
+      - name: Setup node
         uses: actions/setup-node@v4
         with:
           cache: npm
-          node-version-file: ./main-repo/.nvmrc
-          cache-dependency-path: ./main-repo/package.json
+          node-version-file: ./${{ env.MAIN_REPO_FOLDER }}/.nvmrc
+          cache-dependency-path: ./${{ env.MAIN_REPO_FOLDER }}/package.json
 
-      - name: 📥 Install deps
+      - name: Install dependencies
         run: npm install
 
-      - name: ⚡ Run vitest
+      - name: Run vitest
         run: npm run test -- --coverage
-
-  # deploy:
-  #   name: 🚀 Deploy
-  #   runs-on: ubuntu-latest
-  #   needs: [lint, typecheck, vitest]
-  #   # only deploy main/dev branch on pushes
-  #   if: ${{ (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/dev') && github.event_name == 'push' }}
-
-  #   steps:
-  #     - name: ⬇️ Checkout main repo
-  #       uses: actions/checkout@v4
-
-  #     - name: 👀 Read app name
-  #       uses: SebRollen/toml-action@v1.2.0
-  #       id: app_name
-  #       with:
-  #         file: fly.toml
-  #         field: app
-
-  #     - name: 🎈 Setup Fly
-  #       uses: superfly/flyctl-actions/setup-flyctl@1.5
-
-  #     - name: 🚀 Deploy Staging
-  #       if: ${{ github.ref == 'refs/heads/dev' }}
-  #       run: flyctl deploy --remote-only --build-arg COMMIT_SHA=${{ github.sha }} --app ${{ steps.app_name.outputs.value }}-staging
-  #       env:
-  #         FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-
-  #     - name: 🚀 Deploy Production
-  #       if: ${{ github.ref == 'refs/heads/main' }}
-  #       run: flyctl deploy --remote-only --build-arg COMMIT_SHA=${{ github.sha }} --app ${{ steps.app_name.outputs.value }}
-  #       env:
-  #         FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
