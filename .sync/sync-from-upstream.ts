@@ -9,7 +9,7 @@ import { dirname } from "path";
 import { createInterface } from "readline";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
-import { GitUtils } from "./utils/git-utils";
+import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
 
 interface PullOptions {
@@ -23,7 +23,7 @@ interface FileChange {
 }
 
 class UpstreamPuller {
-  private readonly git: GitUtils;
+  private readonly git: GitHelper;
   private readonly options: Required<PullOptions>;
   private readonly tempBranch: string;
 
@@ -32,7 +32,7 @@ class UpstreamPuller {
       gitignoreUpstreamPath: config.sync.allowedOverridesPath,
       ...options,
     };
-    this.git = new GitUtils({});
+    this.git = new GitHelper({});
     const createId = init();
     this.tempBranch = `temp-upstream-${createId()}`;
   }
@@ -185,7 +185,6 @@ class UpstreamPuller {
     }
 
     log.info("Proposed changes:");
-    log.info("");
     log.info("");
     this.formatChangesForDisplay(changes).forEach((line) => log.info(line));
     log.info("");

@@ -1,14 +1,14 @@
 import { config } from "./.config";
-import { GitUtils } from "./utils/git-utils";
+import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
 
 interface ConfigureOptions {}
 
 class GitConfigurator {
-  private readonly git: GitUtils;
+  private readonly git: GitHelper;
 
   constructor(options: ConfigureOptions = {}) {
-    this.git = new GitUtils({ ...options });
+    this.git = new GitHelper({ ...options });
   }
 
   public configure(): void {

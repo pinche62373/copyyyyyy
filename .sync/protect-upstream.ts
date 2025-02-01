@@ -3,7 +3,7 @@ import { join, relative, resolve } from "path";
 import { config } from "./.config";
 import { getInfoBox } from "./utils/boxen";
 import { defaultCIHelper } from "./utils/ci-helper";
-import { GitUtils } from "./utils/git-utils";
+import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
 
 interface ProtectOptions {
@@ -17,7 +17,7 @@ interface ViolatingFile {
 }
 
 class UpstreamProtector {
-  private readonly git: GitUtils;
+  private readonly git: GitHelper;
   private readonly options: Required<ProtectOptions>;
 
   constructor(options: ProtectOptions = {}) {
@@ -25,7 +25,7 @@ class UpstreamProtector {
       allowedOverridesPath: config.sync.allowedOverridesPath,
       ...options,
     };
-    this.git = new GitUtils({});
+    this.git = new GitHelper({});
   }
 
   // Shared methods between CI and local environments

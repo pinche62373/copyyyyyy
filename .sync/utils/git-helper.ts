@@ -1,4 +1,4 @@
-// ./sync/utils/git-utils.ts
+// ./sync/utils/git-helper.ts
 
 import { execSync } from "child_process";
 import { dirname } from "path";
@@ -29,12 +29,12 @@ export interface GitCommandOptions {
   input?: string; // @Claude: unused ?!?
 }
 
-export interface GitUtilsConfig {}
+export interface GitHelperConfig {}
 
-export class GitUtils {
-  private config: GitUtilsConfig;
+export class GitHelper {
+  private config: GitHelperConfig;
 
-  constructor(config: GitUtilsConfig) {
+  constructor(config: GitHelperConfig) {
     this.config = config;
   }
 
@@ -107,7 +107,7 @@ export class GitUtils {
       // Fallback to finding .git directory if rev-parse fails
       try {
         const scriptDir = dirname(fileURLToPath(import.meta.url));
-        const repoRoot = dirname(dirname(scriptDir)); // Go up two levels from utils/git-utils.ts
+        const repoRoot = dirname(dirname(scriptDir)); // Go up two levels from utils/git-jelper.ts
 
         log.debug(`Changing to repository root (fallback): ${repoRoot}`);
 
@@ -195,4 +195,4 @@ export class GitUtils {
 }
 
 // Export a default instance that can be used directly
-export const defaultGitUtils = new GitUtils({});
+export const defaultGitHelper = new GitHelper({});

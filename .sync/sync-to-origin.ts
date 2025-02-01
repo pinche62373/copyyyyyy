@@ -1,18 +1,18 @@
 import { config } from "./.config";
-import { GitUtils } from "./utils/git-utils";
+import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
 
 interface SyncOptions {}
 
 class OriginSyncer {
-  private readonly git: GitUtils;
+  private readonly git: GitHelper;
   private readonly options: Required<SyncOptions>;
 
   constructor(options: SyncOptions = {}) {
     this.options = {
       ...options,
     };
-    this.git = new GitUtils({});
+    this.git = new GitHelper({});
   }
 
   private getUpstreamCommitHash(): string {
