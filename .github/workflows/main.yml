@@ -22,7 +22,7 @@ permissions:
 
 jobs:
   protect-upstream:
-    name: 🛡️ Protect Upstream Files
+    name: 🛡️ Protect Upstream
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -38,6 +38,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: ${{ env.UPSTREAM_REPOSITORY }}
+          token: ${{ secrets.PAT_TOKEN }}          
           path: ${{ env.UPSTREAM_REPO_FOLDER }}
           
       - name: Setup Node
@@ -126,7 +127,8 @@ jobs:
       - name: Checkout upstream repository
         uses: actions/checkout@v4
         with:
-          repository: ${{ env.UPSTREAM_REPOSITORY }}          
+          repository: ${{ env.UPSTREAM_REPOSITORY }}   
+          token: ${{ secrets.PAT_TOKEN }}                 
           path: ${{ env.UPSTREAM_REPO_FOLDER }}
 
       - name: List workspace folder structure
