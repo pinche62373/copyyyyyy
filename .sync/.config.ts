@@ -1,3 +1,4 @@
+// .config.ts
 export interface GitConfig {
   upstream: {
     organization: string;
@@ -8,6 +9,11 @@ export interface GitConfig {
   sync: {
     allowedOverridesPath: string;
     verbose: boolean;
+    ci: {
+      syncCommitPattern: string; // Regex pattern to identify sync commits
+      mainRepoPath?: string;
+      upstreamRepoPath?: string;
+    };
   };
 }
 
@@ -21,5 +27,13 @@ export const config: GitConfig = {
   sync: {
     allowedOverridesPath: "./.sync/.allowed-upstream-overrides",
     verbose: true,
+    ci: {
+      // This pattern matches commits created by `git sync-to-origin`
+      syncCommitPattern:
+        "^chore: synced with upstream https://github\\.com/[^/]+/[^/]+/tree/[a-f0-9]+$",
+      // These will be populated at runtime in CI
+      mainRepoPath: undefined,
+      upstreamRepoPath: undefined,
+    },
   },
 };

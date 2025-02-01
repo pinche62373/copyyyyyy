@@ -34,6 +34,15 @@ class UpstreamInitializer {
     try {
       this.git.log("Initializing upstream sync configuration...", true);
 
+      // Check if we're in CI
+      const env = defaultCIUtils.getEnv();
+      if (defaultCIUtils.isCIEnvironment(env)) {
+        // Fix: Use defaultCIUtils.isCIEnvironment
+        await this.initializeForCI();
+        return;
+      }
+
+      // If not in CI, continue with normal initialization
       defaultCIUtils.requireToken();
       this.git.changeToRepoRoot();
 
@@ -66,6 +75,39 @@ class UpstreamInitializer {
     } catch (error) {
       await this.cleanup();
       throw error;
+    }
+  }
+
+  private async initializeForCI(): Promise<void> {
+    try {
+      this.git.log("Initializing for CI environment...", true);
+
+      // Get CI repo paths
+      const { mainRepoPath, upstreamRepoPath } =
+        defaultCIUtils.getCIRepoPaths();
+
+      // Verify paths exist
+      for (const path of [mainRepoPath, upstreamRepoPath]) {
+        const fs = await import("fs/promises");
+        try {
+          await fs.access(path);
+        } catch {
+          throw new Error(`Repository path does not exist: ${path}`);
+        }
+      }
+
+      // Store paths in config for other tools to use
+      config.sync.ci.mainRepoPath = mainRepoPath;
+      config.sync.ci.upstreamRepoPath = upstreamRepoPath;
+
+      this.git.log(
+        "✓ CI initialization complete - Using side-by-side repositories:",
+        true,
+      );
+      this.git.log(`  Main repo: ${mainRepoPath}`, true);
+      this.git.log(`  Upstream repo: ${upstreamRepoPath}`, true);
+    } catch (error) {
+      throw new Error(`CI initialization failed: ${error.message}`);
     }
   }
 
