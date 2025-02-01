@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join, resolve } from "path";
-import { init } from "@paralleldrive/cuid2";
+import { createId } from "@paralleldrive/cuid2";
 import { config } from "./.config";
 import { defaultCIHelper } from "./utils/ci-helper";
 import { GitHelper } from "./utils/git-helper";
@@ -25,7 +25,6 @@ class UpstreamInitializer {
     };
 
     this.git = new GitHelper({});
-    const createId = init();
     this.tempFile = join(tmpdir(), `gitignore-upstream-${createId()}`);
   }
 
