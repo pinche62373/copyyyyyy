@@ -1,5 +1,6 @@
 import { readFileSync, readdirSync, statSync } from "fs";
 import { join, relative, resolve } from "path";
+import boxen from "boxen";
 import { config } from "./.config";
 import { defaultCIUtils } from "./utils/ci-utils";
 import { GitUtils } from "./utils/git-utils";
@@ -236,28 +237,21 @@ class UpstreamProtector {
       messages.push(`  ${prefix} ${file}`);
     });
 
-    // Ascii boxed explainer
-    messages.push("\n┌" + "─".repeat(100) + "┐"); // top border
+    const explainer =
+      "These centrally managed files can only be modified in the upstream repository" +
+      "https://github.com/pinche62373/tzdb unless explicitly allowed in '.sync/.allowed-upstream-overrides'." +
+      "If you need to update these files, first submit a PR in the upstream repository, then pull merged changes";
+    ("into your downstream repository using the 'git sync-from-upstream' command.");
 
-    messages.push(
-      "│" +
-        " These files can only be modified in the upstream repository unless explicitly allowed in .allowed-upstream-overrides".padEnd(
-          100,
-        ) +
-        "│",
-      "│" +
-        ` Please submit your changes to: https://github.com/${config.upstream.organization}/${config.upstream.repository}`.padEnd(
-          100,
-        ) +
-        "│",
-      "│" +
-        " After your changes are merged upstream, you can use 'git sync-from-upstream' to pull them into this repository.".padEnd(
-          100,
-        ) +
-        "│",
+    console.log(
+      boxen(explainer, {
+        padding: 1,
+        margin: 0,
+        borderStyle: "single",
+        width: 80,
+        textAlignment: "left",
+      }),
     );
-
-    messages.push("└" + "─".repeat(100) + "┘\n"); // bottom border
 
     return messages.join("\n");
   }
