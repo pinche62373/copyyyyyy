@@ -223,7 +223,7 @@ class UpstreamPuller {
 
       for (const change of changes) {
         try {
-          log.info(`⚡ Processing: ${change.path}`, true);
+          log.info(`Processing: ${change.path}`, true);
 
           switch (change.status) {
             case "D": {
