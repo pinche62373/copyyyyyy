@@ -70,7 +70,7 @@ class OriginSyncer {
       log.info("Pushing to origin...", true);
       this.git.execCommand("git push origin");
 
-      log.info("✓ Sync complete: successfully synced core changes to origin");
+      log.info("Sync complete: successfully synced core changes to origin ✓");
     } catch (error) {
       log.error("Sync failed:", error);
       throw error;
