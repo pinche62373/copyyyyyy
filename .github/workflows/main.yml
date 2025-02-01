@@ -132,7 +132,8 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}                 
           path: ${{ env.UPSTREAM_REPO_FOLDER }}
 
-      - name: List folder content
+      - name: List folder content (in debug mode)
+        if: ${{ runner.debug == '1' }}      
         shell: bash
         run: |
           ls -alR ${{ github.workspace }}

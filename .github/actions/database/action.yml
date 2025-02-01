@@ -8,7 +8,8 @@ runs:
       shell: bash
       run: cp .env.example .env
 
-    - name: List folder content
+    - name: List folder content (in debug mode)
+      if: ${{ runner.debug == '1' }}
       shell: bash
       run: |
         ls -alR ${{ github.workspace }}
