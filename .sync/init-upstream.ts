@@ -3,7 +3,7 @@ import { tmpdir } from "os";
 import { join, resolve } from "path";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
-import { defaultCIUtils } from "./utils/ci-utils";
+import { defaultCIHelper } from "./utils/ci-helper";
 import { GitUtils } from "./utils/git-utils";
 
 interface InitOptions {
@@ -35,8 +35,7 @@ class UpstreamInitializer {
       this.git.log("Initializing upstream sync configuration...", true);
 
       // Initialize for CI
-      const env = defaultCIUtils.getEnv();
-      if (defaultCIUtils.isCIEnvironment(env)) {
+      if (defaultCIHelper.isGithubActions()) {
         await this.initializeForCI();
 
         return;
@@ -81,9 +80,7 @@ class UpstreamInitializer {
     try {
       this.git.log("Initializing for CI environment...", true);
 
-      // Get CI repo paths
-      const { mainRepoPath, upstreamRepoPath } =
-        defaultCIUtils.getCIRepoPaths();
+      const { mainRepoPath, upstreamRepoPath } = defaultCIHelper.getRepoPaths();
 
       // Verify paths exist
       for (const path of [mainRepoPath, upstreamRepoPath]) {
@@ -175,8 +172,6 @@ class UpstreamInitializer {
     this.git.log("1. Setting up upstream remote...", true);
     const hasUpstream = this.git.hasRemote("upstream");
 
-    // Detect CI environment and modify URL if needed
-    const ciEnv = defaultCIUtils.getEnv();
     let upstreamUrl = this.options.upstreamUrl;
 
     if (!hasUpstream) {
@@ -188,7 +183,7 @@ class UpstreamInitializer {
     } else {
       this.git.log("Upstream remote already exists");
       // Update the URL in case token needs to be added
-      if (ciEnv.isCI) {
+      if (defaultCIHelper.isGithubActions()) {
         this.git.execCommand(`git remote set-url upstream ${upstreamUrl}`, {
           suppressOutput: true,
         });
