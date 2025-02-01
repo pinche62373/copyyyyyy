@@ -1,9 +1,10 @@
 name: 🚀 CI
 env:
-  UPSTREAM_REPOSITORY: "pinche62373/tzdb"
-  UPSTREAM_FOLDER: "upstream-repo"
+  MAIN_REPO_FOLDER: "main-repo"
   MAIN_REPO_PATH: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/main-repo
+  UPSTREAM_REPO_FOLDER: "upstream-repo"
   UPSTREAM_REPO_PATH: /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/upstream-repo
+
 
 on:
   push:
@@ -21,26 +22,6 @@ permissions:
   contents: read
 
 jobs:
-  # job responsible for producing boolean indicating if are in the upstream repository itself.
-  check-upstream:
-    runs-on: ubuntu-latest
-    outputs:
-      is_upstream: ${{ steps.check_upstream.outputs.is_upstream }}
-    
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Check if inside upstream repo
-        id: check_upstream
-        shell: bash
-        run: |
-          REPO_URL=$(git config --get remote.origin.url)
-          if [[ "$REPO_URL" == *"${{ env.UPSTREAM_REPOSITORY }}"* ]]; then
-            echo "is_upstream=true" >> $GITHUB_OUTPUT
-          else
-            echo "is_upstream=false" >> $GITHUB_OUTPUT
-          fi
-
   lint-code:
     name: ⬣ Biome
     runs-on: ubuntu-latest
@@ -93,32 +74,28 @@ jobs:
   vitest:
     name: ⚡ Vitest
     runs-on: ubuntu-latest
-    needs: check-upstream
     defaults:
       run:
-        working-directory: main-repo
-    env:
-      IS_UPSTREAM: ${{ needs.check-upstream.outputs.is_upstream }}
+        working-directory: ${{ env.MAIN_REPO_FOLDER }}
 
     steps:
       - name: ⬇️ Checkout main repository
         uses: actions/checkout@v4
         with:
-          path: main-repo
+          path: ${{ env.MAIN_REPO_FOLDER }}
 
       - name: ⬇️ Checkout upstream repository
         uses: actions/checkout@v4
-        if: ${{ env.IS_UPSTREAM == 'false' }}
         with:
-          path: upstream-repo
-          pat_token: ${{ secrets.PAT_TOKEN }}
+          path: ${{ env.UPSTREAM_REPO_FOLDER }}
+          # pat_token: ${{ secrets.PAT_TOKEN }}
 
       - name: List workspace folder structure
         shell: bash
         run: |
           echo "======Workspace======"
           echo "DIR = ${{ github.workspace }}"
-          ls -alR ${{ github.workspace }}
+          ls -al ${{ github.workspace }}
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
@@ -128,8 +105,6 @@ jobs:
           cache-dependency-path: ./main-repo/package.json
 
       - name: 📥 Install deps
-        env:
-          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
         run: npm install
 
       - name: ⚡ Run vitest

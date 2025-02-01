@@ -43,7 +43,7 @@ class UpstreamInitializer {
       }
 
       // If not in CI, continue with normal initialization
-      defaultCIUtils.requireToken();
+      // defaultCIUtils.requireToken();
       this.git.changeToRepoRoot();
 
       // Check if we're in the upstream repo
@@ -180,11 +180,6 @@ class UpstreamInitializer {
     const ciEnv = defaultCIUtils.getEnv();
     let upstreamUrl = this.options.upstreamUrl;
 
-    // Normalize URL for CI environments
-    if (ciEnv.isCI && ciEnv.accessToken) {
-      upstreamUrl = this.git.normalizeGitUrl(upstreamUrl, ciEnv.accessToken);
-    }
-
     if (!hasUpstream) {
       this.git.log("Adding upstream remote...");
       // Using execCommand with suppressOutput to prevent token exposure in logs
@@ -194,7 +189,7 @@ class UpstreamInitializer {
     } else {
       this.git.log("Upstream remote already exists");
       // Update the URL in case token needs to be added
-      if (ciEnv.isCI && ciEnv.accessToken) {
+      if (ciEnv.isCI) {
         this.git.execCommand(`git remote set-url upstream ${upstreamUrl}`, {
           suppressOutput: true,
         });
