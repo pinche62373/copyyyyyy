@@ -30,7 +30,7 @@ class OriginSyncer {
   private generateCommitMessage(): string {
     const upstreamHash = this.getUpstreamCommitHash();
     const { organization, repository } = config.upstream;
-    return `chore: synced with upstream https://github.com/${organization}/${repository}/tree/${upstreamHash}`;
+    return `chore: sync with upstream https://github.com/${organization}/${repository}/tree/${upstreamHash}`;
   }
 
   private hasChangesToCommit(): boolean {

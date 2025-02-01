@@ -28,7 +28,7 @@ export const config: GitConfig = {
     ci: {
       // This pattern matches commits created by `git sync-to-origin`
       syncCommitPattern:
-        "^chore: synced with upstream https://github\\.com/[^/]+/[^/]+/tree/[a-f0-9]+$",
+        "^chore: sync with upstream https://github\\.com/[^/]+/[^/]+/tree/[a-f0-9]+$",
       // These will be populated at runtime in CI
       mainRepoPath: undefined,
       upstreamRepoPath: undefined,
