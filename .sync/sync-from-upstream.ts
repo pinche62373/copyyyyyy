@@ -185,6 +185,7 @@ class UpstreamPuller {
     }
 
     log.info("Proposed changes:");
+    log.info("");
     this.formatChangesForDisplay(changes).forEach((line) => log.info(line));
     log.info("");
 
@@ -368,7 +369,7 @@ class UpstreamPuller {
       this.git.execCommand("git fetch upstream");
 
       const changes = this.getChangedFiles();
-      log.info(`Found ${changes.length} changed files`);
+      log.debug(`Found ${changes.length} changed files`);
 
       const ignorePatterns = this.readIgnorePatterns();
       log.debug("Filtering changes based on ignore patterns");
