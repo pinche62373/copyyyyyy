@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { readFileSync, readdirSync, statSync } from "fs";
 import { join, relative, resolve } from "path";
 import { config } from "./.config";
 import { defaultCIUtils } from "./utils/ci-utils";
@@ -222,8 +222,7 @@ class UpstreamProtector {
   // Common formatting methods
   private formatErrorMessage(violations: ViolatingFile[]): string {
     const messages: string[] = [
-      "\n🚫 Error: Attempted to modify upstream-controlled files",
-      "\nUnauthorized changes detected:\n",
+      "\n🚫 Error: Detected modification of upstream-controlled files:",
     ];
 
     violations.forEach(({ file, type }) => {
@@ -237,11 +236,28 @@ class UpstreamProtector {
       messages.push(`  ${prefix} ${file}`);
     });
 
+    // Ascii boxed explainer
+    messages.push("\n┌" + "─".repeat(100) + "┐"); // top border
+
     messages.push(
-      "\nThese files can only be modified in the upstream repository unless explicitly allowed in .allowed-upstream-overrides",
-      `\nPlease submit your changes to: https://github.com/${config.upstream.organization}/${config.upstream.repository}`,
-      "\nAfter your changes are merged upstream, you can use 'git sync-from-upstream' to pull them into this repository.\n",
+      "│" +
+        " These files can only be modified in the upstream repository unless explicitly allowed in .allowed-upstream-overrides".padEnd(
+          100,
+        ) +
+        "│",
+      "│" +
+        ` Please submit your changes to: https://github.com/${config.upstream.organization}/${config.upstream.repository}`.padEnd(
+          100,
+        ) +
+        "│",
+      "│" +
+        " After your changes are merged upstream, you can use 'git sync-from-upstream' to pull them into this repository.".padEnd(
+          100,
+        ) +
+        "│",
     );
+
+    messages.push("└" + "─".repeat(100) + "┘\n"); // bottom border
 
     return messages.join("\n");
   }
