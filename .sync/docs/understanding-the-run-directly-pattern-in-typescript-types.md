@@ -42,7 +42,7 @@ if (isRunDirectly) {
   try {
     configurator.configure();
   } catch (error) {
-    console.error("Configuration failed:", error);
+    log.error("Configuration failed:", error);
     process.exit(1);  // CLI-specific error handling
   }
 }

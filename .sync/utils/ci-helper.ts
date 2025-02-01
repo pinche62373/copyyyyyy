@@ -1,4 +1,5 @@
 // ./sync/utils/ci-helpers.ts
+import log from "./logger";
 
 /**
  * CI Utils for GitHub Actions Integration
@@ -8,8 +9,8 @@
  *
  * Usage:
  * ```typescript
- * if (defaultCIUtils.isGithubActions()) {
- *   const { mainRepoPath, upstreamRepoPath } = defaultCIUtils.getRepoPaths();
+ * if (defaultCIHelper.isGithubActions()) {
+ *   const { mainRepoPath, upstreamRepoPath } = defaultCIHelper.getRepoPaths();
  *   // Work with paths...
  * }
  * ```
@@ -21,24 +22,13 @@ interface GithubActionsPaths {
   upstreamRepoPath: string;
 }
 
-export interface CIUtilsConfig {
-  verbose: boolean; // Whether to enable verbose logging
-}
+export interface CIHelperConfig {}
 
-export class CIUtils {
-  private config: CIUtilsConfig;
+export class CIHelper {
+  private config: CIHelperConfig;
 
-  constructor(config: CIUtilsConfig) {
+  constructor(config: CIHelperConfig) {
     this.config = config;
-  }
-
-  /**
-   * Logs a message if verbose mode is enabled
-   */
-  public log(message: string, force: boolean = false): void {
-    if (force || this.config.verbose) {
-      console.log(message);
-    }
   }
 
   /**
@@ -81,7 +71,7 @@ export class CIUtils {
     for (const [key, path] of Object.entries(paths)) {
       try {
         await fs.access(path);
-        this.log(`✓ Verified ${key}: ${path}`);
+        log.info(`✓ Verified ${key}: ${path}`);
       } catch {
         throw new Error(`Repository path does not exist: ${path}`);
       }
@@ -90,4 +80,4 @@ export class CIUtils {
 }
 
 // Export a default instance that can be used directly
-export const defaultCIUtils = new CIUtils({ verbose: false });
+export const defaultCIHelper = new CIHelper({});
