@@ -57,7 +57,9 @@ class OriginSyncer {
 
       // Create commit with formatted message
       const commitMessage = this.generateCommitMessage();
-      log.info(`Creating commit: ${commitMessage}`, true);
+      log.info("Creating commit...");
+
+      log.debug(`Commit message: ${commitMessage}`, true);
 
       // Set environment variable to bypass protection check for this commit
       process.env.UPSTREAM_SYNC_OPERATION = "true";
