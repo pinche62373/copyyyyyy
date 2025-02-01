@@ -9,6 +9,8 @@ import { dirname } from "path";
 import { createInterface } from "readline";
 import { createId } from "@paralleldrive/cuid2";
 import { config } from "./.config";
+import { getInfoBox } from "./utils/boxen";
+import { getExplainer } from "./utils/explainers";
 import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
 
@@ -388,7 +390,9 @@ class UpstreamPuller {
           true,
         );
 
-        // TODO explainer
+        // sync completed successfully
+        console.log("");
+        console.log(getInfoBox(getExplainer("sync-from-upstream-complete")));
       } else {
         log.info("Update cancelled", true);
         process.exit(1);

@@ -1,4 +1,6 @@
 import { config } from "./.config";
+import { getInfoBox } from "./utils/boxen";
+import { getExplainer } from "./utils/explainers";
 import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
 
@@ -28,12 +30,9 @@ class GitConfigurator {
       const originScript = "!npx tsx ./.sync/sync-to-origin.ts";
       this.git.execCommand(`git config alias.sync-to-origin "${originScript}"`);
 
-      // TODO: explainer
-      log.info(
-        "✓ Git configuration complete\n" +
-          '  - Use "git sync-from-upstream" to pull from upstream while respecting exclusions\n' +
-          '  - Use "git sync-to-origin" to commit and push upstream sync changes',
-      );
+      // git configure completed successfully
+      console.log("");
+      console.log(getInfoBox(getExplainer("git-configure-complete")));
     } catch (error) {
       log.error("Configuration failed:", error);
       throw error;

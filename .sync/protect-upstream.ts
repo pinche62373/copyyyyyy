@@ -3,6 +3,7 @@ import { join, relative, resolve } from "path";
 import { config } from "./.config";
 import { getInfoBox } from "./utils/boxen";
 import { defaultCIHelper } from "./utils/ci-helper";
+import { getExplainer } from "./utils/explainers";
 import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
 
@@ -228,13 +229,12 @@ class UpstreamProtector {
       messages.push(`  ${prefix} ${file}`);
     });
 
-    const explainer =
-      "These centrally managed files can only be modified in the upstream repository " +
-      "https://github.com/pinche62373/tzdb UNLESS explicitly allowed in '.sync/.allowed-upstream-overrides'.\n\n" +
-      "If you really need to update these files, first submit a PR in the upstream repository, then pull merged " +
-      "changes into your downstream repository by using the 'git sync-from-upstream' command.";
-
-    return messages.join("\n") + "\n\n" + getInfoBox(explainer);
+    // error message
+    return (
+      messages.join("\n") +
+      "\n\n" +
+      getInfoBox(getExplainer("protect-upstream-violation"))
+    );
   }
 
   private formatChanges(
