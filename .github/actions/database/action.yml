@@ -26,8 +26,7 @@ runs:
       run: npx prisma migrate dev
 
     - name: Run Snaplet sync
-      shell: bash
-      run: npx @snaplet/seed sync --config /home/runner/work/tzdb/tzdb/prisma/seed/seed.config.ts
+      run: npx @snaplet/seed sync --config ./prisma/seed/seed.config.ts
 
     - name: Run Snaplet seed
       shell: bash
