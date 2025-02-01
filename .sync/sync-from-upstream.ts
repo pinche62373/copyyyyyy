@@ -224,48 +224,49 @@ class UpstreamPuller {
 
       for (const change of changes) {
         try {
-          this.git.log(`\nProcessing: ${change.path}`, true);
+          this.git.log(`\n⚡Processing: ${change.path}`, true);
 
           switch (change.status) {
             case "D": {
               this.git.log(
-                `📥 Retrieving deleted file from upstream: ${change.path}`,
+                `Retrieving deleted file from upstream: ${change.path}`,
               );
               const addContent = this.git.execCommand(
                 `git show ${this.tempBranch}:"${change.path}"`,
                 { suppressOutput: true },
               );
               this.ensureDirectoryExists(change.path);
-              this.git.log(`📝 Writing recovered file: ${change.path}`);
+              this.git.log(`Writing recovered file: ${change.path}`);
               writeFileSync(change.path, addContent, "utf8");
-              this.git.log(`✓ Successfully restored: ${change.path}`, true);
+              this.git.log(`Successfully restored ${change.path}`, true);
               break;
             }
 
             case "M": {
               this.git.log(
-                `📥 Getting modified content from upstream: ${change.path}`,
+                `Getting modified content from upstream: ${change.path}`,
               );
               const modContent = this.git.execCommand(
                 `git show ${this.tempBranch}:"${change.path}"`,
                 { suppressOutput: true },
               );
               this.ensureDirectoryExists(change.path);
-              this.git.log(`📝 Writing updated content to: ${change.path}`);
+              this.git.log(`Writing updated content to: ${change.path}`);
               writeFileSync(change.path, modContent, "utf8");
-              this.git.log(`✓ Successfully updated: ${change.path}`, true);
+              this.git.log(`Successfully updated ${change.path}`, true);
               break;
             }
 
             case "A": {
               if (existsSync(change.path)) {
                 this.git.log(
-                  `🗑️ Deleting file that was added in upstream: ${change.path}`,
+                  `Deleting file that was added in upstream: ${change.path}`,
                 );
                 unlinkSync(change.path);
-                this.git.log(`✓ Successfully deleted: ${change.path}`, true);
+                this.git.log(`Successfully deleted ${change.path}`, true);
               } else {
                 this.git.log(
+                  // TODO: fix this type
                   `ℹ️ File already doesn't exist locally: ${change.path}`,
                   true,
                 );
@@ -284,16 +285,16 @@ class UpstreamPuller {
               }
 
               if (existsSync(localOldPath)) {
-                this.git.log(`🗑️ Deleting old local file: ${localOldPath}`);
+                this.git.log(`Deleting old local file ${localOldPath}`);
                 unlinkSync(localOldPath);
                 this.git.log(
-                  `✓ Successfully deleted old file: ${localOldPath}`,
+                  `Successfully deleted old local file ${localOldPath}`,
                   true,
                 );
               }
 
               this.git.log(
-                `📥 Getting renamed file content from upstream: ${upstreamPath}`,
+                `Getting renamed file content from upstream: ${upstreamPath}`,
               );
 
               const renameContent = this.git.execCommand(
@@ -303,9 +304,9 @@ class UpstreamPuller {
 
               this.ensureDirectoryExists(upstreamPath);
 
-              this.git.log(`📝 Writing to new local path: ${upstreamPath}`);
+              this.git.log(`Writing to new local path: ${upstreamPath}`);
               writeFileSync(upstreamPath, renameContent, "utf8");
-              this.git.log(`✓ Successfully moved to: ${upstreamPath}`, true);
+              this.git.log(`Successfully moved to ${upstreamPath}`, true);
               break;
             }
           }
