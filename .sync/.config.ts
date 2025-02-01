@@ -9,7 +9,7 @@ export interface GitConfig {
   sync: {
     allowedOverridesPath: string;
     ci: {
-      syncCommitPattern: string; // Regex pattern to identify sync commits
+      syncCommitPattern: string; // Regex pattern to identify sync commit messages created by `git sync-to-origin`
       mainRepoPath?: string;
       upstreamRepoPath?: string;
     };
@@ -26,12 +26,10 @@ export const config: GitConfig = {
   sync: {
     allowedOverridesPath: "./.sync/.allowed-upstream-overrides",
     ci: {
-      // This pattern matches commits created by `git sync-to-origin`
       syncCommitPattern:
         "^chore: sync with upstream https://github\\.com/[^/]+/[^/]+/tree/[a-f0-9]+$",
-      // These will be populated at runtime in CI
-      mainRepoPath: undefined,
-      upstreamRepoPath: undefined,
+      mainRepoPath: undefined, // populated at runtime in CI
+      upstreamRepoPath: undefined, // populated at runtime in CI
     },
   },
 };

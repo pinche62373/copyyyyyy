@@ -378,12 +378,17 @@ class UpstreamPuller {
       const proceed = await this.promptForConfirmation(filteredChanges);
 
       if (proceed) {
+        log.info(""); // empty line between files being processed for readability
         log.debug("Beginning to apply changes");
         await this.applyChanges(filteredChanges);
+        log.info("");
+
         log.info(
           "Sync complete: successfully synced core changes from upstream ✓",
           true,
         );
+
+        // TODO explainer
       } else {
         log.info("Update cancelled", true);
         process.exit(1);
