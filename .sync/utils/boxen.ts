@@ -14,7 +14,6 @@ const defaultStyles: BoxStyles = {
     borderStyle: "single",
     width: 80,
     textAlignment: "left",
-    // borderColor: "blue",
   },
   warning: {
     padding: 1,

@@ -1,8 +1,7 @@
 import { readFileSync, readdirSync, statSync } from "fs";
 import { join, relative, resolve } from "path";
-import boxen from "boxen";
 import { config } from "./.config";
-import { getWarningBox } from "./utils/boxen";
+import { getInfoBox } from "./utils/boxen";
 import { defaultCIUtils } from "./utils/ci-utils";
 import { GitUtils } from "./utils/git-utils";
 
@@ -240,11 +239,11 @@ class UpstreamProtector {
 
     const explainer =
       "These centrally managed files can only be modified in the upstream repository " +
-      "https://github.com/pinche62373/tzdb UNLESS explicitly allowed in '.sync/.allowed-upstream-overrides'. " +
-      "If you need to update these files, first submit a PR in the upstream repository, then pull merged changes " +
-      "into your downstream repository using the 'git sync-from-upstream' command.";
+      "https://github.com/pinche62373/tzdb UNLESS explicitly allowed in '.sync/.allowed-upstream-overrides'.\n\n" +
+      "If you really need to update these files, first submit a PR in the upstream repository, then pull merged " +
+      "changes into your downstream repository by using the 'git sync-from-upstream' command.";
 
-    return messages.join("\n") + "\n\n" + getWarningBox(explainer);
+    return messages.join("\n") + "\n\n" + getInfoBox(explainer);
   }
 
   private formatChanges(
