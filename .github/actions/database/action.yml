@@ -4,22 +4,26 @@ description: "Creates, syncs and seeds the SQLite database"
 runs:
   using: composite
   steps:
-    - name: 📥 Copy env file
+    - name: Copy env file
       shell: bash
       run: cp .env.example .env
 
-    - name: 📥 Create SQLite database file
+    - name: Temporarily generate prisma client
+      shell: bash
+      run: npx prisma generate
+
+    - name: Create SQLite database file
       shell: bash
       run: touch prisma/data.db
 
-    - name: 💃 Run Prisma database migration
+    - name: Run Prisma database migration
       shell: bash
       run: npx prisma migrate dev
 
-    - name: 💃 Run Snaplet sync
+    - name: Run Snaplet sync
       shell: bash
       run: npx @snaplet/seed sync --config /home/runner/work/tzdb/tzdb/prisma/seed/seed.config.ts
 
-    - name: 💃 Run Snaplet seed
+    - name: Run Snaplet seed
       shell: bash
       run: npm run seed -- -- --force
