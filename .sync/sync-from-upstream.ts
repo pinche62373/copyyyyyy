@@ -7,7 +7,7 @@ import {
 } from "fs";
 import { dirname } from "path";
 import { createInterface } from "readline";
-import { init } from "@paralleldrive/cuid2";
+import { createId } from "@paralleldrive/cuid2";
 import { config } from "./.config";
 import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
@@ -33,7 +33,6 @@ class UpstreamPuller {
       ...options,
     };
     this.git = new GitHelper({});
-    const createId = init();
     this.tempBranch = `temp-upstream-${createId()}`;
   }
 
