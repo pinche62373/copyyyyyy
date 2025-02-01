@@ -8,6 +8,11 @@ runs:
       shell: bash
       run: cp .env.example .env
 
+    - name: List folder content
+      shell: bash
+      run: |
+        ls -alR ${{ github.workspace }}
+
     - name: Temporarily generate prisma client
       shell: bash
       run: npx prisma generate

@@ -131,12 +131,10 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}                 
           path: ${{ env.UPSTREAM_REPO_FOLDER }}
 
-      - name: List workspace folder structure
+      - name: List folder content
         shell: bash
         run: |
-          echo "======Workspace======"
-          echo "DIR = ${{ github.workspace }}"
-          ls -al ${{ github.workspace }}
+          ls -alR ${{ github.workspace }}
 
       - name: Setup node
         uses: actions/setup-node@v4
