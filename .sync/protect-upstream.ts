@@ -287,10 +287,7 @@ class UpstreamProtector {
 
         // Skip check if we're in the upstream repo
         if (this.isUpstreamRepo()) {
-          log.info(
-            "✓ In upstream repository - skipping protection check",
-            true,
-          );
+          log.info("In upstream repository - skipping protection check", true);
           process.exit(0);
         }
 
