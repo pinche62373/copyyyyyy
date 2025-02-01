@@ -186,6 +186,7 @@ class UpstreamPuller {
 
     log.info("Proposed changes:");
     log.info("");
+    log.info("");
     this.formatChangesForDisplay(changes).forEach((line) => log.info(line));
     log.info("");
 
