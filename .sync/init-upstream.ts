@@ -82,15 +82,8 @@ class UpstreamInitializer {
 
       const { mainRepoPath, upstreamRepoPath } = defaultCIHelper.getRepoPaths();
 
-      // Verify paths exist
-      for (const path of [mainRepoPath, upstreamRepoPath]) {
-        const fs = await import("fs/promises");
-        try {
-          await fs.access(path);
-        } catch {
-          throw new Error(`Repository path does not exist: ${path}`);
-        }
-      }
+      // Verify repository paths exist
+      await defaultCIHelper.verifyRepoPaths();
 
       // Store paths in config for other tools to use
       config.sync.ci.mainRepoPath = mainRepoPath;
