@@ -4,7 +4,6 @@ import { join, resolve } from "path";
 import { init } from "@paralleldrive/cuid2";
 import { config } from "./.config";
 import { defaultCIUtils } from "./utils/ci-utils";
-// import { detectCI } from "./utils/detect-ci";
 import { GitUtils } from "./utils/git-utils";
 
 interface InitOptions {
