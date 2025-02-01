@@ -1,5 +1,7 @@
-import { readFileSync } from "fs";
+import { existsSync, readFileSync, readdirSync, statSync } from "fs";
+import { join, relative, resolve } from "path";
 import { config } from "./.config";
+import { defaultCIUtils } from "./utils/ci-utils";
 import { GitUtils } from "./utils/git-utils";
 
 interface ProtectOptions {
@@ -10,6 +12,7 @@ interface ProtectOptions {
 interface ViolatingFile {
   file: string;
   type: "modified" | "added" | "deleted" | "renamed";
+  upstreamPath?: string;
 }
 
 class UpstreamProtector {
@@ -25,103 +28,28 @@ class UpstreamProtector {
     this.git = new GitUtils({ verbose: this.options.verbose });
   }
 
-  private isUpstreamRepo(): boolean {
-    try {
-      // Get the remote URL of origin
-      const originUrl = this.git.getRemoteUrl("origin");
-
-      // Extract org/repo from origin URL
-      const match = originUrl.match(/[:/]([^/]+)\/([^/]+?)(?:\.git)?$/);
-      if (!match) {
-        return false;
-      }
-
-      const [, org, repo] = match;
-
-      // Compare with configured upstream
-      return (
-        org === config.upstream.organization &&
-        repo === config.upstream.repository
-      );
-    } catch (error) {
-      this.git.log(
-        `Warning: Could not determine if this is upstream repo: ${error}`,
-      );
-      return false;
+  private log(message: string, force: boolean = false): void {
+    if (force || this.options.verbose) {
+      console.log(message);
     }
   }
 
-  // Add new method to check if commit is a sync commit
-  private isSyncCommit(commitMessage: string): boolean {
-    const pattern = new RegExp(config.sync.ci.syncCommitPattern);
-    return pattern.test(commitMessage);
-  }
-
-  // Add method to get the commit message in CI
-  private getCommitMessage(): string {
-    try {
-      // In CI, we want to check the commit that triggered the workflow
-      if (process.env.GITHUB_EVENT_PATH) {
-        const eventPath = process.env.GITHUB_EVENT_PATH;
-        const eventData = JSON.parse(readFileSync(eventPath, "utf8"));
-
-        // Handle different event types
-        if (eventData.pull_request) {
-          // For pull requests, get the HEAD commit message
-          return this.git
-            .execCommand(
-              `git log -1 --format=%B ${eventData.pull_request.head.sha}`,
-              { suppressOutput: true },
-            )
-            .trim();
-        } else if (eventData.head_commit) {
-          // For push events
-          return eventData.head_commit.message;
-        }
-      }
-
-      // Fallback to getting the last commit message
-      return this.git
-        .execCommand("git log -1 --format=%B", { suppressOutput: true })
-        .trim();
-    } catch (error) {
-      this.git.log(`Warning: Failed to get commit message: ${error}`);
-      return "";
-    }
-  }
-
+  // Shared methods between CI and local environments
   private readAllowedOverrides(): string[] {
     try {
-      this.git.log(
-        `Reading allowed overrides from: ${this.options.allowedOverridesPath}`,
+      const allowedOverridesPath = resolve(
+        process.cwd(),
+        this.options.allowedOverridesPath,
       );
-      const content = readFileSync(this.options.allowedOverridesPath, "utf8");
+      this.log(`Reading allowed overrides from: ${allowedOverridesPath}`);
+
+      const content = readFileSync(allowedOverridesPath, "utf8");
       return content
         .split("\n")
         .filter((line) => line && !line.startsWith("#"))
         .map((pattern) => pattern.trim());
     } catch (error) {
       console.error(`Failed to read allowed overrides: ${error}`);
-      throw error;
-    }
-  }
-
-  private getUpstreamFiles(): Set<string> {
-    try {
-      // Fetch latest upstream if needed
-      this.git.execCommand("git fetch upstream");
-
-      // Get list of files that exist in upstream
-      const files = this.git
-        .execCommand("git ls-tree -r --name-only upstream/main", {
-          suppressOutput: true,
-        })
-        .split("\n")
-        .filter((file) => file.trim());
-
-      return new Set(files);
-    } catch (error) {
-      console.error("Failed to get upstream files:", error);
       throw error;
     }
   }
@@ -145,8 +73,105 @@ class UpstreamProtector {
     return false;
   }
 
+  // CI-specific methods
+  private getAllFiles(dir: string, baseDir: string = dir): string[] {
+    const files: string[] = [];
+
+    const entries = readdirSync(dir);
+
+    for (const entry of entries) {
+      const fullPath = join(dir, entry);
+      const stat = statSync(fullPath);
+
+      if (stat.isDirectory()) {
+        // Skip node_modules and .git directories
+        if (entry === "node_modules" || entry === ".git") continue;
+        files.push(...this.getAllFiles(fullPath, baseDir));
+      } else {
+        // Get path relative to base directory
+        const relativePath = relative(baseDir, fullPath);
+        files.push(relativePath);
+      }
+    }
+
+    return files;
+  }
+
+  private async getChangedFilesCI(): Promise<ViolatingFile[]> {
+    const env = defaultCIUtils.getEnv();
+    if (!defaultCIUtils.isCIEnvironment(env)) {
+      throw new Error("Not in CI environment");
+    }
+
+    const mainRepoPath = env.mainRepoPath;
+    const upstreamRepoPath = env.upstreamRepoPath;
+
+    // Get all files from both repositories
+    this.log("Scanning repositories...");
+    const mainFiles = new Set(this.getAllFiles(mainRepoPath));
+    const upstreamFiles = new Set(this.getAllFiles(upstreamRepoPath));
+
+    const changes: ViolatingFile[] = [];
+
+    // Check for modifications and additions
+    for (const file of mainFiles) {
+      if (upstreamFiles.has(file)) {
+        // File exists in both - check if modified
+        const mainContent = readFileSync(join(mainRepoPath, file), "utf8");
+        const upstreamContent = readFileSync(
+          join(upstreamRepoPath, file),
+          "utf8",
+        );
+
+        if (mainContent !== upstreamContent) {
+          changes.push({
+            file,
+            type: "modified",
+            upstreamPath: join(upstreamRepoPath, file),
+          });
+        }
+      }
+    }
+
+    return changes;
+  }
+
+  // Local development methods
+  private isUpstreamRepo(): boolean {
+    try {
+      const originUrl = this.git.getRemoteUrl("origin");
+      const match = originUrl.match(/[:/]([^/]+)\/([^/]+?)(?:\.git)?$/);
+      if (!match) return false;
+      const [, org, repo] = match;
+      return (
+        org === config.upstream.organization &&
+        repo === config.upstream.repository
+      );
+    } catch (error) {
+      this.log(
+        `Warning: Could not determine if this is upstream repo: ${error}`,
+      );
+      return false;
+    }
+  }
+
+  private getUpstreamFiles(): Set<string> {
+    try {
+      this.git.execCommand("git fetch upstream");
+      const files = this.git
+        .execCommand("git ls-tree -r --name-only upstream/main", {
+          suppressOutput: true,
+        })
+        .split("\n")
+        .filter((file) => file.trim());
+      return new Set(files);
+    } catch (error) {
+      console.error("Failed to get upstream files:", error);
+      throw error;
+    }
+  }
+
   private getStagedChanges(): ViolatingFile[] {
-    // Get status of staged files with rename detection
     const status = this.git
       .execCommand("git diff --cached --name-status", { suppressOutput: true })
       .split("\n")
@@ -155,10 +180,9 @@ class UpstreamProtector {
     return status.map((line) => {
       const [status, ...paths] = line.split("\t");
       const type = status.charAt(0) as "M" | "A" | "D" | "R";
-
       let file: string;
+
       if (type === "R") {
-        // For renames, we care about the new filename
         file = paths[1];
       } else {
         file = paths[0];
@@ -178,103 +202,123 @@ class UpstreamProtector {
     });
   }
 
-  private checkViolations(): ViolatingFile[] {
+  private checkViolationsLocal(): ViolatingFile[] {
     const allowedPatterns = this.readAllowedOverrides();
     const upstreamFiles = this.getUpstreamFiles();
     const stagedChanges = this.getStagedChanges();
     const violations: ViolatingFile[] = [];
 
     for (const change of stagedChanges) {
-      // If the file exists in upstream
       if (upstreamFiles.has(change.file)) {
-        // Check if it's allowed to be overridden
         if (!this.isFileAllowedOverride(change.file, allowedPatterns)) {
           violations.push(change);
         }
       }
-      // If file doesn't exist in upstream, it's allowed by default
     }
 
     return violations;
   }
 
-  private generateUpstreamUrl(file: string): string {
-    const { organization, repository } = config.upstream;
-    return `https://github.com/${organization}/${repository}/blob/main/${file}`;
-  }
-
+  // Common formatting methods
   private formatErrorMessage(violations: ViolatingFile[]): string {
     const messages: string[] = [
       "\n🚫 Error: Attempted to modify upstream-controlled files",
-      "\nThe following files are managed by the upstream repository and cannot be modified:",
-      "",
+      "\nUnauthorized changes detected:\n",
     ];
 
     violations.forEach(({ file, type }) => {
-      messages.push(`  • ${file}`);
-      messages.push(`    action: ${type}`);
-      messages.push(`    upstream location: ${this.generateUpstreamUrl(file)}`);
-      messages.push("");
+      const prefix = {
+        modified: "[MOD]",
+        added: "[ADD]",
+        deleted: "[DEL]",
+        renamed: "[REN]",
+      }[type];
+
+      messages.push(`  ${prefix} ${file}`);
     });
 
     messages.push(
-      "These files can only be modified in the upstream repository unless explicitly allowed in .allowed-upstream-overrides",
-      `Please submit your changes to: https://github.com/${config.upstream.organization}/${config.upstream.repository}`,
-      "\nAfter your changes are merged upstream, you can use 'git sync-from-upstream' to pull them into this repository.",
-      "",
+      "\nThese files can only be modified in the upstream repository unless explicitly allowed in .allowed-upstream-overrides",
+      `\nPlease submit your changes to: https://github.com/${config.upstream.organization}/${config.upstream.repository}`,
+      "\nAfter your changes are merged upstream, you can use 'git sync-from-upstream' to pull them into this repository.\n",
     );
 
     return messages.join("\n");
   }
 
-  // Modify the check method to handle CI environment
-  public check(): void {
+  private formatChanges(
+    changes: ViolatingFile[],
+    violations: ViolatingFile[],
+  ): void {
+    if (changes.length > 0) {
+      this.log("\nDetected changes:", true);
+      changes.forEach(({ file, type }) => {
+        const prefix = {
+          modified: "[MOD]",
+          added: "[ADD]",
+          deleted: "[DEL]",
+          renamed: "[REN]",
+        }[type];
+        const status = violations.some((v) => v.file === file) ? "❌" : "✓";
+        this.log(`  ${status} ${prefix} ${file}`, true);
+      });
+      this.log(""); // Empty line for spacing
+    }
+  }
+
+  public async check(): Promise<void> {
     try {
-      // Skip check if this is a sync operation (local machine case)
+      // Skip check if this is a sync operation
       if (process.env.UPSTREAM_SYNC_OPERATION === "true") {
-        this.git.log(
-          "✓ Upstream sync operation - skipping protection check",
-          true,
-        );
+        this.log("✓ Upstream sync operation - skipping protection check", true);
         process.exit(0);
       }
 
-      // Skip check if this is a sync commit in CI
-      if (process.env.GITHUB_ACTIONS === "true") {
-        const commitMessage = this.getCommitMessage();
-        if (this.isSyncCommit(commitMessage)) {
-          this.git.log(
-            "✓ Sync commit detected in CI - skipping protection check",
+      // Determine environment
+      const env = defaultCIUtils.getEnv();
+      let violations: ViolatingFile[] = [];
+      let changes: ViolatingFile[] = [];
+
+      if (defaultCIUtils.isCIEnvironment(env)) {
+        this.log("Running in CI environment...", true);
+        changes = await this.getChangedFilesCI();
+        violations = changes.filter(
+          (change) =>
+            !this.isFileAllowedOverride(
+              change.file,
+              this.readAllowedOverrides(),
+            ),
+        );
+      } else {
+        this.log("Running in local environment...", true);
+        // Change to repository root
+        this.git.changeToRepoRoot();
+
+        // Skip check if we're in the upstream repo
+        if (this.isUpstreamRepo()) {
+          this.log(
+            "✓ In upstream repository - skipping protection check",
             true,
           );
           process.exit(0);
         }
+
+        violations = this.checkViolationsLocal();
+        changes = this.getStagedChanges();
       }
 
-      // Change to repository root
-      this.git.changeToRepoRoot();
-
-      // Skip check if we're in the upstream repo
-      if (this.isUpstreamRepo()) {
-        this.git.log(
-          "✓ In upstream repository - skipping protection check",
-          true,
-        );
-        process.exit(0);
-      }
-
-      // Check for violations
-      const violations = this.checkViolations();
+      // Format and display changes
+      this.formatChanges(changes, violations);
 
       if (violations.length > 0) {
         console.error(this.formatErrorMessage(violations));
         process.exit(1);
       }
 
-      this.git.log("✓ No unauthorized modifications to upstream files", true);
+      this.log("✓ No unauthorized modifications to upstream files", true);
       process.exit(0);
     } catch (error) {
-      console.error("Check failed:", error);
+      console.error("Protection check failed:", error);
       process.exit(1);
     }
   }
