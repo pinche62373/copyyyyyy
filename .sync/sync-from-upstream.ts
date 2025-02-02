@@ -113,15 +113,25 @@ class UpstreamPuller {
     log.debug(`Filtering ${files.length} changed files`);
 
     return files.filter(({ path }) => {
-      const shouldSync = defaultUpstreamFileHelper.shouldSync(path);
+      const behavior = defaultUpstreamFileHelper.getSyncBehavior(path);
 
-      if (shouldSync) {
-        log.debug(`Syncing ${path} (matches protection pattern)`);
-      } else {
-        log.debug(`Skipping ${path} (not protected)`);
+      switch (behavior.type) {
+        case "implicit-sync":
+          log.debug(`Syncing ${path} (implicit sync - catchall)`);
+          break;
+        case "explicit-sync":
+          log.debug(
+            `Syncing ${path} (explicit sync pattern: ${behavior.pattern})`,
+          );
+          break;
+        case "explicit-skip":
+          log.debug(
+            `Skipping ${path} (explicit skip pattern: ${behavior.pattern})`,
+          );
+          break;
       }
 
-      return shouldSync;
+      return behavior.shouldSync;
     });
   }
 

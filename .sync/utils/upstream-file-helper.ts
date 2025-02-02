@@ -5,6 +5,12 @@ import { resolve } from "path";
 import { config } from "../.config";
 import log from "./logger";
 
+export type SyncBehavior = {
+  shouldSync: boolean;
+  type: "implicit-sync" | "explicit-sync" | "explicit-skip";
+  pattern?: string;
+};
+
 export class UpstreamFileHelper {
   private readonly allowedOverridesPath: string;
   protected patterns: string[] | null = null;
@@ -45,17 +51,18 @@ export class UpstreamFileHelper {
   }
 
   /**
-   * Determines if a file should be synced from upstream.
-   * Files should sync if:
-   * 1. They don't match any allow pattern (default sync)
-   * 2. OR they match a negation pattern (forced sync)
+   * Determines sync behavior for a file with semantic reasoning.
+   * Returns:
+   * - implicit-sync: File syncs because it doesn't match any patterns (catchall)
+   * - explicit-sync: File syncs because it matches a negation pattern
+   * - explicit-skip: File skips because it matches an allow pattern
    */
-  public shouldSync(filePath: string): boolean {
+  public getSyncBehavior(filePath: string): SyncBehavior {
     const patterns = this.loadPatterns();
     let matchesAllowPattern = false;
+    let allowPattern: string | undefined;
 
     for (const pattern of patterns) {
-      // Skip empty lines and comments
       if (!pattern || pattern.startsWith("#")) {
         continue;
       }
@@ -65,16 +72,34 @@ export class UpstreamFileHelper {
 
       if (this.fileMatchesPattern(filePath, cleanPattern)) {
         if (isNegation) {
-          // If matches negation pattern, should sync
-          return true;
+          return {
+            shouldSync: true,
+            type: "explicit-sync",
+            pattern,
+          };
         }
-        // If matches allow pattern, mark it (but keep checking for negations)
         matchesAllowPattern = true;
+        allowPattern = pattern;
       }
     }
 
-    // Should sync if doesn't match any allow pattern
-    return !matchesAllowPattern;
+    return matchesAllowPattern
+      ? {
+          shouldSync: false,
+          type: "explicit-skip",
+          pattern: allowPattern,
+        }
+      : {
+          shouldSync: true,
+          type: "implicit-sync",
+        };
+  }
+
+  /**
+   * Backwards compatibility method for existing code
+   */
+  public shouldSync(filePath: string): boolean {
+    return this.getSyncBehavior(filePath).shouldSync;
   }
 
   /**
