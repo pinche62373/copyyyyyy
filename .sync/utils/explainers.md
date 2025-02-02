@@ -14,9 +14,9 @@ Git configuration complete:
 
 ## protect-upstream-violation
 
-These centrally managed files can ONLY be modified in the upstream repository
-[https://github.com/pinche62373/tzdb](https://github.com/pinche62373/tzdb) UNLESS
-explicitly allowed in '.sync/.allowed-upstream-overrides'.
+These centrally managed files can ONLY be modified in the
+[upstream repository](https://github.com/pinche62373/tzdb)
+UNLESS explicitly allowed in '.sync/.allowed-upstream-overrides'.
 
 If you really need to update these files, first submit a PR in the upstream repository, then pull merged
 changes into your downstream repository by using the 'git sync-from-upstream' command.

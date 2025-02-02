@@ -2,11 +2,38 @@
 import { readFileSync } from "fs";
 import { dirname, join } from "path";
 import { fileURLToPath } from "url";
+import terminalLink from "terminal-link";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const explainerFile = join(__dirname, "explainers.md");
+
+/**
+ * Converts markdown links to terminal-friendly hyperlinks
+ * Handles both [text](url) and <url> formats
+ */
+function processMarkdownLinks(content: string): string {
+  // First, handle standard markdown links: [text](url)
+  const markdownLinkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  let processed = content.replace(markdownLinkRegex, (_match, text, url) => {
+    if (!text || !url) return _match;
+    return terminalLink(text.trim(), url.trim(), {
+      fallback: (text, url) => `${text} (${url})`,
+    });
+  });
+
+  // Then handle plain URLs in angle brackets: <url>
+  const urlRegex = /<(https?:\/\/[^>]+)>/g;
+  processed = processed.replace(urlRegex, (_match, url) => {
+    if (!url) return _match;
+    return terminalLink(url.trim(), url.trim(), {
+      fallback: (text) => text,
+    });
+  });
+
+  return processed;
+}
 
 function parseExplainers(content: string): Record<string, string> {
   const sections = content.split("\n## ");
@@ -18,11 +45,13 @@ function parseExplainers(content: string): Record<string, string> {
 
     // Split into key and content
     const [firstLine, ...contentLines] = section.split("\n");
-    // Simply use the header text as the key, just trimmed
     const key = firstLine.replace("## ", "").trim();
-    const content = contentLines.join("\n").trim();
 
-    explainers[key] = content;
+    // Process the content to handle markdown links
+    const rawContent = contentLines.join("\n").trim();
+    const processedContent = processMarkdownLinks(rawContent);
+
+    explainers[key] = processedContent;
   });
 
   return explainers;
