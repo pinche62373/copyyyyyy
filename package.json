@@ -94,7 +94,7 @@
     "@types/react": "^19.0.00",
     "@types/react-dom": "^19.00.00",
     "@vitejs/plugin-react": "^4.3.4",
-    "@vitest/coverage-v8": "2.1.8",
+    "@vitest/coverage-v8": "^3.0.4",
     "autoprefixer": "^10.4.20",
     "binode": "^1.0.5",
     "boxen": "^8.0.1",
@@ -120,7 +120,7 @@
     "vite": "^6.0.11",
     "vite-plugin-icons-spritesheet": "^2.2.1",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^2.1.8",
+    "vitest": "^3.0.4",
     "winston": "^3.17.0"
   },
   "optionalDependencies": {
