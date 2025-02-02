@@ -2,6 +2,10 @@
 // https://github.com/microsoft/vscode-css-languageservice/blob/main/docs/customData.md
 //
 {
+  "files.associations": {
+    "**/.allowed-upstream-overrides": "ignore" // treat sync-overrides file as .gitignore
+  },
+
   "css.customData": ["./app/styles/custom-data.json"],
 
   "files.exclude": {

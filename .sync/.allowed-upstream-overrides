@@ -1,5 +1,3 @@
-# vim: syntax=gitignore
-
 # Allowed Upstream Overrides
 #
 # Lists files and directories from the upstream repository that can be modified locally.
@@ -26,19 +24,25 @@
 # assets/**/*.css      # All CSS files in assets and subdirectories
 # local.settings.js    # Specific file
 # dev/                 # Entire directory and contents
+#
+# Glob override pattern:
+# - First exclude upstream directory and all its contents
+# - Then allow other component directories
 
+# root files
 README.md
 node_modules/
 package.json
 package-lock.json
 
-# Glob override pattern:
-# - First exclude upstream directory and all its contents
-# - Then allow other component directories
+# app/components
+!app/components/README.md
 !app/components/upstream/**
 app/components/*
 app/components/*/*
 
+# app/ui
+!app/ui/README.md
 !app/ui/upstream/**
 app/ui/*
 app/ui/*/*
