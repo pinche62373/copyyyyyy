@@ -45,15 +45,36 @@ export class UpstreamFileHelper {
   }
 
   /**
-   * Determines if a file should be synced from upstream based on negation patterns.
-   * Returns true if file should be synced, false otherwise.
+   * Determines if a file should be synced from upstream.
+   * Files should sync if:
+   * 1. They don't match any allow pattern (default sync)
+   * 2. OR they match a negation pattern (forced sync)
    */
   public shouldSync(filePath: string): boolean {
-    const patterns = this.parseSyncPatterns();
-    // File should sync if it matches any negation pattern
-    return patterns.some((pattern) =>
-      this.fileMatchesPattern(filePath, pattern),
-    );
+    const patterns = this.loadPatterns();
+    let matchesAllowPattern = false;
+
+    for (const pattern of patterns) {
+      // Skip empty lines and comments
+      if (!pattern || pattern.startsWith("#")) {
+        continue;
+      }
+
+      const isNegation = pattern.startsWith("!");
+      const cleanPattern = isNegation ? pattern.slice(1) : pattern;
+
+      if (this.fileMatchesPattern(filePath, cleanPattern)) {
+        if (isNegation) {
+          // If matches negation pattern, should sync
+          return true;
+        }
+        // If matches allow pattern, mark it (but keep checking for negations)
+        matchesAllowPattern = true;
+      }
+    }
+
+    // Should sync if doesn't match any allow pattern
+    return !matchesAllowPattern;
   }
 
   /**
