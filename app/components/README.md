@@ -6,7 +6,7 @@ This document describes the design principals for `/components` folder.
 
 For information about UI Components, please refer to [/app/ui/README.md](../ui/README.md).
 
-Sync mayyy
+Sync mayyy manaaaa
 
 ## Detailed Structure
 
