@@ -1,22 +1,12 @@
-import {
-  existsSync,
-  mkdirSync,
-  readFileSync,
-  unlinkSync,
-  writeFileSync,
-} from "fs";
+import { existsSync, mkdirSync, unlinkSync, writeFileSync } from "fs";
 import { dirname } from "path";
 import { createInterface } from "readline";
 import { createId } from "@paralleldrive/cuid2";
-import { config } from "./.config";
 import { getInfoBox } from "./utils/boxen";
 import { getExplainer } from "./utils/explainers";
 import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
-
-interface PullOptions {
-  gitignoreUpstreamPath?: string;
-}
+import { defaultUpstreamFileHelper } from "./utils/upstream-file-helper";
 
 interface FileChange {
   status: "A" | "M" | "D" | "R";
@@ -26,14 +16,9 @@ interface FileChange {
 
 class UpstreamPuller {
   private readonly git: GitHelper;
-  private readonly options: Required<PullOptions>;
   private readonly tempBranch: string;
 
-  constructor(options: PullOptions = {}) {
-    this.options = {
-      gitignoreUpstreamPath: config.sync.allowedOverridesPath,
-      ...options,
-    };
+  constructor() {
     this.git = new GitHelper({});
     this.tempBranch = `temp-upstream-${createId()}`;
   }
@@ -120,70 +105,23 @@ class UpstreamPuller {
       });
   }
 
-  private readIgnorePatterns(): string[] {
-    try {
-      log.debug(
-        `Reading ignore patterns from: ${this.options.gitignoreUpstreamPath}`,
-      );
-      const content = readFileSync(this.options.gitignoreUpstreamPath, "utf8");
-      const patterns = content
-        .split("\n")
-        .filter((line) => line && !line.startsWith("#"))
-        .map((pattern) => pattern.trim());
-
-      log.debug(`Found ${patterns.length} ignore patterns`);
-      return patterns;
-    } catch (error) {
-      log.error(`Failed to read ignore patterns: ${error}`);
-      throw error;
-    }
-  }
-
   /**
-   * Filters files for syncing based on protection patterns.
-   * Only files that match protection patterns (starting with !) will be synced from upstream.
-   *
-   * The approach:
-   * 1. Only considers negation patterns (starting with !) from allowed-overrides
-   * 2. Strips the ! prefix and converts patterns to regex
-   * 3. If a file matches ANY protection pattern -> sync it
-   * 4. If a file doesn't match any protection pattern -> skip it
-   *
-   * @param files - List of changed files to filter
-   * @param allowedPatterns - Patterns from allowed-upstream-overrides
-   * @returns Filtered list of files that should be synced from upstream
+   * Filters files for syncing based on protection patterns using UpstreamFileHelper.
+   * Returns files that should be synced according to the configured patterns.
    */
-  private filterFiles(
-    files: FileChange[],
-    allowedPatterns: string[],
-  ): FileChange[] {
-    // Extract only the negation patterns - these define what we want to sync
-    const protectedPatterns = allowedPatterns
-      .filter((pattern) => pattern && pattern.startsWith("!"))
-      .map((pattern) => pattern.slice(1));
-
-    log.debug(`Found ${protectedPatterns.length} protection patterns:`);
-    protectedPatterns.forEach((pattern) => log.debug(`  ${pattern}`));
+  private filterFiles(files: FileChange[]): FileChange[] {
+    log.debug(`Filtering ${files.length} changed files`);
 
     return files.filter(({ path }) => {
-      // Check if file matches any protection pattern
-      for (const pattern of protectedPatterns) {
-        const regexPattern = pattern
-          .replace(/\./g, "\\.")
-          .replace(/\*\*/g, ".*")
-          .replace(/\*/g, "[^/]*")
-          .replace(/\//g, "\\/");
+      const shouldSync = defaultUpstreamFileHelper.shouldSync(path);
 
-        const regex = new RegExp(`^${regexPattern}($|\\/)`);
-
-        if (regex.test(path)) {
-          log.debug(`Syncing ${path} (protected by ${pattern})`);
-          return true;
-        }
+      if (shouldSync) {
+        log.debug(`Syncing ${path} (matches protection pattern)`);
+      } else {
+        log.debug(`Skipping ${path} (not protected)`);
       }
 
-      log.debug(`Skipping ${path} (not protected)`);
-      return false;
+      return shouldSync;
     });
   }
 
@@ -396,9 +334,8 @@ class UpstreamPuller {
       const changes = this.getChangedFiles();
       log.debug(`Found ${changes.length} changed files`);
 
-      const ignorePatterns = this.readIgnorePatterns();
-      log.debug("Filtering changes based on ignore patterns");
-      const filteredChanges = this.filterFiles(changes, ignorePatterns);
+      log.debug("Filtering changes based on protection patterns");
+      const filteredChanges = this.filterFiles(changes);
       log.debug(`${filteredChanges.length} changes remain after filtering`);
 
       const proceed = await this.promptForConfirmation(filteredChanges);
@@ -442,4 +379,4 @@ if (isRunDirectly) {
   });
 }
 
-export { UpstreamPuller, type PullOptions };
+export { UpstreamPuller };
