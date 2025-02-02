@@ -6,8 +6,6 @@ This document describes the design principals for `/components` folder.
 
 For information about UI Components, please refer to [/app/ui/README.md](../ui/README.md).
 
-Sync mayyy manaaaa
-
 ## Detailed Structure
 
 The `/components` folder contains business-logic specific and feature-specific components that combine multiple UI elements.
