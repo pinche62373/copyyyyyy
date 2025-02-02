@@ -1,5 +1,5 @@
 import type React from "react";
-import { DebouncedInput } from "#app/components/debounced-input";
+import { DebouncedInput } from "#app/ui/upstream/debounced-input.tsx";
 import { Icon } from "#app/ui/upstream/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 
