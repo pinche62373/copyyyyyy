@@ -53,19 +53,40 @@ class UpstreamProtector {
     file: string,
     allowedPatterns: string[],
   ): boolean {
-    for (const pattern of allowedPatterns) {
-      const regexPattern = pattern
-        .replace(/\./g, "\\.")
-        .replace(/\*/g, ".*")
-        .replace(/\?/g, ".")
-        .replace(/\//g, "[/\\\\]");
+    let isAllowed = false;
 
-      const regex = new RegExp(`^${regexPattern}($|[/\\\\])`);
-      if (regex.test(file)) {
-        return true;
+    for (const pattern of allowedPatterns) {
+      // Skip empty lines and comments
+      if (!pattern || pattern.startsWith("#")) {
+        continue;
+      }
+
+      const isNegation = pattern.startsWith("!");
+      const cleanPattern = isNegation ? pattern.slice(1) : pattern;
+
+      // Convert glob pattern to regex
+      const regexPattern = cleanPattern
+        .replace(/\./g, "\\.")
+        .replace(/\*\*/g, ":::GLOBSTAR:::") // Temporarily replace ** to handle it specially
+        .replace(/\*/g, "[^/]*") // * matches anything except /
+        .replace(/\?/g, "[^/]") // ? matches any single char except /
+        .replace(/:::GLOBSTAR:::/g, ".*") // ** matches anything including /
+        .replace(/\//g, "\\/"); // Escape forward slashes
+
+      const regex = new RegExp(`^${regexPattern}($|\\/)`);
+      const matches = regex.test(file);
+
+      if (matches) {
+        // If it's a negation pattern and matches, this file should be protected
+        if (isNegation) {
+          return false;
+        }
+        // If it's a regular pattern and matches, mark as allowed (but keep checking for negations)
+        isAllowed = true;
       }
     }
-    return false;
+
+    return isAllowed;
   }
 
   // CI-specific methods

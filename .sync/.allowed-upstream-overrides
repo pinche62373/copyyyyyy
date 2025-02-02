@@ -1,3 +1,5 @@
+# vim: syntax=gitignore
+
 # Allowed Upstream Overrides
 #
 # Lists files and directories from the upstream repository that can be modified locally.
@@ -11,12 +13,13 @@
 #
 # Format: 
 # - One pattern per line
+# - Lines starting with # are comments
 # - Supports glob patterns (like .gitignore):
 #   - * matches any number of characters except /
 #   - ** matches any number of characters including /
 #   - ? matches a single character
 #   - directory/ matches directory and contents
-# - Lines starting with # are comments
+#   - !pattern negates a previous pattern (exceptions)
 #
 # Examples:
 # config/*.json        # All JSON files in config directory
@@ -28,3 +31,10 @@ README.md
 node_modules/
 package.json
 package-lock.json
+
+# Glob override pattern:
+# - First exclude upstream directory and all its contents
+# - Then allow other component directories
+!app/components/upstream/**
+app/components/*
+app/components/*/*
