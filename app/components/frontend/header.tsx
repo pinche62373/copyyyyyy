@@ -1,7 +1,7 @@
 import { NavLink } from "react-router";
 import { UserMenu } from "#app/components/shared/user-menu";
-import { UpstreamLogo } from "#app/components/upstream/logo.tsx";
 import { ThemeSwitch } from "#app/routes/resources+/theme-switch.tsx";
+import { UpstreamLogo } from "#app/ui/upstream/logo.tsx";
 import { cn } from "#app/utils/lib/cn";
 import { useRequestInfo } from "#app/utils/request-info.ts";
 

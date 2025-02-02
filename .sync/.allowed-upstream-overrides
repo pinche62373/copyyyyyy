@@ -38,3 +38,7 @@ package-lock.json
 !app/components/upstream/**
 app/components/*
 app/components/*/*
+
+!app/ui/upstream/**
+app/ui/*
+app/ui/*/*

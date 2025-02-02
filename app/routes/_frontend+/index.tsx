@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { UpstreamLogo } from "#app/components/upstream/logo.tsx";
+import { UpstreamLogo } from "#app/ui/upstream/logo.tsx";
 import { useOptionalUser } from "#app/utils/user";
 
 export default function IndexPage() {
