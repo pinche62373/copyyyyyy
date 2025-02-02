@@ -1,5 +1,6 @@
 import { NavLink } from "react-router";
 import { UserMenu } from "#app/components/shared/user-menu";
+import { UpstreamLogo } from "#app/components/upstream/logo.tsx";
 import { ThemeSwitch } from "#app/routes/resources+/theme-switch.tsx";
 import { cn } from "#app/utils/lib/cn";
 import { useRequestInfo } from "#app/utils/request-info.ts";
@@ -16,7 +17,7 @@ export const FrontendHeader = ({ className }: Props) => {
       <div
         className={cn(
           "mx-auto mb-6 w-full max-w-[80rem] basis-full items-center px-4 sm:px-6 lg:px-8",
-          "z-50 flex flex-wrap bg-red-200 md:flex-nowrap md:justify-start dark:bg-neutral-900",
+          "z-50 flex flex-wrap md:flex-nowrap md:justify-start dark:bg-neutral-900",
           className,
         )}
       >
@@ -33,7 +34,7 @@ export const FrontendHeader = ({ className }: Props) => {
               className="inline-block flex-none rounded-md text-xl font-semibold focus:opacity-80 focus:outline-none"
               aria-label="Home"
             >
-              Logo
+              <UpstreamLogo width={100} />
             </NavLink>
             {/* End Logo */}
           </div>
