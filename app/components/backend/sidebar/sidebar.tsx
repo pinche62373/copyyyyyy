@@ -4,7 +4,7 @@ import { SidebarFooter } from "#app/components/backend/sidebar/sidebar-footer";
 import { SidebarGroup } from "#app/components/backend/sidebar/sidebar-group";
 import { SidebarLink } from "#app/components/backend/sidebar/sidebar-link";
 import { SidebarSection } from "#app/components/backend/sidebar/sidebar-section";
-import { Icon } from "#app/components/ui/icon.tsx";
+import { Icon } from "#app/ui/upstream/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 import { Roles } from "#app/validations/role-schema";
 

@@ -1,7 +1,7 @@
 import type { HTMLInputTypeAttribute } from "react";
 import { type InputHTMLAttributes, useId, useState } from "react";
 import { tv } from "tailwind-variants";
-import { Icon } from "#app/components/ui/icon.tsx";
+import { Icon } from "#app/ui/upstream/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 
 type Variant = "stacked" | "ifta";

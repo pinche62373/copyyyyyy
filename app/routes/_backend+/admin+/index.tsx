@@ -1,7 +1,7 @@
 import type { LoaderFunctionArgs } from "react-router";
 import { useLoaderData } from "react-router";
 import { DashboardCounterCard } from "#app/components/backend/dashboard/counter-card";
-import { Icon } from "#app/components/ui/icon.tsx";
+import { Icon } from "#app/ui/upstream/icon.tsx";
 import { prisma } from "#app/utils/db.server";
 import { requireRoutePermission } from "#app/utils/permissions.server.ts";
 

@@ -7,7 +7,7 @@ import type { Schema } from "zod";
 import type zod from "zod";
 import { IconContainerRound } from "#app/components/icon-container-round";
 import { Confirm } from "#app/components/shared/confirm.tsx";
-import { Icon } from "#app/components/ui/icon.tsx";
+import { Icon } from "#app/ui/upstream/icon.tsx";
 import type { Crud } from "#app/utils/admin-crud";
 import { useUser, userHasModelPermission } from "#app/utils/user";
 

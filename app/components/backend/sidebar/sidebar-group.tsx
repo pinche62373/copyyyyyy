@@ -1,6 +1,6 @@
 import { Accordion, AccordionItem } from "@szhsin/react-accordion";
 import type React from "react";
-import { Icon } from "#app/components/ui/icon.tsx";
+import { Icon } from "#app/ui/upstream/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 import { useUser, userHasRole } from "#app/utils/user";
 import type { Role } from "#app/validations/role-schema";

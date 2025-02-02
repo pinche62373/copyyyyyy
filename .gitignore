@@ -23,4 +23,4 @@ node_modules
 # App
 # -------------------------------------
 # auto-generated SVG sprite sheet and typings
-/app/components/ui/icons
+/app/ui/upstream/icons

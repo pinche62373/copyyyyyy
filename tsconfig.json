@@ -19,7 +19,7 @@
     "paths": {
       "#*": ["./*"],
       "@/icon-name": [
-        "./app/components/ui/icons/name.ts",
+        "./app/ui/upstream/icons/types.ts",
         "./types/icon-name.d.ts"
       ]
     },

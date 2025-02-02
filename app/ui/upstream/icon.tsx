@@ -1,6 +1,6 @@
 import type { IconName } from "@/icon-name";
 import type { SVGProps } from "react";
-import href from "#app/components/ui/icons/spritesheet.svg?url";
+import href from "#app/ui/upstream/icons/spritesheet.svg?url";
 import { cn } from "#app/utils/lib/cn.ts";
 
 export { href, IconName };

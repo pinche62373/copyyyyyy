@@ -1,7 +1,7 @@
 import type { Row } from "@tanstack/react-table";
 import { NavLink } from "react-router";
 import { IconContainerRound } from "#app/components/icon-container-round";
-import { Icon } from "#app/components/ui/icon.tsx";
+import { Icon } from "#app/ui/upstream/icon.tsx";
 import type { Crud } from "#app/utils/admin-crud";
 import { useUser, userHasModelPermission } from "#app/utils/user";
 

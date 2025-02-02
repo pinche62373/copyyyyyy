@@ -17,7 +17,7 @@ import {
   type ValidationResult,
 } from "react-aria-components";
 import { tv } from "tailwind-variants";
-import { Icon } from "#app/components/ui/icon.tsx";
+import { Icon } from "#app/ui/upstream/icon.tsx";
 import { cn } from "#app/utils/lib/cn";
 
 const tvo = tv({
