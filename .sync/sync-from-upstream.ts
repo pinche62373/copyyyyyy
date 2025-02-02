@@ -139,27 +139,51 @@ class UpstreamPuller {
     }
   }
 
+  /**
+   * Filters files for syncing based on protection patterns.
+   * Only files that match protection patterns (starting with !) will be synced from upstream.
+   *
+   * The approach:
+   * 1. Only considers negation patterns (starting with !) from allowed-overrides
+   * 2. Strips the ! prefix and converts patterns to regex
+   * 3. If a file matches ANY protection pattern -> sync it
+   * 4. If a file doesn't match any protection pattern -> skip it
+   *
+   * @param files - List of changed files to filter
+   * @param allowedPatterns - Patterns from allowed-upstream-overrides
+   * @returns Filtered list of files that should be synced from upstream
+   */
   private filterFiles(
     files: FileChange[],
-    ignorePatterns: string[],
+    allowedPatterns: string[],
   ): FileChange[] {
-    log.debug("Filtering files based on ignore patterns");
+    // Extract only the negation patterns - these define what we want to sync
+    const protectedPatterns = allowedPatterns
+      .filter((pattern) => pattern && pattern.startsWith("!"))
+      .map((pattern) => pattern.slice(1));
+
+    log.debug(`Found ${protectedPatterns.length} protection patterns:`);
+    protectedPatterns.forEach((pattern) => log.debug(`  ${pattern}`));
+
     return files.filter(({ path }) => {
-      for (const pattern of ignorePatterns) {
+      // Check if file matches any protection pattern
+      for (const pattern of protectedPatterns) {
         const regexPattern = pattern
           .replace(/\./g, "\\.")
-          .replace(/\*/g, ".*")
-          .replace(/\?/g, ".")
-          .replace(/\//g, "[/\\\\]");
-        const regex = new RegExp(`^${regexPattern}($|[/\\\\])`);
-        if (regex.test(path)) {
-          log.debug(`Excluding ${path} (matched pattern: ${pattern})`);
+          .replace(/\*\*/g, ".*")
+          .replace(/\*/g, "[^/]*")
+          .replace(/\//g, "\\/");
 
-          return false;
+        const regex = new RegExp(`^${regexPattern}($|\\/)`);
+
+        if (regex.test(path)) {
+          log.debug(`Syncing ${path} (protected by ${pattern})`);
+          return true;
         }
       }
-      log.debug(`Including ${path} (no matching ignore patterns)`);
-      return true;
+
+      log.debug(`Skipping ${path} (not protected)`);
+      return false;
     });
   }
 

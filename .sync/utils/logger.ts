@@ -1,7 +1,13 @@
 // .sync/utils/logger.ts
 import winston from "winston";
 
-// Configure the shared logger
+/**
+ * Configure the shared logger.
+ *
+ * To run in debug mode choose one of:
+ * - export LOG_LEVEL=debug
+ * - LOG_LEVEL=debug npx tsx script.ts
+ */
 const log = winston.createLogger({
   level: process.env.LOG_LEVEL || "info",
   format: winston.format.json(),

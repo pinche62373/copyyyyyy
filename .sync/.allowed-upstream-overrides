@@ -19,15 +19,15 @@
 #   - directory/ matches directory and contents
 #   - !pattern negates a previous pattern (exceptions)
 #
-# Examples:
-# config/*.json        # All JSON files in config directory
-# assets/**/*.css      # All CSS files in assets and subdirectories
-# local.settings.js    # Specific file
-# dev/                 # Entire directory and contents
-#
 # Glob override pattern:
-# - First exclude upstream directory and all its contents
-# - Then allow other component directories
+# - First include directories/files you want to allow modifications for
+# - Then exclude specific paths within those directories that should remain protected
+#
+# Examples:
+# config/*.json            # Allow all JSON files in config directory
+# !config/upstream.json    # But protect the upstream configuration
+# assets/**/*.css         # Allow all CSS files in assets and subdirectories
+# !assets/core/*.css      # But protect core CSS files
 
 # root files
 README.md
@@ -36,13 +36,13 @@ package.json
 package-lock.json
 
 # app/components
-!app/components/README.md
-!app/components/upstream/**
 app/components/*
 app/components/*/*
+!app/components/upstream/**
+!app/components/README.md
 
 # app/ui
-!app/ui/README.md
-!app/ui/upstream/**
 app/ui/*
 app/ui/*/*
+!app/ui/upstream/**
+!app/ui/README.md
