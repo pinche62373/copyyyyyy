@@ -1,15 +1,12 @@
 import { readFileSync, readdirSync, statSync } from "fs";
-import { join, relative, resolve } from "path";
+import { join, relative } from "path";
 import { config } from "./.config";
 import { getInfoBox } from "./utils/boxen";
 import { defaultCIHelper } from "./utils/ci-helper";
 import { getExplainer } from "./utils/explainers";
 import { GitHelper } from "./utils/git-helper";
 import log from "./utils/logger";
-
-interface ProtectOptions {
-  allowedOverridesPath?: string;
-}
+import { defaultUpstreamFileHelper } from "./utils/upstream-file-helper";
 
 interface ViolatingFile {
   file: string;
@@ -19,80 +16,14 @@ interface ViolatingFile {
 
 class UpstreamProtector {
   private readonly git: GitHelper;
-  private readonly options: Required<ProtectOptions>;
 
-  constructor(options: ProtectOptions = {}) {
-    this.options = {
-      allowedOverridesPath: config.sync.allowedOverridesPath,
-      ...options,
-    };
+  constructor() {
     this.git = new GitHelper({});
-  }
-
-  // Shared methods between CI and local environments
-  private readAllowedOverrides(): string[] {
-    try {
-      const allowedOverridesPath = resolve(
-        process.cwd(),
-        this.options.allowedOverridesPath,
-      );
-      log.info(`Reading allowed overrides from: ${allowedOverridesPath}`);
-
-      const content = readFileSync(allowedOverridesPath, "utf8");
-      return content
-        .split("\n")
-        .filter((line) => line && !line.startsWith("#"))
-        .map((pattern) => pattern.trim());
-    } catch (error) {
-      log.error(`Failed to read allowed overrides: ${error}`);
-      throw error;
-    }
-  }
-
-  private isFileAllowedOverride(
-    file: string,
-    allowedPatterns: string[],
-  ): boolean {
-    let isAllowed = false;
-
-    for (const pattern of allowedPatterns) {
-      // Skip empty lines and comments
-      if (!pattern || pattern.startsWith("#")) {
-        continue;
-      }
-
-      const isNegation = pattern.startsWith("!");
-      const cleanPattern = isNegation ? pattern.slice(1) : pattern;
-
-      // Convert glob pattern to regex
-      const regexPattern = cleanPattern
-        .replace(/\./g, "\\.")
-        .replace(/\*\*/g, ":::GLOBSTAR:::") // Temporarily replace ** to handle it specially
-        .replace(/\*/g, "[^/]*") // * matches anything except /
-        .replace(/\?/g, "[^/]") // ? matches any single char except /
-        .replace(/:::GLOBSTAR:::/g, ".*") // ** matches anything including /
-        .replace(/\//g, "\\/"); // Escape forward slashes
-
-      const regex = new RegExp(`^${regexPattern}($|\\/)`);
-      const matches = regex.test(file);
-
-      if (matches) {
-        // If it's a negation pattern and matches, this file should be protected
-        if (isNegation) {
-          return false;
-        }
-        // If it's a regular pattern and matches, mark as allowed (but keep checking for negations)
-        isAllowed = true;
-      }
-    }
-
-    return isAllowed;
   }
 
   // CI-specific methods
   private getAllFiles(dir: string, baseDir: string = dir): string[] {
     const files: string[] = [];
-
     const entries = readdirSync(dir);
 
     for (const entry of entries) {
@@ -120,17 +51,14 @@ class UpstreamProtector {
 
     const { mainRepoPath, upstreamRepoPath } = defaultCIHelper.getRepoPaths();
 
-    // Get all files from both repositories
     log.debug("Scanning repositories...");
     const mainFiles = new Set(this.getAllFiles(mainRepoPath));
     const upstreamFiles = new Set(this.getAllFiles(upstreamRepoPath));
 
     const changes: ViolatingFile[] = [];
 
-    // Check for modifications and additions
     for (const file of mainFiles) {
       if (upstreamFiles.has(file)) {
-        // File exists in both - check if modified
         const mainContent = readFileSync(join(mainRepoPath, file), "utf8");
         const upstreamContent = readFileSync(
           join(upstreamRepoPath, file),
@@ -138,11 +66,13 @@ class UpstreamProtector {
         );
 
         if (mainContent !== upstreamContent) {
-          changes.push({
-            file,
-            type: "modified",
-            upstreamPath: join(upstreamRepoPath, file),
-          });
+          if (!defaultUpstreamFileHelper.allowOverride(file)) {
+            changes.push({
+              file,
+              type: "modified",
+              upstreamPath: join(upstreamRepoPath, file),
+            });
+          }
         }
       }
     }
@@ -163,7 +93,8 @@ class UpstreamProtector {
       );
     } catch (error) {
       log.error(
-        `Warning: Could not determine if this is upstream repo: ${error}`,
+        "Warning: Could not determine if this is upstream repo:",
+        error,
       );
       return false;
     }
@@ -217,14 +148,13 @@ class UpstreamProtector {
   }
 
   private checkViolationsLocal(): ViolatingFile[] {
-    const allowedPatterns = this.readAllowedOverrides();
     const upstreamFiles = this.getUpstreamFiles();
     const stagedChanges = this.getStagedChanges();
     const violations: ViolatingFile[] = [];
 
     for (const change of stagedChanges) {
       if (upstreamFiles.has(change.file)) {
-        if (!this.isFileAllowedOverride(change.file, allowedPatterns)) {
+        if (!defaultUpstreamFileHelper.allowOverride(change.file)) {
           violations.push(change);
         }
       }
@@ -233,7 +163,6 @@ class UpstreamProtector {
     return violations;
   }
 
-  // Common formatting methods
   private formatErrorMessage(violations: ViolatingFile[]): string {
     const messages: string[] = [
       "\n🚫 Error: Detected modification of upstream-controlled files:",
@@ -250,7 +179,6 @@ class UpstreamProtector {
       messages.push(`  ${prefix} ${file}`);
     });
 
-    // error message
     return (
       messages.join("\n") +
       "\n\n" +
@@ -287,7 +215,6 @@ class UpstreamProtector {
         process.exit(0);
       }
 
-      // Determine environment
       let violations: ViolatingFile[] = [];
       let changes: ViolatingFile[] = [];
 
@@ -295,18 +222,12 @@ class UpstreamProtector {
         log.debug("Running in CI environment...", true);
         changes = await this.getChangedFilesCI();
         violations = changes.filter(
-          (change) =>
-            !this.isFileAllowedOverride(
-              change.file,
-              this.readAllowedOverrides(),
-            ),
+          (change) => !defaultUpstreamFileHelper.allowOverride(change.file),
         );
       } else {
         log.debug("Running in local environment...", true);
-        // Change to repository root
         this.git.changeToRepoRoot();
 
-        // Skip check if we're in the upstream repo
         if (this.isUpstreamRepo()) {
           log.info("In upstream repository - skipping protection check", true);
           process.exit(0);
@@ -316,7 +237,6 @@ class UpstreamProtector {
         changes = this.getStagedChanges();
       }
 
-      // Format and display changes
       this.formatChanges(changes, violations);
 
       if (violations.length > 0) {
@@ -346,4 +266,4 @@ if (isRunDirectly) {
   log.debug("Script loaded as module");
 }
 
-export { UpstreamProtector, type ProtectOptions };
+export { UpstreamProtector };
