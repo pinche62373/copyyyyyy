@@ -36,10 +36,10 @@ package.json
 package-lock.json
 
 # app/components
-app/components/*
-app/components/*/*
-!app/components/upstream/**
-!app/components/README.md
+#app/components/*
+#app/components/*/*
+#!app/components/upstream/**
+#!app/components/README.md
 
 # app/ui
 app/ui/*
