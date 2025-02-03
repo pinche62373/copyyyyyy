@@ -7,7 +7,7 @@ import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { Pairs } from "#app/components/ui/pairs.tsx";
 import { getLanguage } from "#app/queries/language.server.ts";
-import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
+import { handle as languagesHandle } from "#app/routes/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";

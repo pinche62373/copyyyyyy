@@ -1,14 +1,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "prisma-client";
 import type { FieldPath } from "react-hook-form";
-import { Controller } from "react-hook-form";
-import type { ActionFunctionArgs } from "react-router";
-import {
-  Form,
-  type LoaderFunctionArgs,
-  useLoaderData,
-  useNavigation,
-} from "react-router";
+import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
+import { Form, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
 import { dataWithError, redirectWithSuccess } from "remix-toast";
 import type zod from "zod";
@@ -16,15 +10,12 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import { ComboBoxItem } from "#app/components/shared/form/combobox-item.tsx";
-import { ComboBox } from "#app/components/shared/form/combobox.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
-import { createCountry } from "#app/queries/country.server.ts";
-import { getRegionById, getRegions } from "#app/queries/region.server.ts";
-import { handle as countriesHandle } from "#app/routes/_backend+/admin+/countries+/index";
+import { createLanguage } from "#app/queries/language.server.ts";
+import { handle as languagesHandle } from "#app/routes/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
@@ -33,21 +24,19 @@ import {
   requireModelPermission,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
-import { CountrySchemaCreate } from "#app/validations/country-schema";
+import { LanguageSchemaCreate } from "#app/validations/language-schema";
 
-// https://stackoverflow.com/questions/76222652/how-to-use-register-from-react-hook-forms-with-headless-ui-combobox
-
-const { countryCrud: crud } = getAdminCrud();
+const { languageCrud: crud } = getAdminCrud();
 
 const intent = "create" as const;
 
-const resolver = zodResolver(CountrySchemaCreate);
+const resolver = zodResolver(LanguageSchemaCreate);
 
-type FormData = zod.infer<typeof CountrySchemaCreate>;
+type FormData = zod.infer<typeof LanguageSchemaCreate>;
 
 export const handle = {
   breadcrumb: (): BreadcrumbHandle => [
-    ...countriesHandle.breadcrumb(),
+    ...languagesHandle.breadcrumb(),
     { name: "New" },
   ],
 };
@@ -59,11 +48,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   });
 
   return {
-    defaultValues: {
-      ...getDefaultValues(CountrySchemaCreate),
-      intent,
-      regions: await getRegions(),
-    },
+    defaultValues: getDefaultValues(LanguageSchemaCreate, { intent }),
   };
 }
 
@@ -87,12 +72,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     scope: "any",
   });
 
-  if ((await getRegionById(data.country.regionId)) === null) {
-    return dataWithError(null, "Invalid relationship");
-  }
-
   try {
-    await createCountry(data.country, userId);
+    await createLanguage(data.language, userId);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
@@ -121,10 +102,9 @@ export default function Component() {
   });
 
   const {
-    register,
-    control,
-    getFieldState,
     handleSubmit,
+    register,
+    getFieldState,
     formState: { errors },
   } = form;
 
@@ -138,50 +118,19 @@ export default function Component() {
 
         <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
           <input type="hidden" {...register("intent")} />
-          <input type="hidden" {...register("country.regionId")} />
 
           <Input
             label="Name"
             variant="ifta"
-            {...register("country.name")}
-            optional={CountrySchemaCreate.shape.country.shape.name.isOptional()}
-            error={errors.country?.name?.message}
+            {...register("language.name")}
+            error={errors.language?.name?.message}
             onBlur={(e) =>
               setFormFieldValue(
-                "country.name" as FieldPath<FormData>,
+                "language.name" as FieldPath<FormData>,
                 e.currentTarget.value,
               )
             }
-            checkmark={isValidFormField(getFieldState("country.name"))}
-          />
-
-          <Controller
-            name="country.regionId"
-            control={control}
-            render={({ field, fieldState: { invalid, error } }) => {
-              return (
-                <ComboBox
-                  onSelectionChange={(id) =>
-                    setFormFieldValue(
-                      "country.regionId" as FieldPath<FormData>,
-                      (id as string) || "",
-                    )
-                  }
-                  optional={CountrySchemaCreate.shape.country.shape.regionId.isOptional()}
-                  isInvalid={invalid}
-                  checkmark={isValidFormField(
-                    getFieldState("country.regionId"),
-                  )}
-                  errorMessage={error && error.message}
-                  label="Region"
-                  menuTrigger="focus"
-                  onBlur={field.onBlur}
-                  defaultItems={defaultValues.regions}
-                >
-                  {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
-                </ComboBox>
-              );
-            }}
+            checkmark={isValidFormField(getFieldState("language.name"))}
           />
 
           <Flex className="mobile gap-5">

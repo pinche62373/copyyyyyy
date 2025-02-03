@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "prisma-client";
 import { useEffect } from "react";
 import type { FieldPath } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
@@ -11,12 +12,15 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
+import { ComboBoxItem } from "#app/components/shared/form/combobox-item.tsx";
+import { ComboBox } from "#app/components/shared/form/combobox.tsx";
 import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
-import { getLanguage, updateLanguage } from "#app/queries/language.server.ts";
-import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
+import { getCountry, updateCountry } from "#app/queries/country.server.ts";
+import { getRegionById, getRegions } from "#app/queries/region.server.ts";
+import { handle as countriesHandle } from "#app/routes/admin+/countries+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";
@@ -25,50 +29,50 @@ import {
   requireRoutePermission,
 } from "#app/utils/permissions.server";
 import { validatePageId } from "#app/utils/validate-page-id";
-import {
-  LanguageSchema,
-  LanguageSchemaUpdate,
-} from "#app/validations/language-schema";
+import { CountrySchemaUpdate } from "#app/validations/country-schema";
 
-const { languageCrud: crud } = getAdminCrud();
+const { countryCrud: crud } = getAdminCrud();
 
 const intent = "update" as const;
 
-const resolver = zodResolver(LanguageSchemaUpdate);
+const resolver = zodResolver(CountrySchemaUpdate);
 
-type FormData = zod.infer<typeof LanguageSchemaUpdate>;
+type FormData = zod.infer<typeof CountrySchemaUpdate>;
 
 export const handle = {
   breadcrumb: ({
     data,
   }: {
-    data: { defaultValues: { language: { id: string; name: string } } };
+    data: { defaultValues: { country: { id: string; name: string } } };
   }): BreadcrumbHandle => [
-    ...languagesHandle.breadcrumb(),
+    ...countriesHandle.breadcrumb(),
     {
-      name: data.defaultValues.language.name,
-      to: `${crud.routes.index}/${data.defaultValues.language.id}`,
+      name: data.defaultValues.country.name,
+      to: `${crud.routes.index}/${data.defaultValues.country.id}`,
     },
     { name: "Edit" },
   ],
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const languageId = validatePageId(params.languageId, LanguageSchema);
+  const countryId = validatePageId(params.countryId, CountrySchemaUpdate);
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
     scope: "any",
   });
 
-  const language = await getLanguage({ id: languageId });
+  const country = await getCountry({ id: countryId });
 
-  if (!language) {
+  if (!country) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
+  const regions = await getRegions();
+
   return {
-    defaultValues: { language, intent },
+    defaultValues: { country, intent },
+    regions,
   };
 }
 
@@ -92,8 +96,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     scope: "any",
   });
 
+  if ((await getRegionById(data.country.regionId)) === null) {
+    return dataWithError(null, "Invalid relationship");
+  }
+
   try {
-    await updateLanguage(data.language, userId);
+    await updateCountry(data.country, userId);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
@@ -105,13 +113,18 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   return dataWithSuccess(
-    null,
+    {
+      defaultValues: {
+        country: data.country,
+        intent,
+      },
+    },
     `${humanize(crud.singular)} updated successfully`,
   );
 };
 
 export default function Component() {
-  const { defaultValues } = useLoaderData<typeof loader>();
+  const { defaultValues, regions } = useLoaderData<typeof loader>();
 
   const navigation = useNavigation();
 
@@ -123,9 +136,10 @@ export default function Component() {
   });
 
   const {
-    handleSubmit,
     register,
+    control,
     getFieldState,
+    handleSubmit,
     reset,
     formState: { errors, isSubmitSuccessful },
   } = form;
@@ -147,20 +161,55 @@ export default function Component() {
 
         <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
           <input type="hidden" {...register("intent")} />
-          <input type="hidden" {...register("language.id")} />
+          <input type="hidden" {...register("country.id")} />
 
           <Input
             label="Name"
             variant="ifta"
-            {...register("language.name")}
-            error={errors.language?.name?.message}
+            {...register("country.name")}
+            optional={CountrySchemaUpdate.shape.country.shape.name.isOptional()}
+            error={errors.country?.name?.message}
             onBlur={(e) =>
               setFormFieldValue(
-                "language.name" as FieldPath<FormData>,
+                "country.name" as FieldPath<FormData>,
                 e.currentTarget.value,
               )
             }
-            checkmark={isValidFormField(getFieldState("language.name"))}
+            checkmark={isValidFormField(getFieldState("country.name"))}
+          />
+
+          <Controller
+            name="country.regionId"
+            control={control}
+            render={({ fieldState: { invalid, error } }) => {
+              // https://github.com/react-hook-form/react-hook-form/issues/4597#issuecomment-1069673930
+              return (
+                <ComboBox
+                  onSelectionChange={(id) => {
+                    setFormFieldValue(
+                      "country.regionId" as FieldPath<FormData>,
+                      (id as string) || "",
+                    );
+                  }}
+                  optional={CountrySchemaUpdate.shape.country.shape.regionId.isOptional()}
+                  isInvalid={invalid}
+                  checkmark={isValidFormField(
+                    getFieldState("country.regionId"),
+                  )}
+                  errorMessage={error && error.message}
+                  label="Region"
+                  menuTrigger="focus"
+                  defaultItems={regions}
+                  defaultSelectedKey={
+                    regions.find(
+                      (region) => region.id === defaultValues.country.regionId,
+                    )?.id
+                  }
+                >
+                  {(item) => <ComboBoxItem>{item.name}</ComboBoxItem>}
+                </ComboBox>
+              );
+            }}
           />
 
           <Flex className="mobile gap-5">

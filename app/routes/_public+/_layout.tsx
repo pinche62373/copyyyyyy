@@ -9,7 +9,7 @@ export const meta: MetaFunction = () => [
   { name: "description", content: "TZDB Frontend" },
 ];
 
-export default function FrontendLayout() {
+export default function PublicLayout() {
   return (
     <>
       <FrontendHeader />

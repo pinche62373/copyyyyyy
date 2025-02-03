@@ -1,10 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Prisma } from "prisma-client";
+import { useEffect } from "react";
 import type { FieldPath } from "react-hook-form";
 import type { ActionFunctionArgs, LoaderFunctionArgs } from "react-router";
 import { Form, useLoaderData, useNavigation } from "react-router";
 import { getValidatedFormData, useRemixForm } from "remix-hook-form";
-import { dataWithError, redirectWithSuccess } from "remix-toast";
+import { dataWithError, dataWithSuccess } from "remix-toast";
 import type zod from "zod";
 import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title";
@@ -14,41 +15,60 @@ import { Input } from "#app/components/shared/form/input.tsx";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
-import { createLanguage } from "#app/queries/language.server.ts";
-import { handle as languagesHandle } from "#app/routes/_backend+/admin+/languages+/index";
+import { getLanguage, updateLanguage } from "#app/queries/language.server.ts";
+import { handle as languagesHandle } from "#app/routes/admin+/languages+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
-import { getDefaultValues } from "#app/utils/lib/get-default-values.ts";
 import { humanize } from "#app/utils/lib/humanize";
 import {
   requireModelPermission,
   requireRoutePermission,
 } from "#app/utils/permissions.server";
-import { LanguageSchemaCreate } from "#app/validations/language-schema";
+import { validatePageId } from "#app/utils/validate-page-id";
+import {
+  LanguageSchema,
+  LanguageSchemaUpdate,
+} from "#app/validations/language-schema";
 
 const { languageCrud: crud } = getAdminCrud();
 
-const intent = "create" as const;
+const intent = "update" as const;
 
-const resolver = zodResolver(LanguageSchemaCreate);
+const resolver = zodResolver(LanguageSchemaUpdate);
 
-type FormData = zod.infer<typeof LanguageSchemaCreate>;
+type FormData = zod.infer<typeof LanguageSchemaUpdate>;
 
 export const handle = {
-  breadcrumb: (): BreadcrumbHandle => [
+  breadcrumb: ({
+    data,
+  }: {
+    data: { defaultValues: { language: { id: string; name: string } } };
+  }): BreadcrumbHandle => [
     ...languagesHandle.breadcrumb(),
-    { name: "New" },
+    {
+      name: data.defaultValues.language.name,
+      to: `${crud.routes.index}/${data.defaultValues.language.id}`,
+    },
+    { name: "Edit" },
   ],
 };
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
+  const languageId = validatePageId(params.languageId, LanguageSchema);
+
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
     scope: "any",
   });
 
+  const language = await getLanguage({ id: languageId });
+
+  if (!language) {
+    throw new Response("Not Found", { status: 404, statusText: "Not Found" });
+  }
+
   return {
-    defaultValues: getDefaultValues(LanguageSchemaCreate, { intent }),
+    defaultValues: { language, intent },
   };
 }
 
@@ -61,8 +81,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   );
 
   if (errors) {
-    return dataWithError({ errors }, "Form data rejected by server", {
-      // status: 422, // TODO re-enable when remix-toast fixes this
+    throw dataWithError({ errors }, "Form data rejected by server", {
+      status: 422,
     });
   }
 
@@ -73,7 +93,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   });
 
   try {
-    await createLanguage(data.language, userId);
+    await updateLanguage(data.language, userId);
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
       if (e.code === "P2002") {
@@ -84,9 +104,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     }
   }
 
-  return redirectWithSuccess(
-    crud.routes.index,
-    `${humanize(crud.singular)} created successfully`,
+  return dataWithSuccess(
+    null,
+    `${humanize(crud.singular)} updated successfully`,
   );
 };
 
@@ -97,6 +117,7 @@ export default function Component() {
 
   const form = useRemixForm<FormData>({
     mode: "onBlur",
+    reValidateMode: "onBlur",
     resolver,
     defaultValues,
   });
@@ -105,19 +126,28 @@ export default function Component() {
     handleSubmit,
     register,
     getFieldState,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitSuccessful },
   } = form;
 
   // @ts-ignore: awaits remix-hook-form fix for type `UseRemixFormReturn`
   const { setFormFieldValue, isValidFormField } = useFormHelpers(form);
 
+  // Reset form after successful submission
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset(defaultValues);
+    }
+  }, [isSubmitSuccessful, reset, defaultValues]);
+
   return (
     <>
       <BackendPanel>
-        <BackendTitle text={`New ${crud.singular}`} foreground />
+        <BackendTitle text={`Edit ${crud.singular}`} foreground />
 
         <Form method="POST" onSubmit={handleSubmit} autoComplete="off">
           <input type="hidden" {...register("intent")} />
+          <input type="hidden" {...register("language.id")} />
 
           <Input
             label="Name"
@@ -139,7 +169,7 @@ export default function Component() {
           </Flex>
 
           <Flex className="desktop">
-            <Flex.End>
+            <Flex.End className="hidden sm:flex">
               <LinkButton text="Cancel" to={crud.routes.index} secondary />
               <SubmitButton disabled={navigation.state === "submitting"} />
             </Flex.End>

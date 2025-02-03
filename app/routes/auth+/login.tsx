@@ -155,7 +155,7 @@ export default function LoginPage() {
 
           <Flex className="desktop">
             <Flex.End>
-              <LinkButton text="Cancel" to={ROUTE_LOGIN} secondary />
+              <LinkButton text="Cancel" to={ROUTE_HOME} secondary />
               <SubmitButton disabled={navigation.state === "submitting"} />
             </Flex.End>
           </Flex>

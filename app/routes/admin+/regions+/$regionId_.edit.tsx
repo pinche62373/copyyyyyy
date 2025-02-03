@@ -16,7 +16,7 @@ import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { SubmitButton } from "#app/components/ui/submit-button.tsx";
 import { useFormHelpers } from "#app/hooks/use-form-helpers.ts";
 import { getRegion, updateRegion } from "#app/queries/region.server.ts";
-import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
+import { handle as regionsHandle } from "#app/routes/admin+/regions+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { requireUserId } from "#app/utils/auth.server";
 import { humanize } from "#app/utils/lib/humanize";

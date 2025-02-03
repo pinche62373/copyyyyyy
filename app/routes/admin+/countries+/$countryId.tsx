@@ -6,50 +6,50 @@ import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { LinkButton } from "#app/components/ui/link-button.tsx";
 import { Pairs } from "#app/components/ui/pairs.tsx";
-import { getRegion } from "#app/queries/region.server.ts";
-import { handle as regionsHandle } from "#app/routes/_backend+/admin+/regions+/index";
+import { getCountry } from "#app/queries/country.server.ts";
+import { handle as countriesHandle } from "#app/routes/admin+/countries+/index";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import { humanize } from "#app/utils/lib/humanize";
 import { timeStampToHuman } from "#app/utils/lib/timestamp-to-human";
 import { requireRoutePermission } from "#app/utils/permissions.server";
 import { useUser, userHasModelPermission } from "#app/utils/user";
 import { validatePageId } from "#app/utils/validate-page-id";
-import { RegionSchema } from "#app/validations/region-schema";
+import { CountrySchema } from "#app/validations/country-schema";
 
-const { regionCrud: crud } = getAdminCrud();
+const { countryCrud: crud } = getAdminCrud();
 
 export const handle = {
   breadcrumb: ({
     data,
   }: {
-    data: { region: { id: string; name: string } };
+    data: { country: { id: string; name: string } };
   }): BreadcrumbHandle => [
-    ...regionsHandle.breadcrumb(),
-    { name: data.region.name },
+    ...countriesHandle.breadcrumb(),
+    { name: data.country.name },
   ],
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const regionId = validatePageId(params.regionId, RegionSchema);
+  const countryId = validatePageId(params.countryId, CountrySchema);
 
   await requireRoutePermission(request, {
     resource: new URL(request.url).pathname,
     scope: "any",
   });
 
-  const region = await getRegion({ id: regionId });
+  const country = await getCountry({ id: countryId });
 
-  if (!region) {
+  if (!country) {
     throw new Response("Not Found", { status: 404, statusText: "Not Found" });
   }
 
   return {
-    region,
+    country,
   };
 }
 
 export default function Component() {
-  const { region } = useLoaderData<typeof loader>();
+  const { country } = useLoaderData<typeof loader>();
 
   const user = useUser();
 
@@ -65,20 +65,23 @@ export default function Component() {
 
       <Pairs>
         <Pairs.Key>Name</Pairs.Key>
-        <Pairs.Value>{region.name}</Pairs.Value>
+        <Pairs.Value>{country.name}</Pairs.Value>
+
+        <Pairs.Key>Region</Pairs.Key>
+        <Pairs.Value>{country.region.name}</Pairs.Value>
 
         <Pairs.Key>Created By</Pairs.Key>
         <Pairs.Value>
-          {region.regionCreatedBy.username} at{" "}
-          {timeStampToHuman(region.createdAt)}
+          {country.countryCreatedBy.username} at{" "}
+          {timeStampToHuman(country.createdAt)}
         </Pairs.Value>
 
         <Pairs.Key>Updated By</Pairs.Key>
         <Pairs.Value>
-          {region.updatedAt !== null && (
+          {country.updatedAt !== null && (
             <>
-              {region.regionupdatedBy?.username} at{" "}
-              {timeStampToHuman(region.updatedAt)}
+              {country.countryUpdatedBy?.username} at{" "}
+              {timeStampToHuman(country.updatedAt)}
             </>
           )}
         </Pairs.Value>
@@ -88,7 +91,7 @@ export default function Component() {
         {renderEditButton && (
           <LinkButton
             text="Edit"
-            to={`${crud.routes.index}/${region.id}/edit`}
+            to={`${crud.routes.index}/${country.id}/edit`}
           />
         )}
         <LinkButton text="Cancel" to={crud.routes.index} secondary />
@@ -101,7 +104,7 @@ export default function Component() {
           {renderEditButton && (
             <LinkButton
               text="Edit"
-              to={`${crud.routes.index}/${region.id}/edit`}
+              to={`${crud.routes.index}/${country.id}/edit`}
             />
           )}
         </Flex.End>
