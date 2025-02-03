@@ -15,13 +15,13 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { getRoles } from "#app/queries/role.server.ts";
-import TanstackTable from "#app/ui/upstream/tanstack-table";
-import { TableFooter } from "#app/ui/upstream/tanstack-table/TableFooter";
-import { TableSearch } from "#app/ui/upstream/tanstack-table/TableSearch";
-import { TableIndex } from "#app/ui/upstream/tanstack-table/cells/table-index.tsx";
-import { TableLink } from "#app/ui/upstream/tanstack-table/cells/table-link.tsx";
-import { fuzzyFilter } from "#app/ui/upstream/tanstack-table/filters/fuzzy-filter";
-import { fuzzySort } from "#app/ui/upstream/tanstack-table/sorts/fuzzy";
+import TanstackTable from "#app/ui/upstream/table";
+import { TableFooter } from "#app/ui/upstream/table/TableFooter";
+import { TableSearch } from "#app/ui/upstream/table/TableSearch";
+import { TableIndex } from "#app/ui/upstream/table/cells/table-index.tsx";
+import { TableLink } from "#app/ui/upstream/table/cells/table-link.tsx";
+import { fuzzyFilter } from "#app/ui/upstream/table/filters/fuzzy-filter";
+import { fuzzySort } from "#app/ui/upstream/table/sorts/fuzzy";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,

@@ -16,15 +16,15 @@ import { BackendTitle } from "#app/components/backend/title.tsx";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
 import { getPermissions } from "#app/queries/permission.server.ts";
-import TanstackTable from "#app/ui/upstream/tanstack-table";
-import { TableFooter } from "#app/ui/upstream/tanstack-table/TableFooter";
-import { TableSearch } from "#app/ui/upstream/tanstack-table/TableSearch";
-import { TableIndex } from "#app/ui/upstream/tanstack-table/cells/table-index.tsx";
-import { TableLink } from "#app/ui/upstream/tanstack-table/cells/table-link.tsx";
-import { fuzzyFilter } from "#app/ui/upstream/tanstack-table/filters/fuzzy-filter";
-import { permissionTypeFilter } from "#app/ui/upstream/tanstack-table/filters/permission-type-filter";
-import { PermissionTypeFilterComponent } from "#app/ui/upstream/tanstack-table/filters/permission-type-filter-component";
-import { fuzzySort } from "#app/ui/upstream/tanstack-table/sorts/fuzzy";
+import TanstackTable from "#app/ui/upstream/table";
+import { TableFooter } from "#app/ui/upstream/table/TableFooter";
+import { TableSearch } from "#app/ui/upstream/table/TableSearch";
+import { TableIndex } from "#app/ui/upstream/table/cells/table-index.tsx";
+import { TableLink } from "#app/ui/upstream/table/cells/table-link.tsx";
+import { fuzzyFilter } from "#app/ui/upstream/table/filters/fuzzy-filter";
+import { permissionTypeFilter } from "#app/ui/upstream/table/filters/permission-type-filter";
+import { PermissionTypeFilterComponent } from "#app/ui/upstream/table/filters/permission-type-filter-component";
+import { fuzzySort } from "#app/ui/upstream/table/sorts/fuzzy";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,

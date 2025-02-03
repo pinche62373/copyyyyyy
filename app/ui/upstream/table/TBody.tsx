@@ -1,6 +1,6 @@
 import { flexRender } from "@tanstack/react-table";
 
-import useTable from "#app/ui/upstream/tanstack-table/useTable";
+import useTable from "#app/ui/upstream/table/useTable";
 import { cn } from "#app/utils/lib/cn";
 
 const TBody = () => {
