@@ -16,18 +16,18 @@ import { BackendPanel } from "#app/components/backend/panel.tsx";
 import { BackendTitle } from "#app/components/backend/title.tsx";
 import { Flex } from "#app/components/flex.tsx";
 import type { BreadcrumbHandle } from "#app/components/shared/breadcrumb";
-import TanstackTable from "#app/components/tanstack-table";
-import { TableFooter } from "#app/components/tanstack-table/TableFooter";
-import { TableSearch } from "#app/components/tanstack-table/TableSearch";
-import { TableIndex } from "#app/components/tanstack-table/cells/table-index.tsx";
-import { TableLink } from "#app/components/tanstack-table/cells/table-link.tsx";
-import { fuzzyFilter } from "#app/components/tanstack-table/filters/fuzzy-filter";
-import { PermissionTypeFilterComponent } from "#app/components/tanstack-table/filters/permission-type-filter-component.tsx";
-import { permissionTypeFilter } from "#app/components/tanstack-table/filters/permission-type-filter.ts";
-import { fuzzySort } from "#app/components/tanstack-table/sorts/fuzzy";
 import { Pairs } from "#app/components/ui/pairs.tsx";
 import { getRoleWithPermissions } from "#app/queries/role.server.ts";
 import { handle as rolesHandle } from "#app/routes/admin+/security+/roles+/index";
+import TanstackTable from "#app/ui/upstream/tanstack-table";
+import { TableFooter } from "#app/ui/upstream/tanstack-table/TableFooter";
+import { TableSearch } from "#app/ui/upstream/tanstack-table/TableSearch";
+import { TableIndex } from "#app/ui/upstream/tanstack-table/cells/table-index.tsx";
+import { TableLink } from "#app/ui/upstream/tanstack-table/cells/table-link.tsx";
+import { fuzzyFilter } from "#app/ui/upstream/tanstack-table/filters/fuzzy-filter";
+import { PermissionTypeFilterComponent } from "#app/ui/upstream/tanstack-table/filters/permission-type-filter-component.tsx";
+import { permissionTypeFilter } from "#app/ui/upstream/tanstack-table/filters/permission-type-filter.ts";
+import { fuzzySort } from "#app/ui/upstream/tanstack-table/sorts/fuzzy";
 import { getAdminCrud } from "#app/utils/admin-crud";
 import {
   ADMIN_TABLE_PAGE_INDEX,

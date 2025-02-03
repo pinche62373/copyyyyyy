@@ -31,7 +31,6 @@ export const handle = {
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const url = new URL(request.url);
 
-  // RR7: replaced with function clone
   await isAuthenticated(request, ROUTE_LOGIN + `?returnTo=${url.pathname}`);
 
   return null;

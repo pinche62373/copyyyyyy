@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from "react";
-import { TableContext } from "#app/components/tanstack-table/Context";
+import { TableContext } from "#app/ui/upstream/tanstack-table/Context";
 import { cn } from "#app/utils/lib/cn.ts";
 import type { t_table } from "#types/table.js";
 
